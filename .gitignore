@@ -253,6 +253,7 @@ proj/media
 # profiling data
 
 ### vscode ###
+.vscode/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
