@@ -1,0 +1,10 @@
+<h1>Create an account</h1>
+  
+<p>Sign up using the following form or with google account:</p>
+
+<form method="post">
+  {{ user_form.as_p }}
+  {% csrf_token %}
+  <p><input type="submit" value="Create my account"></p>
+</form>
+

@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# Create your models here.
+from django.contrib.auth.models import User
 
 
-class UserProfile(models.Model):
+class Profile(models.Model):
     '''A general user profile info model that extends `User` fields. '''
 
     # Connect to the admin User object by on-to-one relation
