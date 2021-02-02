@@ -23,10 +23,7 @@ def register(request):
             # Save the User object
             new_user.save()
             # Create the user profile
-            Profile.objects.create(user=new_user)
-            
-            new_profile = profile_form.save(commit=False)
-            new_profile.user = new_user
+            new_profile = Profile.objects.create(user=new_user)
 
             if 'profile_pic' in request.FILES:
                 new_profile.profile_pic = request.FILES['profile_pic']
