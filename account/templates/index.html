@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+</head>
+<body>
+    <h1>This is the index of account</h1>
+    
+    <a href={% url 'register' %}>Register</a><br>
+    {% if user.is_authenticated %}
+        <p><a href="{% url "password_change" %}">Password Change</a></p><br>
+        <a href={% url 'profile_detail' user.pk %}>MY Profile</a>
+    {% else %} <a href={% url 'login' %}>Login</a> <br>
+    {% endif %}
+</body>
+</html>
