@@ -18,10 +18,15 @@ class UserRegistrationForm(forms.ModelForm):
             raise forms.ValidationError('Passwords don\'t match.')
         return cd['password2']
 
+class UserForm(forms.ModelForm):
 
-class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'email')
+
+class ProfileForm(forms.ModelForm):
     '''A form for the additional `UserProfile` fields'''
     
     class Meta:
         model = Profile
-        fields = ("profile_pic",)
+        fields = ("profile_pic", "year")
