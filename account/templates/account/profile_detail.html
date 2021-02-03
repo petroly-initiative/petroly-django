@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+</head>
+<body>
+    <h1>Hi <em>{{ object.username }}</em></h1>
+    <p>First name: {{ object.first_name }}</p>
+    <p>Last name: {{ object.last_name }}</p>
+    <p>Email: {{ object.email }}</p>
+    <p>Year: {{ object.profile.year }}</p>
+    <p>Your Profile Picture</p>
+    {% if object.profile.profile_pic %}
+        <img src={{ object.profile.profile_pic.url | default:''}} alt="">
+        {% else %} <p>:( you dont have any profile picture setup yet</p>
+    {% endif %}
+    <h3>To update your information</h3>
+    <a href={% url 'profile_form' user.pk %}>Edit My Profile</a> <br>
+    <a href={% url 'logout' %}>Logout !</a>
+    
+</body>
+</html>
