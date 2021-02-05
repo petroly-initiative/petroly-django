@@ -14,7 +14,12 @@
     {{ user_form.as_p }}
     {{ profile_form.as_p }}
     {% csrf_token %}
-    <p><input type="submit" value="Create my account"></p>
+    <p><input type="submit" value="Create my account" name='from1'></p>
+  </form>
+  <form enctype='multipart/form-data' method="post">
+
+    {% csrf_token %}
+    <p><input type="submit" value="Create my account" name='form2'></p>
   </form>
 
 {% endblock body %}
