@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from .models import Profile
 
 class UserRegistrationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update({'class': '', 'placeholder':'Email'})
+
     password = forms.CharField(label='Password',
                                widget=forms.PasswordInput)
     password2 = forms.CharField(label='Repeat password',
@@ -27,6 +31,10 @@ class UserForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     '''A form for the additional `UserProfile` fields'''
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['year'].widget.attrs.update({'class': 'form-control'})
+
     class Meta:
         model = Profile
         fields = ("profile_pic", "year")

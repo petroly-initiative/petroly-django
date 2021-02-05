@@ -1,17 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}
+  MY Profile
+{% endblock title %}
+
+
+{% block body %}
+
     <h1>Update Yuor Profile</h1>
     <form enctype='multipart/form-data' action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         {{ form2.as_p }}
-        <button type="submit">Update</button>
+        <button type="submit" name='form1'>Update</button>
     </form>
-</body>
-</html>
+
+{% endblock body %}

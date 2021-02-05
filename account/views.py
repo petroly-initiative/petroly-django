@@ -6,13 +6,15 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import CreateView, UpdateView, TemplateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+import logging 
+logging.basicConfig(filename='request.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 # Create your views here.
 
 
 class IndexView(TemplateView):
 
-    template_name = "index.html"
+    template_name = "account/index.html"
     
 
 class RegisterView(CreateView):
@@ -40,8 +42,8 @@ class RegisterView(CreateView):
                 new_profile.profile_pic = request.FILES['profile_pic']
 
             new_profile.save()
-            print('profile: '+str(new_profile.pk))
-            print('user: '+str(new_user.pk))
+            logging.info('profile: '+str(new_profile.pk))
+            logging.info('user: '+str(new_user.pk))
 
             return render(request,
                             'account/register_done.html',
@@ -64,6 +66,30 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     form_class2 = ProfileForm
     template_name = 'account/profile_form.html'
     
+    def get_object(self, queryset=None):
+        """
+        Returns the object the view is displaying.
+        By default this requires `self.queryset` and a `pk` or `slug` argument
+        in the URLconf, but subclasses can override this to return any object.
+        """
+        # Use a custom queryset if provided; this is required for subclasses
+        # like DateDetailView
+        if queryset is None:
+            queryset = self.get_queryset()
+        # Next, try looking up by primary key.
+        pk = self.request.user.pk
+
+        if pk is not None:
+            queryset = queryset.filter(pk=pk)
+
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(_("No %(verbose_name)s found matching the query") %
+                        {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -81,10 +107,13 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         form = self.get_form(self.form_class)
         form2 = self.get_form(self.form_class2)
         form2.instance = request.user.profile
-
+    
+        if 'form1' in request.POST:
+            logging.info('i got form1')
+            logging.info(request.POST)
+            print('test')
 
         if form.is_valid() and form2.is_valid():
-            print('valid')
             cd = form.cleaned_data
             new_user = form.save(commit=False)
             new_user.save()
@@ -97,6 +126,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             print(new_user.pk)
             print(new_profile.pk)
 
-            return redirect(reverse('profile_detail', kwargs={'pk':request.user.pk}))
+            return redirect(reverse('profile_form', kwargs={}))
         else:
             return self.form_invalid(form=form)

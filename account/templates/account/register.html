@@ -1,11 +1,21 @@
-<h1>Create an account</h1>
-  
-<p>Sign up using the following form or with google account:</p>
+{% extends 'base.html' %}
 
-<form enctype='multipart/form-data' method="post">
-  {{ user_form.as_p }}
-  {{ profile_form.as_p }}
-  {% csrf_token %}
-  <p><input type="submit" value="Create my account"></p>
-</form>
+{% block title %}
+  Register
+{% endblock title %}
+
+{% block body %}
+
+  <h1>Create an account</h1>
+    
+  <p>Sign up using the following form or with google account:</p>
+
+  <form enctype='multipart/form-data' method="post">
+    {{ user_form.as_p }}
+    {{ profile_form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" value="Create my account"></p>
+  </form>
+
+{% endblock body %}
 

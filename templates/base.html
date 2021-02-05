@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+{% load static %}
+<html style="width: 100%;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title> {% block title %} {% endblock title %} </title>
+    <meta name="twitter:description" content="A new place that combines all services that you need in one place">
+    <meta name="twitter:card" content="summary">
+    <meta name="description" content="One place for all services needed by KFUPM students">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content={% static "base/assets/img/favicon.svg" %}>
+    <meta name="twitter:title" content="KFUPMER,com">
+    <link rel="icon" type="image/svg+xml" sizes="512x512" href={% static "base/assets/img/favicon.svg" %}>
+    <link rel="icon" type="image/svg+xml" sizes="512x512" href={% static "base/assets/img/favicon.svg" %}>
+    <link rel="icon" type="image/svg+xml" sizes="512x512" href={% static "base/assets/img/favicon.svg" %}>
+    <link rel="icon" type="image/svg+xml" sizes="512x512" href={% static "base/assets/img/favicon.svg" %}>
+    <link rel="icon" type="image/svg+xml" sizes="512x512" href={% static "base/assets/img/favicon.svg" %}>
+    <link rel="stylesheet" href={% static 'base/assets/bootstrap/css/bootstrap.min.css' %}>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900">
+    <link rel="stylesheet" href={% static 'base/assets/css/Caviar%20Dreams.css' %}>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli">
+    <link rel="stylesheet" href={% static 'base/assets/css/Raleway.css' %}>
+    <link rel="stylesheet" href={% static 'base/assets/fonts/ionicons.min.css' %}>
+    <link rel="stylesheet" href={% static 'base/assets/css/16-scrollbar-styles-1.css' %}>
+    <link rel="stylesheet" href={% static 'base/assets/css/animated-form-in-a-modalbutton-4.css' %}>
+    <link rel="stylesheet" href={% static 'base/assets/css/Footer-Clean.css' %}>
+    <link rel="stylesheet" href={% static 'base/assets/css/LinkedIn-like-Profile-Box-1.css' %}>
+    <link rel="stylesheet" href={% static 'base/assets/css/progress-bars.css' %}>
+    <link rel="stylesheet" href={% static 'base/assets/css/styles.css' %}>
+    <link rel="stylesheet" href={% static 'base/assets/css/User-Rating-F19690.css' %}>
+
+    {% block head %}{% endblock head %}
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md fixed-top shadow" id="navbar"
+        style="box-shadow: 0px 2px 6px 0px var(--gray);background: #ffffff;">
+        <div class="container-fluid"><img id="header_pattern" src={% static 'base/assets/img/header_pattern.svg' %}>
+            <a class="navbar-brand" href={% url 'index' %}> {% include 'design.html' %} </a>
+
+            {% comment %} for mobile {% endcomment %}
+            {% if user.is_authenticated %}
+                <div class="d-flex justify-content-end" id="mobile_modal" style="background: rgba(255,255,255,0);border-right-style: none;margin-left: auto;">
+                    <a class="btn btn-primary btn-lg d-flex justify-content-center align-items-center" role="button" id="mobile_modal_button" data-toggle="modal" href="#profile-modal">
+                    <img id="profile_pic_small" class="profile_pic" style="width: 33px;margin-right: 0;height: 33px;background: rgba(0,0,0,0);" 
+                    {% if user.profile.profile_pic %} src={{ user.profile.profile_pic.url }} 
+                    {% else %} src={% static 'base/assets/img/profile_pic.svg' %} {% endif %}></a>
+                </div>
+            {% endif %}
+
+
+            <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1" style="border-width: 0px;">
+                <span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse border rounded scstyle-1" data-toggle="tooltip" data-bs-tooltip="" id="navcol-1" style="box-shadow: 0px 0px;border-width: 0px!important;border-color: rgba(33,37,41,0);border-top-width: 2px;border-top-style: solid;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link active" href={% url 'evaluation:index' %} style="color: #000000;"><strong>Evaluation</strong></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#" style="color: #000000;"><strong>Resources</strong></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#" style="color: #000000;"><strong>KFUPM Board</strong></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#" style="color: #000000;"><strong>Events</strong></a></li>
+                    <li class="nav-item" style="box-shadow: 0px 0px;"><a class="nav-link active" href="#" style="color: #000000;"><strong>Clubs</strong></a></li>
+                </ul>
+
+                {% comment %} for large screen {% endcomment %}
+                {% if user.is_authenticated %}
+                    <div class="d-md-flex d-lg-flex align-items-md-center align-items-lg-center" id="profile_link" style="height: 32px;border-radius: 50%;">
+                        <a class="btn btn-primary btn-lg d-flex d-xl-flex justify-content-xl-center align-items-xl-center" role="button" data-toggle="modal" href="#profile-modal" style="padding: 0;background: rgba(0,123,255,0);border-width: 0px;border-radius: 50%;">
+                        <img id="profile_pic_big" class="profile_pic" 
+                        {% if user.profile.profile_pic %} src={{ user.profile.profile_pic.url }} 
+                        {% else %} src={% static 'base/assets/img/profile_pic.svg' %} {% endif %}
+                        style="margin-right: 0px;margin-left: 0px;border-radius: 50%;"></a>
+                    </div>
+                    <a href="{% url 'logout' %}" class="btn signout">Log Out</a>
+                 {% else %}
+                    <a href="{% url 'login' %}" class="btn signout">Log In</a>
+                    <a href={% url 'register' %}>Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-doc" style="box-shadow: 0px 0px;">
+    
+        <div class="modal fade text-center" role="dialog" tabindex="-1" id="profile-modal" style="width: large;margin: auto;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center d-flex" style="padding-bottom: 0;padding-left: 0px;">
+                        <div id="instructor_styler-10" style="height: 312px;background-image: url(&quot;{% static 'base/assets/img/bg-pattern.png' %}&quot;);background-color: rgba(54,162,177,0);position: absolute;width: 100%;z-index: 0;padding-left: 12px;"></div>
+                        <div class="d-flex justify-content-center" style="width: 100%;">
+                            <h3 class="text-center d-flex justify-content-center align-items-center" style="width: 100%;text-align: center;font-size: 36px;margin-left: 0px;position: relative;"><em>Personal Profile</em></h3>
+                        </div><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><strong>x</strong></span></button>
+                    </div>
+                    <div class="modal-body" style="padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 11px;">
+                        <div class="row" style="width: 100%;margin-left: 0px;margin-right: 0px;">
+                            <div class="col-12 col-sm-12 col-md-5 col-lg-4 col-xl-4 d-flex d-xl-flex flex-column align-items-center justify-content-xl-center align-items-xl-center" id="change_section" style="width: 78%;height: 285px;padding-bottom: 0px;margin-bottom: 60px;border: 1px solid rgba(108,117,125,0.48);border-top-width: 0px;border-right-width: 2px;border-right-color: rgba(108,117,125,0.26);border-bottom: 1px none rgb(222,226,230);border-left-width: 0px; display: flex; flex-direction: column">
+                                <div class="d-flex flex-column align-items-center align-items-sm-center align-items-xl-center" id="instructor_form_info-1" style="padding-bottom: 13px;height: 203px;">
+                                <button class="btn btn-primary d-flex justify-content-md-center align-items-md-center" id="change_pic_button" type="button" style="background: rgba(255,255,255,0);height: 77px;width: 77px;padding: 45px; display: flex; justify-content: center;align-items: center; border:none!important">
+                                <img class="d-flex d-sm-flex d-xl-flex justify-content-sm-start justify-content-xl-start" id="form_pic-1" 
+                                {% if user.profile.profile_pic %} src={{ user.profile.profile_pic.url }}
+                                {% else %} src={% static 'base/assets/img/profile_pic.svg' %}
+                                {% endif %}
+                                style="width: 77px;height: 77px;"></button>
+                                <span style="font-size: 27px;"><strong>{{ user.username }}</strong></span>
+                                <span id="email_text">{{ user.email }}</span></div>
+                                <div class="d-flex flex-column align-items-center align-items-xl-start" id="instructor_form_info-2" style="padding-bottom: 0px;height: 103px;font-size: 25px;">
+                                <a href={% url 'password_change' %}> <span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>Change Password</strong></span></a>
+                                <a href={% url 'profile_form' %}> <span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>Edit My Profile</strong></span></a>
+                                <a href="#"> <span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>Change Username</strong></span></a></div>
+                            </div>
+                            <div class="col-md-7 col-lg-8 d-flex flex-column align-items-md-start justify-content-lg-center scstyle-1" id="records">
+                                <div style="padding: 6px;margin-left: 7px;margin-top: 0;height: 92px;margin-bottom: 20px;">
+                                    <h3 class="d-flex d-lg-flex justify-content-lg-start align-items-lg-center" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 1px;width: 100%;"><img src={% static "base/assets/img/Icon%20awesome-building.svg" %} style="height: 28px;margin-top: 6px;">&nbsp; Department</h3><span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 42px;">Information and computer science</span>
+                                </div>
+                                <div class="d-flex d-md-flex flex-column justify-content-md-start" style="padding: 11px;margin-left: 7px;margin-bottom: 20px;">
+                                    <h3 class="d-inline d-lg-flex justify-content-lg-start" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 0px;width: 100%;"><img src={% static "base/assets/img/Icon%20ionic-md-school.svg" %}>&nbsp; Academic Year</h3><span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 37px;">Prep-year AKA "Cute Orya"</span>
+                                </div>
+                                <div class="d-flex d-md-flex flex-column justify-content-md-start" style="padding: 11px;margin-left: 7px;margin-bottom: 20px;">
+                                    <h3 class="d-inline d-lg-flex justify-content-lg-start" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 0px;width: 100%;"><img src={% static "base/assets/img/Icon%20ionic-md-stats.svg" %}>&nbsp; Statistics</h3>
+                                    <div class="row">
+                                        <div class="col d-flex flex-column"><span style="font-size: 24px;">Evaluations</span><span style="font-size: 23px;color: rgb(63,159,255);"><strong>26</strong></span></div>
+                                        <div class="col d-flex flex-column"><span style="font-size: 24px;">Posts</span><span style="font-size: 23px;color: rgb(63,159,255);"><strong>324</strong></span></div>
+                                        <div class="col-md-12 d-flex flex-column"><span style="font-size: 24px;">Rating</span><span style="font-size: 23px;color: rgb(255,178,87);"><strong>253</strong></span></div>
+                                    </div>
+                                </div>
+                                <div style="padding: 11px;margin-left: 4px;">
+                                    <h3 class="d-flex d-lg-flex align-items-sm-center justify-content-lg-start align-items-lg-center" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;"><img src={% static "base/assets/img/Group%205.svg" %} style="height: 33px;margin-top: 3px;">&nbsp; &nbsp;Medals<button class="btn btn-light border rounded-circle d-flex justify-content-lg-center align-items-lg-center" type="button" style="width: 16px;height: 16px;margin: 0 0;padding: 0 0;margin-left: 17px;background: rgba(0,0,0,0);border-width: 0px;border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 3px;border-left-style: none;"><img class="d-flex align-items-lg-center" src="base/assets/img/Icon%20awesome-info-circle.svg" style="width: 16px;height: 16px;margin-left: 0px;"></button></h3>
+                                    <div class="d-flex flex-row justify-content-center align-content-center align-items-md-center justify-content-lg-center justify-content-xl-center" id="medals" style="height: auto;display: flex;align-items: center;margin: 0;width: 100%;margin-right: 0px;margin-left: -12px;">
+                                        <div class="row d-flex flex-row justify-content-lg-end" style="height: auto;width: 100%;margin-left: 1px;">
+                                            <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center medal_containers" style="height: 55.0312px;">
+                                                <div class="d-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center"><img class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" src={% static "base/assets/img/Icon%20awesome-hands-helping.svg" %} style="width: 40px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;"><strong>Helping Hand</strong></span></div>
+                                            </div>
+                                            <div class="col-5 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center medal_containers">
+                                                <div class="d-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center"><img class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" src={% static "base/assets/img/Group%204.svg" %} style="width: 30px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;"><strong>Discussion Solver</strong></span></div>
+                                            </div>
+                                            <div class="col-6 col-sm-6 col-md-6 offset-lg-0 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center justify-content-lg-start align-items-lg-center medal_containers" style="height: 55.0312px;">
+                                                <div class="d-flex flex-row align-items-sm-center align-items-lg-center"><img class="d-sm-flex flex-row align-items-sm-center" src={% static "base/assets/img/Group%203.svg" %} style="width: 30px;"><span class="d-sm-flex flex-row align-items-sm-center" style="margin-left: 15px;font-size: 14px;"><strong>Golden member</strong></span></div>
+                                            </div>
+                                            <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center justify-content-lg-start medal_containers" style="height: 55.0312px;font-size: 14px;">
+                                                <div class="d-flex flex-row align-items-lg-center" style="font-size: 14px;"><img class="flex-row" src={% static "base/assets/img/Icon%20material-rate-review.svg" %} style="font-size: 14px;width: 30px;height: 30px;"><span class="flex-row" style="margin-left: 15px;font-size: 14px;"><strong>Evaluation Hero</strong></span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div style="display: flex;justify-content: center;margin: 22px;">
+            <header id="heading"><span id="top_header"><strong><em>{% block big_text %}{% endblock big_text %}</em></strong></span>
+            <sub id="sub_header" style="word-wrap: break-word;height: 49px;">{% block small_text %}{% endblock small_text %}</sub></header>
+        </div>
+
+        {% block body %}{% endblock body %}
+
+    </main>
+
+    <div class="footer-clean">
+        <footer>
+            <div class="container" style="width: 94%;box-shadow: 0px 0px;">
+                <div class="row d-flex d-xl-flex justify-content-center align-items-xl-center">
+                    <div class="col-sm-4 col-md-3 text-center item">
+                        <h4>Services</h4>
+                        <ul>
+                            <li><a href="#" style="font-size: 21px;">Web design</a></li>
+                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Development</a></li>
+                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Hosting</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4 col-md-3 text-center item">
+                        <h4>About</h4>
+                        <ul>
+                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Developers</a></li>
+                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Computer Club</a></li>
+                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Legacy</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4 col-md-3 text-center item">
+                        <h4>Careers</h4>
+                        <ul>
+                            <li><a href="#" style="font-size: 21px;">Job openings</a></li>
+                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Employee success</a></li>
+                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Benefits</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-8" style="text-align: center;padding-top: 15px;">
+                        <p class="copyright" style="display: inline;">KFUPM Computer Club © 2017</p>
+                    </div>
+                    <div class="col-md-10 col-lg-5 item social" id="links_column"
+                        style="padding-left: 0px;padding-right: 0;width: 231px;display: flex;justify-content: center;">
+                        <a href="#"><i class="icon ion-social-facebook"></i></a><a href="https://twitter.com/kfupm_cc"
+                            target="_blank"><i class="icon ion-social-twitter"></i></a><a href="#"><i
+                                class="icon ion-social-snapchat"></i></a><a href="#" style="display: block;"><i
+                                class="icon ion-social-instagram"></i></a></div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src={% static 'base/assets/js/jquery.min.js' %}></script>
+    <script src={% static 'base/assets/bootstrap/js/bootstrap.min.js' %}></script>
+    <script src={% static 'base/assets/js/bs-init.js' %}></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+    <script src={% static 'base/assets/js/animated-form-in-a-modalbutton.js' %}></script>
+</body>
+
+</html>

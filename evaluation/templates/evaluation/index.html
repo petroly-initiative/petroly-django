@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+    <div class="modal fade text-center" role="dialog" tabindex="-1" id="formModal" style="width: large;margin: auto;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-left d-flex" style="padding-bottom: 0;">
+                    <div>
+                        <h3 class="d-block" style="width: 100%;text-align: left;"><em>Evaluation form</em></h3>
+                        <p class="lead float-left" style="font-size: 18px;">Choose your satisfaction level for each given category</p>
+                    </div><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 11px;">
+                    <form>
+                        <div class="form-row">
+                            <div class="col-xl-12 d-flex justify-content-center justify-content-lg-center" style="width: 100%;border: 1px solid var(--gray) ;border-top-width: 0px;border-right-width: 0px;border-bottom-width: 2px;border-bottom-color: rgb(222,226,230);border-left-width: 0px;">
+                                <div class="d-flex flex-column align-items-center align-items-lg-center align-items-xl-center" id="instructor_form_info" style="padding-bottom: 13px;"><img class="d-flex d-lg-flex justify-content-lg-center" id="form_pic" src="assets/img/profile_pic.svg"><span style="font-size: 35px;"><strong>Instructor name</strong></span></div>
+                            </div>
+                            <div class="col" style="padding-top: 17px;border-width: 1px;border-color: rgb(222,226,230);border-bottom-width: 1px;border-bottom-color: rgb(222,226,230);">
+                                <h3 class="d-inline" style="text-align: left;color: rgb(23,209,196);">Grading</h3>
+                                <legend style="font-size: 18px;margin-bottom: 0px;">grading system, efficiency and fairness</legend>
+                                <fieldset class="rating one">
+                                    
+                                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!"><span>&#9733</span></label>
+                                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good"><span>&#9733</span></label>
+                                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh"><span>&#9733</span></label>
+                                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad"><span>&#9733</span></label>
+                                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time"><span>&#9733</span></label>
+                                </fieldset>
+                                </div>
+                            <div class="col-12" style="padding-top: 17px;">
+                                <h3 class="d-inline" style="text-align: left;color: rgb(23,209,196);">Teaching</h3>
+                                <legend style="font-size: 18px;margin-bottom: 0px;">Sound, material delivery&nbsp;</legend>
+                                <fieldset class="rating two">
+                                    <input type="radio" id="star5-1" name="ratingtwo" value="5" /><label for="star5-1" title="Rocks!"><span>&#9733</span></label>
+                                    <input type="radio" id="star4-1" name="ratingtwo" value="4" /><label for="star4-1" title="Pretty good"><span>&#9733</span></label>
+                                    <input type="radio" id="star3-1" name="ratingtwo" value="3" /><label for="star3-1" title="Meh"><span>&#9733</span></label>
+                                    <input type="radio" id="star2-1" name="ratingtwo" value="2" /><label for="star2-1" title="Kinda bad"><span>&#9733</span></label>
+                                    <input type="radio" id="star1-1" name="ratingtwo" value="1" /><label for="star1-1" title="Sucks big time"><span>&#9733</span></label>
+                                </fieldset>
+                                </div>
+                            <div class="col-12"  style="padding-top: 17px; width: 100%">
+                                <h3 class="d-inline" style="text-align: left;color: rgb(23,209,196);">Personality</h3>
+                                <legend style="font-size: 18px;margin-bottom: 0px;">flexibility, communication, general mood</legend>
+                                <fieldset class="rating three">
+                                    <input type="radio" id="star5-2" name="ratingthree" value="5" /><label for="star5-2" title="Rocks!"><span>&#9733</span></label>
+                                    <input type="radio" id="star4-2" name="ratingthree" value="4" /><label for="star4-2" title="Pretty good"><span>&#9733</span></label>
+                                    <input type="radio" id="star3-2" name="ratingthree" value="3" /><label for="star3-2" title="Meh"><span>&#9733</span></label>
+                                    <input type="radio" id="star2-2" name="ratingthree" value="2" /><label for="star2-2" title="Kinda bad"><span>&#9733</span></label>
+                                    <input type="radio" id="star1-2" name="ratingthree" value="1" /><label for="star1-2" title="Sucks big time"><span>&#9733</span></label>
+                                </fieldset></div>
+                            <div class="col-12" style="padding-top: 17px;">
+                                <div class="d-flex flex-column align-items-xl-center">
+                                    <h3 class="d-inline" style="text-align: center;color: rgb(23,209,196);width: 100%;height: 32px;">Comments</h3><sub style="height: 37px;"><em>optional</em></sub><textarea class="form-control" style="width: 107%;font-size: 16px;height: 73px;"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form><button class="btn btn-primary" type="submit" style="border-width: 0px;border-color: rgb(23,209,196);background: #17d1c4;width: 32%;padding: 0 0;height: 35px;margin-top: 26px;margin-bottom: 18px;color: white;"><strong>Submit</strong></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade text-center" role="dialog" tabindex="-1" id="profile-modal" style="width: large;margin: auto;">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center d-flex" style="padding-bottom: 0;padding-left: 0px;">
+                    <div id="instructor_styler-10" style="height: 312px;background-image: url(&quot;assets/img/bg-pattern.png&quot;);background-color: rgba(54,162,177,0);position: absolute;width: 100%;z-index: 0;padding-left: 12px;"></div>
+                    <div class="d-flex justify-content-center" style="width: 100%;">
+                        <h3 class="text-center d-flex justify-content-center align-items-center" style="width: 100%;text-align: center;font-size: 36px;margin-left: 0px;position: relative;"><em>Personal Profile</em></h3>
+                    </div><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><strong>x</strong></span></button>
+                </div>
+                <div class="modal-body" style="padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 11px;">
+                    <div class="row" style="width: 100%;margin-left: 0px;margin-right: 0px;">
+                        <div class="col-12 col-sm-12 col-md-5 col-lg-4 col-xl-4 d-flex d-xl-flex flex-column align-items-center justify-content-xl-center align-items-xl-center" id="change_section" style="width: 78%;height: 285px;padding-bottom: 0px;margin-bottom: 60px;border: 1px solid rgba(108,117,125,0.48);border-top-width: 0px;border-right-width: 2px;border-right-color: rgba(108,117,125,0.26);border-bottom: 1px none rgb(222,226,230);border-left-width: 0px; display: flex; flex-direction: column">
+                            <div class="d-flex flex-column align-items-center align-items-sm-center align-items-xl-center" id="instructor_form_info-1" style="padding-bottom: 13px;height: 203px;"><button class="btn btn-primary d-flex justify-content-md-center align-items-md-center" id="change_pic_button" type="button" style="background: rgba(255,255,255,0);height: 77px;width: 77px;padding: 45px; display: flex; justify-content: center;align-items: center; border:none!important"><img class="d-flex d-sm-flex d-xl-flex justify-content-sm-start justify-content-xl-start" id="form_pic-1" src="assets/img/edit_pic.svg" style="width: 77px;height: 77px;"></button><span style="font-size: 27px;"><strong>Username</strong></span><span id="email_text">username@kfupm.email.com</span></div>
+                            <div class="d-flex flex-column align-items-center align-items-xl-start" id="instructor_form_info-2" style="padding-bottom: 0px;height: 103px;font-size: 25px;"><a href="#"><span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>Change Password</strong></span></a><a href="#"><span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>Privacy settings</strong></span></a><a href="#"><span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>Change Username</strong></span></a></div>
+                        </div>
+                        <div class="col-md-7 col-lg-8 d-flex flex-column align-items-md-start justify-content-lg-center scstyle-1" id="records">
+                            <div style="padding: 6px;margin-left: 7px;margin-top: 0;height: 92px;margin-bottom: 20px;">
+                                <h3 class="d-flex d-lg-flex justify-content-lg-start align-items-lg-center" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 1px;width: 100%;"><img src="assets/img/Icon%20awesome-building.svg" style="height: 28px;margin-top: 6px;">&nbsp; Department</h3><span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 42px;">Information and computer science</span>
+                            </div>
+                            <div class="d-flex d-md-flex flex-column justify-content-md-start" style="padding: 11px;margin-left: 7px;margin-bottom: 20px;">
+                                <h3 class="d-inline d-lg-flex justify-content-lg-start" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 0px;width: 100%;"><img src="assets/img/Icon%20ionic-md-school.svg">&nbsp; Academic Year</h3><span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 37px;">Prep-year AKA "Cute Orya"</span>
+                            </div>
+                            <div class="d-flex d-md-flex flex-column justify-content-md-start" style="padding: 11px;margin-left: 7px;margin-bottom: 20px;">
+                                <h3 class="d-inline d-lg-flex justify-content-lg-start" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 0px;width: 100%;"><img src="assets/img/Icon%20ionic-md-stats.svg">&nbsp; Statistics</h3>
+                                <div class="row">
+                                    <div class="col d-flex flex-column"><span style="font-size: 24px;">Evaluations</span><span style="font-size: 23px;color: rgb(63,159,255);"><strong>26</strong></span></div>
+                                    <div class="col d-flex flex-column"><span style="font-size: 24px;">Posts</span><span style="font-size: 23px;color: rgb(63,159,255);"><strong>324</strong></span></div>
+                                    <div class="col-md-12 d-flex flex-column"><span style="font-size: 24px;">Rating</span><span style="font-size: 23px;color: rgb(255,178,87);"><strong>253</strong></span></div>
+                                </div>
+                            </div>
+                            <div style="padding: 11px;margin-left: 4px;">
+                                <h3 class="d-flex d-lg-flex align-items-sm-center justify-content-lg-start align-items-lg-center" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;"><img src="assets/img/Group%205.svg" style="height: 33px;margin-top: 3px;">&nbsp; &nbsp;Medals<button class="btn btn-light border rounded-circle d-flex justify-content-lg-center align-items-lg-center" type="button" style="width: 16px;height: 16px;margin: 0 0;padding: 0 0;margin-left: 17px;background: rgba(0,0,0,0);border-width: 0px;border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 3px;border-left-style: none;"><img class="d-flex align-items-lg-center" src="assets/img/Icon%20awesome-info-circle.svg" style="width: 16px;height: 16px;margin-left: 0px;"></button></h3>
+                                <div class="d-flex flex-row justify-content-center align-content-center align-items-md-center justify-content-lg-center justify-content-xl-center" id="medals" style="height: auto;display: flex;align-items: center;margin: 0;width: 100%;margin-right: 0px;margin-left: -12px;">
+                                    <div class="row d-flex flex-row justify-content-lg-end" style="height: auto;width: 100%;margin-left: 1px;">
+                                        <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center medal_containers" style="height: 55.0312px;">
+                                            <div class="d-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center"><img class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" src="assets/img/Icon%20awesome-hands-helping.svg" style="width: 40px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;"><strong>Helping Hand</strong></span></div>
+                                        </div>
+                                        <div class="col-5 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center medal_containers">
+                                            <div class="d-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center"><img class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" src="assets/img/Group%204.svg" style="width: 30px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;"><strong>Discussion Solver</strong></span></div>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6 offset-lg-0 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center justify-content-lg-start align-items-lg-center medal_containers" style="height: 55.0312px;">
+                                            <div class="d-flex flex-row align-items-sm-center align-items-lg-center"><img class="d-sm-flex flex-row align-items-sm-center" src="assets/img/Group%203.svg" style="width: 30px;"><span class="d-sm-flex flex-row align-items-sm-center" style="margin-left: 15px;font-size: 14px;"><strong>Golden member</strong></span></div>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center justify-content-lg-start medal_containers" style="height: 55.0312px;font-size: 14px;">
+                                            <div class="d-flex flex-row align-items-lg-center" style="font-size: 14px;"><img class="flex-row" src="assets/img/Icon%20material-rate-review.svg" style="font-size: 14px;width: 30px;height: 30px;"><span class="flex-row" style="margin-left: 15px;font-size: 14px;"><strong>Evaluation Hero</strong></span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex;justify-content: center;margin: 22px;">
+        <header id="heading"><span id="top_header"><strong><em>Instructor Evaluation</em></strong></span><sub id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your constructors easily and quickly!</sub></header>
+    </div>
+    <form class="d-flex flex-row flex-grow-0 flex-fill justify-content-center align-content-center align-self-center my-auto align-items-sm-center" data-toggle="tooltip" data-bs-tooltip="" data-placement="right" id="search_container"  method="get" style="background: rgba(255,255,255,0);">
+    {% csrf_token %}
+    {{filter.form}}
+    <button type="submit">search</button>
+    </form>
+
+    <div class="row" id="instructors_container" style="margin-bottom: 29px;margin-right: 0;margin-left: 0;">
+
+            
+        {% for i in filter.qs %}
+        <div class="col-md-4 col-lg-6 col-xl-4 instructor_column" style="margin-bottom: 28px;">
+            <div role="tablist" id="accordion-3" style="background: rgba(231,231,231,0);border-radius: 0;">
+            
+                <div class="card instructors" style="border-radius: 11px;box-shadow: 0px 5px 7px rgba(33,37,41,0.44);margin-bottom: 14px;">
+                    <div class="card-header" role="tab" style="background: rgba(255,255,255,0.03);border-radius: 19px;border-width: 0px;">
+                        <div id="instructor_styler-5" style="height: 67px;background-image: url(&quot;assets/img/bg-pattern.png&quot;);background-color: rgba(54,162,177,0);position: absolute;width: 100%;z-index: 1;"></div>
+                        <h5 class="mb-0" style="position: relative;z-index: 2;"><img class="rounded-circle d-flex float-left d-xl-flex instructor_pic" src={% static 'evaluation/instructors/assets/img/profile_pic.svg' %} width="60px" height="60px" style="width: 70px;height: 70px;margin: 0 0 0 0;margin-left: 22px;margin-right: 48px;"><a class="d-flex justify-content-xl-end align-items-xl-center instrucotr_collapse_button" data-toggle="collapse" aria-expanded="false" aria-controls="accordion-3 .item-1" href="#accordion-3 .item-1"><strong>{{ i.Name }}</strong></a></h5>
+                        <h6 class="d-lg-flex justify-content-xl-end"><em>{{ i.department }}</em></h6>
+                        <div class="d-flex align-items-lg-center rating_container"><span class="d-inline-flex justify-content-xl-center align-items-xl-center static_rating" style="color: var(--yellow);height: 100%;"><br>★<br><br><br></span><span class="d-inline-flex justify-content-xl-center align-items-xl-center static_rating" style="color: var(--yellow);"><br>★<br><br><br></span><span class="d-inline-flex justify-content-xl-center align-items-xl-center static_rating" style="color: var(--yellow);"><br>★<br><br><br></span><span class="d-inline-flex justify-content-xl-center align-items-xl-center static_rating"><br>★<br><br><br></span><span class="d-inline-flex justify-content-xl-center align-items-xl-center static_rating"><br>★<br><br><br></span></div>
+                    </div>
+                    <div class="collapse item-1" role="tabpanel" data-parent="#accordion-3">
+                        <div class="card-body">
+                            <div class="row d-lg-flex align-items-xl-center">
+                                <div class="col-lg-12 col-xl-12" style="height: 100%;min-height: none;margin-top: 32px;margin-bottom: 19px;">
+                                    <div class="d-flex justify-content-center flex-nowrap justify-content-xl-end stat_containers" id="stat_container-1" style="height: 177px;width: 100%;padding-top: 0px;padding-bottom: 0px;">
+                                        <div class="d-flex flex-row justify-content-lg-center align-items-xl-center" id="category_container-4" style="padding: 12px 0px;padding-bottom: 0px;width: 100%;height: auto;padding-top: 0px;">
+                                            <div class="col-6 col-sm-4 col-md-5 col-lg-4 col-xl-5 text-center d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex justify-content-center justify-content-sm-center justify-content-lg-center justify-content-xl-center categories" style="height: auto;margin-top: 0px;"><span class="d-md-flex justify-content-xl-center" style="font-size: 22px;text-align: center;width: 100%;"><strong>Grading</strong></span></div>
+                                            <div class="col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center progress_indicators" style="height: auto;text-align: center;">
+                                                <div class="progress border rounded d-md-flex d-lg-flex justify-content-lg-start beautiful progress-xs" style="width: 100%;text-align: center;">
+                                                    <div class="progress-bar bg-primary" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;"><span class="sr-only">90%</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row justify-content-lg-center align-items-xl-center" id="category_container-3" style="padding: 12px 0px;padding-bottom: 0px;width: 100%;height: auto;text-align: center;">
+                                            <div class="col-6 col-sm-4 col-md-5 col-lg-4 col-xl-5 d-md-flex categories" style="height: auto;margin-top: 0px;text-align: center;"><span class="d-md-flex justify-content-xl-center" style="font-size: 22px;text-align: center;width: 100%;"><strong>Teaching</strong></span></div>
+                                            <div class="col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center" style="height: auto;text-align: center;width: 100%;">
+                                                <div class="progress border rounded d-md-flex d-lg-flex flex-row justify-content-lg-start beautiful progress-xs" style="width: 100%;text-align: center;">
+                                                    <div class="progress-bar bg-success progress-bar-animated" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" style="width: 67%;"><span class="sr-only">67%</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row justify-content-lg-center align-items-xl-center" id="category_container-2" style="padding: 12px 0px;padding-bottom: 0px;width: 100%;height: auto;text-align: center;">
+                                            <div class="col-md-5 col-lg-4 col-xl-5 d-md-flex categories" style="height: auto;margin-top: 0px;text-align: center;padding-left: 6px;"><span class="d-md-flex justify-content-xl-center" style="font-size: 22px;text-align: center;width: 100%;"><strong>Personality</strong><br></span></div>
+                                            <div class="col-sm-8 col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center" style="height: auto;text-align: center;width: 100%;">
+                                                <div class="progress border rounded d-md-flex d-lg-flex justify-content-lg-start beautiful progress-xs" style="width: 100%;text-align: center;">
+                                                    <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"><span class="sr-only">40%</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row justify-content-lg-center align-items-xl-center" id="category_container-1" style="padding: 12px 0px;padding-bottom: 0px;width: 100%;height: auto;">
+                                            <div class="col-md-5 col-lg-4 col-xl-5 d-md-flex categories" style="height: auto;margin-top: 0px;text-align: center;"><span class="text-center d-md-flex justify-content-xl-center" style="font-size: 22px;text-align: center;width: 100%;"><strong>mood</strong><br></span></div>
+                                            <div class="col-sm-8 col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center" style="height: auto;">
+                                                <div class="progress border rounded d-lg-flex justify-content-lg-start beautiful progress-xs" style="width: 100%;">
+                                                    <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"><span class="sr-only">20%</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-xl-center" style="height: 75px;">
+                                <div><a class="btn btn-primary btn-lg modal_buttons" role="button" data-toggle="modal" href="#formModal" style="color: rgb(255,255,255);">Rate instructor</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    {% endfor %}
+    </div>
+
+{% endblock body %}
