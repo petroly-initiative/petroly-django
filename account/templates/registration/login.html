@@ -1,18 +1,91 @@
-<h1>Log-in</h1>
-{% if form.errors %}
-  <p>
-    Your username and password didn't match.
-    Please try again.
-  </p>
-{% else %}
-  <p>Please, use the following form to log-in. If you don't have an account <a href="{% url "register" %}">register here</a></p>
-{% endif %}
-<div class="login-form">
-  <form action="{% url 'login' %}" method="post">
-    {{ form.as_p }}
-    {% csrf_token %}
-    <input type="hidden" name="next" value="{{ next }}" />
-    <p><input type="submit" value="Log-in"></p>
-  </form>
-  <p><a href="{% url "password_reset" %}">Forgotten your password?</a></p>
-</div>
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>CC_loginPage</title>
+        <link rel="stylesheet" href={% static 'account/login_page/assets/bootstrap/css/bootstrap.min.css' %}>
+        <link rel="stylesheet" href={% static 'account/login_page/assets/css/Login-Form-Clean.css' %}>
+        <script src="https://kit.fontawesome.com/aa260f149b.js" crossorigin="anonymous"></script> <!-- please don't change its place-->
+    </head>
+    <body>
+        <div class="logo">
+            <img src={% static 'account/login_page/assets/img/logo.png' %} alt="logo.png">
+        </div>
+        <!-- Registration Form -->
+        <div class="container form-box">
+
+            <div class="row no-gutters form-selection">
+                <div class="col-6">
+                    <button type="button" class="btn signup-button active">Sign up</button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="btn login-button">Log in</button>
+                </div>
+            </div>
+            
+            <div id="login" class="form-container">
+                <form method="post">
+                {% csrf_token %}
+                    <h2 class="login-header form-header">Welcome Back!</h2>
+                    <div class="form-group">
+                        <i class="fas fa-at"></i>
+                        {{ form.username }}
+                        {% comment %} <input class="form-control" type="email" name="email" placeholder="Email address"> {% endcomment %}
+                    </div>
+
+                    <div class="form-group">
+                        <i class="fas fa-unlock-alt"></i>
+                        {{ form.password }}
+                        {% comment %} <input class="form-control" type="password" name="password" placeholder="Password"> {% endcomment %}
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn sumbit-btn btn-block" type="submit">Log In</button>
+                        <a class="forgot" href={% url 'password_reset' %}>Forgot your email or password?</a>
+                    </div>
+                </form>
+            </div>
+
+            <div id="signup" class="form-container show">
+                <form method="post">
+                    <h2 class="signUp-header form-header">Join petroly community.</h2>
+                    <div class="form-group">
+                        <i class="fas fa-user"></i>
+                        <input class="form-control" type="text" name="username" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-at"></i>
+                        <input class="form-control" type="email" name="email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-unlock-alt"></i>
+                        <input class="form-control" type="password" name="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-unlock-alt"></i>
+                        <input class="form-control" type="password" name="password-repeat" placeholder="Password (again)">
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-book"></i><input class="form-control" type="text" name="Major" placeholder="Major">
+                    </div>
+                    <div class="form-group check">
+                        <div class="form-check"><input class="form-check-input" type="checkbox">
+                            <label class="form-check-label">I agree to the license terms.</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn sumbit-btn btn-block" type="submit">Sign Up</button>
+                        <a class="already" href="#">You already have an account? Login here.</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Registration Form (END) -->
+        <script src={% static 'account/login_page/assets/js/jquery.min.js' %}></script>
+        <script src={% static 'account/login_page/assets/bootstrap/js/bootstrap.min.js' %}></script>
+        <script src={% static 'account/login_page/assets/js/form-script.js' %}></script>
+    </body>
+
+</html>

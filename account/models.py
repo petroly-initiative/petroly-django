@@ -31,7 +31,7 @@ class Profile(models.Model):
             img.save(self.profile_pic.path)  # saving image at the same path
 
     def get_absolute_url(self):
-        return reverse("profile_detail", kwargs={'pk':self.pk})
+        return reverse("index", kwargs={})
 
     # For a nice representation for an object
     def __str__(self) -> str:
