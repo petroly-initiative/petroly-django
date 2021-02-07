@@ -1,0 +1,68 @@
+.beautiful.progress {
+  height: 15px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.beautiful.progress.progress-square {
+  border-radius: 0px;
+}
+
+.beautiful.progress.progress-circle {
+  border-radius: 500px;
+}
+
+.beautiful.progress.progress-xs .progress-bar {
+  line-height: 4px;
+}
+
+.beautiful.progress.progress-xs {
+  height: 22px;
+  border-radius: 1px;
+  border-color: rgba(33,37,41,0);
+}
+
+.beautiful.progress .progress-bar.progress-bar-success {
+  background-color: #46be8a;
+  background-image: none;
+}
+
+.beautiful.progress .progress-bar.progress-bar-info {
+  background-color: #57c7d4;
+  background-image: none;
+}
+
+.beautiful.progress .progress-bar.progress-bar-warning {
+  background-color: #f2a654;
+  background-image: none;
+}
+
+.beautiful.progress .progress-bar.progress-bar-danger {
+  background-color: #f96868;
+  background-image: none;
+}
+
+.beautiful.progress .progress-sm {
+  height: 10px;
+}
+
+.beautiful.progress .progress-sm .progress-bar {
+  line-height: 10px;
+}
+
+.beautiful.progress.progress-lg {
+  height: 22px;
+}
+
+.beautiful.progress .progress-lg .progress-bar {
+  line-height: 22px;
+}
+
+.beautiful.progress .progress-bar {
+  background-image: none;
+  line-height: 15px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background-color: #62a8ea;
+}
+
