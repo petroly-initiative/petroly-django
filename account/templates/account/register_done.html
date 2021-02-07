@@ -1,2 +1,11 @@
-<h1>Welcome {{ new_user.first_name }}!</h1>
-<p>Your account has been successfully created. Now you can <a href="{% url "login" %}">log in</a>.</p>
+{% extends 'base.html' %}
+
+{% block big_text %}
+    Welcome <strong>@{{ new_user.username }}</strong>
+{% endblock big_text %}
+
+{% block body %}
+
+    <p>Your account has been successfully created. Now you can <a href="{% url "login" %}">log in</a>.</p>
+
+{% endblock body %}

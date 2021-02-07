@@ -1,3 +1,4 @@
+from django.forms import forms
 from django.http.response import Http404
 from .forms import  UserRegistrationForm, ProfileForm, UserForm
 from .models import Profile, User
@@ -5,47 +6,74 @@ from django.http import HttpResponse, request
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import CreateView, UpdateView, TemplateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate, login
 from django.urls import reverse
+import logging 
+logging.basicConfig(filename='request.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 # Create your views here.
 
 
 class IndexView(TemplateView):
 
-    template_name = "index.html"
+    template_name = "account/index.html"
     
 
 class RegisterView(CreateView):
+
     def get(self, request, *args, **kwargs):
         user_form = UserRegistrationForm()
         profile_form = ProfileForm()
         return render(request,
-                  'account/register.html',
+                  'registration/login.html',
                   {'user_form': user_form,
                   'profile_form': profile_form})
 
     def post(self, request, *args, **kwargs):
         user_form = UserRegistrationForm(data=request.POST)
         profile_form = ProfileForm(data=request.POST)
-        
-        if user_form.is_valid() and profile_form.is_valid():
-            new_user = user_form.save(commit=False)
-            new_user.set_password(user_form.cleaned_data['password'])
-            new_user.save()
+        logging.info(request.POST)
 
-            new_profile = profile_form.save(commit=False)
-            new_profile.user = new_user
+        # For Login
+        if 'login' in request.POST:
+            logging.info('from login form')
 
-            if 'profile_pic' in request.FILES:
-                new_profile.profile_pic = request.FILES['profile_pic']
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(request, username=username, password=password)
 
-            new_profile.save()
-            print('profile: '+str(new_profile.pk))
-            print('user: '+str(new_user.pk))
+            if user is not None:
+                login(request, user)
+                return redirect(reverse('index'))
 
-            return render(request,
-                            'account/register_done.html',
-                            {'new_user': new_user})
+            else: redirect(reverse('register'))
+
+        # For Registering
+        if 'register' in request.POST:
+            logging.info('from register form')
+
+            logging.info(user_form.is_valid())
+            logging.info(profile_form.is_valid())
+            if user_form.is_valid() and profile_form.is_valid():
+                new_user = user_form.save(commit=False)
+                new_user.set_password(user_form.cleaned_data['password'])
+                new_user.save()
+
+                new_profile = profile_form.save(commit=False)
+                new_profile.user = new_user
+
+                if 'profile_pic' in request.FILES:
+                    new_profile.profile_pic = request.FILES['profile_pic']
+
+                new_profile.save()
+                logging.info('profile: '+str(new_profile.pk))
+                logging.info('user: '+str(new_user.pk))
+
+                return render(request,
+                                'account/register_done.html',
+                                {'new_user': new_user})
+
+            else: return HttpResponse('Error: The user might be exist')
 
         else: return HttpResponse('Erorr while POSTing data')
 
@@ -64,6 +92,30 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     form_class2 = ProfileForm
     template_name = 'account/profile_form.html'
     
+    def get_object(self, queryset=None):
+        """
+        Returns the object the view is displaying.
+        By default this requires `self.queryset` and a `pk` or `slug` argument
+        in the URLconf, but subclasses can override this to return any object.
+        """
+        # Use a custom queryset if provided; this is required for subclasses
+        # like DateDetailView
+        if queryset is None:
+            queryset = self.get_queryset()
+        # Next, try looking up by primary key.
+        pk = self.request.user.pk
+
+        if pk is not None:
+            queryset = queryset.filter(pk=pk)
+
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(_("No %(verbose_name)s found matching the query") %
+                        {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -82,9 +134,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         form2 = self.get_form(self.form_class2)
         form2.instance = request.user.profile
 
-
         if form.is_valid() and form2.is_valid():
-            print('valid')
             cd = form.cleaned_data
             new_user = form.save(commit=False)
             new_user.save()
@@ -93,10 +143,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             new_profile.user = new_user
             new_profile.save()
 
-            print(request.user.pk)
-            print(new_user.pk)
-            print(new_profile.pk)
-
-            return redirect(reverse('profile_detail', kwargs={'pk':request.user.pk}))
+            return redirect(reverse('profile_form', kwargs={}))
         else:
             return self.form_invalid(form=form)
