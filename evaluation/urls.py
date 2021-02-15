@@ -7,4 +7,5 @@ app_name = 'evaluation'
 urlpatterns = [
     # path('', views.index, name='index'),
       path('instructor/', views.searchInstructor.as_view(), name='index'),
+      
 ]
