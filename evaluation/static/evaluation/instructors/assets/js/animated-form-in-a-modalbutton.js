@@ -9,3 +9,8 @@ signUpButton.addEventListener('click', () => {
 signInButton.addEventListener('click', () => {
 	container.classList.remove("right-panel-active");
 });
+
+function submit_evaluation() {
+	alert("clicked");
+	document.getElementById("instructor_id").setAttribute("value", "1234");
+}
