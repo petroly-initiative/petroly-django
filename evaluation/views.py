@@ -8,19 +8,23 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 # Create your views here.
 
 
-class searchInstructor(ListView):
+class SearchInstructor(ListView):
     model = instructor
     template_name = 'evaluation/index.html'
     fields = [
     'Name', 'department',
     ]
-    # search bar
+    # search bar'
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filter'] = insFilter(
             self.request.GET, queryset=self.get_queryset())
 
         return context
+
+class Evaluate(UpdateView):
+
 
     def get_object(self, queryset=None):
         """
