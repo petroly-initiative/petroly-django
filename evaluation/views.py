@@ -25,7 +25,7 @@ class SearchInstructor(SuccessMessageMixin, CreateView):
     def get_success_message(self):
         return self.success_message
 
-<<<<<<< HEAD
+
 class SearchInstructor(ListView):
     model = instructor
     template_name = 'evaluation/index.html'
@@ -34,9 +34,9 @@ class SearchInstructor(ListView):
     ]
     # search bar'
     
-=======
+
     # search bar
->>>>>>> 3a3d5321e41203080afa46d29e1a090b5de0e9dc
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["filter"] = insFilter(self.request.GET, queryset=self.get_queryset())
