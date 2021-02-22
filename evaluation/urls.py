@@ -9,9 +9,7 @@ urlpatterns = [
 
     path("instructor/", views.SearchInstructor.as_view(), name="index"),
     path(
-        "instructor/create/",
-        views.InstructorCreateView.as_view(),
-        name="instructor_form",
+        "instructor/create/",        views.InstructorCreateView.as_view(),        name="instructor_form",
     ),
     path(
         "instructor/<int:pk>/delete",
@@ -19,4 +17,3 @@ urlpatterns = [
         name="instructor_delete",
     ),
 ]
-
