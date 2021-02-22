@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block big_text %}
+    Are you sure you want to delete "{{ object }}"?
+{% endblock big_text %}
+
+{% block body %}
+    <form action="" method="post">{% csrf_token %}
+        
+        <input type="submit" value="Confirm" />
+    </form>
+{% endblock body %}
