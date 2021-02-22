@@ -87,9 +87,8 @@
                                 </h3><sub style="height: 37px;"><em>optional</em></sub><textarea class="form-control"
                                     style="width: 107%;font-size: 16px;height: 73px; " name="comment"></textarea>
                             </div>
-                            {% for i in filter.qs %}
-                            <input type="hidden"  name="instructor_id" value="{{ i.id }}">
-                            {% endfor %}
+                            
+                           
                         </div>
                         <button class="btn btn-primary" type="submit"
                             style="border-width: 0px;border-color: rgb(23,209,196);background: #17d1c4;width: 32%;padding: 0 0;height: 35px;margin-top: 26px;margin-bottom: 18px;color: white;"><strong>Submit</strong></button>
