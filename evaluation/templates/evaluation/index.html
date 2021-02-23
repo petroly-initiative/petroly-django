@@ -279,7 +279,7 @@
                                     <a href={% url 'evaluation:instructor_delete' i.pk %}>Delete This Instructor</a>
 
                                 {% else %}
-                                    <a href="{% url 'register' %}"><strong>LogIn To Rate</strong></a>
+                                    <a href="{% url 'register' %}?next={% url 'evaluation:index' %}"><strong>LogIn To Rate</strong></a>
                                 {% endif %}
                                 
                             </div>

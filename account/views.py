@@ -5,11 +5,12 @@ from .models import Profile, User
 from django.http import HttpResponse, request, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import CreateView, UpdateView, TemplateView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse, reverse_lazy
+from django.core.mail import send_mail
 import logging
 
 logging.basicConfig(
@@ -24,7 +25,7 @@ class IndexView(TemplateView):
 
 class RegisterView(LoginView):
 
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy("index")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -80,7 +81,7 @@ class RegisterView(LoginView):
 
             else:
                 return HttpResponse("Error: The user might be exist")
-        
+
         else:
             return super().form_invalid(user_form)
 
@@ -120,7 +121,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             obj = queryset.get()
         except queryset.model.DoesNotExist:
             raise Http404(
-                _("No %(verbose_name)s found matching the query")
+                ("No %(verbose_name)s found matching the query")
                 % {"verbose_name": queryset.model._meta.verbose_name}
             )
         return obj
