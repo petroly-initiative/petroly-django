@@ -28,7 +28,7 @@ class SearchInstructor(SuccessMessageMixin, CreateView):
 
 
 class SearchInstructor(ListView):
-    model = instructor
+    model = Instructor
     template_name = 'evaluation/index.html'
     fields = [
     'Name', 'department',
