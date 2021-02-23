@@ -1,0 +1,13 @@
+gunicorn
+Django
+django-bootstrap==0.2.4
+django-bootstrap-form==3.4
+django-crispy-forms==1.10.0
+django-debug-toolbar==3.2
+django-filter==2.4.0
+django-heroku==0.3.1
+django-widget-tweaks==1.4.8
+mysqlclient==2.0.2
+Pillow==8.0.1
+psycopg2
+whitenoise==5.2.0
