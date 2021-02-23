@@ -110,7 +110,6 @@
 
 <script>
     function submit(id) {
-        alert(id)
         document.getElementById("instructor_id").setAttribute("value", id);
     }
 </script>
@@ -280,7 +279,7 @@
                                     <a href={% url 'evaluation:instructor_delete' i.pk %}>Delete This Instructor</a>
 
                                 {% else %}
-                                    <a href={% url 'register' %}><strong>LogIn To Rate</strong></a>
+                                    <a href="{% url 'register' %}"><strong>LogIn To Rate</strong></a>
                                 {% endif %}
                                 
                             </div>
