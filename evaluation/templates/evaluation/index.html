@@ -17,7 +17,7 @@
             <div class="modal-body"
                 style="padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 11px;">
                 {% comment %} The FORM {% endcomment %}
-                <form method="POST">
+                <form method="POST" action="{% url 'evaluation:evaluate' %}">
                     {% csrf_token %}
                     <div class="form-row">
                         <div class="col-xl-12 d-flex justify-content-center justify-content-lg-center"
@@ -92,14 +92,10 @@
                                     style="width: 107%;font-size: 16px;height: 73px; " name="comment"></textarea>
                             </div>
                             
-<<<<<<< HEAD
-                           
-=======
                             <input type="hidden"  id="instructor_id" name="instructor_id" value="">
                             
->>>>>>> 3a3d5321e41203080afa46d29e1a090b5de0e9dc
                         </div>
-                        <button class="btn btn-primary" type="submit" onclick="" href={% url 'index' %}
+                        <button class="btn btn-primary" type="submit"
                             style="border-width: 0px;border-color: rgb(23,209,196);background: #17d1c4;width: 32%;
                             padding: 0 0;height: 35px;margin-top: 26px;margin-bottom: 18px;color: white;">
                             <strong>Submit</strong></button>
@@ -280,7 +276,8 @@
                                 {% if user.is_authenticated %}
                                     <div><a onclick="submit({{i.id}})" class="btn btn-primary btn-lg modal_buttons" role="button" data-toggle="modal"
                                             href="#formModal" style="color: rgb(255,255,255);">Rate instructor</a></div> <br>
-                                    <a href={% url 'evaluation:instructor_delete' i.pk %}>Delete This Instructor</a>
+                                    
+                                    {% comment %} <a href={% url 'evaluation:instructor_delete' i.pk %}>Delete This Instructor</a> {% endcomment %}
 
                                 {% else %}
                                     <a href="{% url 'register' %}?next={% url 'evaluation:index' %}"><strong>LogIn To Rate</strong></a>
