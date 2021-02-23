@@ -56,7 +56,6 @@
             <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1" style="border-width: 0px;">
                 <span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse border rounded scstyle-1" data-toggle="tooltip" data-bs-tooltip="" id="navcol-1" style="box-shadow: 0px 0px;border-width: 0px!important;border-color: rgba(33,37,41,0);border-top-width: 2px;border-top-style: solid;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link active" href={% url 'evaluation:index' %} style="color: #000000;"><strong>Evaluation</strong></a></li>
@@ -66,6 +65,8 @@
                     <li class="nav-item" style="box-shadow: 0px 0px;"><a class="nav-link active" href="#" style="color: #000000;"><strong>Clubs</strong></a></li>
                 </ul>
 
+            </div>
+        </div>
                 {% comment %} for large screen {% endcomment %}
                 {% if user.is_authenticated %}
                     <div class="d-md-flex d-lg-flex align-items-md-center align-items-lg-center" id="profile_link" style="height: 32px;border-radius: 50%;">
@@ -79,8 +80,6 @@
                  {% else %}
                     <a href={% url 'register' %}>LogIn/Register</a>
                 {% endif %}
-            </div>
-        </div>
     </nav>
 
     <main id="main-doc" style="box-shadow: 0px 0px;">
