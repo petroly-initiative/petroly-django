@@ -1,0 +1,163 @@
+/* 
+  Contributed By @Adxnan10 :) 
+  Pure css.
+  -- indicates starting point of a group of elements
+  primary, secondry colors: #2Aff80, #03caffff
+  font-colors: #808080, #b3b3b3
+  (other similar colors were used)
+  ** Not Finished Yet**
+*/
+
+.logo {
+  text-align: center;
+}
+.logo img {
+  width: 300px;
+}
+/* -- Forms container and form selection buttons */
+.form-box {
+  margin: 50px auto;
+  padding: 1em;
+  border-radius: 0.75em;
+  background-color: #fbfbfb;
+  box-shadow: -3px 6px 8px 2px rgba(0, 0, 0, 0.3),
+    3px 2px 8px 2px rgba(0, 0, 0, 0.1);
+  max-width: 688px;
+  /*Browsers support*/
+  -webkit-box-shadow: -3px 6px 8px 2px rgba(0, 0, 0, 0.3),
+    3px 2px 8px 2px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: -3px 6px 8px 2px rgba(0, 0, 0, 0.3),
+    3px 2px 8px 2px rgba(0, 0, 0, 0.1);
+  -webkit-border-radius: 0.75em;
+  -moz-border-radius: 0.75em;
+  -ms-border-radius: 0.75em;
+  -o-border-radius: 0.75em;
+}
+.form-selection {
+  margin-bottom: 0.5em;
+}
+.form-selection > div:nth-child(1) {
+  text-align: right;
+}
+.form-selection button {
+  background-color: #ebebeb;
+  font-size: 1.2em;
+  margin: 1em;
+  color: #645d6b;
+  border-radius: 1em;
+  transition: all 0.2 0.5s ease-in;
+  /*Browsers support*/
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  -ms-border-radius: 1em;
+  -o-border-radius: 1em;
+  -webkit-transition: all 0.2 0.5s ease-in;
+  -moz-transition: all 0.2 0.5s ease-in;
+  -ms-transition: all 0.2 0.5s ease-in;
+  -o-transition: all 0.2 0.5s ease-in;
+}
+.form-selection button:not(.active):hover {
+  background-color: #f2f2f2;
+  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.3);
+}
+
+.form-selection button.active {
+  background-color: #f2f2f2;
+  background-image: linear-gradient(#2aff80 20%, 45%, #03caffff 62%);
+  background-size: 100%;
+  background-clip: text;
+  margin: 1em;
+  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.3);
+  text-fill-color: transparent;
+  /*Browsers support*/
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
+}
+
+/* -- forms' elements */
+.form-container {
+  display: none;
+}
+.form-container.show {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.form-header {
+  text-align: center;
+  color: #02a6d2;
+}
+.form-group {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.form-group i {
+  margin-right: 0.5em;
+  background-image: linear-gradient(#2aff80 20%, 70%, #03caffff 90%);
+  background-size: 100%;
+  background-clip: text;
+  text-fill-color: transparent;
+  /*Browsers support*/
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
+}
+.form-group input:not(.form-check-input) {
+  display: inline-block;
+  width: 70%;
+}
+
+.check {
+  width: 60%;
+}
+.form-check {
+  text-align: left;
+}
+.sumbit-btn {
+  width: 60%;
+  margin: auto;
+  background-image: linear-gradient(45deg, #2aff80, #03caffff);
+  color: white;
+  transition: transform 0.3s 0.1s ease;
+  -webkit-transition: transform 0.3s 0.1s ease;
+  -moz-transition: transform 0.3s 0.1s ease;
+  -ms-transition: transform 0.3s 0.1s ease;
+  -o-transition: transform 0.3s 0.1s ease;
+}
+.sumbit-btn:hover {
+  color: white;
+  background-image: linear-gradient(45deg, #26e473, #02a6d2);
+}
+.form-group a {
+  color: #808080;
+}
+/* font-size: 1.15em */
+
+/*Media Queries.. */
+@media screen and (max-width: 768px) {
+  .logo img {
+    width: 250px;
+  }
+  /* -- form box */
+  .form-selection button {
+    font-size: 1em;
+  }
+  /* -- forms' elements */
+  .form-header {
+    font-size: 1.75em;
+  }
+}
+@media screen and (max-width: 540px) {
+  .logo img {
+    width: 165px;
+  }
+  /* -- forms' elements */
+  .form-header {
+    font-size: 1.15em;
+  }
+}
