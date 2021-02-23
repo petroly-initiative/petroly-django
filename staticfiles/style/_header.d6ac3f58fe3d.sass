@@ -1,0 +1,106 @@
+.navbar-brand
+    margin: 0
+
+.top-nav
+    padding: 1em 0
+    z-index: 1
+    background-color: #FFFFFF
+    background-image: url('../img/Header_Background.svg')
+    background-repeat: no-repeat
+    background-size: contain
+
+.logo
+    width: 100px
+
+.profile-img
+    width: 45px
+    border-radius: 35px
+
+.signout
+    color: #e84d54
+    background: linear-gradient(to right top, #ffc869, #fda156, #f67950, #e84d54, #d2145e)
+    font-weight: bold
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+
+.dropdown-btn
+    background-color: unset
+    border: none
+    display: none
+    margin: 0 auto
+    outline: none
+
+.nav-link
+    color: #4D657B
+    padding: .5em 1em
+
+
+    &:hover
+        color: #40446d
+
+.nav-item
+    margin: 0 1em
+    text-align: left
+
+.middle-nav
+    z-index: 1
+    justify-content: center
+
+.bottom-nav
+    box-shadow: 0 1px 10px rgba($color: #000000, $alpha: .2)
+
+///////////////
+@media only screen and (max-width: 991px)
+    .dropdown-menu
+        left: 37%
+    .top-nav
+        background-position: -190px
+
+    .dropdown-btn
+        display: block
+
+    .menu
+        text-align: center
+        display: block
+        justify-content: center
+
+    .nav-link
+        text-align: center
+///////////////
+
+
+
+
+///////////////
+@media only screen and (max-width: 522px)
+
+    .dropdown-menu
+        left: 27%
+    .top-nav
+        font-size: 14px
+        background-position: -100px
+
+    .logo
+        width: 55px
+
+    .signout
+        font-size: 12px
+
+    .profile-img
+        width: 20px
+
+    .bottom-nav
+        font-size: 14px
+        justify-content: center
+
+    .nav-item
+        margin: 0
+///////////////
+
+///////////////
+@media only screen and (max-width: 325px)
+    .top-nav
+        justify-content: center
+        text-align: center
+        display: block
+///////////////
