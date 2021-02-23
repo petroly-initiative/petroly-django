@@ -1,97 +1,104 @@
 from django.forms import forms
 from django.http.response import Http404
-from .forms import  UserRegistrationForm, ProfileForm, UserForm
+from .forms import UserRegistrationForm, ProfileForm, UserForm
 from .models import Profile, User
-from django.http import HttpResponse, request
+from django.http import HttpResponse, request, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import CreateView, UpdateView, TemplateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login
-from django.urls import reverse
-import logging 
-logging.basicConfig(filename='request.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.forms import AuthenticationForm
+from django.urls import reverse, reverse_lazy
+import logging
 
-# Create your views here.
+logging.basicConfig(
+    filename="request.log", level=logging.INFO, format="%(asctime)s - %(message)s"
+)
 
 
 class IndexView(TemplateView):
 
     template_name = "account/index.html"
-    
 
-class RegisterView(CreateView):
 
-    def get(self, request, *args, **kwargs):
-        user_form = UserRegistrationForm()
+class RegisterView(LoginView):
+
+    success_url = reverse_lazy('index')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
         profile_form = ProfileForm()
-        return render(request,
-                  'registration/login.html',
-                  {'user_form': user_form,
-                  'profile_form': profile_form})
+        user_form = UserRegistrationForm()
+        context.update({"profile_form": profile_form, "user_form": user_form})
+        return context
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        # Redirect user to the index page if there is a user is alreday logged in
+        if request.user.is_active:
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        # auth_form = AuthenticationForm(data=request.POST)
         user_form = UserRegistrationForm(data=request.POST)
         profile_form = ProfileForm(data=request.POST)
         logging.info(request.POST)
 
         # For Login
-        if 'login' in request.POST:
-            logging.info('from login form')
-
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(request, username=username, password=password)
-
-            if user is not None:
-                login(request, user)
-                return redirect(reverse('index'))
-
-            else: redirect(reverse('register'))
+        if "login" in request.POST:
+            # This will take the form from LoginView
+            super().post(request)
+            return HttpResponseRedirect(reverse("index"))
 
         # For Registering
-        if 'register' in request.POST:
-            logging.info('from register form')
+        elif "register" in request.POST:
+            logging.info("from register form")
 
             logging.info(user_form.is_valid())
             logging.info(profile_form.is_valid())
             if user_form.is_valid() and profile_form.is_valid():
                 new_user = user_form.save(commit=False)
-                new_user.set_password(user_form.cleaned_data['password'])
+                new_user.set_password(user_form.cleaned_data["password"])
                 new_user.save()
 
                 new_profile = profile_form.save(commit=False)
                 new_profile.user = new_user
 
-                if 'profile_pic' in request.FILES:
-                    new_profile.profile_pic = request.FILES['profile_pic']
+                if "profile_pic" in request.FILES:
+                    new_profile.profile_pic = request.FILES["profile_pic"]
 
                 new_profile.save()
-                logging.info('profile: '+str(new_profile.pk))
-                logging.info('user: '+str(new_user.pk))
+                logging.info("profile: " + str(new_profile.pk))
+                logging.info("user: " + str(new_user.pk))
 
-                return render(request,
-                                'account/register_done.html',
-                                {'new_user': new_user})
+                return render(
+                    request, "account/register_done.html", {"new_user": new_user}
+                )
 
-            else: return HttpResponse('Error: The user might be exist')
-
-        else: return HttpResponse('Erorr while POSTing data')
+            else:
+                return HttpResponse("Error: The user might be exist")
+        
+        else:
+            return super().form_invalid(user_form)
 
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
-    
+
     model = User
-    template_name = 'account/profile_detail.html'
+    template_name = "account/profile_detail.html"
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
-    
+
     model = User
-    login_url = 'login'
+    login_url = "login"
     form_class = UserForm
     form_class2 = ProfileForm
-    template_name = 'account/profile_form.html'
-    
+    template_name = "account/profile_form.html"
+
     def get_object(self, queryset=None):
         """
         Returns the object the view is displaying.
@@ -112,19 +119,21 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             # Get the single item from the filtered queryset
             obj = queryset.get()
         except queryset.model.DoesNotExist:
-            raise Http404(_("No %(verbose_name)s found matching the query") %
-                        {'verbose_name': queryset.model._meta.verbose_name})
+            raise Http404(
+                _("No %(verbose_name)s found matching the query")
+                % {"verbose_name": queryset.model._meta.verbose_name}
+            )
         return obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        if 'form' not in context:
+        if "form" not in context:
             context["form"] = self.form_class(instance=self.request.user)
-        
-        if 'form2' not in context:
-            context['form2'] = self.form_class2(instance=self.request.user.profile)
-        
+
+        if "form2" not in context:
+            context["form2"] = self.form_class2(instance=self.request.user.profile)
+
         return context
 
     def post(self, request, *args, **kwargs) -> HttpResponse:
@@ -143,6 +152,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             new_profile.user = new_user
             new_profile.save()
 
-            return redirect(reverse('profile_form', kwargs={}))
+            return redirect(reverse("profile_form", kwargs={}))
         else:
             return self.form_invalid(form=form)

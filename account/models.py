@@ -7,25 +7,28 @@ from PIL import Image
 
 
 class Profile(models.Model):
-    '''A general user profile info model that extends `User` fields. '''
+    """A general user profile info model that extends `User` fields. """
 
-    years = [('OR', 'Orea'), 
-            ('FR', 'Jabal Orea'),
-            ('SP', 'Major Orea'),
-            ('SN', 'Training Orea'),
-            ('JN', 'Dieing Orea')]
+    years = [
+        ("OR", "Orea"),
+        ("FR", "Jabal Orea"),
+        ("SP", "Major Orea"),
+        ("SN", "Training Orea"),
+        ("JN", "Dieing Orea"),
+    ]
     # Connect to the admin User object by on-to-one relation
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     # Additional fields
-    profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default='')
+    profile_pic = models.ImageField(upload_to="profile_pics", blank=True, default="")
+    major = models.CharField(default="", max_length=25)
     year = models.CharField(blank=True, max_length=25, choices=years)
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs) # saving image first
+        super().save(*args, **kwargs)  # saving image first
 
         if self.profile_pic:
-            img = Image.open(self.profile_pic.path) # Open image using self
+            img = Image.open(self.profile_pic.path)  # Open image using self
             new_img = (300, 300)
             img.thumbnail(new_img)
             img.save(self.profile_pic.path)  # saving image at the same path
@@ -35,4 +38,5 @@ class Profile(models.Model):
 
     # For a nice representation for an object
     def __str__(self) -> str:
-        return '@{}'.format(self.user.username)
+        return "@{}".format(self.user.username)
+

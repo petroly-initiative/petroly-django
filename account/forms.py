@@ -1,40 +1,61 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.forms import models, widgets
 from .models import Profile
+
 
 class UserRegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs.update({'class': '', 'placeholder':'Email'})
+        self.fields["email"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "201XXXXXX@kfupm.edu.sa"}
+        )
+        self.fields["username"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Username"}
+        )
+        self.fields["first_name"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "First Name"}
+        )
 
-    password = forms.CharField(label='Password',
-                               widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Repeat password',
-                                widget=forms.PasswordInput)
+    password = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "Password"}
+        ),
+    )
+    password2 = forms.CharField(
+        label="Repeat password",
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "Password Again"}
+        ),
+    )
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'email')
+        fields = ("username", "first_name", "email")
 
     def clean_password2(self):
         cd = self.cleaned_data
-        if cd['password'] != cd['password2']:
-            raise forms.ValidationError('Passwords don\'t match.')
-        return cd['password2']
+        if cd["password"] != cd["password2"]:
+            raise forms.ValidationError("Passwords don't match.")
+        return cd["password2"]
+
 
 class UserForm(forms.ModelForm):
-
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'email')
+        fields = ("username", "first_name", "email")
+
 
 class ProfileForm(forms.ModelForm):
-    '''A form for the additional `UserProfile` fields'''
-    
+    """A form for the additional `UserProfile` fields"""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['year'].widget.attrs.update({'class': 'form-control'})
+        self.fields["year"].widget.attrs.update({"class": "form-control"})
+        self.fields["profile_pic"].widget.attrs.update({"class": "form-control"})
+        self.fields["major"].widget.attrs.update({"class": "form-control", "placeholder": "PHYS, ICS, etc."})
 
     class Meta:
         model = Profile
-        fields = ("profile_pic", "year")
+        fields = ("major", "year", "profile_pic")

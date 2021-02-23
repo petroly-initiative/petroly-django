@@ -14,6 +14,7 @@ from django.views.generic import (
 )
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
 class SearchInstructor(SuccessMessageMixin, CreateView):
@@ -79,14 +80,19 @@ class SearchInstructor(SuccessMessageMixin, CreateView):
         return redirect(reverse("evaluation:index"))
 
 
-class InstructorCreateView(SuccessMessageMixin, CreateView):
+class InstructorCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
 
+    permission_required = ["evaluation.add_instructor"]
     model = Instructor
     fields = ["name", "department", "profile_pic"]
     success_url = reverse_lazy("evaluation:index")
     success_message = "The instructor was added"
 
 
-class InstructorDeleteView(DeleteView):
+class InstructorDeleteView(PermissionRequiredMixin, DeleteView):
+
+    permission_required = ["evaluation.delete_instructor"]
+    permission_denied_message = "403; You do not have the permission :("
+    raise_exception = True
     model = Instructor
     success_url = reverse_lazy("evaluation:index")
