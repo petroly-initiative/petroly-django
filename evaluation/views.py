@@ -17,26 +17,14 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
-class SearchInstructor(SuccessMessageMixin, CreateView):
-    model = Instructor
-    template_name = "evaluation/index.html"
-    fields = ["name", "department"]
-    success_message = "was created successfully"
-
-    def get_success_message(self):
-        return self.success_message
-
 
 class SearchInstructor(ListView):
     model = Instructor
     template_name = 'evaluation/index.html'
     fields = [
-    'Name', 'department',
+    'name', 'department',
     ]
-    # search bar'
-    
 
-    # search bar
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -45,7 +33,8 @@ class SearchInstructor(ListView):
         return context
 
 class Evaluate(UpdateView):
-
+    
+    model = Instructor
 
     def get_object(self, queryset=None):
         """
@@ -89,8 +78,7 @@ class Evaluate(UpdateView):
             instructor=self.object,
         )
 
-        messages.success(request, "Profile details updated.")
-        self.get_success_message()
+        messages.success(request, "Evaluation Was Submitted.")
         return redirect(reverse("evaluation:index"))
 
 
