@@ -1,1 +1,1 @@
-web: gunicorn kfupm.wsgi
+web: gunicorn gettingstarted.wsgi --log-file -
