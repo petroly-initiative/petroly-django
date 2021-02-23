@@ -143,7 +143,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_REDIRECT_URL = 'index'
-LOGIN_URL = 'login'
+LOGIN_URL = 'register'
 
 
 prod_db  =  dj_database_url.config(conn_max_age=500)
