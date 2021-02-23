@@ -116,19 +116,19 @@
 
 
 {% comment %} Body {% endcomment %}
-<div style="display: flex;justify-content: center;margin: 22px;">
     {% if messages %}
+    <div style="display: flex;justify-content: center;margin: 22px;">
         <ul class="messages">
+    </div>
     {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
         </ul>
     {% endif %}
-    <a href={% url 'evaluation:instructor_form' %}>Add New Instructor</a>
+    <a href={% url 'evaluation:instructor_form' %}>Add New Instructor</a> <br>
 
-    <header id="heading"><span id="top_header"><strong><em>Instructor Evaluation</em></strong></span>
-    <sub id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your constructors easily and quickly!</sub></header>
-</div>
+    <header id="heading"><span id="top_header"><strong><em>Instructors Evaluation</em></strong></span>
+    <sub id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your instructor easily and quickly!</sub></header>
 
 {% comment %} Search {% endcomment %}
 <form
@@ -136,8 +136,10 @@
     data-toggle="tooltip" data-bs-tooltip="" data-placement="right" id="search_container" method="get"
     style="background: rgba(255,255,255,0);">
     {% csrf_token %}
-    {{filter.form}}
-    <button type="submit">search</button>
+    <l>
+        {{filter.form.as_p}}
+        <button type="submit">search</button>
+    </l>
 </form>
 
 
