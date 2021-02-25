@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath expense_manager wsgi
+web: gunicorn kfupm.wsgi --log-file -
