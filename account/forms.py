@@ -8,7 +8,7 @@ class UserRegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["email"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "201XXXXXX@kfupm.edu.sa"}
+            {"class": "form-control", "placeholder": "201XXXXXX@kfupm.edu.sa", "required": "true"}
         )
         self.fields["username"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Username"}
