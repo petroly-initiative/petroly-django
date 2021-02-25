@@ -25,8 +25,6 @@ class IndexView(TemplateView):
 
 class RegisterView(LoginView):
 
-    success_url = reverse_lazy("index")
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -50,9 +48,8 @@ class RegisterView(LoginView):
 
         # For Login
         if "login" in request.POST:
-            # This will take the form from LoginView
-            super().post(request)
-            return HttpResponseRedirect(reverse("index"))
+            # This will take the form from LoginView and redirect back
+            return super().post(request)
 
         # For Registering
         elif "register" in request.POST:
