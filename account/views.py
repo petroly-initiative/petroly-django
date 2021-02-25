@@ -11,11 +11,6 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
-import logging
-
-logging.basicConfig(
-    filename="request.log", level=logging.INFO, format="%(asctime)s - %(message)s"
-)
 
 
 class IndexView(TemplateView):
@@ -44,19 +39,18 @@ class RegisterView(LoginView):
         # auth_form = AuthenticationForm(data=request.POST)
         user_form = UserRegistrationForm(data=request.POST)
         profile_form = ProfileForm(data=request.POST)
-        logging.info(request.POST)
 
         # For Login
         if "login" in request.POST:
-            # This will take the form from LoginView and redirect back
-            return super().post(request)
+            # get the auth form
+            form = self.get_form()
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
 
         # For Registering
         elif "register" in request.POST:
-            logging.info("from register form")
-
-            logging.info(user_form.is_valid())
-            logging.info(profile_form.is_valid())
             if user_form.is_valid() and profile_form.is_valid():
                 new_user = user_form.save(commit=False)
                 new_user.set_password(user_form.cleaned_data["password"])
@@ -69,8 +63,6 @@ class RegisterView(LoginView):
                     new_profile.profile_pic = request.FILES["profile_pic"]
 
                 new_profile.save()
-                logging.info("profile: " + str(new_profile.pk))
-                logging.info("user: " + str(new_user.pk))
 
                 return render(
                     request, "account/register_done.html", {"new_user": new_user}
