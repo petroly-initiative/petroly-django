@@ -11,3 +11,4 @@ mysqlclient
 Pillow
 psycopg2
 whitenoise
+environ
