@@ -19,6 +19,13 @@ cloudinary.config(
     api_secret = env.str("CLOUDINARY_API_SECRET", '') 
 )
 
+
+# Extra app
+
+INSTALLED_APPS += [
+    
+]
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
