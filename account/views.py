@@ -11,6 +11,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
+from cloudinary.uploader import upload, upload_resource
 
 
 class IndexView(TemplateView):
@@ -140,6 +141,18 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
             new_profile = form2.save(commit=False)
             new_profile.user = new_user
+            if request.FILES.get('profile_pic', '') != '':
+                upload(
+                    request.FILES.get('profile_pic'),
+                    folder='profile_pics',
+                    public_id=new_user.username,
+                    overwrite=True,
+                    invalidate=True,
+                    transformation=[
+                        {'width': 200, 'height': 200, 'gravity': "face", 'crop': "thumb"}
+                    ],
+                    format='jpg'
+                )
             new_profile.save()
 
             return redirect(reverse("profile_form", kwargs={}))
