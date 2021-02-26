@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'django_filters',
     'bootstrapform',
     'widget_tweaks',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
