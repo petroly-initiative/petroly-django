@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include 
 from django.contrib.staticfiles.urls import static
-from . import settings
+from kfupm.settings import dev
 
 urlpatterns = [
     path('', include('account.urls')),
@@ -24,5 +24,5 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('evaluation/', include('evaluation.urls')),
 ]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# WARNING: this setting is only for development environment
+urlpatterns += static(dev.MEDIA_URL, document_root=dev.MEDIA_ROOT)
