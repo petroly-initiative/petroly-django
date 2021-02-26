@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 
@@ -20,18 +21,14 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     # Additional fields
-    profile_pic = models.ImageField(upload_to="profile_pics", blank=True, default="")
+    profile_pic = CloudinaryField(
+        'image', 
+        default='https://res.cloudinary.com/ammar-faifi/image/upload/v1614314169/sample.jpg',
+        blank=True
+    )
     major = models.CharField(default="", max_length=25)
     year = models.CharField(blank=True, max_length=25, choices=years)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # saving image first
-
-        if self.profile_pic:
-            img = Image.open(self.profile_pic.path)  # Open image using self
-            new_img = (300, 300)
-            img.thumbnail(new_img)
-            img.save(self.profile_pic.path)  # saving image at the same path
 
     def get_absolute_url(self):
         return reverse("index", kwargs={})

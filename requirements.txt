@@ -12,3 +12,4 @@ Pillow
 psycopg2-binary
 whitenoise
 django-environ
+cloudinary

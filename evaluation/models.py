@@ -1,8 +1,10 @@
-from typing import overload
+from os import name
 from django.db import models
 from django.db.models import Avg
 from django.contrib.auth.models import User
 from .data import departments
+from cloudinary.models import CloudinaryField
+from cloudinary.uploader import upload, upload_image
 
 
 class Instructor(models.Model):
@@ -10,8 +12,12 @@ class Instructor(models.Model):
     name = models.CharField(max_length=250, unique=True)
     department = models.CharField(
         max_length=200, choices=departments
-    )  # Additional fields
-    profile_pic = models.ImageField(upload_to="profile_pics", blank=True)
+    )  
+    # Additional fields
+    profile_pic = CloudinaryField(
+    default='https://res.cloudinary.com/ammar-faifi/image/upload/v1614314169/sample.jpg',
+    blank=True
+    )
 
     def avg(self):
         result = self.evaluation_set.aggregate(
