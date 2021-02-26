@@ -12,7 +12,6 @@ env.read_env()
 
 SECRET_KEY = os.environ.get("SECRET_KEY", default='')
 
-DEBUG = env.bool("DEBUG", default=True)
 DEBUG = os.environ.get("DEBUG", default=True)
 
 ALLOWED_HOSTS = ['ccwebsite1.herokuapp.com']
@@ -20,9 +19,9 @@ ALLOWED_HOSTS = ['ccwebsite1.herokuapp.com']
 # Clouddinary: for media
 
 cloudinary.config(
-    cloud_name = env.str("CLOUDINARY_NAME", ''), 
-    api_key = env.str("CLOUDINARY_API_KEY", ''), 
-    api_secret = env.str("CLOUDINARY_API_SECRET", '') 
+    cloud_name = os.environ.get("CLOUDINARY_NAME", ''), 
+    api_key = os.environ.get("CLOUDINARY_API_KEY", ''), 
+    api_secret = os.environ.get("CLOUDINARY_API_SECRET", '') 
 )
 
 # Database
