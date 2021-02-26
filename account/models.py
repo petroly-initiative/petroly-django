@@ -23,7 +23,8 @@ class Profile(models.Model):
     # Additional fields
     profile_pic = CloudinaryField('image', 
         default='https://res.cloudinary.com/ammar-faifi/image/upload/v1614314169/sample.jpg',
-        blank=True)
+        blank=True
+    )
     major = models.CharField(default="", max_length=25)
     year = models.CharField(blank=True, max_length=25, choices=years)
 

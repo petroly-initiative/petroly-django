@@ -10,7 +10,8 @@ class Instructor(models.Model):
     name = models.CharField(max_length=250, unique=True)
     department = models.CharField(
         max_length=200, choices=departments
-    )  # Additional fields
+    )  
+    # Additional fields
     profile_pic = models.ImageField(upload_to="profile_pics", blank=True)
 
     def avg(self):
