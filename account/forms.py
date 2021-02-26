@@ -1,5 +1,4 @@
 from cloudinary import CloudinaryImage
-import cloudinary
 from django import forms
 from django.contrib.auth.models import User
 from django.forms import models, widgets
@@ -59,15 +58,17 @@ class ProfileForm(forms.ModelForm):
         self.fields["major"].widget.attrs.update({"class": "form-control", "placeholder": "PHYS, ICS, etc."})
     
 
-    profile_pic = CloudinaryFileField(
-        widget =forms.FileInput(attrs = {"class": "form-control"}), 
-        required = False,
-        options={
-            'tags': "profile_pic",
-            'crop': 'limit', 'width': 300, 'height': 300,
-        }
-    )
 
     class Meta:
         model = Profile
-        fields = ("major", "year")
+        fields = ("major", "year", 'profile_pic')
+
+        profile_pic = CloudinaryFileField(
+            widget =forms.FileInput(attrs = {"class": "form-control"}), 
+            required = False,
+            options={
+                'tags': "profile_pic",
+                'crop': 'limit', 'width': 300, 'height': 300,
+                'folder': 'profile_pics',
+            }
+        )

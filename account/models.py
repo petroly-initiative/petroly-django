@@ -21,15 +21,14 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     # Additional fields
-    profile_pic = CloudinaryField('image', 
+    profile_pic = CloudinaryField(
+        'image', 
         default='https://res.cloudinary.com/ammar-faifi/image/upload/v1614314169/sample.jpg',
         blank=True
     )
     major = models.CharField(default="", max_length=25)
     year = models.CharField(blank=True, max_length=25, choices=years)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # saving image first
 
     def get_absolute_url(self):
         return reverse("index", kwargs={})
