@@ -9,6 +9,6 @@ django-heroku
 django-widget-tweaks
 mysqlclient
 Pillow
-psycopg2
+psycopg2-binary
 whitenoise
-environ
+django-environ
