@@ -9,7 +9,7 @@ import cloudinary
 
 
 # settings.configure()
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kfupm.settings.dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kfupm.settings.prod')
 
 print(os.environ.get('DJANGO_SETTINGS_MODULE'))
 django.setup()

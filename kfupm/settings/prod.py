@@ -6,6 +6,7 @@ import django_heroku
 import environ
 import os
 import cloudinary
+from cloudinary import config
 
 env = environ.Env()
 env.read_env()
@@ -18,7 +19,7 @@ ALLOWED_HOSTS = ['ccwebsite1.herokuapp.com']
 
 # Clouddinary: for media
 
-cloudinary.config(
+config(
     cloud_name = os.environ.get("CLOUDINARY_NAME", ''), 
     api_key = os.environ.get("CLOUDINARY_API_KEY", ''), 
     api_secret = os.environ.get("CLOUDINARY_API_SECRET", '') 
