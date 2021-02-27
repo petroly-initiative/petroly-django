@@ -26,7 +26,7 @@ def populate(name, dep, url):
         profile_pic = upload(
                             url,
                             folder='instructors/profile_pics',
-                            public_id=new_obj[0].pk,
+                            public_id=name,
                             overwrite=True,
                             invalidate=True,
                             transformation=[
