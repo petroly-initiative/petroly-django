@@ -23,7 +23,7 @@ class Profile(models.Model):
     # Additional fields
     profile_pic = CloudinaryField(
         'image', 
-        default='https://res.cloudinary.com/ammar-faifi/image/upload/v1614314169/sample.jpg',
+        default='https://res.cloudinary.com/ammar-faifi/image/upload/v1614377885/icon.jpg',
         blank=True
     )
     major = models.CharField(default="", max_length=25)
