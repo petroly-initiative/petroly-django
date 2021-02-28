@@ -17,12 +17,14 @@ from django.contrib import admin
 from django.urls import path,include 
 from django.contrib.staticfiles.urls import static
 from kfupm.settings import dev
+import debug_toolbar
 
 urlpatterns = [
     path('', include('account.urls')),
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('evaluation/', include('evaluation.urls')),
+    path('__debug__/', include(debug_toolbar.urls)),
 ]
 # WARNING: this setting is only for development environment
 urlpatterns += static(dev.MEDIA_URL, document_root=dev.MEDIA_ROOT)
