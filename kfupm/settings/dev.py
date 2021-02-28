@@ -19,12 +19,20 @@ cloudinary.config(
     api_secret = env.str("CLOUDINARY_API_SECRET", '') 
 )
 
+INTERNAL_IPS = ("127.0.0.1", "172.17.0.1", 'localhost')
 
 # Extra app
 
 INSTALLED_APPS += [
-    
+    'debug_toolbar',
 ]
+
+# Extra middleware
+
+MIDDLEWARE += [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
