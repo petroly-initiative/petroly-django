@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+	<title>KFUPM</title>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href={% static "main/assets/bootstrap/css/bootstrap.min.css" %} />
+	<link rel="stylesheet" href={% static "main/assets/fonts/font-awesome.min.css" %} />
+	<link rel="stylesheet" href={% static "main/assets/css/styles.css" %} />
+	<link
+	rel="stylesheet"
+	type="text/css"
+	href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"
+	/>
+
+    <style type="text/css">
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      .slider {
+        width: 100%;
+        margin: 70px auto;
+        margin-bottom: 50px;
+      }
+
+      .slick-slide {
+        margin: 0px 20px;
+      }
+
+      .slick-slide img {
+        width: 100%;
+        height: 400px;
+        border-radius: 20px;
+      }
+
+      .slick-prev:before,
+      .slick-next:before {
+        color: black;
+        margin-top: -25%;
+      }
+
+      .slick-slide {
+        transition: all ease-in-out 0.3s;
+        opacity: 0.3;
+        height: fit-content;
+      }
+
+      .slick-active {
+        opacity: 0.8;
+      }
+
+      .slick-current {
+        opacity: 1;
+      }
+    </style>
+  {% endblock head %}
+
+
+
+    <h1
+      class="d-inline-block"
+      style="
+        color: rgb(44, 215, 164);
+        font-weight: bold;
+        font-style: normal;
+        margin-left: 5%;
+        margin-bottom: -20%;
+        margin-top: 10px;
+      "
+    >
+      KFUPM EVENTS
+    </h1>
+    <section class="center slider">
+      <div>
+        <img src="https://placekitten.com/350/300" />
+      </div>
+      <div>
+        <img src="http://placehold.it/350x300?text=2" />
+      </div>
+      <div>
+        <img src="http://placehold.it/350x300?text=3" />
+      </div>
+      <div>
+        <img src="http://placehold.it/350x300?text=4" />
+      </div>
+      <div>
+        <img src="http://placehold.it/350x300?text=5" />
+      </div>
+      <div>
+        <img src="http://placehold.it/350x300?text=6" />
+      </div>
+      <div>
+        <img src="http://placehold.it/350x300?text=7" />
+      </div>
+      <div>
+        <img src="http://placehold.it/350x300?text=8" />
+      </div>
+      <div>
+        <img src="http://placehold.it/350x300?text=9" />
+      </div>
+    </section>
+    <section>
+      <div>
+        <h1
+          class="d-inline-block"
+          style="
+            color: rgb(44, 215, 164);
+            font-weight: bold;
+            font-style: normal;
+            margin-left: 55px;
+          "
+        >
+          Trending Discussion
+        </h1>
+      </div>
+      <div
+        class="d-inline-block"
+        style="
+          width: 700px;
+          height: 160px;
+          padding: 10px;
+          margin-left: 55px;
+          margin-bottom: 22px;
+          padding-bottom: 10px;
+          border-radius: 8px;
+          background: #f5f4f4;
+          border-style: none;
+          border-color: rgb(214, 218, 222);
+          box-shadow: 2px 2px 4px var(--gray);
+        "
+      >
+        <img
+          class="rounded-circle d-inline"
+          style="
+            border-radius: 155px;
+            background: url('https://cdn.bootstrapstudio.io/placeholders/1400x800.png')
+              top / contain;
+            width: 20px;
+            height: 20px;
+            border-style: none;
+          "
+        />
+        <h5
+          class="d-inline"
+          style="
+            margin-left: 17px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            padding-top: 0px;
+          "
+        >
+          user name
+        </h5>
+        <h3 style="text-align: left; margin-left: 60px; margin-top: 10px">
+          Title
+        </h3>
+        <p style="margin-left: 60px">content</p>
+        <i
+          class="fa fa-wechat"
+          style="margin-left: 65px; margin-bottom: 0px"
+        ></i>
+        <p class="d-inline" style="margin-left: 5px">12</p>
+      </div>
+      <div
+        class="d-inline-block"
+        style="
+          width: 100px;
+          height: 180px;
+          margin-left: 150px;
+          border-radius: 20px;
+          padding-top: 17px;
+          box-shadow: 2px 2px 4px var(--gray);
+          border-style: none;
+          border-color: var(--gray);
+        "
+      >
+        <i
+          class="fa fa-plus-circle d-block"
+          style="font-size: 35px; text-align: center"
+        ></i>
+        <p style="margin-left: 0px; text-align: center; font-weight: bold">
+          POST
+        </p>
+        <i
+          class="fa fa-search d-block"
+          style="font-size: 35px; text-align: center"
+        ></i>
+        <p style="margin-left: 0px; text-align: center; font-weight: bold">
+          SEARCH
+        </p>
+      </div>
+    </section>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-2.2.0.min.js"
+      type="text/javascript"
+    ></script>
+    <script
+      type="text/javascript"
+      src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"
+    ></script>
+
+    <script type="text/javascript">
+      $(document).on("ready", function () {
+        $(".center").slick({
+          dots: false,
+          infinite: true,
+          centerMode: true,
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          autoplay: true,
+          nextArrow: $("#next"),
+          prevArrow:
+            "<img class='a-left control-c prev slick-prev' src='https://lh3.googleusercontent.com/proxy/iVpbmk6lVRAX_6wOrbYYXBGlzt3aoxsRBQGWrY2oXfQjyV0EvFa1BRXC0nusprXMYMZY_1uawSC-X5T48x6410BAij1hU-8'>",
+          nextArrow:
+            "<img class='a-right control-c next slick-next' src='http://www.clker.com/cliparts/V/1/Z/A/h/U/left-arrow-right-hi.png'>",
+        });
+      });
+    </script>
+
