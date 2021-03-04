@@ -4,17 +4,17 @@
 
 {% block head %}
 	<title>KFUPM</title>
-	<meta charset="UTF-8" />
+	{% comment %} <meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" href={% static "main/assets/bootstrap/css/bootstrap.min.css" %} />
-	<link rel="stylesheet" href={% static "main/assets/fonts/font-awesome.min.css" %} />
-	<link rel="stylesheet" href={% static "main/assets/css/styles.css" %} />
-	<link
+	<link rel="stylesheet" href={% static "home/assets/bootstrap/css/bootstrap.min.css" %} />
+	<link rel="stylesheet" href={% static "home/assets/fonts/font-awesome.min.css" %} />
+	<link rel="stylesheet" href={% static "home/assets/css/styles.css" %} /> {% endcomment %}
+	{% comment %} <link
 	rel="stylesheet"
 	type="text/css"
 	href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"
-	/>
+	/> {% endcomment %}
 
     <style type="text/css">
       html,
@@ -66,6 +66,7 @@
   {% endblock head %}
 
 
+{% block body %}
 
     <h1
       class="d-inline-block"
@@ -76,10 +77,9 @@
         margin-left: 5%;
         margin-bottom: -20%;
         margin-top: 10px;
-      "
-    >
-      KFUPM EVENTS
-    </h1>
+      "> KFUPM EVENTS </h1>
+
+
     <section class="center slider">
       <div>
         <img src="https://placekitten.com/350/300" />
@@ -90,25 +90,9 @@
       <div>
         <img src="http://placehold.it/350x300?text=3" />
       </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=4" />
-      </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=5" />
-      </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=6" />
-      </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=7" />
-      </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=8" />
-      </div>
-      <div>
-        <img src="http://placehold.it/350x300?text=9" />
-      </div>
+
     </section>
+
     <section>
       <div>
         <h1
@@ -118,11 +102,10 @@
             font-weight: bold;
             font-style: normal;
             margin-left: 55px;
-          "
-        >
-          Trending Discussion
-        </h1>
+          "> Trending Discussion </h1>
       </div>
+
+
       <div
         class="d-inline-block"
         style="
@@ -137,8 +120,8 @@
           border-style: none;
           border-color: rgb(214, 218, 222);
           box-shadow: 2px 2px 4px var(--gray);
-        "
-      >
+        ">
+        
         <img
           class="rounded-circle d-inline"
           style="
@@ -230,3 +213,4 @@
       });
     </script>
 
+{% endblock body %}
