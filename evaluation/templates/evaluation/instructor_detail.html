@@ -15,8 +15,8 @@
                 background: #ffffff; ">
                 <img class="rounded-circle" style="text-align: center;background: var(--dark);border-style: solid;border-radius: 10px;height: 80px;width: 80px;margin-top: 30px;" src="assets/img/userIcon.png" />
 
-                    <h1 style="border-style:none;">name</h1>
-                    <h3 style="border-style: none;">department</h3>
+                    <h1 style="border-style:none;">{{ object.name }}</h1>
+                    <h3 style="border-style: none;">{{ object.department }}</h3>
                     <h5 style="border-style: none;">email</h5>
                     <h5 style="border-style: none;">website</h5>
                     <h5 style="border-style: none;">office</h5>
@@ -55,22 +55,25 @@
 
                             <div class="progress">
                                 <div class="progress-bar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
-                                style="width: 30%; background-color: #1dd491;">30%</div>
+                                style="width: {{ object.avg.grading__avg }}%; background-color: #1dd491;">{{ object.avg.grading__avg }}%</div>
                             </div>
 
-                            <h4 class=" text-center my-3">Attendence</h4>
+                            <h4 class=" text-center my-3">Teaching</h4>
                             <div class="progress">
-                                <div class="progress-bar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%; background-color: #1dd491;">50%</div>
+                                <div class="progress-bar" aria-valuenow="{{ object.avg.teaching__avg }}" aria-valuemin="0" aria-valuemax="100" 
+                                style="width: {{ object.avg.teaching__avg }}%; background-color: #1dd491;">{{ object.avg.teaching__avg }}%</div>
                             </div>
-                            <h4 class="text-center my-3">Assigments</h4>
+                            <h4 class="text-center my-3">Personality</h4>
                             <div class="progress">
                                 <div class="progress-bar"
-                                aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%; background-color: #1dd491;">80%
-                                
-                                </div>
+                                aria-valuenow="{{ object.avg.personality__avg }}" aria-valuemin="0" aria-valuemax="100" 
+                                style="width: {{ object.avg.personality__avg }}%; background-color: #1dd491;">{{ object.avg.personality__avg }}%</div>
                             </div>
                         </div>
                     </div>
+
+
+{% comment %} Comments Area {% endcomment %}
                     <div class="text-capitalize text-center m-3 p-5 h-60 align-content-center" style="border-radius:16px;
                     border-style: none;
                     box-shadow: 0px 0px 4px 1px ;">
@@ -78,33 +81,16 @@
 
                         <div
                         style="overflow-y: scroll; height: 300px;">
-                            <div class="m-3 p-2" style="border-style: none;box-shadow: 0px 0px 4px 1px; border-bottom: 2px solid #7b7c7e; border-radius: 5px;text-align: left;">
-                                comment
-                            </div>
 
-                            <div class="m-3 p-2" 
-                            style="border-style: none; 
-                            box-shadow: 0px 0px 4px 1px;border-bottom: 2px solid #7b7c7e; border-radius: 5px;text-align: left;">
-                                comment
-                            </div>
+                            {% for i in object.evaluation_set.all %}
+                                <div class="m-3 p-2" style="border-style: none; 
+                                box-shadow: 0px 0px 4px 1px;border-bottom: 2px solid #7b7c7e; border-radius: 5px;text-align: left;">
+                                    {{ i.comments }}
+                                </div>
+                            {% empty %}
+                                <h4>No commnets yet:(</h4>
+                            {% endfor %}    
 
-                            <div class="m-3 p-2" style="border-style: none; 
-                            box-shadow: 0px 0px 4px 1px;border-bottom: 2px solid #7b7c7e; border-radius: 5px;text-align: left;">
-                                comment
-                            </div>
-
-                            <div class="m-3 p-2" style="border-style: none; 
-                            box-shadow: 0px 0px 4px 1px;border-bottom: 2px solid #7b7c7e; border-radius: 5px;text-align: left;">
-                                comment
-                            </div>
-                            <div class="m-3 p-2" style="border-style: none; 
-                            box-shadow: 0px 0px 4px 1px;border-bottom: 2px solid #7b7c7e; border-radius: 5px;text-align: left;">
-                                comment
-                            </div>
-                            <div class="m-3 p-2" style="border-style: none; 
-                            box-shadow: 0px 0px 4px 1px;border-bottom: 2px solid #7b7c7e; border-radius: 5px;text-align: left;">
-                                comment
-                            </div>
                         </div>
 
                         

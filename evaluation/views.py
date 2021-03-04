@@ -101,5 +101,5 @@ class InstructorDeleteView(PermissionRequiredMixin, DeleteView):
 
 
 class InstructorDetailView(DetailView):
+    
     model = Instructor
-    template_name = "instructor_detail.html"
