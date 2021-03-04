@@ -17,14 +17,13 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
-
 class SearchInstructor(ListView):
     model = Instructor
-    template_name = 'evaluation/index.html'
+    template_name = "evaluation/index.html"
     fields = [
-    'name', 'department',
+        "name",
+        "department",
     ]
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -32,8 +31,9 @@ class SearchInstructor(ListView):
 
         return context
 
+
 class Evaluate(UpdateView):
-    
+
     model = Instructor
 
     def get_object(self, queryset=None):
@@ -98,3 +98,8 @@ class InstructorDeleteView(PermissionRequiredMixin, DeleteView):
     raise_exception = True
     model = Instructor
     success_url = reverse_lazy("evaluation:index")
+
+
+class InstructorDetailView(DetailView):
+    model = Instructor
+    template_name = "instructor_detail.html"

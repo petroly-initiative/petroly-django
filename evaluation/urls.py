@@ -18,4 +18,5 @@ urlpatterns = [
         name="instructor_delete",
     ),
     path("evaluate/", views.Evaluate.as_view(), name="evaluate"),
+    path("instructor/<int:pk>/", views.InstructorDetailView.as_view(), name="detail"),
 ]
