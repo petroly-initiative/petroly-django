@@ -9,6 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 INSTALLED_APPS = [
     
     'account.apps.AccountConfig',
+    'main.apps.AccountConfig',
     'evaluation.apps.EvaluationConfig' ,
     'django.contrib.admin',
     'django.contrib.auth',

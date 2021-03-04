@@ -20,7 +20,7 @@ from kfupm.settings import dev
 import debug_toolbar
 
 urlpatterns = [
-    path('', include('account.urls')),
+    path('', include('main.urls')),
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('evaluation/', include('evaluation.urls')),
