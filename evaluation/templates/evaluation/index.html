@@ -264,7 +264,7 @@
                                     <div><a onclick="submit({{i.id}})" class="btn btn-primary btn-lg modal_buttons" role="button" data-toggle="modal"
                                             href="#formModal" style="color: rgb(255,255,255);">Rate instructor</a></div> <br>
                                     
-                                    {% comment %} <a href={% url 'evaluation:instructor_delete' i.pk %}>Delete This Instructor</a> {% endcomment %}
+                                    <a href={% url 'evaluation:detail' i.pk %}>Detail</a>
 
                                 {% else %}
                                     <a href="{% url 'register' %}?next={% url 'evaluation:index' %}"><strong>LogIn To Rate</strong></a>
