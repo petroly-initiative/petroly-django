@@ -11,7 +11,7 @@ SECRET_KEY = env.str("SECRET_KEY", default='')
 
 DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["*"]
 
 cloudinary.config(
     cloud_name = env.str("CLOUDINARY_NAME", ''), 
