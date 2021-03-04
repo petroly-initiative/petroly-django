@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import Http404, HttpResponse
-from django.urls.base import reverse_lazy
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.urls.base import reverse_lazy, reverse
 from .models import Instructor, Evaluation
 from .filters import insFilter
 from django.urls import reverse
@@ -36,33 +36,7 @@ class Evaluate(UpdateView):
 
     model = Instructor
 
-    def get_object(self, queryset=None):
-        """
-        Returns the object the view is displaying.
-        By default this requires `self.queryset` and a `pk` or `slug` argument
-        in the URLconf, but subclasses can override this to return any object.
-        """
-        # Use a custom queryset if provided; this is required for subclasses
-        # like DateDetailView
-        if queryset is None:
-            queryset = self.get_queryset()
-        # Next, try looking up by primary key.
-        pk = self.request.POST["instructor_id"]
-
-        if pk is not None:
-            queryset = queryset.filter(pk=pk)
-
-        try:
-            # Get the single item from the filtered queryset
-            obj = queryset.get()
-        except queryset.model.DoesNotExist:
-            raise Http404(
-                ("No %(verbose_name)s found matching the query")
-                % {"verbose_name": queryset.model._meta.verbose_name}
-            )
-        return obj
-
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         rating_1 = int(request.POST["rating"]) * 20
         rating_2 = int(request.POST["ratingtwo"]) * 20
@@ -79,7 +53,7 @@ class Evaluate(UpdateView):
         )
 
         messages.success(request, "Evaluation Was Submitted.")
-        return redirect(reverse("evaluation:index"))
+        return redirect(reverse("evaluation:detail", kwargs={"pk": self.object.pk}))
 
 
 class InstructorCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):

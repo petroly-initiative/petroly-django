@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
+{% load static %}
 
 {% block head %}
     <title>Details</title>
@@ -7,6 +8,22 @@
 
 {% block body %}
 
+{% comment %} Body {% endcomment %}
+    {% if messages %}
+    <div style="display: flex;justify-content: center;margin: 22px;">
+        <ul class="messages">
+    </div>
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+        </ul>
+    {% endif %}
+    <a href={% url 'evaluation:instructor_form' %}>Add New Instructor</a> <br>
+
+    <header id="heading"><span id="top_header"><strong><em>Instructors Evaluation</em></strong></span>
+    <sub  id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your instructor easily and quickly!</sub></header>
+
+{% comment %} Side Card {% endcomment %}
     <div style="margin-top: 50px;">
         <div class="container-fluid p-4">
             <div class="row">
@@ -93,20 +110,127 @@
                             {% endfor %}    
 
                         </div>
+                    </div>
 
+                    <div class="d-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-xl-center"
+                    style="height: 75px;">
+                    
+
+                    {% if user.is_authenticated %}
+                        <div><a class="btn btn-primary btn-lg modal_buttons" role="button" data-toggle="modal"
+                                href="#formModal" style="color: rgb(255,255,255);">Rate instructor</a></div> <br>
                         
+                    {% else %}
+                        <a href="{% url 'register' %}?next={% url 'evaluation:index' %}"><strong>LogIn To Rate</strong></a>
+                    {% endif %}
 
-
-                    </div>
-                    <div class="text-right">
-                        <button class="btn btn-primary text-left px-3
-                        py-2 m-2" type="button" 
-                        style="text-align: right;border-style: none;background: #1dd491;font-size: 20px;">Rate</button>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div></div>
+
+
+{% comment %} Form {% endcomment %}
+    <div class="modal fade text-center" role="dialog" tabindex="-1" id="formModal" style="width: large;margin: auto;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-left d-flex" style="padding-bottom: 0;">
+                    <div>
+                        <h3 class="d-block" style="width: 100%;text-align: left;"><em>Evaluation form</em></h3>
+                        <p class="lead float-left" style="font-size: 18px;">Choose your satisfaction level for each given category</p>
+                    </div><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+
+                <div class="modal-body"
+                    style="padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 11px;">
+                    {% comment %} The FORM {% endcomment %}
+                    <form method="POST" action="{% url 'evaluation:evaluate' object.pk %}">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="col-xl-12 d-flex justify-content-center justify-content-lg-center"
+                                style="width: 100%;border: 1px solid var(--gray) ;border-top-width: 0px;border-right-width: 0px;border-bottom-width: 2px;border-bottom-color: rgb(222,226,230);border-left-width: 0px;">
+                                <div class="d-flex flex-column align-items-center align-items-lg-center align-items-xl-center"
+                                    id="instructor_form_info" style="padding-bottom: 13px;"><img
+                                        class="d-flex d-lg-flex justify-content-lg-center" id="form_pic"
+                                        src={{ object.profile_pic.url }}>
+                                </div>
+                                        
+                            </div>
+                            <div class="col"
+                                style="padding-top: 17px;border-width: 1px;border-color: rgb(222,226,230);border-bottom-width: 1px;border-bottom-color: rgb(222,226,230);">
+                                <h3 class="d-inline" style="text-align: left;color: rgb(23,209,196);">Grading</h3>
+                                <legend style="font-size: 18px;margin-bottom: 0px;">grading system, efficiency and fairness
+                                </legend>
+                                <fieldset class="rating one">
+
+                                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5"
+                                        title="Rocks!"><span>&#9733</span></label>
+                                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4"
+                                        title="Pretty good"><span>&#9733</span></label>
+                                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3"
+                                        title="Meh"><span>&#9733</span></label>
+                                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2"
+                                        title="Kinda bad"><span>&#9733</span></label>
+                                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1"
+                                        title="Sucks big time"><span>&#9733</span></label>
+                                </fieldset>
+                            </div>
+                            <div class="col-12" style="padding-top: 17px;">
+                                <h3 class="d-inline" style="text-align: left;color: rgb(23,209,196);">Teaching</h3>
+                                <legend style="font-size: 18px;margin-bottom: 0px;">Sound, material delivery&nbsp;</legend>
+                                <fieldset class="rating two">
+                                    <input type="radio" id="star5-1" name="ratingtwo" value="5" /><label for="star5-1"
+                                        title="Rocks!"><span>&#9733</span></label>
+                                    <input type="radio" id="star4-1" name="ratingtwo" value="4" /><label for="star4-1"
+                                        title="Pretty good"><span>&#9733</span></label>
+                                    <input type="radio" id="star3-1" name="ratingtwo" value="3" /><label for="star3-1"
+                                        title="Meh"><span>&#9733</span></label>
+                                    <input type="radio" id="star2-1" name="ratingtwo" value="2" /><label for="star2-1"
+                                        title="Kinda bad"><span>&#9733</span></label>
+                                    <input type="radio" id="star1-1" name="ratingtwo" value="1" /><label for="star1-1"
+                                        title="Sucks big time"><span>&#9733</span></label>
+                                </fieldset>
+                            </div>
+                            <div class="col-12" style="padding-top: 17px; width: 100%">
+                                <h3 class="d-inline" style="text-align: left;color: rgb(23,209,196);">Personality</h3>
+                                <legend style="font-size: 18px;margin-bottom: 0px;">flexibility, communication, general mood
+                                </legend>
+                                <fieldset class="rating three">
+                                    <input type="radio" id="star5-2" name="ratingthree" value="5" /><label for="star5-2"
+                                        title="Rocks!"><span>&#9733</span></label>
+                                    <input type="radio" id="star4-2" name="ratingthree" value="4" /><label for="star4-2"
+                                        title="Pretty good"><span>&#9733</span></label>
+                                    <input type="radio" id="star3-2" name="ratingthree" value="3" /><label for="star3-2"
+                                        title="Meh"><span>&#9733</span></label>
+                                    <input type="radio" id="star2-2" name="ratingthree" value="2" /><label for="star2-2"
+                                        title="Kinda bad"><span>&#9733</span></label>
+                                    <input type="radio" id="star1-2" name="ratingthree" value="1" /><label for="star1-2"
+                                        title="Sucks big time"><span>&#9733</span></label>
+                                </fieldset>
+                            </div>
+                            <div class="col-12" style="padding-top: 17px;">
+                                <div class="d-flex flex-column align-items-xl-center">
+                                    <h3 class="d-inline"
+                                        style="text-align: center;color: rgb(23,209,196);width: 100%;height: 32px;">Comments
+                                    </h3><sub style="height: 37px;"><em>optional</em></sub><textarea class="form-control"
+                                        style="width: 107%;font-size: 16px;height: 73px; " name="comment"></textarea>
+                                </div>
+                                
+                                <input type="hidden"  id="instructor_id" name="instructor_id" value="{{ object.pk }}">
+                                
+                            </div>
+                            <button class="btn btn-primary" type="submit"
+                                style="border-width: 0px;border-color: rgb(23,209,196);background: #17d1c4;width: 32%;
+                                padding: 0 0;height: 35px;margin-top: 26px;margin-bottom: 18px;color: white;">
+                                <strong>Submit</strong></button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 {% endblock body %}
