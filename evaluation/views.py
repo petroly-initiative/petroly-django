@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.urls.base import reverse_lazy, reverse
 from .models import Instructor, Evaluation
-from .filters import insFilter
+from .filters import InstructorFilter
 from django.urls import reverse
 from django.views.generic import (
     ListView,
