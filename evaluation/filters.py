@@ -5,7 +5,7 @@ from django import forms
 from .data import departments
 
 
-class insFilter(django_filters.FilterSet):
+class InstructorFilter(django_filters.FilterSet):
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
     #     self.filters['Name'].field.widget.attrs.update({'class': '', 'placeholder':'Email'})
