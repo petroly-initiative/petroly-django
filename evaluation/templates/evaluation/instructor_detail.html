@@ -91,7 +91,7 @@
                     </div>
 
 
-{% comment %} Comments Area {% endcomment %}
+{% comment %} Comments and bottom Area {% endcomment %}
                     <div class="text-capitalize text-center m-3 p-5 h-60 align-content-center" style="border-radius:16px;
                     border-style: none;
                     box-shadow: 0px 0px 4px 1px ;">
@@ -124,7 +124,7 @@
                                 href="#formModal" style="color: rgb(255,255,255);">Rate instructor</a></div> <br>
                         
                     {% else %}
-                        <a href="{% url 'register' %}?next={% url 'evaluation:index' %}"><strong>LogIn To Rate</strong></a>
+                        <a href="{% url 'register' %}?next={% url 'evaluation:detail' object.pk %}"><strong>LogIn To Rate</strong></a>
                     {% endif %}
 
                 </div>
