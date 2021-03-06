@@ -17,17 +17,15 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
-class SearchInstructor(ListView):
+class InstructorListView(ListView):
+
     model = Instructor
-    template_name = "evaluation/index.html"
-    fields = [
-        "name",
-        "department",
-    ]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["filter"] = InstructorFilter(self.request.GET, queryset=self.get_queryset())
+        context["filter"] = InstructorFilter(
+            self.request.GET, queryset=self.get_queryset()
+        )
 
         return context
 
@@ -75,5 +73,5 @@ class InstructorDeleteView(PermissionRequiredMixin, DeleteView):
 
 
 class InstructorDetailView(DetailView):
-    
+
     model = Instructor
