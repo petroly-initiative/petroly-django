@@ -6,7 +6,7 @@ app_name = "evaluation"
 
 urlpatterns = [
     # path('', views.index, name='index'),
-    path("instructor/", views.SearchInstructor.as_view(), name="index"),
+    path("instructors/", views.InstructorListView.as_view(), name="instructors"),
     path(
         "instructor/create/",
         views.InstructorCreateView.as_view(),
