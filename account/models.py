@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
 from cloudinary.models import CloudinaryField
+from evaluation.data import departments
 
 # Create your models here.
 
@@ -27,7 +28,7 @@ class Profile(models.Model):
         blank=True,
         max_length=350,
     )
-    major = models.CharField(default="", max_length=25)
+    major = models.CharField(default="", max_length=25, choices=departments)
     year = models.CharField(blank=True, max_length=25, choices=years)
 
 
