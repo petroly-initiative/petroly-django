@@ -33,31 +33,33 @@
                 <img class="rounded-circle" style="text-align: center;background: var(--dark);border-style: solid;border-radius: 10px;height: 
                 80px;width: 80px;margin-top: 30px;" src={{ object.profile_pic.url }} />
 
-                    <h1 style="border-style:none;">{{ object.name }}</h1>
-                    <h3 style="border-style: none;">{{ object.department }}</h3>
-                    <h5 style="border-style: none;">email</h5>
-                    <h5 style="border-style: none;">website</h5>
-                    <h5 style="border-style: none;">office</h5>
-                    <div class="table-responsive" style="">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>day</th>
-                                    <th>time</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Sun</td>
-                                    <td>10:30-12:00AM</td>
-                                </tr>
-                                <tr>
-                                    <td>Mon</td>
-                                    <td>1:00-3:00PM</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                {% comment %}
+                <h1 style="border-style:none;">{{ object.name }}</h1>
+                <h3 style="border-style: none;">{{ object.department }}</h3>
+                <h5 style="border-style: none;">email</h5>
+                <h5 style="border-style: none;">website</h5>
+                <h5 style="border-style: none;">office</h5>
+                <div class="table-responsive" style="">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>day</th>
+                                <th>time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Sun</td>
+                                <td>10:30-12:00AM</td>
+                            </tr>
+                            <tr>
+                                <td>Mon</td>
+                                <td>1:00-3:00PM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% endcomment %}
                 </div>
                 <div class="col-12 col-lg-7 mx-auto m-3" style="border-radius: 15px; border-style: none; box-shadow: 0px 0px 10px 2px;background: #ffffff;">
 
