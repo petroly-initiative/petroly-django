@@ -15,7 +15,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", default='')
 
 DEBUG = os.environ.get("DEBUG", default=True)
 
-ALLOWED_HOSTS = ['ccwebsite1.herokuapp.com']
+ALLOWED_HOSTS = ['petroly-main.herokuapp.com']
 
 # Clouddinary: for media
 
