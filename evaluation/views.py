@@ -36,9 +36,9 @@ class Evaluate(UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        rating_1 = int(request.POST["rating"]) * 20
-        rating_2 = int(request.POST["ratingtwo"]) * 20
-        rating_3 = int(request.POST["ratingthree"]) * 20
+        rating_1 = int(request.POST.get("rating", 0)) * 20
+        rating_2 = int(request.POST.get("ratingtwo", 0)) * 20
+        rating_3 = int(request.POST.get("ratingthree", 0)) * 20
         comment = request.POST["comment"]
 
         rating = Evaluation.objects.create(
