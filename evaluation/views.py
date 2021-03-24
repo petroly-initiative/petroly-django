@@ -75,3 +75,21 @@ class InstructorDeleteView(PermissionRequiredMixin, DeleteView):
 class InstructorDetailView(DetailView):
 
     model = Instructor
+
+
+class EvaluationListView(ListView):
+
+    model = Evaluation
+
+
+class EvaluationUpdateView(UpdateView):
+
+    model = Evaluation
+    fields = ["grading", "teaching", "personality", "comments"]
+    success_url = reverse_lazy("evaluation:instructors")
+
+    def post(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
+
+        messages.success(request, "Evaluation Was Updated.")
+        return redirect(reverse("evaluation:evaluation_list", kwargs={"pk": request.user.pk}))
