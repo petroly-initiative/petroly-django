@@ -65,13 +65,16 @@ class RegisterView(LoginView):
 
                 new_profile.save()
 
-                send_mail(
-                    'THANK YOU!',
-                    'We welcome you to out community, where we all help one another :)',
-                    'a@petroly.co',
-                    [user_form.cleaned_data['email']],
-                    fail_silently=False,
-                )
+                try:
+                    send_mail(
+                        'THANK YOU!',
+                        'We welcome you to out community, where we all help one another :)',
+                        'no-reply@petroly.co',
+                        [request.POST['email']],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    print(e)
 
                 return render(
                     request, "account/register_done.html", {"new_user": new_user}
