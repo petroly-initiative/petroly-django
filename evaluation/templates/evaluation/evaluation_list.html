@@ -15,10 +15,10 @@
 
 {% block body %}
     {% for i in evaluation_list %}
-        <h3>Date: </h3> {{ i.Edate }}
+        <h3>Date: </h3> {{ i.date }}
         <h3>Instructor: </h3> {{ i.instructor.name }}
         <h3>Departmnet: </h3> {{ i.instructor.department }}
-        <h3>Comments: </h3> {{ i.comments }}
+        <h3>Comments: </h3> {{ i.comment }}
         
         <a href="{% url 'evaluation:evaluation_form' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
         <h1>EDIT</h1></a>

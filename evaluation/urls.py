@@ -19,6 +19,6 @@ urlpatterns = [
     ),
     path("evaluate/<int:pk>/", views.Evaluate.as_view(), name="evaluate"),
     path("instructor/<int:pk>/", views.InstructorDetailView.as_view(), name="detail"),
-    path("my_evaluations/<int:pk>", views.EvaluationListView.as_view(), name="evaluation_list"),
+    path("my_evaluations/<pk>", views.EvaluationListView.as_view(), name="evaluation_list"),
     path("update/<int:pk>", views.EvaluationUpdateView.as_view(), name="evaluation_form"),
 ]

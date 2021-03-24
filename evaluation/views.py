@@ -42,7 +42,7 @@ class Evaluate(UpdateView):
         comment = request.POST["comment"]
 
         rating = Evaluation.objects.create(
-            comments=comment,
+            comment=comment,
             grading=rating_1,
             teaching=rating_2,
             personality=rating_3,
@@ -85,7 +85,7 @@ class EvaluationListView(ListView):
 class EvaluationUpdateView(UpdateView):
 
     model = Evaluation
-    fields = ["grading", "teaching", "personality", "comments"]
+    fields = ["grading", "teaching", "personality", "comment"]
     success_url = reverse_lazy("evaluation:instructors")
 
     def post(self, request, *args, **kwargs):
