@@ -41,6 +41,11 @@ class Evaluate(UpdateView):
         rating_3 = int(request.POST.get("ratingthree", 0)) * 20
         comment = request.POST["comment"]
 
+        if Evaluation.objects.filter(user=request.user, instructor=self.object):
+            messages.success(request, """You have RATED this instructor before, 
+                click `My Evaluations` from your profile to edit it""")
+            return redirect(reverse("evaluation:detail", kwargs={"pk": self.object.pk}))
+        
         rating = Evaluation.objects.create(
             comment=comment,
             grading=rating_1,
