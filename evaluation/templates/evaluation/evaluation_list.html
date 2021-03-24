@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}My Evaluations{% endblock title %}
+
+    {% if messages %}
+        <div style="display: flex;justify-content: center;margin: 22px;">
+            <ul class="messages">
+        </div>
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+        </ul>
+    {% endif %}
+
+{% block body %}
+    {% for i in evaluation_list %}
+        <h3>Date: </h3> {{ i.Edate }}
+        <h3>Instructor: </h3> {{ i.instructor.name }}
+        <h3>Departmnet: </h3> {{ i.instructor.department }}
+        <h3>Comments: </h3> {{ i.comments }}
+        
+        <a href="{% url 'evaluation:evaluation_form' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
+        <h1>EDIT</h1></a>
+        <br><br>
+    {% empty %}
+        <h1>Oohps!, It looks u haven't Evaluate yet.</h1>
+    {% endfor %}
+{% endblock body %}

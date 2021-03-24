@@ -93,9 +93,12 @@
                     </div>
                     <div class="modal-body" style="padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 11px;">
                         <div class="row" style="width: 100%;margin-left: 0px;margin-right: 0px;">
-                            <div class="col-12 col-sm-12 col-md-5 col-lg-4 col-xl-4 d-flex d-xl-flex flex-column align-items-center justify-content-xl-center align-items-xl-center" id="change_section" style="width: 78%;height: 285px;padding-bottom: 0px;margin-bottom: 60px;border: 1px solid rgba(108,117,125,0.48);border-top-width: 0px;border-right-width: 2px;border-right-color: rgba(108,117,125,0.26);border-bottom: 1px none rgb(222,226,230);border-left-width: 0px; display: flex; flex-direction: column">
+                            <div class="col-12 col-sm-12 col-md-5 col-lg-4 col-xl-4 d-flex d-xl-flex flex-column align-items-center justify-content-xl-center align-items-xl-center" id="change_section" 
+                            style="width: 78%;height: 285px;padding-bottom: 0px;margin-bottom: 60px;border: 1px solid rgba(108,117,125,0.48);border-top-width: 0px;border-right-width: 2px;border-right-color: rgba(108,117,125,0.26);
+                            border-bottom: 1px none rgb(222,226,230);border-left-width: 0px; display: flex; flex-direction: column">
                                 <div class="d-flex flex-column align-items-center align-items-sm-center align-items-xl-center" id="instructor_form_info-1" style="padding-bottom: 13px;height: 203px;">
-                                <button class="btn btn-primary d-flex justify-content-md-center align-items-md-center" id="change_pic_button" type="button" style="background: rgba(255,255,255,0);height: 77px;width: 77px;padding: 45px; display: flex; justify-content: center;align-items: center; border:none!important">
+                                <button class="btn btn-primary d-flex justify-content-md-center align-items-md-center" id="change_pic_button" type="button" style="background: rgba(255,255,255,0);height: 77px;width: 77px;padding: 45px; 
+                                display: flex; justify-content: center;align-items: center; border:none!important">
                                 <img class="d-flex d-sm-flex d-xl-flex justify-content-sm-start justify-content-xl-start" id="form_pic-1" 
                                 {% if user.profile.profile_pic %} src={{ user.profile.profile_pic.url }}
                                 {% else %} src={% static 'base/assets/img/profile_pic.svg' %}
@@ -106,39 +109,54 @@
                                 <div class="d-flex flex-column align-items-center align-items-xl-start" id="instructor_form_info-2" style="padding-bottom: 0px;height: 103px;font-size: 25px;">
                                 <a href={% url 'password_change' %}> <span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>Change Password</strong></span></a>
                                 <a href={% url 'profile_form' %}> <span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>Edit My Profile</strong></span></a>
+                                <a href={% url 'evaluation:evaluation_list' user.pk %}> <span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>My Evaluations</strong></span></a>
                                 </div>
                             </div>
                             <div class="col-md-7 col-lg-8 d-flex flex-column align-items-md-start justify-content-lg-center scstyle-1" id="records">
                                 <div style="padding: 6px;margin-left: 7px;margin-top: 0;height: 92px;margin-bottom: 20px;">
-                                    <h3 class="d-flex d-lg-flex justify-content-lg-start align-items-lg-center" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 1px;width: 100%;"><img src={% static "base/assets/img/Icon%20awesome-building.svg" %} style="height: 28px;margin-top: 6px;">&nbsp; Department</h3><span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 42px;">Information and computer science</span>
+                                    <h3 class="d-flex d-lg-flex justify-content-lg-start align-items-lg-center" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 1px;width: 100%;">
+                                    <img src={% static "base/assets/img/Icon%20awesome-building.svg" %} style="height: 28px;margin-top: 6px;">&nbsp; Department</h3>
+                                    <span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 42px;">{{ user.profile.major }}</span>
                                 </div>
                                 <div class="d-flex d-md-flex flex-column justify-content-md-start" style="padding: 11px;margin-left: 7px;margin-bottom: 20px;">
-                                    <h3 class="d-inline d-lg-flex justify-content-lg-start" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 0px;width: 100%;"><img src={% static "base/assets/img/Icon%20ionic-md-school.svg" %}>&nbsp; Academic Year</h3><span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 37px;">Prep-year AKA "Cute Orya"</span>
+                                    <h3 class="d-inline d-lg-flex justify-content-lg-start" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 0px;width: 100%;">
+                                    <img src={% static "base/assets/img/Icon%20ionic-md-school.svg" %}>&nbsp; Academic Year</h3>
+                                    <span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 37px;">{{ user.profile.year }}</span>
                                 </div>
                                 <div class="d-flex d-md-flex flex-column justify-content-md-start" style="padding: 11px;margin-left: 7px;margin-bottom: 20px;">
-                                    <h3 class="d-inline d-lg-flex justify-content-lg-start" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 0px;width: 100%;"><img src={% static "base/assets/img/Icon%20ionic-md-stats.svg" %}>&nbsp; Statistics</h3>
+                                    <h3 class="d-inline d-lg-flex justify-content-lg-start" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 0px;width: 100%;">
+                                    <img src={% static "base/assets/img/Icon%20ionic-md-stats.svg" %}>&nbsp; Statistics</h3>
                                     <div class="row">
-                                        <div class="col d-flex flex-column"><span style="font-size: 24px;">Evaluations</span><span style="font-size: 23px;color: rgb(63,159,255);"><strong>26</strong></span></div>
-                                        <div class="col d-flex flex-column"><span style="font-size: 24px;">Posts</span><span style="font-size: 23px;color: rgb(63,159,255);"><strong>324</strong></span></div>
-                                        <div class="col-md-12 d-flex flex-column"><span style="font-size: 24px;">Rating</span><span style="font-size: 23px;color: rgb(255,178,87);"><strong>253</strong></span></div>
+                                        <div class="col d-flex flex-column"><span style="font-size: 24px;">Evaluations</span><span style="font-size: 23px;color: rgb(63,159,255);"><strong>{{ user.evaluation_set.count }}</strong></span></div>
+                                        <div class="col d-flex flex-column"><span style="font-size: 24px;">Posts</span><span style="font-size: 23px;color: rgb(63,159,255);"><strong>0</strong></span></div>
+                                        <div class="col-md-12 d-flex flex-column"><span style="font-size: 24px;">Rating</span><span style="font-size: 23px;color: rgb(255,178,87);"><strong>0</strong></span></div>
                                     </div>
                                 </div>
                                 <div style="padding: 11px;margin-left: 4px;">
-                                    <h3 class="d-flex d-lg-flex align-items-sm-center justify-content-lg-start align-items-lg-center" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;"><img src={% static "base/assets/img/Group%205.svg" %} style="height: 33px;margin-top: 3px;">&nbsp; &nbsp;Medals<button class="btn btn-light border rounded-circle d-flex justify-content-lg-center align-items-lg-center" type="button" style="width: 16px;height: 16px;margin: 0 0;padding: 0 0;margin-left: 17px;background: rgba(0,0,0,0);border-width: 0px;border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 3px;border-left-style: none;">
+                                    <h3 class="d-flex d-lg-flex align-items-sm-center justify-content-lg-start align-items-lg-center" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;">
+                                    <img src={% static "base/assets/img/Group%205.svg" %} style="height: 33px;margin-top: 3px;">&nbsp; &nbsp;Medals
+                                    <button class="btn btn-light border rounded-circle d-flex justify-content-lg-center align-items-lg-center" type="button" style="width: 16px;height: 16px;margin: 0 0;padding: 0 0;margin-left: 17px;background: rgba(0,0,0,0);border-width: 0px;border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 3px;border-left-style: none;">
                                     <img class="d-flex align-items-lg-center" src="{% static 'base/assets/img/Icon%20awesome-info-circle.svg' %}" style="width: 16px;height: 16px;margin-left: 0px;"></button></h3>
-                                    <div class="d-flex flex-row justify-content-center align-content-center align-items-md-center justify-content-lg-center justify-content-xl-center" id="medals" style="height: auto;display: flex;align-items: center;margin: 0;width: 100%;margin-right: 0px;margin-left: -12px;">
+                                    <div class="d-flex flex-row justify-content-center align-content-center align-items-md-center justify-content-lg-center justify-content-xl-center" id="medals" 
+                                    style="height: auto;display: flex;align-items: center;margin: 0;width: 100%;margin-right: 0px;margin-left: -12px;">
                                         <div class="row d-flex flex-row justify-content-lg-end" style="height: auto;width: 100%;margin-left: 1px;">
                                             <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center medal_containers" style="height: 55.0312px;">
-                                                <div class="d-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center"><img class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" src={% static "base/assets/img/Icon%20awesome-hands-helping.svg" %} style="width: 40px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;"><strong>Helping Hand</strong></span></div>
+                                                <div class="d-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center"><img class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" 
+                                                src={% static "base/assets/img/Icon%20awesome-hands-helping.svg" %} style="width: 40px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;">
+                                                <strong>Helping Hand</strong></span></div>
                                             </div>
                                             <div class="col-5 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center medal_containers">
-                                                <div class="d-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center"><img class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" src={% static "base/assets/img/Group%204.svg" %} style="width: 30px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;"><strong>Discussion Solver</strong></span></div>
+                                                <div class="d-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center"><img class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" 
+                                                src={% static "base/assets/img/Group%204.svg" %} style="width: 30px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;">
+                                                <strong>Discussion Solver</strong></span></div>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 offset-lg-0 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center justify-content-lg-start align-items-lg-center medal_containers" style="height: 55.0312px;">
-                                                <div class="d-flex flex-row align-items-sm-center align-items-lg-center"><img class="d-sm-flex flex-row align-items-sm-center" src={% static "base/assets/img/Group%203.svg" %} style="width: 30px;"><span class="d-sm-flex flex-row align-items-sm-center" style="margin-left: 15px;font-size: 14px;"><strong>Golden member</strong></span></div>
+                                                <div class="d-flex flex-row align-items-sm-center align-items-lg-center"><img class="d-sm-flex flex-row align-items-sm-center" src={% static "base/assets/img/Group%203.svg" %} 
+                                                style="width: 30px;"><span class="d-sm-flex flex-row align-items-sm-center" style="margin-left: 15px;font-size: 14px;"><strong>Golden member</strong></span></div>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center justify-content-lg-start medal_containers" style="height: 55.0312px;font-size: 14px;">
-                                                <div class="d-flex flex-row align-items-lg-center" style="font-size: 14px;"><img class="flex-row" src={% static "base/assets/img/Icon%20material-rate-review.svg" %} style="font-size: 14px;width: 30px;height: 30px;"><span class="flex-row" style="margin-left: 15px;font-size: 14px;"><strong>Evaluation Hero</strong></span></div>
+                                                <div class="d-flex flex-row align-items-lg-center" style="font-size: 14px;"><img class="flex-row" src={% static "base/assets/img/Icon%20material-rate-review.svg" %} style="font-size: 14px;width: 30px;height: 30px;">
+                                                <span class="flex-row" style="margin-left: 15px;font-size: 14px;"><strong>Evaluation Hero</strong></span></div>
                                             </div>
                                         </div>
                                     </div>
