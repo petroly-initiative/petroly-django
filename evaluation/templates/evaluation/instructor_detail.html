@@ -103,11 +103,11 @@
                         style="overflow-y: scroll; height: 300px;">
 
                             {% for i in object.evaluation_set.all %}
-                                {% if i.comments == "" %}
+                                {% if i.comment == "" %}
                                 {% else %}
                                     <div class="m-3 p-2" style="border-style: none; 
                                     box-shadow: 0px 0px 4px 1px;border-bottom: 2px solid #7b7c7e; border-radius: 5px;text-align: left;">
-                                        {{ i.comments }}
+                                        {{ i.comment }}
                                     </div>
                                 {% endif %}
                             {% empty %}
