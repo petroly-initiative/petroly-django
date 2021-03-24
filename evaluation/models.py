@@ -27,10 +27,15 @@ class Instructor(models.Model):
             Avg("personality"),
         )
         try:
+            result['grading__avg'] = round(result['grading__avg'])
+            result['teaching__avg'] = round(result['teaching__avg'])
+            result['personality__avg'] = round(result['personality__avg'])
             result['overall'] = round((result['grading__avg'] + result['teaching__avg'] + result['personality__avg'])/60)
         except:
+            result['grading__avg'] = 0
+            result['teaching__avg'] = 0
+            result['personality__avg'] = 0
             result["overall"] = 0
-        print(result)
         return result
 
     def __str__(self):
