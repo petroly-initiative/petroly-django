@@ -81,7 +81,7 @@ class RegisterView(LoginView):
                 )
 
             else:
-                return HttpResponse("Error: The user might be exist")
+                return self.render_to_response(self.get_context_data(form=user_form))
 
         else:
             return super().form_invalid(user_form)
