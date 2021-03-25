@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.urls.base import reverse_lazy, reverse
+from django.views.generic.base import TemplateView
 from .models import Instructor, Evaluation
 from .filters import InstructorFilter
 from django.urls import reverse
@@ -20,12 +21,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 class InstructorListView(ListView):
 
     model = Instructor
+    paginate_by = 9
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["filter"] = InstructorFilter(
+        filter_context = InstructorFilter(
             self.request.GET, queryset=self.get_queryset()
         )
+        context = super().get_context_data(**kwargs, object_list=filter_context.qs)
+        context["filter"] = filter_context
 
         return context
 
