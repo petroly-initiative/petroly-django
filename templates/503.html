@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +8,8 @@
     <title>Under Maintance</title>
 </head>
 <body>
-    <h1>Soory, The website is under maintance</h1>
-    <h3>We will be back very soon :)</h3>
+    {% comment %} <h1>Soory, The website is under maintance</h1>
+    <h3>We will be back very soon :)</h3> {% endcomment %}
+    <img src="{% static 'coming.jpeg' %}" alt="" style='width: 100%; height:auto;'>
 </body>
 </html>
