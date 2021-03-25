@@ -3,13 +3,10 @@ from .base import *
 from pathlib import Path
 import dj_database_url 
 import django_heroku
-import environ
 import os
 import cloudinary
 from cloudinary import config
 
-env = environ.Env()
-env.read_env()
 
 SECRET_KEY = os.environ.get("SECRET_KEY", default='')
 
