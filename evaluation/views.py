@@ -16,6 +16,7 @@ from django.views.generic import (
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from .data import departments
 
 
 class InstructorListView(ListView):
@@ -24,11 +25,14 @@ class InstructorListView(ListView):
     paginate_by = 9
 
     def get_context_data(self, **kwargs):
-        filter_context = InstructorFilter(
-            self.request.GET, queryset=self.get_queryset()
+        name = self.request.GET.get("name", default="")
+        department = self.request.GET.get("department", default="")
+
+        context = super().get_context_data(**kwargs, 
+            object_list = Instructor.objects.filter(name__icontains=name, department=department) 
+            if name!="" and department!="" else Instructor.objects.all()
         )
-        context = super().get_context_data(**kwargs, object_list=filter_context.qs)
-        context["filter"] = filter_context
+        context['departments'] = departments
 
         return context
 
