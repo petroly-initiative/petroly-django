@@ -25,14 +25,15 @@ class InstructorListView(ListView):
     paginate_by = 9
 
     def get_context_data(self, **kwargs):
-        name = self.request.GET.get("name", default="")
+        name = self.request.GET.get("name__icontains", default="")
         department = self.request.GET.get("department", default="")
 
-        context = super().get_context_data(**kwargs, 
-            object_list = Instructor.objects.filter(name__icontains=name, department=department) 
-            if name!="" and department!="" else Instructor.objects.all()
-        )
+        filter_qs = InstructorFilter(self.request.GET, Instructor.objects.all())
+        context = super().get_context_data(**kwargs, object_list = filter_qs.qs)
         context['departments'] = departments
+        context['selected_department'] = department
+        context['selected_name'] = name
+        context['selected_search'] = f"name__icontains={name}&department={department}"
 
         return context
 
