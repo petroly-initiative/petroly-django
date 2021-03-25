@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
 INSTALLED_APPS = [
-    
+    'maintenance_mode',
     'account.apps.AccountConfig',
     'evaluation.apps.EvaluationConfig' ,
     'django.contrib.admin',
@@ -31,6 +31,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'maintenance_mode.middleware.MaintenanceModeMiddleware',
 ]
 
 ROOT_URLCONF = 'kfupm.urls'
@@ -48,6 +49,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'maintenance_mode.context_processors.maintenance_mode',
             ],
         },
     },
@@ -74,6 +76,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CONTEXT_PROCESSORS = [
+    'maintenance_mode.context_processors.maintenance_mode'
+]
+
+MAINTENANCE_MODE = None
+MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True
+MAINTENANCE_MODE_IGNORE_SUPERUSER = True
+MAINTENANCE_MODE_IGNORE_TESTS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
