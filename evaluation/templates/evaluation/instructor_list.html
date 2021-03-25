@@ -34,7 +34,18 @@
     style="background: rgba(255,255,255,0);">
     {% csrf_token %}
     <l>
-        {{filter.form.as_p}}
+        {% comment %} {{filter.form.as_p}} {% endcomment %}
+        <h3>Name Contains:</h3>
+        <input type="" name="name" value="" /> <br>
+        <h3>Department:</h3>
+
+        <select name="department" id="">
+            <option value="">---------------</option>
+            {% for key, name in departments %}
+                <option value={{ key }}>{{ name }}</option>
+            {% endfor %}
+        </select>
+
         <button type="submit">search</button>
     </l>
 </form>
