@@ -14,23 +14,6 @@ DEBUG = (os.environ.get("DEBUG", default=True) == 'True')
 
 ALLOWED_HOSTS = ['petroly-main.herokuapp.com']
 
-[
-    'maintenance_mode',
-] + INSTALLED_APPS
-
-MIDDLEWARE + [
-    'maintenance_mode.middleware.MaintenanceModeMiddleware',
-]
-
-CONTEXT_PROCESSORS = [
-    'maintenance_mode.context_processors.maintenance_mode'
-]
-
-MAINTENANCE_MODE = True
-MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True
-MAINTENANCE_MODE_IGNORE_SUPERUSER = True
-MAINTENANCE_MODE_IGNORE_TESTS = True
-
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
