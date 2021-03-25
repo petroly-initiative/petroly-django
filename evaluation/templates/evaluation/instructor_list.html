@@ -36,13 +36,13 @@
     <l>
         {% comment %} {{filter.form.as_p}} {% endcomment %}
         <h3>Name Contains:</h3>
-        <input type="" name="name" value="" /> <br>
+        <input type="" name="name__icontains" value="{{ selected_name }}" /> <br>
         <h3>Department:</h3>
 
-        <select name="department" id="">
+        <select name="department" id="" default="{{ selected_department }}">
             <option value="">---------------</option>
             {% for key, name in departments %}
-                <option value={{ key }}>{{ name }}</option>
+                <option value={{ key }} {% if key == selected_department %}selected{% endif %}>{{ name }}</option>
             {% endfor %}
         </select>
 
@@ -184,21 +184,21 @@
     {% if is_paginated %}
 
       {% if page_obj.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.previous_page_number }}">Previous</a>
       {% endif %}
 
       {% for num in page_obj.paginator.page_range %}
         {% if page_obj.number == num %}
-          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          <a class="btn btn-info mb-4" href="?{{ selected_search }}&page={{ num }}">{{ num }}</a>
         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ num }}">{{ num }}</a>
         {% endif %}
       {% endfor %}
 
       {% if page_obj.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.paginator.num_pages }}">Last</a>
       {% endif %}
 
     {% endif %}
