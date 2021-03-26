@@ -15,7 +15,7 @@ from cloudinary.uploader import upload
 
 class IndexView(TemplateView):
 
-    template_name = "account/index.html"
+    template_name = "index.html"
 
 
 class RegisterView(LoginView):
