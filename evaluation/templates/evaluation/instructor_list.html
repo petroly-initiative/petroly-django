@@ -22,7 +22,9 @@
     {% endfor %}
         </ul>
     {% endif %}
-    <a href={% url 'evaluation:instructor_form' %}>Add New Instructor</a> <br>
+    {% if perms.evaluation %}
+        <a href={% url 'evaluation:instructor_form' %}>Add New Instructor</a> <br>
+    {% endif %}
 
     <header id="heading"><span id="top_header"><strong><em>Instructors Evaluation</em></strong></span>
     <sub id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your instructor easily and quickly!</sub></header>
