@@ -1,8 +1,7 @@
 from django.forms import forms
-from django.http.response import Http404
 from .forms import UserRegistrationForm, ProfileForm, UserForm
 from .models import Profile, User
-from django.http import HttpResponse, request, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import CreateView, UpdateView, TemplateView, DetailView
 from django.contrib.auth import authenticate, login
@@ -11,7 +10,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
-from cloudinary.uploader import upload, upload_resource
+from cloudinary.uploader import upload
 
 
 class IndexView(TemplateView):
