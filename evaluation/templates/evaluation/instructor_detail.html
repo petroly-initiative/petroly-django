@@ -75,19 +75,19 @@
 
                             <div class="progress">
                                 <div class="progress-bar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
-                                style="width: {{ object.avg.grading__avg }}%; background-color: #1dd491;">{{ object.avg.grading__avg }}%</div>
+                                style="width: {{ object.avg.grading__avg|default:0 }}%; background-color: #1dd491;">{{ object.avg.grading__avg|default:0 }}%</div>
                             </div>
 
                             <h4 class=" text-center my-3">Teaching</h4>
                             <div class="progress">
-                                <div class="progress-bar" aria-valuenow="{{ object.avg.teaching__avg }}" aria-valuemin="0" aria-valuemax="100" 
-                                style="width: {{ object.avg.teaching__avg }}%; background-color: #1dd491;">{{ object.avg.teaching__avg }}%</div>
+                                <div class="progress-bar" aria-valuenow="{{ object.avg.teaching__avg|default:0 }}" aria-valuemin="0" aria-valuemax="100" 
+                                style="width: {{ object.avg.teaching__avg|default:0 }}%; background-color: #1dd491;">{{ object.avg.teaching__avg|default:0 }}%</div>
                             </div>
                             <h4 class="text-center my-3">Personality</h4>
                             <div class="progress">
                                 <div class="progress-bar"
-                                aria-valuenow="{{ object.avg.personality__avg }}" aria-valuemin="0" aria-valuemax="100" 
-                                style="width: {{ object.avg.personality__avg }}%; background-color: #1dd491;">{{ object.avg.personality__avg }}%</div>
+                                aria-valuenow="{{ object.avg.personality__avg|default:0 }}" aria-valuemin="0" aria-valuemax="100" 
+                                style="width: {{ object.avg.personality__avg|default:0 }}%; background-color: #1dd491;">{{ object.avg.personality__avg|default:0 }}%</div>
                             </div>
                         </div>
                     </div>
