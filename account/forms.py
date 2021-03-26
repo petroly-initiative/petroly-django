@@ -1,16 +1,20 @@
 from cloudinary import CloudinaryImage
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.forms import models, widgets
 from .models import Profile
 from cloudinary.forms import CloudinaryFileField, CloudinaryInput
+import re
 
 
-class UserRegistrationForm(forms.ModelForm):
+
+class UserRegistrationForm(UserCreationForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["email"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "201XXXXXX@kfupm.edu.sa", "required": "true"}
+            {"class": "form-control", "placeholder": "s202012345@kfupm.edu.sa", "required": "true"}
         )
         self.fields["username"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Username"}
@@ -18,29 +22,28 @@ class UserRegistrationForm(forms.ModelForm):
         self.fields["first_name"].widget.attrs.update(
             {"class": "form-control", "placeholder": "First Name"}
         )
+        self.fields["password1"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Password"}
+        )
+        self.fields["password2"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Password Again"}
+        )
 
-    password = forms.CharField(
-        label="Password",
-        widget=forms.PasswordInput(
-            attrs={"class": "form-control", "placeholder": "Password"}
-        ),
-    )
-    password2 = forms.CharField(
-        label="Repeat password",
-        widget=forms.PasswordInput(
-            attrs={"class": "form-control", "placeholder": "Password Again"}
-        ),
-    )
+    def clean_email(self):
+        REGEX = r'^\w+@kfupm.edu.sa$'
+        email = self.cleaned_data['email']
+
+        if email and not re.match(REGEX, email):
+            raise forms.ValidationError('You must use a KFUPM email')
+
+        return email
+
+
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "email")
+        fields = UserCreationForm.Meta.fields + ('email', 'first_name')
 
-    def clean_password2(self):
-        cd = self.cleaned_data
-        if cd["password"] != cd["password2"]:
-            raise forms.ValidationError("Passwords don't match.")
-        return cd["password2"]
 
 
 class UserForm(forms.ModelForm):
