@@ -16,8 +16,14 @@
 
          {% if form.errors %}
             <p>
-            <h4 style="text-align:center">Your username and password didn't match.</h4>
-            <h6 style="text-align:center">Please try again.</h6> 
+            <h1 style="text-align:center">Oohps :(</h1>
+            {% for field, field_errors in form.errors.items %}
+                <h6 style="text-align:center">
+                    {% for error in field_errors %}
+                        <p style='color:red;'> {{ error|escape }} </p><br>
+                    {% endfor %} 
+                </h6> 
+            {% endfor %}
             </p>
         {% endif %}
 
@@ -41,12 +47,14 @@
                     <h2 class="login-header form-header">Welcome Back!</h2>
                     <div class="form-group">
                         <i class="fas fa-at"></i>
-                        {{ form.username }}
+                        <input type="username" name="username" id="email", placeholder='Username'>
+                        {% comment %} {{ form.username }} {% endcomment %}
                     </div>
 
                     <div class="form-group">
                         <i class="fas fa-unlock-alt"></i>
-                        {{ form.password }}
+                        <input type="password" name="password" id="password", placeholder='Password'>
+                        {% comment %} {{ form.password }} {% endcomment %}
                     </div>
 
                     <div class="form-group">
@@ -61,7 +69,7 @@
                 <form method="post" action='{% url 'register' %}' enctype='multipart/form-data'>
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}" />
-                    <h2 class="signUp-header form-header">Join petroly community.</h2>
+                    <h2 class="signUp-header form-header">Join Petroly Community.</h2>
                     <div class="form-group">
                         <i class="fas fa-user"></i>
                         {{ user_form.username }}
@@ -74,7 +82,7 @@
 
                     <div class="form-group">
                         <i class="fas fa-unlock-alt"></i>
-                        {{ user_form.password }}
+                        {{ user_form.password1 }}
                     </div>
 
                     <div class="form-group">

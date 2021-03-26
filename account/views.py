@@ -7,7 +7,6 @@ from django.views.generic import CreateView, UpdateView, TemplateView, DetailVie
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
 from cloudinary.uploader import upload
@@ -36,7 +35,6 @@ class RegisterView(LoginView):
             return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        # auth_form = AuthenticationForm(data=request.POST)
         user_form = UserRegistrationForm(data=request.POST)
         profile_form = ProfileForm(data=request.POST)
 
@@ -52,9 +50,7 @@ class RegisterView(LoginView):
         # For Registering
         elif "register" in request.POST:
             if user_form.is_valid() and profile_form.is_valid():
-                new_user = user_form.save(commit=False)
-                new_user.set_password(user_form.cleaned_data["password"])
-                new_user.save()
+                new_user = user_form.save(commit=True)
 
                 new_profile = profile_form.save(commit=False)
                 new_profile.user = new_user
@@ -74,13 +70,15 @@ class RegisterView(LoginView):
                     )
                 except Exception as e:
                     print(e)
+                    User.objects.filter(email=request.POST['email'])
+                    return HttpResponse("Unexpected error while sending you an email, please register again")
 
                 return render(
                     request, "account/register_done.html", {"new_user": new_user}
                 )
 
             else:
-                return self.render_to_response(self.get_context_data(form=user_form))
+                return super().form_invalid(user_form)
 
         else:
             return super().form_invalid(user_form)
