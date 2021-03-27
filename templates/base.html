@@ -140,7 +140,7 @@
                                     <div class="d-flex flex-row justify-content-center align-content-center align-items-md-center justify-content-lg-center justify-content-xl-center" id="medals" 
                                     style="height: auto;display: flex;align-items: center;margin: 0;width: 100%;margin-right: 0px;margin-left: -12px;">
                                         <div class="row d-flex flex-row justify-content-lg-end" style="height: auto;width: 100%;margin-left: 1px;">
-                                            <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center medal_containers" style="height: 55.0312px;">
+                                            {% comment %} <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center medal_containers" style="height: 55.0312px;">
                                                 <div class="d-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center"><img class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" 
                                                 src={% static "base/assets/img/Icon%20awesome-hands-helping.svg" %} style="width: 40px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;">
                                                 <strong>Helping Hand</strong></span></div>
@@ -152,12 +152,17 @@
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 offset-lg-0 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center justify-content-lg-start align-items-lg-center medal_containers" style="height: 55.0312px;">
                                                 <div class="d-flex flex-row align-items-sm-center align-items-lg-center"><img class="d-sm-flex flex-row align-items-sm-center" src={% static "base/assets/img/Group%203.svg" %} 
-                                                style="width: 30px;"><span class="d-sm-flex flex-row align-items-sm-center" style="margin-left: 15px;font-size: 14px;"><strong>Golden member</strong></span></div>
-                                            </div>
+                                                style="width: 30px;"><span class="d-sm-flex flex-row align-items-sm-center" style="margin-left: 15px;font-size: 14px;">
+                                                <strong>Golden member</strong></span></div>
+                                            </div> 
+                                            {% if user.evaluation_set.count >= 10 %}
                                             <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center justify-content-lg-start medal_containers" style="height: 55.0312px;font-size: 14px;">
                                                 <div class="d-flex flex-row align-items-lg-center" style="font-size: 14px;"><img class="flex-row" src={% static "base/assets/img/Icon%20material-rate-review.svg" %} style="font-size: 14px;width: 30px;height: 30px;">
-                                                <span class="flex-row" style="margin-left: 15px;font-size: 14px;"><strong>Evaluation Hero</strong></span></div>
+                                                <span class="flex-row" style="margin-left: 15px;font-size: 14px;">
+                                                <strong>Evaluation Hero</strong></span></div>
                                             </div>
+                                            {% endif %}
+                                            {% endcomment %}
                                         </div>
                                     </div>
                                 </div>
