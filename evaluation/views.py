@@ -16,7 +16,7 @@ from django.views.generic import (
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from .data import departments
+from data import departments
 
 
 class InstructorListView(ListView):

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
 from cloudinary.models import CloudinaryField
-from evaluation.data import departments
+from data import departments, years
 
 # Create your models here.
 
@@ -11,13 +11,6 @@ from evaluation.data import departments
 class Profile(models.Model):
     """A general user profile info model that extends `User` fields. """
 
-    years = [
-        ("OR", "Orea"),
-        ("FR", "Jabal Orea"),
-        ("SP", "Major Orea"),
-        ("SN", "Training Orea"),
-        ("JN", "Dieing Orea"),
-    ]
     # Connect to the admin User object by on-to-one relation
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 

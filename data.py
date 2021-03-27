@@ -1,3 +1,11 @@
+years = [
+	("OR", "Orientation"),
+	("FR", "Freshman"),
+	("SP", "Sophomore"),
+	("JN", "Junior"),
+	("SN", "Senior"),
+]
+
 departments = [
 	("ACFN", "Accounting & Finance"),
 	("AE", "Aerospace Engineering"),

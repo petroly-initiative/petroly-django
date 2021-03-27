@@ -2,7 +2,7 @@ import django_filters
 from .models import Instructor
 from django_filters import DateFilter, CharFilter
 from django import forms
-from .data import departments
+from data import departments
 
 
 class InstructorFilter(django_filters.FilterSet):
