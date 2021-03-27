@@ -2,7 +2,7 @@ from os import name
 from django.db import models
 from django.db.models import Avg
 from django.contrib.auth.models import User
-from .data import departments
+from data import departments
 from cloudinary.models import CloudinaryField
 from cloudinary.uploader import upload, upload_image
 
