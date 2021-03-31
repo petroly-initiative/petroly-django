@@ -61,6 +61,9 @@
                     <li class="nav-item"><a class="nav-link active" href="#" style="color: #000000;"><strong>Events</strong></a></li>
                     <li class="nav-item" style="box-shadow: 0px 0px;"><a class="nav-link active" href="#" style="color: #000000;"><strong>Clubs</strong></a></li>
                     {% endcomment %}
+                    {% if perms.admin %}
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'admin:index' %}" style="color: #000000;"><strong>ADMIN</strong></a></li>
+                    {% endif %}
                 </ul>
 
             </div>
