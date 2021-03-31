@@ -2,15 +2,16 @@
 {% extends 'base.html' %}
 
 
-{% block head %}
-    <meta charset="UTF-8">
-    <title>Confirmation</title>
-{% endblock head %}
+{% block title %}
+    Confirmation
+{% endblock title %}
 
 {% block body %}
 {% if success %}
-{{ user.username }}, your account is confirmed!
+    {% block big_text %}
+        {{ user.username }}, your account is confirmed!
+    {% endblock big_text %}
 {% else %}
-Error, invalid token!
+    <h2>Error, invalid token!</h2>
 {% endif %}
 {% endblock body %}

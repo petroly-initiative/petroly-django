@@ -64,13 +64,13 @@ class RegisterView(LoginView):
 
                 try:
                     # Confirmation email
-                    send_mail(
-                        'THANK YOU!',
-                        'We welcome you to our community, where we all help one another :)',
-                        'no-reply@petroly.co',
-                        [request.POST['email']],
-                        fail_silently=False,
-                    )
+                    # send_mail(
+                    #     'THANK YOU!',
+                    #     'We welcome you to our community, where we all help one another :)',
+                    #     'no-reply@petroly.co',
+                    #     [request.POST['email']],
+                    #     fail_silently=False,
+                    # )
                     send_email(new_user)
                 except Exception as e:
                     print(e)
