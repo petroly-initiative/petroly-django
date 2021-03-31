@@ -6,12 +6,10 @@
     Confirmation
 {% endblock title %}
 
-{% block body %}
-{% if success %}
-    {% block big_text %}
+{% block big_text %}
+    {% if success %}
         {{ user.username }}, your account is confirmed!
-    {% endblock big_text %}
-{% else %}
-    <h2>Error, invalid token!</h2>
-{% endif %}
-{% endblock body %}
+    {% else %}
+        <h2>Error, invalid token!</h2>
+    {% endif %}
+{% endblock big_text %}
