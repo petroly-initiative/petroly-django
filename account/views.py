@@ -64,7 +64,6 @@ class RegisterView(LoginView):
 
                 try:
                     # Confirmation email
-                    send_email(new_user)
                     send_mail(
                         'THANK YOU!',
                         'We welcome you to our community, where we all help one another :)',
@@ -72,6 +71,7 @@ class RegisterView(LoginView):
                         [request.POST['email']],
                         fail_silently=False,
                     )
+                    send_email(new_user)
                 except Exception as e:
                     print(e)
                     User.objects.filter(email=request.POST['email']).delete()
