@@ -85,6 +85,7 @@
 
     <main id="main-doc" style="box-shadow: 0px 0px;">
     
+    {% if user.is_authenticated %}
         <div class="modal fade text-center" role="dialog" tabindex="-1" id="profile-modal" style="width: large;margin: auto;">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -112,7 +113,7 @@
                                 <div class="d-flex flex-column align-items-center align-items-xl-start" id="instructor_form_info-2" style="padding-bottom: 0px;height: 103px;font-size: 25px;">
                                 <a href={% url 'password_change' %}> <span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>Change Password</strong></span></a>
                                 <a href={% url 'profile_form' %}> <span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>Edit My Profile</strong></span></a>
-                                <a href={% url 'evaluation:evaluation_list' user.pk|default:'' %}> <span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>My Evaluations</strong></span></a>
+                                <a href={% url 'evaluation:evaluation_list' user.pk %}> <span style="font-size: 16px;color: #26f4e7;padding-top: 0px;padding-bottom: 12px;"><strong>My Evaluations</strong></span></a>
                                 </div>
                             </div>
                             <div class="col-md-7 col-lg-8 d-flex flex-column align-items-md-start justify-content-lg-center scstyle-1" id="records">
@@ -175,7 +176,7 @@
                 </div>
             </div>
         </div>
-
+    {% endif %}
 
 
         <div style="display: flex;justify-content: center;margin: 22px;">
