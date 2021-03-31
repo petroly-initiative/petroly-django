@@ -8,8 +8,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.urls import reverse, reverse_lazy
-from django.core.mail import send_mail
 from cloudinary.uploader import upload
+from django.core.mail import send_mail
+from django_email_verification import send_email
 
 
 class IndexView(TemplateView):
@@ -51,6 +52,7 @@ class RegisterView(LoginView):
         elif "register" in request.POST:
             if user_form.is_valid() and profile_form.is_valid():
                 new_user = user_form.save(commit=True)
+                new_user.is_active= False
 
                 new_profile = profile_form.save(commit=False)
                 new_profile.user = new_user
@@ -61,16 +63,18 @@ class RegisterView(LoginView):
                 new_profile.save()
 
                 try:
-                    send_mail(
-                        'THANK YOU!',
-                        'We welcome you to out community, where we all help one another :)',
-                        'no-reply@petroly.co',
-                        [request.POST['email']],
-                        fail_silently=False,
-                    )
+                    # Confirmation email
+                    send_email(new_user)
+                    # send_mail(
+                    #     'THANK YOU!',
+                    #     'We welcome you to our community, where we all help one another :)',
+                    #     'no-reply@petroly.co',
+                    #     [request.POST['email']],
+                    #     fail_silently=False,
+                    # )
                 except Exception as e:
                     print(e)
-                    User.objects.filter(email=request.POST['email'])
+                    User.objects.filter(email=request.POST['email']).delete()
                     return HttpResponse("Unexpected error while sending you an email, please register again")
 
                 return render(

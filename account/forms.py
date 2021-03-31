@@ -29,14 +29,14 @@ class UserRegistrationForm(UserCreationForm):
             {"class": "form-control", "placeholder": "Password Again"}
         )
 
-    def clean_email(self):
-        REGEX = r'^\w+@kfupm.edu.sa$'
-        email = self.cleaned_data['email']
+    # def clean_email(self):
+    #     REGEX = r'^\w+@kfupm.edu.sa$'
+    #     email = self.cleaned_data['email']
 
-        if email and not re.match(REGEX, email):
-            raise forms.ValidationError('You must use a KFUPM email')
+    #     if email and not re.match(REGEX, email):
+    #         raise forms.ValidationError('You must use a KFUPM email')
 
-        return email
+    #     return email
 
 
 

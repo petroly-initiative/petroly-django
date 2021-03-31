@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'bootstrapform',
     'widget_tweaks',
     'cloudinary',
+    'django_email_verification',
 ]
 
 MIDDLEWARE = [
@@ -65,12 +66,12 @@ AUTH_PASSWORD_VALIDATORS = [
     # {
     #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     # },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
     # {
     #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     # },
@@ -111,3 +112,19 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'register'
+
+
+
+# Email verification
+def verified_callback(user):
+    user.is_active = True
+
+
+EMAIL_VERIFIED_CALLBACK = verified_callback
+EMAIL_FROM_ADDRESS = 'no-reply@petroly.co'
+EMAIL_MAIL_SUBJECT = 'Confirm Your Email'
+EMAIL_MAIL_HTML = 'email_body.html'
+EMAIL_MAIL_PLAIN = 'email_body.txt'
+EMAIL_TOKEN_LIFE = 60 * 60
+EMAIL_PAGE_TEMPLATE = 'email_confirmation.html'
+EMAIL_PAGE_DOMAIN = 'https://www.petroly.co/'
