@@ -80,10 +80,27 @@
                                 {% endif %}
                             </div>
                             <div class="col-5 offset-0">
+                                <h6>Sociable Person</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                {% if i.staying_up %}
+                                    <p><img src="{% static 'roommate/img/checked-1.png' %}" width="25" ></p>
+                                {% else %}
+                                    <p><img src="{% static 'roommate/img/multiply-1.png' %}" width="25" ></p>
+                                {% endif %}
+                            </div>
+                            <div class="col-5 offset-0">
                                 <h6>Hometown</h6>
                             </div>
                             <div class="col-7 offset-0">
-                                <p>{{ i.region }}</p>
+                                <p>{{ i.hometown }}</p>
+                            </div>
+
+                            <div class="col-5 offset-0">
+                                <h6>Comment</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                <p>{{ i.comment }}</p>
                             </div>
                         </div>
                     </div>
