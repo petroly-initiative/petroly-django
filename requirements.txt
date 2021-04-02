@@ -7,7 +7,6 @@ django-debug-toolbar
 django-filter
 django-heroku
 django-widget-tweaks
-mysqlclient
 Pillow
 psycopg2-binary
 whitenoise

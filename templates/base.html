@@ -54,15 +54,15 @@
             </button>
             <div class="collapse navbar-collapse border rounded scstyle-1" data-toggle="tooltip" data-bs-tooltip="" id="navcol-1" style="box-shadow: 0px 0px;border-width: 0px!important;border-color: rgba(33,37,41,0);border-top-width: 2px;border-top-style: solid;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
                 <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link active" href="{% url 'evaluation:instructors' %}" style="color: #000000;"><strong>Evaluation</strong></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#" style="color: #000000;"><strong>Discussion Forum(soon)</strong></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#" style="color: #000000;"><strong>Whatsapp Groups(soon)</strong></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'evaluation:instructors' %}"><strong>Evaluation</strong></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#" ><strong>Discussion Forum(soon)</strong></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#" ><strong>Whatsapp Groups(soon)</strong></a></li>
                     {% comment %}
                     <li class="nav-item"><a class="nav-link active" href="#" style="color: #000000;"><strong>Events</strong></a></li>
                     <li class="nav-item" style="box-shadow: 0px 0px;"><a class="nav-link active" href="#" style="color: #000000;"><strong>Clubs</strong></a></li>
                     {% endcomment %}
                     {% if perms.admin %}
-                        <li class="nav-item"><a class="nav-link active" href="{% url 'admin:index' %}" style="color: #000000;"><strong>ADMIN</strong></a></li>
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'admin:index' %}"><strong>ADMIN</strong></a></li>
                     {% endif %}
                 </ul>
 
@@ -77,7 +77,7 @@
                         {% else %} src={% static 'base/assets/img/profile_pic.svg' %} {% endif %}
                         style="margin-right: 0px;margin-left: 0px;border-radius: 50%;"></a>
                     </div>
-                    <a href="{% url 'logout' %}" class="btn signout">Log Out</a>
+                    <a href="{% url 'logout' %}" class="btn signout nav-link active">Log Out</a>
                  {% else %}
                     <a href={% url 'register' %}>LogIn/Register</a>
                 {% endif %}
