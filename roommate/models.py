@@ -13,8 +13,10 @@ class Bid(models.Model):
     # Additional
     smoking  = models.BooleanField(_("Do You Smoke"))
     staying_up = models.BooleanField(_("Do Stay Up Late"))
+    sociable = models.BooleanField(_("Sociable Person"))
     temperature = models.IntegerField(_("Room Temperature You Like"), blank=True, null=True)
-    region = models.CharField(_("Your Hometown"), max_length=50, blank=True, null=True)
+    hometown = models.CharField(_("Your Hometown"), max_length=50, blank=True, null=True)
+    comment = models.CharField(_("Comment"), max_length=500, blank=True, null=True, default='No Comment')
 
     class Meta:
         verbose_name = _("bid")
