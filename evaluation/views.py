@@ -72,7 +72,7 @@ class InstructorCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateV
     permission_required = ["evaluation.add_instructor"]
     model = Instructor
     fields = ["name", "department", "profile_pic"]
-    success_url = reverse_lazy("evaluation:index")
+    success_url = reverse_lazy("evaluation:instructors")
     success_message = "The instructor was added"
 
 
