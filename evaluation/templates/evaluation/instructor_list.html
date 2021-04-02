@@ -26,8 +26,7 @@
         <a href={% url 'evaluation:instructor_form' %}>Add New Instructor</a> <br>
     {% endif %}
 
-    <header id="heading"><span id="top_header"><strong><em>Instructors Evaluation</em></strong></span>
-    <sub id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your instructor easily and quickly!</sub></header>
+    <div id="heading"><span id="top_header">Instructors Evaluation</span></div>
 
 {% comment %} Search {% endcomment %}
 <form
@@ -37,21 +36,18 @@
     {% csrf_token %}
     <l>
         {% comment %} {{filter.form.as_p}} {% endcomment %}
-        <h3>Name Contains:</h3>
-        <input type="" name="name__icontains" value="{{ selected_name }}" /> <br>
-        <h3>Department:</h3>
+         <div class="d-flex d-md-flex align-items-sm-center justify-content-md-center" style="display: flex;width: 41rem;max-width: 68rem;padding-bottom: 5px;">
+        <input class="border rounded form-control d-xl-flex align-items-xl-center"  id="searchbar" placeholder="enter the name of the instructor" autofocus="" autocomplete="on" style="width: 100%; padding: 16px;margin: 0px;color: var(--dark);margin-left: 2px;text-align: center;font-size: 1rem;border-radius: 0px;" type="" name="name__icontains" value="{{ selected_name }}"/> <br>
+        
 
-        <select name="department" id="" default="{{ selected_department }}">
-            <option value="">---------------</option>
+       <button class="btn btn-primary d-flex justify-content-sm-center" id="search_btn" type="submit" style="background: rgba(0,123,255,0);padding: 0;border-width: 0px;width: 45px;height: 45px;"><img class="rounded-circle d-sm-flex d-xl-flex justify-content-xl-center" data-toggle="tooltip" data-bs-tooltip="" id="search_icon" src="{% static 'evaluation\instructors\assets\img\icons8-google-web-search.svg' %} " type="submit" style="display: inline-flex;margin-right: 4px;width: 45px;min-width: 9px;height: 45px;"></button>
+        </div>
+        <select class="scstyle-1" style="font-size: 18px;padding: 4px ;margin-left: 7px;width: 200px;border-radius: 11px;height: 36px;border-width: 0px; max-height: 150px; overflow-y: scroll" name="department" id="" default="{{ selected_department }}">
+            <option style="color: white; background:rgb(23,209,196);" value="" selected disabled>Department</option>
             {% for key, name in departments %}
                 <option value={{ key }} {% if key == selected_department %}selected{% endif %}>{{ name }}</option>
             {% endfor %}
         </select>
-
-        <button type="submit">search</button>
-    </l>
-</form>
-
 
 {% comment %} Cards {% endcomment %}
 <div class="row" id="instructors_container" style="margin-bottom: 29px;margin-right: 0;margin-left: 0;">
