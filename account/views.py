@@ -53,6 +53,7 @@ class RegisterView(LoginView):
             if user_form.is_valid() and profile_form.is_valid():
                 new_user = user_form.save(commit=True)
                 new_user.is_active= False
+                new_user.save()
 
                 new_profile = profile_form.save(commit=False)
                 new_profile.user = new_user

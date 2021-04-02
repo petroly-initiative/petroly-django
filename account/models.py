@@ -4,6 +4,8 @@ from django.urls import reverse
 from PIL import Image
 from cloudinary.models import CloudinaryField
 from data import departments, years
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
 
 # Create your models here.
 
@@ -32,3 +34,7 @@ class Profile(models.Model):
     def __str__(self) -> str:
         return "@{}".format(self.user.username)
 
+# @receiver(pre_save, sender=User)
+# def user_to_inactive(sender, instance, created, update_fields, **kwargs):
+#     if created:
+#         instance.is_active = False
