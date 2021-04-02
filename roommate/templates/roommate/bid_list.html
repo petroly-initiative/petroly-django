@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    {% if user.bid %}
+        <a href="{% url 'roommate:bid_update' user.bid.pk  %}"><h2>EDIT My Roommate Bid</h2></a>
+    {% else %}
+        <a href="{% url 'roommate:bid_create' %}"><h2>CREATE My Roommate Bid</h2></a>
+    {% endif %}
+    <br>
+    {% for i in bid_list %}
+        <center>
+        Name: {{ i.name }} <br>
+        Phone: {{ i.phone }} <br>
+        Email: {{ i.user.email }} <br>
+        Do You Smoke: {{ i.smoking }} <br>
+        Do Stay Up Late: {{ i.staying_up }} <br>
+        </center>
+
+        {% if i.user == user %}
+            <a href="{% url 'roommate:bid_update' i.pk %}"><h2>EDIT</h2></a>
+            <a href="{% url 'roommate:bid_delete' i.pk %}"><h2>DELETE!</h2></a>
+        {% endif %}
+    {% empty %}
+        <h1>No Roommate Bids Yet.</h1>
+    {% endfor %}
+{% endblock body %}
