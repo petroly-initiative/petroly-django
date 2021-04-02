@@ -4,15 +4,17 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>CC_loginPage</title>
+        <title>Petroly.co</title>
         <link rel="stylesheet" href={% static 'account/login_page/assets/bootstrap/css/bootstrap.min.css' %}>
         <link rel="stylesheet" href={% static 'account/login_page/assets/css/Login-Form-Clean.css' %}>
         <script src="https://kit.fontawesome.com/aa260f149b.js" crossorigin="anonymous"></script> <!-- please don't change its place-->
     </head>
     <body>
+    <a href="{% url 'index' %}">
         <div class="logo">
             <img src={% static 'account/login_page/assets/img/logo.png' %} alt="logo.png">
         </div>
+    </a>
 
          {% if form.errors %}
             <p>
