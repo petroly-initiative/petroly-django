@@ -252,6 +252,7 @@ html {
 #search_container {
   align-items: center;
   margin: 0 auto;
+  max-width: 60vmax;
 }
 
 #search_container {
@@ -483,7 +484,8 @@ a:hover {
 }
 .rating:not(:checked) > input {
   position:absolute;
-  top:-9999px;
+  left: -9999px !important;
+  display: none;
   clip:rect(0, 0, 0, 0);
 }
 .rating:not(:checked) > label {
