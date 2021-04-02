@@ -13,9 +13,11 @@
 {% endblock small_text %}
 
 {% block body %}
-    <center>
-        <a href="{% url 'roommate:bid_delete' user.bid.pk %}"><h1>DELETE MY BID!</h1></a>
-    </center>
+    {% if user.bid %}
+        <center>
+            <a href="{% url 'roommate:bid_delete' user.bid.pk %}"><h1>DELETE MY BID!</h1></a>
+        </center>
+    {% endif %}
     <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
