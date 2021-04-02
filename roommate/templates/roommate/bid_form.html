@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Create Roommate Bid
+{% endblock title %}
+
+{% block big_text %}
+    Create Your Roommate Bid
+{% endblock big_text %}
+
+{% block small_text %}
+    Let Others Know Important Things About You.
+{% endblock small_text %}
+
+{% block body %}
+    {% if user.bid %}
+        <center>
+            <a href="{% url 'roommate:bid_delete' user.bid.pk %}"><h1>DELETE MY BID!</h1></a>
+        </center>
+    {% endif %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">CREATE/UPDATE</button>
+    </form>
+
+{% endblock body %}
