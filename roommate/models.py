@@ -7,8 +7,8 @@ class Bid(models.Model):
 
     # Basic
     name = models.CharField(_("Name"), max_length=100)
-    phone = models.PhoneNumberField(_("Phone Number"))
-    user = models.ForeignKey("admin.User", on_delete=models.CASCADE)
+    phone = models.CharField(_("Phone Number"), max_length=100)
+    user = models.OneToOneField("auth.User", verbose_name=_("User"), on_delete=models.CASCADE)
 
     # Additional
     smoking  = models.BooleanField(_("Do You Smoke"))
@@ -24,6 +24,6 @@ class Bid(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("bid_detail", kwargs={"pk": self.pk})
+        return reverse("roommate:bid_update", kwargs={"pk": self.pk})
 
 
