@@ -14,7 +14,7 @@ class Bid(models.Model):
     smoking  = models.BooleanField(_("Do You Smoke"))
     staying_up = models.BooleanField(_("Do Stay Up Late"))
     sociable = models.BooleanField(_("Sociable Person"))
-    temperature = models.CharField(_("Room Temperature You Like"), blank=True, null=True)
+    temperature = models.CharField(_("Room Temperature You Like"), max_length=50, blank=True, null=True)
     hometown = models.CharField(_("Your Hometown"), max_length=50, blank=True, null=True)
     comment = models.TextField(_("Comment"), blank=True, default='No Comment')
 
