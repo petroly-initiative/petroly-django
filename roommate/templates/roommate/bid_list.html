@@ -24,8 +24,8 @@
                         </div>
                         <h5 class="mb-0" style="position: relative;z-index: 2;"><img
                                 class="rounded-circle d-flex float-left d-xl-flex instructor_pic" 
-                                {% if user.profile_pic %}
-                                    src={{ user.profile_pic.url }}
+                                {% if i.user.profile.profile_pic %}
+                                    src={{ i.user.profile.profile_pic.url }}
                                 {% else %}
                                     src={% static 'evaluation/instructors/assets/img/profile_pic.svg' %} 
                                 {% endif %}
@@ -44,7 +44,51 @@
                         <h6 class="d-lg-flex justify-content-xl-end"><em>Year: {{ i.user.profile.year }}</em></h6>
 
                     </div>
-                    <div class="collapse item-1" role="tabpanel" data-parent="#accordion-{{i.pk}}">
+                    
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5 offset-0">
+                                <h6>Email</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                <p>{{ i.user.email }}</p>
+                            </div>
+                            <div class="col-5 offset-0">
+                                <h6>Phone</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                <p>{{ i.phone }}</p>
+                            </div>
+                            <div class="col-5 offset-0">
+                                <h6>Smoking</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                {% if i.smoking %}
+                                    <p><img src="{% static 'roommate/img/checked-1.png' %}" width="25" ></p>
+                                {% else %}
+                                    <p><img src="{% static 'roommate/img/multiply-1.png' %}" width="25" ></p>
+                                {% endif %}
+                            </div>
+                            <div class="col-5 offset-0">
+                                <h6>Stying Up</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                {% if i.staying_up %}
+                                    <p><img src="{% static 'roommate/img/checked-1.png' %}" width="25" ></p>
+                                {% else %}
+                                    <p><img src="{% static 'roommate/img/multiply-1.png' %}" width="25" ></p>
+                                {% endif %}
+                            </div>
+                            <div class="col-5 offset-0">
+                                <h6>Hometown</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                <p>{{ i.region }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% comment %} <div class="collapse item-1" role="tabpanel" data-parent="#accordion-{{i.pk}}">
                         <div class="card-body">
                             <div class="row d-lg-flex align-items-xl-center">
                                 <div class="col-lg-12 col-xl-12"
@@ -132,7 +176,8 @@
                             </div>
 
                         </div>
-                    </div>
+                    </div> {% endcomment %}
+                
                 </div>
             </div>
 
