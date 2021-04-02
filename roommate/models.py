@@ -25,5 +25,3 @@ class Bid(models.Model):
 
     def get_absolute_url(self):
         return reverse("roommate:bid_update", kwargs={"pk": self.pk})
-
-
