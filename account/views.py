@@ -51,7 +51,7 @@ class RegisterView(LoginView):
         # For Registering
         elif "register" in request.POST:
             if user_form.is_valid() and profile_form.is_valid():
-                new_user = user_form.save(commit=True)
+                new_user = user_form.save(commit=False)
                 new_user.is_active= False
                 new_user.save()
 
