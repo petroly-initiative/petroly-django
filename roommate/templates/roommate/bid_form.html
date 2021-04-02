@@ -13,9 +13,13 @@
 {% endblock small_text %}
 
 {% block body %}
+    <center>
+        <a href="{% url 'roommate:bid_delete' user.bid.pk %}"><h1>DELETE MY BID!</h1></a>
+    </center>
     <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">CREATE/UPDATE</button>
     </form>
+
 {% endblock body %}
