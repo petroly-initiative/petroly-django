@@ -12,7 +12,7 @@
     {% comment %} Cards {% endcomment %}
 <div class="row" id="instructors_container" style="margin-bottom: 29px;margin-right: 0;margin-left: 0;">
     {% for i in bid_list %}
-        <div class="col-md-4 col-lg-6 col-xl-4 instructor_column" style="margin-bottom: 28px;">
+        <div class="col-md-6 col-lg-6 col-xl-4 instructor_column" style="margin-bottom: 28px;">
             <div role="tablist" id="accordion-{{i.pk}}" style="background: rgba(231,231,231,0);border-radius: 0;">
 
                 <div class="card instructors"
@@ -47,7 +47,7 @@
                     
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-5 col-lg-3 offset-0">
+                            <div class="col-5 offset-0">
                                 <h6>Email</h6>
                             </div>
                             <div class="col-7 offset-0">
@@ -64,9 +64,9 @@
                             </div>
                             <div class="col-7 offset-0">
                                 {% if i.smoking %}
-                                    <p><img src="{% static 'roommate/img/checked-1.png' %}" width="25" ></p>
+                                    <p><img src="{% static 'roommate/img/check_icon.svg' %}" width="30"></p>
                                 {% else %}
-                                    <p><img src="{% static 'roommate/img/multiply-1.png' %}" width="25" ></p>
+                                    <p><img src="{% static 'roommate/img/x_icon.svg' %}" width="30" ></p>
                                 {% endif %}
                             </div>
                             <div class="col-5 offset-0">
@@ -74,19 +74,19 @@
                             </div>
                             <div class="col-7 offset-0">
                                 {% if i.staying_up %}
-                                    <p><img src="{% static 'roommate/img/checked-1.png' %}" width="25" ></p>
+                                    <p><img src="{% static 'roommate/img/check_icon.svg' %}" width="30"></p>
                                 {% else %}
-                                    <p><img src="{% static 'roommate/img/multiply-1.png' %}" width="25" ></p>
+                                    <p><img src="{% static 'roommate/img/x_icon.svg' %}" width="30" ></p>
                                 {% endif %}
                             </div>
                             <div class="col-5 offset-0">
                                 <h6>Sociable Person</h6>
                             </div>
                             <div class="col-7 offset-0">
-                                {% if i.staying_up %}
-                                    <p><img src="{% static 'roommate/img/checked-1.png' %}" width="25" ></p>
+                                {% if i.sociable %}
+                                    <p><img src="{% static 'roommate/img/check_icon.svg' %}" width="30"></p>
                                 {% else %}
-                                    <p><img src="{% static 'roommate/img/multiply-1.png' %}" width="25" ></p>
+                                    <p><img src="{% static 'roommate/img/x_icon.svg' %}" width="30" ></p>
                                 {% endif %}
                             </div>
                             <div class="col-5 offset-0">
@@ -98,9 +98,10 @@
 
                             <div class="col-5 offset-0">
                                 <h6>Comment</h6>
+                                <textarea name="" id="" cols="24" rows="5" editable='false'>{{ i.comment }}</textarea>
                             </div>
                             <div class="col-7 offset-0">
-                                <p>{{ i.comment }}</p>
+                                {% comment %} <p>{{ i.comment }}</p> {% endcomment %}
                             </div>
                         </div>
                     </div>
@@ -202,7 +203,9 @@
     {% endfor %}
 </div>
 
+
     {% if is_paginated %}
+    <div class="col-lg-5 offset-lg-5">
 
       {% if page_obj.has_previous %}
         <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page=1">First</a>
@@ -221,7 +224,19 @@
         <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.next_page_number }}">Next</a>
         <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.paginator.num_pages }}">Last</a>
       {% endif %}
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+            </ul>
+        </nav>
 
     {% endif %}
+    </div>
 
 {% endblock body %}

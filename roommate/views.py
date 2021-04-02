@@ -10,13 +10,14 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
+from django import forms
 
 
 class BidCreateView(LoginRequiredMixin, CreateView):
     model = Bid
     fields = [
-        'name', 'phone', 'smoking', 
-        'staying_up', 'temperature', 'region'
+        'name', 'phone', 'smoking', 'sociable',
+        'staying_up', 'temperature', 'hometown', 'comment'
     ]
 
     def form_valid(self, form):
@@ -40,8 +41,8 @@ class BidDeleteView(DeleteView):
 class BidUpdateView(UpdateView):
     model = Bid
     fields = [
-        'name', 'phone', 'smoking', 
-        'staying_up', 'temperature', 'region'
+        'name', 'phone', 'smoking', 'sociable',
+        'staying_up', 'temperature', 'hometown', 'comment'
     ]
 
 

@@ -16,7 +16,7 @@ class Bid(models.Model):
     sociable = models.BooleanField(_("Sociable Person"))
     temperature = models.IntegerField(_("Room Temperature You Like"), blank=True, null=True)
     hometown = models.CharField(_("Your Hometown"), max_length=50, blank=True, null=True)
-    comment = models.CharField(_("Comment"), max_length=500, blank=True, null=True, default='No Comment')
+    comment = models.TextField(_("Comment"), blank=True, default='No Comment')
 
     class Meta:
         verbose_name = _("bid")
