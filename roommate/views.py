@@ -19,6 +19,18 @@ class BidCreateView(LoginRequiredMixin, CreateView):
         'staying_up', 'temperature', 'region'
     ]
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 class BidDeleteView(DeleteView):
     model = Bid

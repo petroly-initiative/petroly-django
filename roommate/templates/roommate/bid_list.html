@@ -7,18 +7,6 @@
     {% else %}
         <a href="{% url 'roommate:bid_create' %}"><h2>CREATE My Roommate Bid</h2></a>
     {% endif %}
-    <br>
-    {% for i in bid_list %}
-        <center>
-        Name: {{ i.name }} <br>
-        Phone: {{ i.phone }} <br>
-        Email: {{ i.user.email }} <br>
-        Do You Smoke: {{ i.smoking }} <br>
-        Do Stay Up Late: {{ i.staying_up }} <br>
-        </center>
-    {% empty %}
-        <h1>No Roommate Bids Yet.</h1>
-    {% endfor %}
 
 
     {% comment %} Cards {% endcomment %}
