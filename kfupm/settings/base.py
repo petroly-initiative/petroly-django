@@ -129,4 +129,3 @@ EMAIL_MAIL_PLAIN = 'email_body.txt'
 EMAIL_TOKEN_LIFE = 60 * 60
 EMAIL_PAGE_TEMPLATE = 'email_confirmation.html'
 EMAIL_PAGE_DOMAIN = 'https://www.petroly.co/'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
