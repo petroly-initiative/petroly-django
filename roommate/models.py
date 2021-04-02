@@ -7,7 +7,7 @@ class Bid(models.Model):
 
     # Basic
     name = models.CharField(_("Name"), max_length=100)
-    phone = models.CharField(_("Phone Number"), max_length=100, blank=True)
+    phone = models.CharField(_("Phone Number"), max_length=100, blank=True, null=True)
     user = models.OneToOneField("auth.User", verbose_name=_("User"), on_delete=models.CASCADE)
 
     # Additional
