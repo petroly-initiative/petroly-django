@@ -476,13 +476,14 @@ a:hover {
 .rating label span
 {
   font-size: 40px ;
+
 }
 
 
 .rating:not(:checked) > input {
   
   position: absolute;
-  left: -9999px !important;
+  left: -9999px ;
   clip:rect(0, 0, 0, 0);
   
 }
@@ -517,4 +518,7 @@ a:hover {
   position:relative;
   
 }
+
+
+
 

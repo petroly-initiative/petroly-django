@@ -484,7 +484,7 @@ a:hover {
 }
 .rating:not(:checked) > input {
   position:absolute;
-  left: -9999px !important;
+  left: -9999px ;
   display: none;
   clip:rect(0, 0, 0, 0);
 }
