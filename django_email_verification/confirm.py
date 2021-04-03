@@ -44,13 +44,12 @@ def send_email_thread(user, token, expiry, sender, domain, subject, mail_plain, 
 
     from .views import verify
     link = ''
-    print('>>>4')
     for k, v in get_resolver(None).reverse_dict.items():
         if k is verify and v[0][0][1][0]:
             addr = str(v[0][0][0])
             link = domain + addr[0: addr.index('%')] + token
-    print('>>>5')
     context = {'link': link, 'expiry': expiry, 'user': user}
+    print('>>>4')
 
     text = render_to_string(mail_plain, context)
 
@@ -58,7 +57,9 @@ def send_email_thread(user, token, expiry, sender, domain, subject, mail_plain, 
 
     msg = EmailMultiAlternatives(subject, text, sender, [user.email])
     msg.attach_alternative(html, 'text/html')
+    print('>>>5')
     msg.send()
+    print('>>>6')
 
 
 def _get_validated_field(field, default_type=None):
