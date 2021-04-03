@@ -6,7 +6,6 @@ from .errors import NotAllFieldCompiled
 
 
 def verify(request, token):
-    print(f'verify({token})')
     try:
         template = settings.EMAIL_PAGE_TEMPLATE
         if not isinstance(template, str):

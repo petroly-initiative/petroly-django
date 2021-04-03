@@ -80,11 +80,10 @@ class EmailVerificationTokenGenerator:
             email = urlsafe_base64_decode(email_b64).decode()
             user = get_user_model().objects.get(email=email)
             ts = base36_to_int(ts_b36)
-            print(email, user, ts)
+
         except (ValueError, get_user_model().DoesNotExist):
             return False, None
-        print(user, ts)
-        print(self._make_token_with_timestamp(user, ts)[0], token)
+
         if not constant_time_compare(self._make_token_with_timestamp(user, ts)[0], token):
             return False, None
 

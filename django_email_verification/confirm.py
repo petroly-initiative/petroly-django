@@ -19,9 +19,8 @@ def send_email(user, thread=True, **kwargs):
             default_token_generator.key_salt = kwargs['custom_salt']
 
         expiry_ = kwargs.get('expiry')
-        print(expiry_)
+
         token, expiry = default_token_generator.make_token(user, expiry_)
-        print(token, expiry)
 
         sender = _get_validated_field('EMAIL_FROM_ADDRESS')
         domain = _get_validated_field('EMAIL_PAGE_DOMAIN')
@@ -49,7 +48,6 @@ def send_email_thread(user, token, expiry, sender, domain, subject, mail_plain, 
             addr = str(v[0][0][0])
             link = domain + addr[0: addr.index('%')] + token
     context = {'link': link, 'expiry': expiry, 'user': user, 'token':token}
-    print('>>>4')
 
     text = render_to_string(mail_plain, context)
 
@@ -57,9 +55,7 @@ def send_email_thread(user, token, expiry, sender, domain, subject, mail_plain, 
 
     msg = EmailMultiAlternatives(subject, text, sender, [user.email])
     msg.attach_alternative(html, 'text/html')
-    print('>>>5')
     msg.send()
-    print('>>>6')
 
 
 def _get_validated_field(field, default_type=None):
@@ -75,7 +71,6 @@ def _get_validated_field(field, default_type=None):
 
 
 def verify_token(token):
-    print(f'verify_token({token})')
     valid, user = default_token_generator.check_token(token)
     if valid:
         callback = _get_validated_field('EMAIL_VERIFIED_CALLBACK', default_type=Callable)
