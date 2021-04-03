@@ -3,9 +3,9 @@
 
 {% block body %}
     {% if user.bid %}
-        <a href="{% url 'roommate:bid_update' user.bid.pk  %}"><h2>EDIT My Roommate Bid</h2></a>
+        <a href="{% url 'roommate:bid_update' user.bid.pk  %}"><h2>EDIT My Roommate Offer</h2></a>
     {% else %}
-        <a href="{% url 'roommate:bid_create' %}"><h2>CREATE My Roommate Bid</h2></a>
+        <a href="{% url 'roommate:bid_create' %}"><h2>CREATE My Roommate Offer</h2></a>
     {% endif %}
 
 
