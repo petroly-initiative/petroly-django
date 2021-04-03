@@ -27,9 +27,6 @@ class ConfirmView(TemplateView):
     def post(self, request, *args, **kwargs):
         token = request.GET.get('token', '')
 
-        # if request.POST.get('confirm', '') != 'true':
-        #     return render(request, ConfirmView.template_name, context={'token':token})
-
         return verify(request, request.POST.get('token', ''))
 
 
