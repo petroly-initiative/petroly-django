@@ -15,21 +15,20 @@ from django_email_verification.views import verify
 
 
 
-class VerifyView(TemplateView):
+class ConfirmView(TemplateView):
 
     template_name = "email_confirm.html"
 
     def get(self, request, *args, **kwargs):
-        next_ = request.GET.get('next', '')
         token = request.GET.get('token', '')
         
-        return render(request, VerifyView.template_name, context={'next': next_, 'token':token})
+        return render(request, ConfirmView.template_name, context={'token':token})
 
     def post(self, request, *args, **kwargs):
         token = request.GET.get('token', '')
 
-        if request.POST.get('confirm', '') != 'true':
-            return render(request, VerifyView.template_name, context={'token':token})
+        # if request.POST.get('confirm', '') != 'true':
+        #     return render(request, ConfirmView.template_name, context={'token':token})
 
         return verify(request, request.POST.get('token', ''))
 
