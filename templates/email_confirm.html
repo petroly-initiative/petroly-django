@@ -12,7 +12,7 @@
         {% csrf_token %}
         <button type="submit">VERIFY ME</button>
         <input type="hidden" name="token" value={{ token }}>
-        <a href="{{ next }}"><h1> VERIFY ME </h1></a>
+        <a href="https://www.petroly.co/email/{{ token }}"><h1> VERIFY ME </h1></a>
     </form>
 {% endblock body %}
 

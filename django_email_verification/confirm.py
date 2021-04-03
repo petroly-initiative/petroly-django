@@ -48,7 +48,7 @@ def send_email_thread(user, token, expiry, sender, domain, subject, mail_plain, 
         if k is verify and v[0][0][1][0]:
             addr = str(v[0][0][0])
             link = domain + addr[0: addr.index('%')] + token
-    context = {'link': link, 'expiry': expiry, 'user': user}
+    context = {'link': link, 'expiry': expiry, 'user': user, 'token':token}
     print('>>>4')
 
     text = render_to_string(mail_plain, context)
