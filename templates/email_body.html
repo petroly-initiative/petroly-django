@@ -6,9 +6,9 @@
 </head>
 <body>
 <h1>You are almost there, {{ user.username }}!</h1><br>
-<h2>Please click <a href="https://www.petroly.co/verify?token={{ token }}">here</a> to confirm your account</h2>
+<h2>Please click <a href="https://www.petroly.co/email_confirm?token={{ token }}">here</a> to confirm your account</h2>
 <h2>The token expires on {{ expiry|time:"TIME_FORMAT" }}</h2>
 <h4>Or copy the following link:</h4>
-    https://www.petroly.co/verify?token={{ token }}
+    https://www.petroly.co/email_confirm?token={{ token }}
 </body>
 </html>
