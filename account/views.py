@@ -10,7 +10,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse, reverse_lazy
 from cloudinary.uploader import upload
 from django.core.mail import send_mail
-from .django_email_verification import send_email
+from django_email_verification import send_email
 import logging
 logging.basicConfig(level = logging.INFO, filename = "my.log")
 
