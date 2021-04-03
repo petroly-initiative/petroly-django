@@ -35,8 +35,6 @@ from django.contrib.auth import get_user_model
 from django.utils.crypto import constant_time_compare, salted_hmac
 from django.utils.http import base36_to_int, int_to_base36, urlsafe_base64_decode, urlsafe_base64_encode
 
-import logging
-logging.basicConfig(level = logging.INFO, filename = "my.log")
 
 class EmailVerificationTokenGenerator:
     """
@@ -82,23 +80,23 @@ class EmailVerificationTokenGenerator:
             email = urlsafe_base64_decode(email_b64).decode()
             user = get_user_model().objects.get(email=email)
             ts = base36_to_int(ts_b36)
-            logging.info(email, user, ts)
+            print(email, user, ts)
         except (ValueError, get_user_model().DoesNotExist):
             return False, None
-        logging.info(self._make_token_with_timestamp(user, ts)[0], token)
+        print(self._make_token_with_timestamp(user, ts)[0], token)
         if not constant_time_compare(self._make_token_with_timestamp(user, ts)[0], token):
             return False, None
 
         now = self._now()
-        logging.info(self._num_seconds(now), ts, settings.EMAIL_TOKEN_LIFE)
-        logging.info((self._num_seconds(now) - ts) > settings.EMAIL_TOKEN_LIFE)
+        print(self._num_seconds(now), ts, settings.EMAIL_TOKEN_LIFE)
+        print((self._num_seconds(now) - ts) > settings.EMAIL_TOKEN_LIFE)
         if (self._num_seconds(now) - ts) > settings.EMAIL_TOKEN_LIFE:
             return False, None
 
         return True, user
 
     def _make_token_with_timestamp(self, user, timestamp):
-        logging.info(timestamp)
+        print(timestamp)
         email_b64 = urlsafe_base64_encode(user.email.encode())
         ts_b36 = int_to_base36(timestamp)
         hash_string = salted_hmac(

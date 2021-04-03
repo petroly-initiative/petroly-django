@@ -10,8 +10,6 @@ from django.utils import timezone
 from .errors import InvalidUserModel, NotAllFieldCompiled
 from .token import default_token_generator
 
-import logging
-logging.basicConfig(level = logging.INFO, filename = "my.log")
 
 def send_email(user, thread=True, **kwargs):
     try:
@@ -21,9 +19,9 @@ def send_email(user, thread=True, **kwargs):
             default_token_generator.key_salt = kwargs['custom_salt']
 
         expiry_ = kwargs.get('expiry')
-        logging.info(expiry_)
+        print(expiry_)
         token, expiry = default_token_generator.make_token(user, expiry_)
-        logging.info(token, expiry)
+        print(token, expiry)
 
         sender = _get_validated_field('EMAIL_FROM_ADDRESS')
         domain = _get_validated_field('EMAIL_PAGE_DOMAIN')
