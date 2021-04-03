@@ -11,6 +11,5 @@ urlpatterns = [
     path('profile/<int:pk>/', views.ProfileDetailView.as_view(), name='profile_detail'),
     path('profile/update/', views.ProfileUpdateView.as_view(), name='profile_form'),
     path('email_confirm/', views.VerifyView.as_view(), name='email_confirm'),
-    path('email_verify/', include(email_urls)),
 
 ]
