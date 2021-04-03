@@ -103,7 +103,7 @@ class EmailVerificationTokenGenerator:
             self._make_hash_value(user, timestamp),
             secret=self.secret,
         ).hexdigest()
-        print(elf.key_salt,
+        print(self.key_salt,
             self._make_hash_value(user, timestamp),
             secret=self.secret,)
         return f'{email_b64}-{ts_b36}-{hash_string}', \
