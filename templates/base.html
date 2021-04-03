@@ -54,9 +54,10 @@
             </button>
             <div class="collapse navbar-collapse border rounded scstyle-1" data-toggle="tooltip" data-bs-tooltip="" id="navcol-1" style="box-shadow: 0px 0px;border-width: 0px!important;border-color: rgba(33,37,41,0);border-top-width: 2px;border-top-style: solid;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 0px;">
                 <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link active" href="{% url 'evaluation:instructors' %}"><strong>Evaluation</strong></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#" ><strong>Discussion Forum(soon)</strong></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#" ><strong>Whatsapp Groups(soon)</strong></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'evaluation:instructors' %}" style="color: #000000;"><strong>Evaluation</strong></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'roommate:bid_list' %}" style="color: #000000;"><strong>Find A Roommate</strong></a></li>
+                    {% comment %} <li class="nav-item"><a class="nav-link active" href="#" style="color: #000000;"><strong>Discussion Forum(soon)</strong></a></li> {% endcomment %}
+                    {% comment %} <li class="nav-item"><a class="nav-link active" href="#" style="color: #000000;"><strong>Whatsapp Groups(soon)</strong></a></li> {% endcomment %}
                     {% comment %}
                     <li class="nav-item"><a class="nav-link active" href="#" style="color: #000000;"><strong>Events</strong></a></li>
                     <li class="nav-item" style="box-shadow: 0px 0px;"><a class="nav-link active" href="#" style="color: #000000;"><strong>Clubs</strong></a></li>
@@ -192,32 +193,29 @@
         <footer>
             <div class="container" style="width: 94%;box-shadow: 0px 0px;">
                 <div class="row d-flex d-xl-flex justify-content-center align-items-xl-center">
-                {% comment "" %}
                     <div class="col-sm-4 col-md-3 text-center item">
                         <h4>Services</h4>
                         <ul>
-                            <li><a href="#" style="font-size: 21px;">Web design</a></li>
-                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Development</a></li>
-                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Hosting</a></li>
+                            <li style="font-size: 21px;"><a href="{% url 'roommate:bid_list' %}" style="font-size: 21px;">Find A Roommate</a></li>
+                            <li><a href="{% url 'evaluation:instructors' %}" style="font-size: 21px;">Instructor Evaluation(beta)</a></li>
                         </ul>
                     </div>
+
                     <div class="col-sm-4 col-md-3 text-center item">
                         <h4>About</h4>
                         <ul>
-                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Developers</a></li>
+                            {% comment %} <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Developers</a></li>
                             <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Computer Club</a></li>
-                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Legacy</a></li>
+                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Legacy</a></li> {% endcomment %}
                         </ul>
                     </div>
                     <div class="col-sm-4 col-md-3 text-center item">
-                        <h4>Careers</h4>
+                        <h4>Coming Soon!</h4>
                         <ul>
-                            <li><a href="#" style="font-size: 21px;">Job openings</a></li>
-                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Employee success</a></li>
-                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Benefits</a></li>
+                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Discussion Forum</a></li>
+                            <li style="font-size: 21px;"><a href="#" style="font-size: 21px;">Whatsapp Groups</a></li>
                         </ul>
                     </div>
-                    {% endcomment %}
 
                     <div class="col-md-8" style="text-align: center;padding-top: 15px;">
                         <p class="copyright" style="display: inline;">KFUPM Computer Club © 2021</p>

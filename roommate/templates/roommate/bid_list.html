@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+    {% if user.bid %}
+        <a href="{% url 'roommate:bid_update' user.bid.pk  %}"><h2>EDIT My Roommate Bid</h2></a>
+    {% else %}
+        <a href="{% url 'roommate:bid_create' %}"><h2>CREATE My Roommate Bid</h2></a>
+    {% endif %}
+
+
+    {% comment %} Cards {% endcomment %}
+<div class="row" id="instructors_container" style="margin-bottom: 29px;margin-right: 0;margin-left: 0;">
+    {% for i in bid_list %}
+        <div class="col-md-6 col-lg-6 col-xl-4 instructor_column" style="margin-bottom: 28px;">
+            <div role="tablist" id="accordion-{{i.pk}}" style="background: rgba(231,231,231,0);border-radius: 0;">
+
+                <div class="card instructors"
+                    style="border-radius: 11px;box-shadow: 0px 5px 7px rgba(33,37,41,0.44);margin-bottom: 14px;">
+                    <div class="card-header" role="tab"
+                        style="background: rgba(255,255,255,0.03);border-radius: 19px;border-width: 0px;">
+                        <div id="instructor_styler-5"
+                            style="height: 67px;background-image: url(&quot;assets/img/bg-pattern.png&quot;);background-color: rgba(54,162,177,0);position: absolute;width: 100%;z-index: 1;">
+                        </div>
+                        <h5 class="mb-0" style="position: relative;z-index: 2;"><img
+                                class="rounded-circle d-flex float-left d-xl-flex instructor_pic" 
+                                {% if i.user.profile.profile_pic %}
+                                    src={{ i.user.profile.profile_pic.url }}
+                                {% else %}
+                                    src={% static 'evaluation/instructors/assets/img/profile_pic.svg' %} 
+                                {% endif %}
+                                width="60px" height="60px"
+                                style="width: 70px;height: 70px;margin: 0 0 0 0;margin-left: 22px;margin-right: 48px;">
+                                <a
+                                class="d-flex justify-content-xl-end align-items-xl-center instrucotr_collapse_button"
+                                data-toggle="collapse" 
+                                aria-expanded="false" 
+                                aria-controls="accordion-{{i.pk}} .item-1"
+                                href="#accordion-{{i.pk}} .item-1">
+                                <strong>{{ i.name }}</strong></a>
+                                </h5>
+
+                        <h6 class="d-lg-flex justify-content-xl-end"><em>Planned Major: {{ i.user.profile.major }}</em></h6>
+                        <h6 class="d-lg-flex justify-content-xl-end"><em>Year: {{ i.user.profile.year }}</em></h6>
+
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5 offset-0">
+                                <h6>Email</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                <p>{{ i.user.email }}</p>
+                            </div>
+                            <div class="col-5 offset-0">
+                                <h6>Phone</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                <p>{{ i.phone }}</p>
+                            </div>
+                            <div class="col-5 offset-0">
+                                <h6>Smoking</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                {% if i.smoking %}
+                                    <p><img src="{% static 'roommate/img/check_icon.svg' %}" width="30"></p>
+                                {% else %}
+                                    <p><img src="{% static 'roommate/img/x_icon.svg' %}" width="30" ></p>
+                                {% endif %}
+                            </div>
+                            <div class="col-5 offset-0">
+                                <h6>Stying Up</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                {% if i.staying_up %}
+                                    <p><img src="{% static 'roommate/img/check_icon.svg' %}" width="30"></p>
+                                {% else %}
+                                    <p><img src="{% static 'roommate/img/x_icon.svg' %}" width="30" ></p>
+                                {% endif %}
+                            </div>
+                            <div class="col-5 offset-0">
+                                <h6>Sociable Person</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                {% if i.sociable %}
+                                    <p><img src="{% static 'roommate/img/check_icon.svg' %}" width="30"></p>
+                                {% else %}
+                                    <p><img src="{% static 'roommate/img/x_icon.svg' %}" width="30" ></p>
+                                {% endif %}
+                            </div>
+                            <div class="col-5 offset-0">
+                                <h6>Hometown</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                <p>{{ i.hometown }}</p>
+                            </div>
+
+                            <div class="col-5 offset-0">
+                                <h6>Comment</h6>
+                                <textarea name="" id="" cols="24" rows="5" disabled>{{ i.comment }}</textarea>
+                            </div>
+                            <div class="col-7 offset-0">
+                                {% comment %} <p>{{ i.comment }}</p> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% comment %} <div class="collapse item-1" role="tabpanel" data-parent="#accordion-{{i.pk}}">
+                        <div class="card-body">
+                            <div class="row d-lg-flex align-items-xl-center">
+                                <div class="col-lg-12 col-xl-12"
+                                    style="height: 100%;min-height: none;margin-top: 32px;margin-bottom: 19px;">
+                                    <div class="d-flex justify-content-center flex-nowrap justify-content-xl-end stat_containers"
+                                        id="stat_container-1"
+                                        style="height: 177px;width: 100%;padding-top: 0px;padding-bottom: 0px;">
+                                        <div class="d-flex flex-row justify-content-lg-center align-items-xl-center"
+                                            id="category_container-4"
+                                            style="padding: 12px 0px;padding-bottom: 0px;width: 100%;height: auto;padding-top: 0px;">
+                                            
+                                            <div class="col-6 col-sm-4 col-md-5 col-lg-4 col-xl-5 text-center d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex justify-content-center justify-content-sm-center justify-content-lg-center justify-content-xl-center categories"
+                                                style="height: auto;margin-top: 0px;"><span
+                                                    class="d-md-flex justify-content-xl-center"
+                                                    style="font-size: 22px;text-align: center;width: 100%;"><strong>Email</strong></span>
+                                            </div>
+                                            <div class="col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center progress_indicators"
+                                                style="height: auto;text-align: center;">
+                                                <h3>{{ i.user.email }}</h3>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-row justify-content-lg-center align-items-xl-center"
+                                            id="category_container-3"
+                                            style="padding: 12px 0px;padding-bottom: 0px;width: 100%;height: auto;text-align: center;">
+                                            <div class="col-6 col-sm-4 col-md-5 col-lg-4 col-xl-5 d-md-flex categories"
+                                                style="height: auto;margin-top: 0px;text-align: center;"><span
+                                                    class="d-md-flex justify-content-xl-center"
+                                                    style="font-size: 22px;text-align: center;width: 100%;"><strong>Phone</strong></span>
+                                            </div>
+                                            <div class="col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center"
+                                                style="height: auto;text-align: center;width: 100%;">
+                                                <h3>{{ i.phone }}</h3>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-row justify-content-lg-center align-items-xl-center"
+                                            id="category_container-3"
+                                            style="padding: 12px 0px;padding-bottom: 0px;width: 100%;height: auto;text-align: center;">
+                                            <div class="col-6 col-sm-4 col-md-5 col-lg-4 col-xl-5 d-md-flex categories"
+                                                style="height: auto;margin-top: 0px;text-align: center;"><span
+                                                    class="d-md-flex justify-content-xl-center"
+                                                    style="font-size: 22px;text-align: center;width: 100%;"><strong>Do You Smoke</strong></span>
+                                            </div>
+                                            <div class="col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center"
+                                                style="height: auto;text-align: center;width: 100%;">
+                                                <h3>{{ i.smoking }}</h3>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-row justify-content-lg-center align-items-xl-center"
+                                            id="category_container-3"
+                                            style="padding: 12px 0px;padding-bottom: 0px;width: 100%;height: auto;text-align: center;">
+                                            <div class="col-6 col-sm-4 col-md-5 col-lg-4 col-xl-5 d-md-flex categories"
+                                                style="height: auto;margin-top: 0px;text-align: center;"><span
+                                                    class="d-md-flex justify-content-xl-center"
+                                                    style="font-size: 22px;text-align: center;width: 100%;"><strong>Do You Stay Up Late</strong></span>
+                                            </div>
+                                            <div class="col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center"
+                                                style="height: auto;text-align: center;width: 100%;">
+                                                <h3>{{ i.staying_up }}</h3>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-row justify-content-lg-center align-items-xl-center"
+                                            id="category_container-3"
+                                            style="padding: 12px 0px;padding-bottom: 0px;width: 100%;height: auto;text-align: center;">
+                                            <div class="col-6 col-sm-4 col-md-5 col-lg-4 col-xl-5 d-md-flex categories"
+                                                style="height: auto;margin-top: 0px;text-align: center;"><span
+                                                    class="d-md-flex justify-content-xl-center"
+                                                    style="font-size: 22px;text-align: center;width: 100%;"><strong>Your Hometown</strong></span>
+                                            </div>
+                                            <div class="col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center"
+                                                style="height: auto;text-align: center;width: 100%;">
+                                                <h3>{{ i.region }}</h3>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-xl-center"
+                                style="height: 75px;">                                                                    
+                            </div>
+
+                        </div>
+                    </div> {% endcomment %}
+                
+                </div>
+            </div>
+
+        </div>
+    {% endfor %}
+</div>
+
+
+    {% if is_paginated %}
+    <div class="col-lg-5 offset-lg-5">
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?{{ selected_search }}&page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+            </ul>
+        </nav>
+
+    {% endif %}
+    </div>
+
+{% endblock body %}
