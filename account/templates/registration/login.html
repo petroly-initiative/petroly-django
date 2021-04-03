@@ -5,18 +5,32 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title>CC_loginPage</title>
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap');
+        @media only screen and (max-width:1186px) {
+            .login-logo
+            {
+                display:none;
+            }
+        }
+        </style>
         <link rel="stylesheet" href={% static 'account/login_page/assets/bootstrap/css/bootstrap.min.css' %}>
         <link rel="stylesheet" href={% static 'account/login_page/assets/css/Login-Form-Clean.css' %}>
+        <link rel="stylesheet" href={% static 'base/assets/css/Raleway.css' %}>
+
+
+
         <script src="https://kit.fontawesome.com/aa260f149b.js" crossorigin="anonymous"></script> <!-- please don't change its place-->
     </head>
     <body>
-        <div class="logo">
+        
+        <img class="login-logo" id="login-logo" style=";position:absolute;z-index:-3; top:0px; left:0px" src={% static 'account\login_page\assets\img\background_image.png' %} alt="background_image.png">
+    <div class="logo">
             <img src={% static 'account/login_page/assets/img/logo.png' %} alt="logo.png">
         </div>
-
          {% if form.errors %}
             <p>
-            <h1 style="text-align:center">Oohps :(</h1>
+            <h1 style="text-align:center">Oops :(</h1>
             {% for field, field_errors in form.errors.items %}
                 <h6 style="text-align:center">
                     {% for error in field_errors %}
@@ -28,14 +42,14 @@
         {% endif %}
 
         <!-- Registration Form -->
-        <div class="container form-box">
+        <div class="container form-box shadow align-content-center">
 
             <div class="row no-gutters form-selection">
                 <div class="col-6">
-                    <button type="button" class="btn signup-button active">Sign up</button>
+                    <button style="width: 120px; border-color: #edeef7; padding-left: 15px: padding-right: 15px" type="button" class="btn signup-button active shadow border"><strong>Sign up</strong></button>
                 </div>
                 <div class="col-6">
-                    <button type="button" class="btn login-button">Log in</button>
+                    <button style="width: 120px;border-color: #edeef7" type="button" class="btn login-button shadow border"><strong>Log in</strong></button>
                 </div>
             </div>
             
@@ -47,13 +61,13 @@
                     <h2 class="login-header form-header">Welcome Back!</h2>
                     <div class="form-group">
                         <i class="fas fa-at"></i>
-                        <input type="username" name="username" id="email", placeholder='Username'>
+                        <input type="username" name="username" id="email", placeholder='Enter your username'>
                         {% comment %} {{ form.username }} {% endcomment %}
                     </div>
 
                     <div class="form-group">
                         <i class="fas fa-unlock-alt"></i>
-                        <input type="password" name="password" id="password", placeholder='Password'>
+                        <input type="password" name="password" id="password", placeholder='Enter your password'>
                         {% comment %} {{ form.password }} {% endcomment %}
                     </div>
 
@@ -65,40 +79,44 @@
             </div>
 
             {% comment %} Register {% endcomment %}
-            <div id="signup" class="form-container show">
+            <div id="signup" class="form-container show align-self-center";>
                 <form method="post" action='{% url 'register' %}' enctype='multipart/form-data'>
                 {% csrf_token %}
-                <input type="hidden" name="next" value="{{ next }}" />
-                    <h2 class="signUp-header form-header">Join Petroly Community.</h2>
+                <input type="hidden" name="next" value="{{ next }}" style="width: 100%"/>
+                    <h2 class="signUp-header form-header" style="margin-bottom: 40px">Join Petroly Community</h2>
                     <div class="form-group">
-                        <i class="fas fa-user"></i>
+                    <div>
+                        <i class="fas fa-user" style="margin-bottom: 12px"><strong style="font-family: Raleway; font-style:bold; padding: 20px;">Username</strong></i>
+                        </div>
                         {{ user_form.username }}
                     </div>
 
                     <div class="form-group">
-                        <i class="fas fa-at"></i>
+                    <div>
+                        <i class="fas fa-at" style="margin-bottom: 12px"><strong style="font-family: Raleway; font-style:bold; padding: 20px;">Email</strong></i>
+                        </div>
                         {{ user_form.email }}
                     </div>
 
                     <div class="form-group">
-                        <i class="fas fa-unlock-alt"></i>
+                        <i class="fas fa-unlock-alt" style="margin-bottom: 12px"><strong style="font-family: Raleway; font-style:bold; padding: 20px;">Account Password</strong></i>
                         {{ user_form.password1 }}
                     </div>
 
                     <div class="form-group">
-                        <i class="fas fa-unlock-alt"></i>
+                        <div><i class="fas fa-unlock-alt" style="margin-bottom: 12px"><strong style="font-family: Raleway; font-style:bold; padding: 20px;">Password verification</strong></i></div>
                         {{ user_form.password2 }}
                     </div>
 
-                    <div class="form-group">
-                        <i class="fas fa-book">Major</i>
+                    <div  class="form-group" style="width: 70%" >
+                        <i class="fas fa-book" style="margin-bottom: 12px;"><strong style="font-family: Raleway; font-style:bold; padding: 20px;">Department</strong></i>
                         {{ profile_form.major }}
-                        <i class="fas fa-book">Year</i>
+                        <i  class="fa fa-calendar" style="margin-bottom: 12px; margin-top: 8px" aria-hidden="true"><strong style="font-family: Raleway; font-style:bold; padding: 20px">Academic Year</strong></i>
                         {{ profile_form.year }}
                     </div>
 
-                    <div class="form-group" style="width: 180px">
-                        <h6>Profile Picture</h6>
+                    <div class="form-group align-content-center" style="width: 30rem;">
+                        <i class="fas fa-image"><strong style="font-family: Raleway; font-style:bold; padding: 20px; margin-bottom: 20px">Profile picture</strong></i>
                         {{ profile_form.profile_pic }}
                     </div>
 
