@@ -344,11 +344,7 @@ input[type=checkbox], input[type=radio] {
   padding: 0;
 }
 
-.rating input {
-  float: right;
-  opacity: 0;
-  position: absolute;
-}
+
 
 .rating label:hover ~ label, .rating input:focus ~ label, .rating label:hover {
   color: orange;
@@ -474,17 +470,22 @@ a:hover {
   -moz-transition: color .4s;
   -o-transition: color .4s;
   transition: color .4s;
-  
+ 
 }
 
 .rating label span
 {
   font-size: 40px ;
+
 }
+
+
 .rating:not(:checked) > input {
-  position:absolute;
-  top:-9999px;
+  
+  position: absolute;
+  left: -9999px ;
   clip:rect(0, 0, 0, 0);
+  
 }
 .rating:not(:checked) > label {
   float:right;
@@ -517,4 +518,7 @@ a:hover {
   position:relative;
   
 }
+
+
+
 
