@@ -8,11 +8,10 @@
 
 
 {% block body %}
-    <form action="{% url 'verify' %}" method="post">
+    <form action="{% url 'email_confirm' %}" method="post">
         {% csrf_token %}
         <button type="submit">VERIFY ME</button>
         <input type="hidden" name="token" value={{ token }}>
-        {% comment %} <a href="https://www.petroly.co/email/{{ token }}"><h1> VERIFY ME </h1></a> {% endcomment %}
     </form>
 {% endblock body %}
 
