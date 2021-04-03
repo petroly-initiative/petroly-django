@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Create Roommate Bid
+    Create Roommate Offer
 {% endblock title %}
 
 {% block big_text %}
-    Create Your Roommate Bid
+    Create Your Roommate Offer
 {% endblock big_text %}
 
 {% block small_text %}
@@ -15,7 +15,7 @@
 {% block body %}
     {% if user.bid %}
         <center>
-            <a href="{% url 'roommate:bid_delete' user.bid.pk %}"><h1>DELETE MY BID!</h1></a>
+            <a href="{% url 'roommate:bid_delete' user.bid.pk %}"><h1>DELETE MY OFFER!</h1></a>
         </center>
     {% endif %}
     <form action="" method="post">
