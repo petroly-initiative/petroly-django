@@ -11,6 +11,18 @@ from django.urls import reverse, reverse_lazy
 from cloudinary.uploader import upload
 from django.core.mail import send_mail
 from django_email_verification import send_email
+from django_email_verification.views import verify
+
+
+
+class VerifyView(TemplateView):
+
+    template_name = "email_confirm.html"
+
+    def get(self, request, *args, **kwargs):
+        next_ = request.GET.get('next', '')
+        
+        return render(request, VerifyView.template_name, context={'next': next_})
 
 
 class IndexView(TemplateView):
