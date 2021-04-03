@@ -105,7 +105,7 @@ class EmailVerificationTokenGenerator:
         ).hexdigest()
         print(self.key_salt,
             self._make_hash_value(user, timestamp),
-            secret=self.secret,)
+            self.secret,)
         return f'{email_b64}-{ts_b36}-{hash_string}', \
                datetime.fromtimestamp(timestamp + settings.EMAIL_TOKEN_LIFE)
 
