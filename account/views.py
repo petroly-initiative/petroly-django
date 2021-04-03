@@ -54,6 +54,7 @@ class RegisterView(LoginView):
                 new_user = user_form.save(commit=False)
                 new_user.is_active= False
                 new_user.save()
+                print('TESTING -------------------')
                 try:
                     # Confirmation email
                     # send_mail(
