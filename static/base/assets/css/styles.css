@@ -368,6 +368,11 @@ a:hover {
   outline: 0;
 }
 
+#form_pic-1{
+  border-radius: 50%;
+  overflow: hidden;
+}
+
 @media (min-width: 576px) {
   #form_pic-1 {
     width: 7rem;
@@ -518,7 +523,6 @@ a:hover {
   position:relative;
   
 }
-
 
 
 

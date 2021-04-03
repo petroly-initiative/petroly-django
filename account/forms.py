@@ -14,19 +14,19 @@ class UserRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["email"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "s202012345@kfupm.edu.sa", "required": "true"}
+            {"class": "form-control", "placeholder": "s20xxxxxxx@kfupm.edu.sa", "required": "true"}
         )
         self.fields["username"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Username"}
+            {"class": "form-control", "placeholder": "Enter your username"}
         )
         self.fields["first_name"].widget.attrs.update(
             {"class": "form-control", "placeholder": "First Name"}
         )
         self.fields["password1"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Password"}
+            {"class": "form-control", "placeholder": "Enter your password"}
         )
         self.fields["password2"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Password Again"}
+            {"class": "form-control", "placeholder": "Enter your password again"}
         )
 
     def clean_email(self):
