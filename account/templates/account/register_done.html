@@ -2,10 +2,5 @@
 
 {% block big_text %}
     Welcome <strong>@{{ new_user.username }}</strong>
+    <p>You need to check your Email Junk Mailbox to vrify your account.</p>
 {% endblock big_text %}
-
-{% block body %}
-
-    <p>Your account has been successfully created. Now you can <a href="{% url "login" %}">log in</a>.</p>
-
-{% endblock body %}
