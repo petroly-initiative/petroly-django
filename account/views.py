@@ -63,7 +63,7 @@ class RegisterView(LoginView):
                     #     [request.POST['email']],
                     #     fail_silently=False,
                     # )
-                    send_email(new_user)
+                    send_email(User.objects.get(email=new_user.email))
                 except Exception as e:
                     print(e)
                     User.objects.filter(email=request.POST['email']).delete()
