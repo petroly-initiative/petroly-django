@@ -73,6 +73,7 @@ def _get_validated_field(field, default_type=None):
 
 
 def verify_token(token):
+    print('verify_token()')
     valid, user = default_token_generator.check_token(token)
     if valid:
         callback = _get_validated_field('EMAIL_VERIFIED_CALLBACK', default_type=Callable)
