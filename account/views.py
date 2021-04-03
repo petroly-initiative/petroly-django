@@ -11,6 +11,8 @@ from django.urls import reverse, reverse_lazy
 from cloudinary.uploader import upload
 from django.core.mail import send_mail
 from .django_email_verification import send_email
+import logging
+logging.basicConfig(level = logging.INFO, filename = "my.log")
 
 
 class IndexView(TemplateView):
@@ -30,6 +32,7 @@ class RegisterView(LoginView):
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
         # Redirect user to the index page if there is a user is alreday logged in
+        logging.info('GET')
         if request.user.is_active:
             return HttpResponseRedirect(reverse("index"))
         else:
@@ -54,7 +57,7 @@ class RegisterView(LoginView):
                 new_user = user_form.save(commit=False)
                 new_user.is_active= False
                 new_user.save()
-                print('TESTING -------------------')
+                logging.info('TESTING -------------------')
                 try:
                     # Confirmation email
                     # send_mail(
@@ -64,7 +67,7 @@ class RegisterView(LoginView):
                     #     [request.POST['email']],
                     #     fail_silently=False,
                     # )
-                    send_email(User.objects.get(email=new_user.email))
+                    send_email(new_user)
                 except Exception as e:
                     print(e)
                     User.objects.filter(email=request.POST['email']).delete()
