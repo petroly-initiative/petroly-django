@@ -265,10 +265,7 @@ input {
 
 }
 
-.nav-item .nav-link.active:focus-within
-{
-border-bottom: 13px solid aquamarine;
-}
+
 
 @media (min-width: 300px) {
   .rounded-circle.d-inline.float-left.instructor_pic {
