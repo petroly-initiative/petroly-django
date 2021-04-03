@@ -67,7 +67,6 @@ class RegisterView(LoginView):
 
         # For Registering
         elif "register" in request.POST:
-            print('>>>1')
             if user_form.is_valid() and profile_form.is_valid():
                 new_user = user_form.save(commit=True)
                 new_user.is_active= False
@@ -80,21 +79,9 @@ class RegisterView(LoginView):
                     new_profile.profile_pic = request.FILES["profile_pic"]
 
                 new_profile.save()
-                try:
-                    # Confirmation email
-                    # send_mail(
-                    #     'THANK YOU!',
-                    #     'We welcome you to our community, where we all help one another :)',
-                    #     'no-reply@petroly.co',
-                    #     [request.POST['email']],
-                    #     fail_silently=False,
-                    # )
-                    send_email(new_user)
-                except Exception as e:
-                    print(e)
-                    User.objects.filter(email=request.POST['email']).delete()
-                    return HttpResponse("Unexpected error while sending you an email, please register again")
 
+                send_email(new_user)
+                
                 return render(
                     request, "account/register_done.html", {"new_user": new_user}
                 )
