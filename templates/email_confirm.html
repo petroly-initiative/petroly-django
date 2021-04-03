@@ -9,30 +9,12 @@
 
 
 {% block body %}
-    <script>
-        function confirm_changed(checkbox){
-        //If the checkbox has been checked
-        if(checkbox.checked){
-            //Set the disabled property to FALSE and enable the button.
-            document.getElementById("submit_button").disabled = false;
-        } 
-        else{
-            //Otherwise, disable the submit button.
-            document.getElementById("submit_button").disabled = true;
-        }
-    }
-    </script>
-
     <form action="{% url 'email_confirm' %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="token" value={{ token }}>
 
         <div>
-            <label for="terms_and_conditions">Check the box to Confirm your Email</label>
-            <input type="checkbox" id="confirmation" name='confirm' value="true" onclick="confirm_changed(this)" />
-        </div>
-        <div>
-            <button type="submit" id="submit_button" disabled>SUBMIT</button>
+            <button type="submit" id="submit_button" >SUBMIT</button>
         </div>
     </form>
     
