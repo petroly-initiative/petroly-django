@@ -21,7 +21,7 @@ class VerifyView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         next_ = request.GET.get('next', '')
-        token = request.GET.get('next', '')
+        token = request.GET.get('token', '')
         
         return render(request, VerifyView.template_name, context={'next': next_, 'token':token})
 
