@@ -15,4 +15,3 @@ django-environ
 cloudinary
 django-debug-toolbar
 django-maintenance-mode
-django-email-verification
