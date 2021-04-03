@@ -25,6 +25,9 @@ class VerifyView(TemplateView):
         
         return render(request, VerifyView.template_name, context={'next': next_, 'token':token})
 
+    def post(self, request, *args, **kwargs):
+        return verify(request, request.POST.get('token', ''))
+
 
 class IndexView(TemplateView):
 
