@@ -83,13 +83,13 @@ class EmailVerificationTokenGenerator:
             print(email, user, ts)
         except (ValueError, get_user_model().DoesNotExist):
             return False, None
+        print(user, ts)
         print(self._make_token_with_timestamp(user, ts)[0], token)
         if not constant_time_compare(self._make_token_with_timestamp(user, ts)[0], token):
             return False, None
 
         now = self._now()
-        print(self._num_seconds(now), ts, settings.EMAIL_TOKEN_LIFE)
-        print((self._num_seconds(now) - ts) > settings.EMAIL_TOKEN_LIFE)
+
         if (self._num_seconds(now) - ts) > settings.EMAIL_TOKEN_LIFE:
             return False, None
 
@@ -103,9 +103,6 @@ class EmailVerificationTokenGenerator:
             self._make_hash_value(user, timestamp),
             secret=self.secret,
         ).hexdigest()
-        print(self.key_salt,
-            self._make_hash_value(user, timestamp),
-            self.secret,)
         return f'{email_b64}-{ts_b36}-{hash_string}', \
                datetime.fromtimestamp(timestamp + settings.EMAIL_TOKEN_LIFE)
 
