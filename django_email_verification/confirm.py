@@ -44,11 +44,12 @@ def send_email_thread(user, token, expiry, sender, domain, subject, mail_plain, 
 
     from .views import verify
     link = ''
+    print('>>>4')
     for k, v in get_resolver(None).reverse_dict.items():
         if k is verify and v[0][0][1][0]:
             addr = str(v[0][0][0])
             link = domain + addr[0: addr.index('%')] + token
-
+    print('>>>5')
     context = {'link': link, 'expiry': expiry, 'user': user}
 
     text = render_to_string(mail_plain, context)
@@ -73,7 +74,7 @@ def _get_validated_field(field, default_type=None):
 
 
 def verify_token(token):
-    print('verify_token()')
+    print(f'verify_token({token})')
     valid, user = default_token_generator.check_token(token)
     if valid:
         callback = _get_validated_field('EMAIL_VERIFIED_CALLBACK', default_type=Callable)
