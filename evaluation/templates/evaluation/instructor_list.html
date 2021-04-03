@@ -26,37 +26,33 @@
         <a href={% url 'evaluation:instructor_form' %}>Add New Instructor</a> <br>
     {% endif %}
 
-    <header id="heading"><span id="top_header"><strong><em>Instructors Evaluation</em></strong></span>
-    <sub id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your instructor easily and quickly!</sub></header>
+    <div id="heading"><span id="top_header">Instructors Evaluation</span></div>
 
 {% comment %} Search {% endcomment %}
 <form
-    class="d-flex flex-row flex-grow-0 flex-fill justify-content-center align-content-center align-self-center my-auto align-items-sm-center"
+    class="flex-row flex-grow-0 flex-fill justify-content-center align-content-center align-self-center align-items-sm-center"
     data-toggle="tooltip" data-bs-tooltip="" data-placement="right" id="search_container" method="get"
-    style="background: rgba(255,255,255,0);">
+    style="background: rgba(255,255,255,0); max-width: 60vw;">
     {% csrf_token %}
     <l>
         {% comment %} {{filter.form.as_p}} {% endcomment %}
-        <h3>Name Contains:</h3>
-        <input type="" name="name__icontains" value="{{ selected_name }}" /> <br>
-        <h3>Department:</h3>
+         <div class="d-flex d-md-flex align-items-sm-center justify-content-md-center" style="display: flex;padding-bottom: 5px; padding-top: 15px" id="search_container"  >
+        <input class="border rounded form-control d-xl-flex align-items-xl-center"  id="searchbar" placeholder="enter the name of the instructor" autofocus="" autocomplete="on" style="width: 100%; padding: 16px;margin: 0px;color: var(--dark);margin-left: 2px;text-align: center;font-size: 1rem;border-radius: 0px;" type="" name="name__icontains" value="{{ selected_name }}"/> <br>
+        </form>
 
-        <select name="department" id="" default="{{ selected_department }}">
-            <option value="">---------------</option>
+       <button class="btn btn-primary d-flex justify-content-sm-center" id="search_btn" type="submit" style="background: rgba(0,123,255,0);padding: 0;border-width: 0px;width: 45px;height: 45px;"><img class="rounded-circle  justify-content-xl-center" data-toggle="tooltip" data-bs-tooltip="" id="search_icon" src="{% static 'evaluation\instructors\assets\img\icons8-google-web-search.svg' %} " type="submit" style="display: inline-flex;margin-right: 4px;width: 45px;min-width: 9px;height: 45px;"></button>
+        </div>
+        <select class="scstyle-1" style="font-size: 18px;margin-bottom: 25px; padding: 4px ;margin-left: 7px;width: 300px;border-radius: 11px;height: 36px;border-width: 0px; max-height: 150px; overflow-y: scroll" name="department" id="" default="{{ selected_department }}"/>
+            <option style="color: white;" value="" selected disabled>Department</option>
             {% for key, name in departments %}
                 <option value={{ key }} {% if key == selected_department %}selected{% endif %}>{{ name }}</option>
             {% endfor %}
         </select>
 
-        <button type="submit">search</button>
-    </l>
-</form>
-
-
 {% comment %} Cards {% endcomment %}
-<div class="row" id="instructors_container" style="margin-bottom: 29px;margin-right: 0;margin-left: 0;">
+<div class="row" id="instructors_container" style="width: 50em; margin-bottom: 29px;margin-right: 0;margin-left: 0;">
     {% for i in instructor_list %}
-        <div class="col-md-4 col-lg-6 col-xl-4 instructor_column" style="margin-bottom: 28px;">
+        <div class="col-md-6 col-lg-6 col-xl-7 instructor_column" style="margin-bottom: 28px;">
             <div role="tablist" id="accordion-{{i.id}}" style="background: rgba(231,231,231,0);border-radius: 0;">
 
                 <div class="card instructors"
@@ -106,7 +102,7 @@
                                         id="stat_container-1"
                                         style="height: 177px;width: 100%;padding-top: 0px;padding-bottom: 0px;">
                                         <div class="d-flex flex-row justify-content-lg-center align-items-xl-center"
-                                            id="category_container-4"
+                                            id="category_container-1"
                                             style="padding: 12px 0px;padding-bottom: 0px;width: 100%;height: auto;padding-top: 0px;">
                                             <div class="col-6 col-sm-4 col-md-5 col-lg-4 col-xl-5 text-center d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex justify-content-center justify-content-sm-center justify-content-lg-center justify-content-xl-center categories"
                                                 style="height: auto;margin-top: 0px;"><span

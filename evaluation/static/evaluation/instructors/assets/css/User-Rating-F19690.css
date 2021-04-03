@@ -1,3 +1,4 @@
+
 .fa {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
@@ -24,6 +25,7 @@
 
 .heading {
   font-size: 25px;
+  font-family: Monoton;
   margin-right: 25px;
 }
 

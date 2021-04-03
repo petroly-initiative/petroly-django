@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block big_text %}
-    Welcome <strong>@{{ new_user.username }}</strong> <br>
-    <h2>You need to check your Junk Mailbox to verify your Email</h2>
+    Welcome <strong>@{{ new_user.username }}</strong>
 {% endblock big_text %}
+
+{% block body %}
+
+    <p>Your account has been successfully created. Now you can <a href="{% url "login" %}">log in</a>.</p>
+
+{% endblock body %}

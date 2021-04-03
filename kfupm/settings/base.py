@@ -10,7 +10,6 @@ INSTALLED_APPS = [
     'maintenance_mode',
     'account.apps.AccountConfig',
     'evaluation.apps.EvaluationConfig' ,
-    'roommate.apps.RoommateConfig' ,
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

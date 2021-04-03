@@ -256,9 +256,18 @@ input {
 
 .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show > .nav-link {
   font-size: 17px;
+  
 }
 
-.rounded-circle.d-inline.float-left.instructor_pic {
+.nav-item .nav-link.active:hover
+{
+  color: aquamarine;
+
+}
+
+.nav-item .nav-link.active:focus-within
+{
+border-bottom: 13px solid aquamarine;
 }
 
 @media (min-width: 300px) {

@@ -7,7 +7,7 @@ years = [
 ]
 
 departments = [
-	("ACCT", "Accounting"),
+	("ACFN", "Accounting & Finance"),
 	("AE", "Aerospace Engineering"),
 	("ARE", "Architectural Engineering"),
 	("ARC", "Architecture"),
@@ -22,7 +22,6 @@ departments = [
 	("EE", "Electrical Engineering"),
 	("ELI", "English Language Inst. (Prep)"),
 	("ELD", "English Language Department"),
-	("FIN", "Finance"),
 	("ISOM", "Info. Systems & Operations Mgt"),
 	("GS", "Global & Social Studies"),
 	("IAS", "Islamic & Arabic Studies"),
