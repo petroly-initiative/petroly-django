@@ -39,7 +39,7 @@ def populate(name, dep, url):
 
 
     print(new_obj)
-with open('data.csv', 'r') as f:
+with open('instructor.csv', 'r') as f:
     reader = csv.DictReader(f, delimiter=',')
 
     for row in reader:
