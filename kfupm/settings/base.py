@@ -128,4 +128,4 @@ EMAIL_MAIL_HTML = 'email_body.html'
 EMAIL_MAIL_PLAIN = 'email_body.txt'
 EMAIL_PAGE_TEMPLATE = 'email_done.html'
 EMAIL_PAGE_DOMAIN = 'https://www.petroly.co/'
-EMAIL_TOKEN_LIFE = 60 * 60
+EMAIL_TOKEN_LIFE = 60 * 60 * 5
