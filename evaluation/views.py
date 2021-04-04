@@ -22,13 +22,13 @@ from data import departments
 class InstructorListView(ListView):
 
     model = Instructor
-    paginate_by = 9
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         name = self.request.GET.get("name__icontains", default="")
         department = self.request.GET.get("department", default="")
 
-        filter_qs = InstructorFilter(self.request.GET, Instructor.objects.all())
+        filter_qs = InstructorFilter(self.request.GET, Instructor.objects.all().order_by('name'))
         context = super().get_context_data(**kwargs, object_list = filter_qs.qs)
         context['departments'] = departments
         context['selected_department'] = department

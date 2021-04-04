@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Confirm Delete Offer
+{% endblock title %}
+
+{% block big_text %}
+    Are You Sure?
+{% endblock big_text %}
+
+{% block body %}
+    <form action="" method="post">
+    {% csrf_token %}
+    <button type="submit">DELETE!</button>
+    </form>
+{% endblock body %}

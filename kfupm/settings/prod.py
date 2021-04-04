@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", default='')
 
 DEBUG = (os.environ.get("DEBUG", default=True) == 'True')
 
-ALLOWED_HOSTS = ['petroly-main.herokuapp.com']
+ALLOWED_HOSTS = ['.petroly.co', '.petroly-main.herokuapp.com']
 
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
