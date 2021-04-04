@@ -22,7 +22,7 @@ from data import departments
 class InstructorListView(ListView):
 
     model = Instructor
-    paginate_by = 9
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         name = self.request.GET.get("name__icontains", default="")
