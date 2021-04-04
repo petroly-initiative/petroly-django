@@ -77,9 +77,9 @@
                         {% else %} src={% static 'base/assets/img/profile_pic.svg' %} {% endif %}
                         style="margin-right: 0px;margin-left: 0px;border-radius: 50%;"></a>
                     </div>
-                    <a href="{% url 'logout' %}" class="btn signout nav-link active">Log Out</a>
+                    <a href="{% url 'logout' %}" class="btn signout nav-link active"><strong>Log Out</strong></a>
                  {% else %}
-                    <a href={% url 'register' %}>LogIn/Register</a>
+                    <a href={% url 'register' %}><strong>LogIn/Register</strong></a>
                 {% endif %}
     </nav>
 
