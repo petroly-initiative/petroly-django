@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Confirmation
+{% endblock title %}
+
+{% block big_text %}
+    Click on the following button to verify your Email
+{% endblock big_text %}
+
+{% block body %}
+    <form action="{% url 'email_confirm' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="token" value={{ token }}>
+
+        <div>
+            <button type="submit" id="submit_button" >CONFIRM</button>
+        </div>
+    </form>
+{% endblock body %}

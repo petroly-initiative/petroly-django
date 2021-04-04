@@ -11,6 +11,23 @@ from django.urls import reverse, reverse_lazy
 from cloudinary.uploader import upload
 from django.core.mail import send_mail
 from django_email_verification import send_email
+from django_email_verification.views import verify
+
+
+
+class ConfirmView(TemplateView):
+
+    template_name = "email_confirm.html"
+
+    def get(self, request, *args, **kwargs):
+        token = request.GET.get('token', '')
+        
+        return render(request, ConfirmView.template_name, context={'token':token})
+
+    def post(self, request, *args, **kwargs):
+        token = request.GET.get('token', '')
+
+        return verify(request, request.POST.get('token', ''))
 
 
 class IndexView(TemplateView):
@@ -53,6 +70,7 @@ class RegisterView(LoginView):
             if user_form.is_valid() and profile_form.is_valid():
                 new_user = user_form.save(commit=True)
                 new_user.is_active= False
+                new_user.save()
 
                 new_profile = profile_form.save(commit=False)
                 new_profile.user = new_user
@@ -62,21 +80,8 @@ class RegisterView(LoginView):
 
                 new_profile.save()
 
-                try:
-                    # Confirmation email
-                    # send_mail(
-                    #     'THANK YOU!',
-                    #     'We welcome you to our community, where we all help one another :)',
-                    #     'no-reply@petroly.co',
-                    #     [request.POST['email']],
-                    #     fail_silently=False,
-                    # )
-                    send_email(new_user)
-                except Exception as e:
-                    print(e)
-                    User.objects.filter(email=request.POST['email']).delete()
-                    return HttpResponse("Unexpected error while sending you an email, please register again")
-
+                send_email(new_user)
+                
                 return render(
                     request, "account/register_done.html", {"new_user": new_user}
                 )
