@@ -17,7 +17,7 @@ class Profile(models.Model):
     # Additional fields
     profile_pic = CloudinaryField(
         'image', 
-        default='https://res.cloudinary.com/ammar-faifi/image/upload/v1614377885/icon.jpg',
+        default='https://res.cloudinary.com/ammar-faifi/image/upload/v1617785115/blank_profile_jiosa2.png',
         blank=True,
         max_length=350,
     )

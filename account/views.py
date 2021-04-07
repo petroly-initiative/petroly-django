@@ -170,6 +170,8 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
                     ],
                     format='jpg'
                 )
+            elif 'profile_pic-clear' in request.POST:
+                new_profile.profile_pic = ''
             else:
                 # insert the old profile_pic
                 new_profile.profile_pic = Profile.objects.get(user=request.user).profile_pic
