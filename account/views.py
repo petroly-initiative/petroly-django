@@ -170,6 +170,9 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
                     ],
                     format='jpg'
                 )
+            else:
+                # insert the old profile_pic
+                new_profile.profile_pic = Profile.objects.get(user=request.user).profile_pic
             new_profile.save()
 
             return redirect(reverse("profile_form", kwargs={}))
