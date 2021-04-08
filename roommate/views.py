@@ -16,7 +16,7 @@ from django import forms
 class BidCreateView(LoginRequiredMixin, CreateView):
     model = Bid
     fields = [
-        'name', 'phone', 'smoking', 'sociable',
+        'name', 'email', 'phone', 'smoking', 'sociable', 
         'staying_up', 'temperature', 'hometown', 'comment'
     ]
 
@@ -41,7 +41,7 @@ class BidDeleteView(DeleteView):
 class BidUpdateView(UpdateView):
     model = Bid
     fields = [
-        'name', 'phone', 'smoking', 'sociable',
+        'name', 'email', 'phone', 'smoking', 'sociable', 
         'staying_up', 'temperature', 'hometown', 'comment'
     ]
 
