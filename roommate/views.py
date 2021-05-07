@@ -23,6 +23,8 @@ class BidCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
+        if 'use-default-email' in self.request.POST:
+            self.object.email = self.request.user.email
         self.object.save()
         return super().form_valid(form)
 
