@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'cloudinary',
     'django_email_verification',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
