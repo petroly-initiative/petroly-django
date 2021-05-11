@@ -57,7 +57,7 @@
             
             {% comment %} Login {% endcomment %}
             <div id="login" class="form-container">
-                <form method="post" action="{% url 'register' %}" >
+                <form method="post" action="{% url 'login' %}" >
                 <input type="hidden" name="next" value="{{ next }}" />
                 {% csrf_token %}
                     <h2 class="login-header form-header">Welcome Back!</h2>
@@ -82,7 +82,7 @@
 
             {% comment %} Register {% endcomment %}
             <div id="signup" class="form-container show align-self-center";>
-                <form method="post" action='{% url 'register' %}' enctype='multipart/form-data'>
+                <form method="post" action='{% url 'login' %}' enctype='multipart/form-data'>
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}" style="width: 100%"/>
                     <h2 class="signUp-header form-header" style="margin-bottom: 40px">Join Petroly Community</h2>

@@ -113,7 +113,7 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_REDIRECT_URL = 'index'
-LOGIN_URL = 'register'
+LOGIN_URL = 'login'
 
 
 
