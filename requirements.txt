@@ -23,8 +23,8 @@ graphql-relay
 gunicorn
 Pillow
 promise
-psycopg2
-# psycopg2-binary
+# psycopg2
+psycopg2-binary
 PyJWT
 pytz
 Rx
