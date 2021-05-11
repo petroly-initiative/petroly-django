@@ -61,6 +61,16 @@ class RegisterView(LoginView):
             # get the auth form
             form = self.get_form()
             if form.is_valid():
+                # To check is user verified
+                user = User.objects.get(username=request.POST.get('username'))
+                if hasattr(user, 'status'):
+                    verified = user.status.verified
+                else:
+                    # For old accounts
+                    verified = user.is_active
+                
+                if not verified:
+                    return render(request, 'index.html')
                 return self.form_valid(form)
             else:
                 return self.form_invalid(form)
