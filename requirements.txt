@@ -3,7 +3,7 @@ Django
 django-bootstrap
 django-bootstrap-form
 django-crispy-forms
-django-debug-toolbar`
+django-debug-toolbar
 django-filter
 django-heroku
 django-widget-tweaks
