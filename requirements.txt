@@ -1,6 +1,3 @@
-aniso8601
-asgiref
-certifi
 cloudinary
 dj-database-url
 Django
@@ -16,8 +13,8 @@ django-maintenance-mode
 django-widget-tweaks
 graphene
 graphene-django
-django-graphql-jwt
-django-graphql-auth
+django-graphql-jwt==0.3.0
+django-graphql-auth==0.3.16
 gunicorn
 Pillow
 psycopg2-binary
