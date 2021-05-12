@@ -9,7 +9,7 @@ django-environ==0.4.5
 django-filter==2.4.0
 django-graphql-auth==0.3.16
 django-graphql-jwt==0.3.0
-django-heroku==0.0.0
+django-heroku
 django-maintenance-mode==0.16.0
 django-widget-tweaks==1.4.8
 graphene==2.1.8
