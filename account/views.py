@@ -26,8 +26,12 @@ class ConfirmView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         token = request.GET.get('token', '')
-
-        return verify(request, request.POST.get('token', ''))
+        try:
+            response = verify(request, request.POST.get('token', ''))
+        except Exception:
+            return HttpResponse("""There are more than one account with the same Email. 
+                Contact support@petroly.co to remove the extra ones""")
+        return response
 
 
 class IndexView(TemplateView):
