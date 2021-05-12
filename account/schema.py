@@ -24,7 +24,7 @@ class ProfileType(DjangoObjectType):
 
     class Meta:
         model = Profile
-        fields = ['__all__']
+        fields = ['profile_pic', 'year', 'major']
 
 
 # class Query(graphene.ObjectType):
