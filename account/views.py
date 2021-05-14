@@ -91,11 +91,11 @@ class RegisterView(LoginView):
             if form.is_valid():
                 # To check is user verified
                 user = User.objects.get(username=request.POST.get('username'))
-                # if hasattr(user, 'status'):
-                #     verified = user.status.verified
-                # else:
-                #     # For old accounts
-                verified = user.is_active
+                try:
+                    verified = user.status.verified
+                except:
+                    # For old accounts
+                    verified = user.is_active
                 
                 if not verified:
                     return HttpResponse('Your account is not yet activated, please check your email box.')
