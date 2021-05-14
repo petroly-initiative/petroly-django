@@ -12,8 +12,32 @@ from cloudinary.uploader import upload
 from django.core.mail import send_mail
 from django_email_verification import send_email
 from django_email_verification.views import verify
+from django.contrib.sites.shortcuts import get_current_site
+import requests
 
 
+class ActivateView(TemplateView):
+
+    def get(self, request, token, *args, **kwargs):
+        return render(request, 'email_confirm.html')
+
+    def post(self, request, token, *args, **kwargs):
+        url =  'http://' + get_current_site(request).domain + '/account/graphql/'
+        payload = '''
+            mutation{
+                verifyAccount(token:"%s"){
+                    success
+                    errors
+                }
+            }
+        ''' % token
+        r = requests.post(url, json={'query': payload})
+        success = r.json()['data']['verifyAccount']['success']
+        if r.status_code == 200:
+            return render(request, 'email_done.html', context={'success':success})
+        else:
+            raise Exception(f"Query failed to run with a {r.status_code}.")
+            return HttpResponse(r)
 
 class ConfirmView(TemplateView):
 
