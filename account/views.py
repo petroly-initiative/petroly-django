@@ -92,7 +92,7 @@ class RegisterView(LoginView):
                 # To check is user verified
                 user = User.objects.get(username=request.POST.get('username'))
                 try:
-                    verified = user.status.verified
+                    verified = user.status.verified or user.is_active
                 except:
                     # For old accounts
                     verified = user.is_active
