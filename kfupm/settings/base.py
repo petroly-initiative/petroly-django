@@ -155,7 +155,6 @@ GRAPHENE = {
 GRAPHQL_JWT = {
     "JWT_VERIFY_EXPIRATION": True,
     "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
-    "ACTIVATION_PATH_ON_EMAIL": "account/activate/",
     "JWT_ALLOW_ANY_CLASSES": [
         "graphql_auth.mutations.Register",
         "graphql_auth.mutations.VerifyAccount",
@@ -168,4 +167,8 @@ GRAPHQL_JWT = {
         "graphql_auth.mutations.RevokeToken",
         "graphql_auth.mutations.VerifySecondaryEmail",
     ],
+}
+
+GRAPHQL_AUTH = {
+    "ACTIVATION_PATH_ON_EMAIL": "account/activate/",
 }
