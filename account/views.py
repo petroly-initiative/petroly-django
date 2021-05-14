@@ -98,7 +98,7 @@ class RegisterView(LoginView):
                     verified = user.is_active
                 
                 if not verified:
-                    return render(request, 'index.html')
+                    return HttpResponse('Your account is not yet activated, please check your email box.')
                 return self.form_valid(form)
             else:
                 return self.form_invalid(form)
