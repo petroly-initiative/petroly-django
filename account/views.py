@@ -12,8 +12,32 @@ from cloudinary.uploader import upload
 from django.core.mail import send_mail
 from django_email_verification import send_email
 from django_email_verification.views import verify
+from django.contrib.sites.shortcuts import get_current_site
+import requests
 
 
+class ActivateView(TemplateView):
+
+    def get(self, request, token, *args, **kwargs):
+        return render(request, 'email_confirm.html')
+
+    def post(self, request, token, *args, **kwargs):
+        url =  'http://' + get_current_site(request).domain + '/account/graphql/'
+        payload = '''
+            mutation{
+                verifyAccount(token:"%s"){
+                    success
+                    errors
+                }
+            }
+        ''' % token
+        r = requests.post(url, json={'query': payload})
+        success = r.json()['data']['verifyAccount']['success']
+        if r.status_code == 200:
+            return render(request, 'email_done.html', context={'success':success})
+        else:
+            raise Exception(f"Query failed to run with a {r.status_code}.")
+            return HttpResponse(r)
 
 class ConfirmView(TemplateView):
 
@@ -25,9 +49,13 @@ class ConfirmView(TemplateView):
         return render(request, ConfirmView.template_name, context={'token':token})
 
     def post(self, request, *args, **kwargs):
-        token = request.GET.get('token', '')
-
-        return verify(request, request.POST.get('token', ''))
+        token = request.POST.get('token', '')
+        try:
+            response = verify(request, token)
+        except Exception:
+            return HttpResponse("""There are more than one account with the same Email. 
+                Contact support@petroly.co to remove the extra ones""")
+        return response
 
 
 class IndexView(TemplateView):
@@ -61,6 +89,16 @@ class RegisterView(LoginView):
             # get the auth form
             form = self.get_form()
             if form.is_valid():
+                # To check is user verified
+                user = User.objects.get(username=request.POST.get('username'))
+                try:
+                    verified = user.status.verified
+                except:
+                    # For old accounts
+                    verified = user.is_active
+                
+                if not verified:
+                    return HttpResponse('Your account is not yet activated, please check your email box.')
                 return self.form_valid(form)
             else:
                 return self.form_invalid(form)
@@ -170,6 +208,11 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
                     ],
                     format='jpg'
                 )
+            elif 'profile_pic-clear' in request.POST:
+                new_profile.profile_pic = ''
+            else:
+                # insert the old profile_pic
+                new_profile.profile_pic = Profile.objects.get(user=request.user).profile_pic
             new_profile.save()
 
             return redirect(reverse("profile_form", kwargs={}))

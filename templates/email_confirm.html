@@ -11,7 +11,7 @@
 {% endblock big_text %}
 
 {% block body %}
-    <form action="{% url 'email_confirm' %}" method="post">
+    <form action="" method="post">
         {% csrf_token %}
         <input type="hidden" name="token" value={{ token }}>
 

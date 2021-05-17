@@ -22,6 +22,9 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'cloudinary',
     'django_email_verification',
+    'graphene_django',
+    'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
+    'graphql_auth',
 ]
 
 MIDDLEWARE = [
@@ -112,7 +115,7 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_REDIRECT_URL = 'index'
-LOGIN_URL = 'register'
+LOGIN_URL = 'login'
 
 
 
@@ -129,3 +132,43 @@ EMAIL_MAIL_PLAIN = 'email_body.txt'
 EMAIL_PAGE_TEMPLATE = 'email_done.html'
 EMAIL_PAGE_DOMAIN = 'https://www.petroly.co/'
 EMAIL_TOKEN_LIFE = 60 * 60 * 5
+
+
+# Models
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+
+AUTHENTICATION_BACKENDS = [
+    # 'graphql_jwt.backends.JSONWebTokenBackend',
+    'graphql_auth.backends.GraphQLAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# GraphQL
+GRAPHENE = {
+    'SCHEMA': 'account.schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
+}
+
+GRAPHQL_JWT = {
+    "JWT_VERIFY_EXPIRATION": True,
+    "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
+    "JWT_ALLOW_ANY_CLASSES": [
+        "graphql_auth.mutations.Register",
+        "graphql_auth.mutations.VerifyAccount",
+        "graphql_auth.mutations.ResendActivationEmail",
+        "graphql_auth.mutations.SendPasswordResetEmail",
+        "graphql_auth.mutations.PasswordReset",
+        "graphql_auth.mutations.ObtainJSONWebToken",
+        "graphql_auth.mutations.VerifyToken",
+        "graphql_auth.mutations.RefreshToken",
+        "graphql_auth.mutations.RevokeToken",
+        "graphql_auth.mutations.VerifySecondaryEmail",
+    ],
+}
+
+GRAPHQL_AUTH = {
+    "ACTIVATION_PATH_ON_EMAIL": "account/activate/",
+}

@@ -20,6 +20,10 @@
     {% endif %}
     <form action="" method="post">
         {% csrf_token %}
+        <center>
+            <label for="use-default-email">Use My KFUPM Email?</label>
+            <input type="checkbox" name="use-default-email" id="use-default-email">
+        </center>
         {{ form.as_p }}
         <button type="submit">CREATE/UPDATE</button>
     </form>

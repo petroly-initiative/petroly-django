@@ -79,7 +79,7 @@
                     </div>
                     <a href="{% url 'logout' %}" class="btn signout nav-link active"><strong>Log Out</strong></a>
                  {% else %}
-                    <a href={% url 'register' %}><strong>LogIn/Register</strong></a>
+                    <a href={% url 'login' %}><strong>LogIn/Register</strong></a>
                 {% endif %}
     </nav>
 
@@ -119,17 +119,17 @@
                             <div class="col-md-7 col-lg-8 d-flex flex-column align-items-md-start justify-content-lg-center scstyle-1" id="records">
                                 <div style="padding: 6px;margin-left: 7px;margin-top: 0;height: 92px;margin-bottom: 20px;">
                                     <h3 class="d-flex d-lg-flex justify-content-lg-start align-items-lg-center" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 1px;width: 100%;">
-                                    <img src={% static "base/assets/img/Icon%20awesome-building.svg" %} style="height: 28px;margin-top: 6px;">&nbsp; Department</h3>
-                                    <span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 42px;">{{ user.profile.major }}</span>
+                                    <img src={% static "base/assets/img/Icon-awesome-building.svg" %} style="height: 28px;margin-top: 6px;">&nbsp; Department</h3>
+                                    <span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 42px;">{{ user.profile.get_major_display }}</span>
                                 </div>
                                 <div class="d-flex d-md-flex flex-column justify-content-md-start" style="padding: 11px;margin-left: 7px;margin-bottom: 20px;">
                                     <h3 class="d-inline d-lg-flex justify-content-lg-start" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 0px;width: 100%;">
-                                    <img src={% static "base/assets/img/Icon%20ionic-md-school.svg" %}>&nbsp; Academic Year</h3>
-                                    <span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 37px;">{{ user.profile.year }}</span>
+                                    <img src={% static "base/assets/img/Icon-ionic-md-school.svg" %}>&nbsp; Academic Year</h3>
+                                    <span class="d-sm-flex d-lg-flex justify-content-sm-start justify-content-lg-start" style="font-size: 15px;margin-left: 37px;">{{ user.profile.get_year_display }}</span>
                                 </div>
                                 <div class="d-flex d-md-flex flex-column justify-content-md-start" style="padding: 11px;margin-left: 7px;margin-bottom: 20px;">
                                     <h3 class="d-inline d-lg-flex justify-content-lg-start" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;margin-left: 0px;width: 100%;">
-                                    <img src={% static "base/assets/img/Icon%20ionic-md-stats.svg" %}>&nbsp; Statistics</h3>
+                                    <img src={% static "base/assets/img/Icon-ionic-md-stats.svg" %}>&nbsp; Statistics</h3>
                                     <div class="row">
                                         <div class="col d-flex flex-column"><span style="font-size: 24px;">Evaluations</span><span style="font-size: 23px;color: rgb(63,159,255);"><strong>{{ user.evaluation_set.count }}</strong></span></div>
                                         <div class="col d-flex flex-column"><span style="font-size: 24px;">Posts</span><span style="font-size: 23px;color: rgb(63,159,255);"><strong>0</strong></span></div>
@@ -140,13 +140,13 @@
                                     <h3 class="d-flex d-lg-flex align-items-sm-center justify-content-lg-start align-items-lg-center" style="text-align: left;color: rgb(23,209,196);margin-bottom: 20px;">
                                     <img src={% static "base/assets/img/Group%205.svg" %} style="height: 33px;margin-top: 3px;">&nbsp; &nbsp;Medals
                                     <button class="btn btn-light border rounded-circle d-flex justify-content-lg-center align-items-lg-center" type="button" style="width: 16px;height: 16px;margin: 0 0;padding: 0 0;margin-left: 17px;background: rgba(0,0,0,0);border-width: 0px;border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-left-width: 3px;border-left-style: none;">
-                                    <img class="d-flex align-items-lg-center" src="{% static 'base/assets/img/Icon%20awesome-info-circle.svg' %}" style="width: 16px;height: 16px;margin-left: 0px;"></button></h3>
+                                    <img class="d-flex align-items-lg-center" src="{% static 'base/assets/img/Icon-awesome-info-circle.svg' %}" style="width: 16px;height: 16px;margin-left: 0px;"></button></h3>
                                     <div class="d-flex flex-row justify-content-center align-content-center align-items-md-center justify-content-lg-center justify-content-xl-center" id="medals" 
                                     style="height: auto;display: flex;align-items: center;margin: 0;width: 100%;margin-right: 0px;margin-left: -12px;">
                                         <div class="row d-flex flex-row justify-content-lg-end" style="height: auto;width: 100%;margin-left: 1px;">
                                             {% comment %} <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center medal_containers" style="height: 55.0312px;">
                                                 <div class="d-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center"><img class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" 
-                                                src={% static "base/assets/img/Icon%20awesome-hands-helping.svg" %} style="width: 40px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;">
+                                                src={% static "base/assets/img/Icon-awesome-hands-helping.svg" %} style="width: 40px;"><span class="d-sm-flex d-md-flex flex-row align-items-sm-center align-items-md-center" style="margin-left: 15px;font-size: 14px;">
                                                 <strong>Helping Hand</strong></span></div>
                                             </div>
                                             <div class="col-5 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center align-items-lg-center medal_containers">
@@ -161,7 +161,7 @@
                                             </div> 
                                             {% if user.evaluation_set.count >= 10 %}
                                             <div class="col-6 col-sm-6 col-md-6 d-sm-flex d-md-flex d-lg-flex flex-row align-items-sm-center align-items-md-center justify-content-lg-start medal_containers" style="height: 55.0312px;font-size: 14px;">
-                                                <div class="d-flex flex-row align-items-lg-center" style="font-size: 14px;"><img class="flex-row" src={% static "base/assets/img/Icon%20material-rate-review.svg" %} style="font-size: 14px;width: 30px;height: 30px;">
+                                                <div class="d-flex flex-row align-items-lg-center" style="font-size: 14px;"><img class="flex-row" src={% static "base/assets/img/Icon-material-rate-review.svg" %} style="font-size: 14px;width: 30px;height: 30px;">
                                                 <span class="flex-row" style="margin-left: 15px;font-size: 14px;">
                                                 <strong>Evaluation Hero</strong></span></div>
                                             </div>
