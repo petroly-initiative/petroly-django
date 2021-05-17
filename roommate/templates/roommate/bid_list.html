@@ -41,7 +41,7 @@
                                 </h5>
 
                         <h6 class="d-lg-flex justify-content-xl-end"><em>Planned Major: {{ i.user.profile.major }}</em></h6>
-                        <h6 class="d-lg-flex justify-content-xl-end"><em>Year: {{ i.user.profile.year }}</em></h6>
+                        <h6 class="d-lg-flex justify-content-xl-end"><em>Year: {{ i.user.profile.get_year_display }}</em></h6>
 
                     </div>
                     
@@ -51,7 +51,7 @@
                                 <h6>Email</h6>
                             </div>
                             <div class="col-7 offset-0">
-                                <p>{{ i.user.email }}</p>
+                                <p>{{ i.email }}</p>
                             </div>
                             <div class="col-5 offset-0">
                                 <h6>Phone</h6>
@@ -94,6 +94,12 @@
                             </div>
                             <div class="col-7 offset-0">
                                 <p>{{ i.hometown }}</p>
+                            </div>
+                            <div class="col-5 offset-0">
+                                <h6>Room Temperature</h6>
+                            </div>
+                            <div class="col-7 offset-0">
+                                <p>{{ i.temperature }}</p>
                             </div>
 
                             <div class="col-5 offset-0">

@@ -16,13 +16,15 @@ from django import forms
 class BidCreateView(LoginRequiredMixin, CreateView):
     model = Bid
     fields = [
-        'name', 'phone', 'smoking', 'sociable',
+        'name', 'email', 'phone', 'smoking', 'sociable', 
         'staying_up', 'temperature', 'hometown', 'comment'
     ]
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
+        if 'use-default-email' in self.request.POST:
+            self.object.email = self.request.user.email
         self.object.save()
         return super().form_valid(form)
 
@@ -41,7 +43,7 @@ class BidDeleteView(DeleteView):
 class BidUpdateView(UpdateView):
     model = Bid
     fields = [
-        'name', 'phone', 'smoking', 'sociable',
+        'name', 'email', 'phone', 'smoking', 'sociable', 
         'staying_up', 'temperature', 'hometown', 'comment'
     ]
 

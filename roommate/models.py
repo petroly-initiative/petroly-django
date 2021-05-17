@@ -8,6 +8,7 @@ class Bid(models.Model):
     # Basic
     name = models.CharField(_("Name"), max_length=100)
     phone = models.CharField(_("Phone Number"), max_length=100, blank=True, null=True)
+    email = models.EmailField(_("Personal Email"), max_length=254, blank=True, null=True)
     user = models.OneToOneField("auth.User", verbose_name=_("User"), on_delete=models.CASCADE)
 
     # Additional
@@ -19,8 +20,8 @@ class Bid(models.Model):
     comment = models.TextField(_("Comment"), blank=True, default='No Comment')
 
     class Meta:
-        verbose_name = _("bid")
-        verbose_name_plural = _("bids")
+        verbose_name = _("offer")
+        verbose_name_plural = _("offers")
 
     def __str__(self):
         return self.name
