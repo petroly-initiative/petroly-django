@@ -170,5 +170,10 @@ GRAPHQL_JWT = {
 }
 
 GRAPHQL_AUTH = {
-    "ACTIVATION_PATH_ON_EMAIL": "account/activate/",
+    "ACTIVATION_PATH_ON_EMAIL": "account/activate",
+    "EMAIL_TEMPLATE_ACTIVATION": "activation_email.html",
+    "EMAIL_TEMPLATE_ACTIVATION_RESEND": "activation_email.html",
+    "EMAIL_TEMPLATE_SECONDARY_EMAIL_ACTIVATION": "email/activation_email.html",
+    "EMAIL_TEMPLATE_PASSWORD_SET": "email/password_set_email.html",
+    "EMAIL_TEMPLATE_PASSWORD_RESET": "email/password_reset_email.html",
 }
