@@ -4958,7 +4958,7 @@
 		top: 0px;
 		transform: matrix(1,0,0,1,0,0);
 	}
-	#You_are_Almost_There_ammar {
+	#You_are_Almost_There {
 		left: 731px;
 		top: 264px;
 		position: absolute;
@@ -8276,20 +8276,21 @@
 			</svg>
 		</div>
 	</div>
-	<div id="You_are_Almost_There_ammar">
-		<span>You are Almost There, ammar!</span>
+	<div id="You_are_Almost_There">
+		<span>You Are Almost There, {{ user.username }}!</span>
 	</div>
 	<div id="Please_click_the_following_lin">
 		<span>Please click the following link to confirm your account</span>
 	</div>
 	<div id="Confirm_KFUPMER_Account">
-		<a target="_blank" style="text-decoration: none; color: rgba(64,153,255,1)" href="#">Confirm KFUPMER Account</a>
+		<a target="_blank" style="text-decoration: none; color: rgba(64,153,255,1)" 
+			href="{{ protocol }}://{{ domain }}/{{ path }}/{{ token }}">Confirm My Account</a>
 	</div>
 	<div id="why_do_we_need_a_verficiation">
-		<span>why do we need a verficiation?</span>
+		<span>Why do we need a verficiation?</span>
 	</div>
 	<div id="because_we_strive_to_offer_KFU">
-		<span>"because we strive to offer KFUPM students a fair and transperant rating and <br/>information from only KFUPMERS" </span>
+		<span>"Because we strive to offer KFUPM students a fair and transperant rating and <br/>information from only KFUPMers" </span>
 	</div>
 </div>
 </body>
