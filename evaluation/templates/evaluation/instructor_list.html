@@ -184,8 +184,8 @@
     {% if is_paginated %}
         <div class="pagination_container">
           {% if page_obj.has_previous %}
-            <a class="btn btn-outline-info mb-4 helper-btn" href="?{{ selected_search }}&page=1">First</a>
-            <a class="btn btn-outline-info mb-4 helper-btn" href="?{{ selected_search }}&page={{ page_obj.previous_page_number }}">Previous</a>
+            <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page=1">First</a>
+            <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.previous_page_number }}">Previous</a>
           {% endif %}
 
           {% for num in page_obj.paginator.page_range %}
@@ -197,8 +197,8 @@
           {% endfor %}
 
           {% if page_obj.has_next %}
-            <a class="btn btn-outline-info mb-4 helper-btn" href="?{{ selected_search }}&page={{ page_obj.next_page_number }}"> Next </a>
-            <a class="btn btn-outline-info mb-4 helper-btn" href="?{{ selected_search }}&page={{ page_obj.paginator.num_pages }}">Last</a>
+            <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.next_page_number }}"> Next </a>
+            <a class="btn btn-outline-info mb-4" href="?{{ selected_search }}&page={{ page_obj.paginator.num_pages }}">Last</a>
           {% endif %}
         </div>
     {% endif %}
