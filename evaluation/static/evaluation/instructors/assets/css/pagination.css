@@ -20,10 +20,6 @@
   -ms-box-shadow: 10px 10px 10px #bbb;
   -o-box-shadow: 10px 10px 10px #bbb;
 }
-.pagination_container .helper-btn {
-  background-color: #FFF;
-  color: #17d1c4;
-}
 .pagination_container .btn:hover {
   background-color: #17d1c4;
   color: white;
