@@ -24,7 +24,7 @@ def upload_image_(img, user):
                     overwrite=True,
                     invalidate=True,
                     transformation=[
-                        {'width': 300, 'gravity': "face", 'crop': "limit"}
+                        {'width': 300, 'crop': "limit"}
                     ],
                     format='jpg'
                 )
