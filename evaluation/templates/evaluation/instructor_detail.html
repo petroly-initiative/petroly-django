@@ -9,19 +9,23 @@
 {% block body %}
 
 {% comment %} Body {% endcomment %}
+<header id="heading"><span id="top_header"><strong><em>Instructors Evaluation</em></strong></span>
+    <sub  id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your instructor easily and quickly!</sub></header>
+
     {% if messages %}
     <div style="display: flex;justify-content: center;margin: 22px;">
         <ul class="messages">
     </div>
     {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    <div class="shadow m-auto text-center p-2 align-items-center" style="display: flex; border-radius: 4px; border: none; width: 50vw; background-color: #ffffff;">
+        <i class="fas fa-exclamation-circle" style="color: rgb(255, 41, 41); margin-right: 12px;"></i>
+        <div style="font-size: 18px; color:#7b7c7e"  {% if message.tags %} class="{{ message.tags }}"{% endif %}> <strong>{{ message }}</strong></div>
+    </div>
     {% endfor %}
         </ul>
     {% endif %}
 
-    <header id="heading"><span id="top_header"><strong><em>Instructors Evaluation</em></strong></span>
-    <sub  id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your instructor easily and quickly!</sub></header>
-
+    
 {% comment %} Side Card {% endcomment %}
     <div style="margin-top: 50px;">
         <div class="container-fluid p-4" >
