@@ -41,8 +41,9 @@ def populate(name, dep, url):
     print(new_obj)
 
 deps = [
-    'AE', 'ARC', 'ARE', 'CE', 'CEM', 'CHE', 
-    'CHEM', 'COE', 'CRP', 'EE', 'GS', 'ICS', 'ISOM',
+    # 'AE', 'ARC', 'ARE', 'CE', 'CEM', 'CHE', 
+    # 'CHEM', 'COE', 
+    'CRP', 'EE', 'GS', 'ICS', 'ISOM',
     'LS', 'MATH', 'ME', 'MGT', 'PE', 'PHYS', 'SE'
 ]
 
