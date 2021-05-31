@@ -15,7 +15,7 @@ class Instructor(models.Model):
     )  
     # Additional fields
     profile_pic = CloudinaryField(
-    default='https://res.cloudinary.com/ammar-faifi/image/upload/v1614377885/icon.jpg',
+    default='https://res.cloudinary.com/petroly-initiative/image/upload/v1622359053/profile_pics/blank_profile.png',
     blank=True,
     max_length=350,
     )

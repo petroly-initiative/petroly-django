@@ -8,13 +8,26 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.urls import reverse, reverse_lazy
-from cloudinary.uploader import upload
+from cloudinary.uploader import upload_image
 from django.core.mail import send_mail
 from django_email_verification import send_email
 from django_email_verification.views import verify
 from django.contrib.sites.shortcuts import get_current_site
 import requests
 
+
+def upload_image_(img, user):
+    return upload_image(
+                    img,
+                    folder='profile_pics',
+                    public_id=user.username,
+                    overwrite=True,
+                    invalidate=True,
+                    transformation=[
+                        {'width': 300, 'crop': "limit"}
+                    ],
+                    format='jpg'
+                )
 
 class ActivateView(TemplateView):
 
@@ -92,7 +105,7 @@ class RegisterView(LoginView):
                 # To check is user verified
                 user = User.objects.get(username=request.POST.get('username'))
                 try:
-                    verified = user.status.verified
+                    verified = user.status.verified or user.is_active
                 except:
                     # For old accounts
                     verified = user.is_active
@@ -114,7 +127,7 @@ class RegisterView(LoginView):
                 new_profile.user = new_user
 
                 if "profile_pic" in request.FILES:
-                    new_profile.profile_pic = request.FILES["profile_pic"]
+                    new_profile.profile_pic = upload_image_(request.FILES["profile_pic"], new_user)
 
                 new_profile.save()
 
@@ -196,20 +209,10 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
             new_profile = form2.save(commit=False)
             new_profile.user = new_user
-            if request.FILES.get('profile_pic', '') != '':
-                upload(
-                    request.FILES.get('profile_pic'),
-                    folder='profile_pics',
-                    public_id=new_user.username,
-                    overwrite=True,
-                    invalidate=True,
-                    transformation=[
-                        {'width': 200, 'height': 200, 'gravity': "face", 'crop': "thumb"}
-                    ],
-                    format='jpg'
-                )
+            if img := request.FILES.get('profile_pic'):
+                new_profile.profile_pic = upload_image_(img, new_user)
             elif 'profile_pic-clear' in request.POST:
-                new_profile.profile_pic = ''
+                new_profile.profile_pic = None
             else:
                 # insert the old profile_pic
                 new_profile.profile_pic = Profile.objects.get(user=request.user).profile_pic
