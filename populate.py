@@ -43,8 +43,9 @@ def populate(name, dep, url):
 deps = [
     # 'AE', 'ARC', 'ARE', 'CE', 'CEM', 'CHE', 
     # 'CHEM', 'COE', 
-    'CRP', 'EE', 'GS', 'ICS', 'ISOM',
-    'LS', 'MATH', 'ME', 'MGT', 'PE', 'PHYS', 'SE'
+    # 'CRP', 'EE', 'GS', 'ICS', 'ISOM',
+    # 'LS', 'MATH', 'ME', 'MGT', 'PE', 'PHYS', 'SE'
+    'IAS'
 ]
 
 for dep in deps:
