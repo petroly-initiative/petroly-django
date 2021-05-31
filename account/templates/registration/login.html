@@ -63,13 +63,13 @@
                     <h2 class="login-header form-header">Welcome Back!</h2>
                     <div class="form-group">
                         <i class="fas fa-at"></i>
-                        <input type="username" name="username" id="email", placeholder='Enter your username'>
+                        <input class="form-control" type="username" name="username" id="email", placeholder='Enter your username'>
                         {% comment %} {{ form.username }} {% endcomment %}
                     </div>
 
                     <div class="form-group">
                         <i class="fas fa-unlock-alt"></i>
-                        <input type="password" name="password" id="password", placeholder='Enter your password'>
+                        <input class="form-control" type="password" name="password" id="password", placeholder='Enter your password'>
                         {% comment %} {{ form.password }} {% endcomment %}
                     </div>
 
@@ -129,7 +129,7 @@
                     </div> {% endcomment %}
 
                     <div class="form-group" style=" margin-top: 22px">
-                        <button class="btn sumbit-btn btn-block" type="submit" name='register'>Sign Up</button>
+                        <button class="btn sumbit-btn btn-block" type="submit" name='register'><strong>Sign Up</strong> </button>
                     </div>
                 </div>  
                 </form>
@@ -139,6 +139,7 @@
         <script src={% static 'account/login_page/assets/js/jquery.min.js' %}></script>
         <script src={% static 'account/login_page/assets/bootstrap/js/bootstrap.min.js' %}></script>
         <script src={% static 'account/login_page/assets/js/form-script.js' %}></script>
+        
     </body>
 
 </html>
