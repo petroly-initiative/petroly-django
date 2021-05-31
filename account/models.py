@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
 from cloudinary.models import CloudinaryField
+from cloudinary import CloudinaryImage
 from data import departments, years
 
 # Create your models here.
@@ -17,7 +18,7 @@ class Profile(models.Model):
     # Additional fields
     profile_pic = CloudinaryField(
         'image', 
-        default='https://res.cloudinary.com/ammar-faifi/image/upload/v1617785115/blank_profile_jiosa2.png',
+        default='https://res.cloudinary.com/petroly-initiative/image/upload/v1622359053/profile_pics/blank_profile.png',
         blank=True,
         max_length=350,
     )
