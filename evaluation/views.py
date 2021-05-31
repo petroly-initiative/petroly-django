@@ -106,3 +106,13 @@ class EvaluationUpdateView(UpdateView):
 
         messages.success(request, "Evaluation Was Updated.")
         return redirect(reverse("evaluation:evaluation_list", kwargs={"pk": request.user.pk}))
+
+class EvaluationDeleteView(DeleteView):
+    model = Evaluation
+    success_url = reverse_lazy("evaluation:instructors")
+
+    def post(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
+
+        messages.success(request, "Evaluation Was Deleted.")
+        return redirect(reverse("evaluation:evaluation_list", kwargs={"pk": request.user.pk}))
