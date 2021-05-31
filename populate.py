@@ -22,7 +22,7 @@ def populate(name, dep, url):
     
     new_obj = Instructor.objects.get_or_create(name=name, department=dep)
     
-    if url != 'https://i.pinimg.com/originals/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.png' and url != '':
+    if url != 'https://i.pinimg.com/originals/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.png' and url != '' and url != None:
         profile_pic = upload_image(
                             url,
                             folder='instructors/profile_pics',
@@ -41,9 +41,7 @@ def populate(name, dep, url):
     print(new_obj)
 
 deps = [
-    'AE', 'ARC', 'ARE', 'CE', 'CEM', 'CHE', 
-    'CHEM', 'COE', 'CRP', 'EE', 'GS', 'ICS', 'ISOM',
-    'LS', 'MATH', 'ME', 'MGT', 'PE', 'PHYS', 'SE'
+    'MATH', 'ME', 'MGT', 'PE', 'PHYS', 'SE'
 ]
 
 for dep in deps:
