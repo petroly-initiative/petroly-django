@@ -28,11 +28,11 @@
             <br>    
             <a href="{% url 'evaluation:evaluation_form' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
             <p style="font-size:12pt">EDIT</p></a>
-            <a href="{% url 'evaluation:evaluation_form' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
+            <a href="{% url 'evaluation:evaluation_delete' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
             <p style="font-size:12pt">DELELTE!</p></a>
         </div>
     {% empty %}
-        <h1>Oohps!, It looks u haven't Evaluate yet.</h1>
+        <p>Oohps!, It looks u haven't Evaluate yet.</p>
     {% endfor %}
 
 {% endblock body %}
