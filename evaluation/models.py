@@ -2,6 +2,7 @@ from os import name
 from django.db import models
 from django.db.models import Avg
 from django.contrib.auth.models import User
+from django.utils.translation import gettext as _
 from data import departments
 from cloudinary.models import CloudinaryField
 from cloudinary.uploader import upload, upload_image
@@ -48,7 +49,7 @@ class Evaluation(models.Model):
 
     starts = [(0, "NO star"), (20, "1 star"), (40, "2 stars"), 
     (60, "3 stars"), (80, "4 stars"), (100, "5 stars")]
-    comment = models.CharField(max_length=250, blank=True)
+    comment = models.TextField(_("Comment"), blank=True, default='')
     date = models.DateTimeField(auto_now_add=True)
     grading = models.IntegerField(choices=starts, blank=False)
     teaching = models.IntegerField(choices=starts, blank=False)
