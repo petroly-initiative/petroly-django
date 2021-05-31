@@ -125,7 +125,7 @@
                                 href="#formModal" style="color: rgb(255,255,255);">Rate instructor</a></div> <br>
                         
                     {% else %}
-                        <a href="{% url 'register' %}?next={% url 'evaluation:detail' object.pk %}"><strong>LogIn To Rate</strong></a>
+                        <a href="{% url 'login' %}?next={% url 'evaluation:detail' object.pk %}"><strong>LogIn To Rate</strong></a>
                     {% endif %}
 
                 </div>
