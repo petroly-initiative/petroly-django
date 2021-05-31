@@ -14,16 +14,25 @@
     {% endif %}
 
 {% block body %}
+    <h1>My Evaluations:</h1>
     {% for i in evaluation_list %}
-        <h3>Date: </h3> {{ i.date }}
-        <h3>Instructor: </h3> {{ i.instructor.name }}
-        <h3>Departmnet: </h3> {{ i.instructor.department }}
-        <h3>Comments: </h3> {{ i.comment }}
-        
-        <a href="{% url 'evaluation:evaluation_form' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
-        <h1>EDIT</h1></a>
-        <br><br>
+        <div class="col-9  m-auto" style="text-align: center;border-style: none;box-shadow: 0px 0px 4px 1px;
+        border-radius: 16px; background: #ffffff; ">
+            <img class="rounded-circle" style="text-align: center;background: var(--dark);border-style: solid;border-radius: 10px;height: 
+            80px;width: 80px;margin-top: 30px;" src={{ i.instructor.profile_pic.url }} /> <br>
+
+            <h5 style="border-style: none;">{{ i.date }}</h5>
+            <h5 style="border-style: none;">{{ i.instructor.name }} ({{ i.instructor.department }})</h5>
+            <h3>Comment: </h3> {{ i.comment }}
+            
+            <br>    
+            <a href="{% url 'evaluation:evaluation_form' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
+            <p style="font-size:12pt">EDIT</p></a>
+            <a href="{% url 'evaluation:evaluation_form' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
+            <p style="font-size:12pt">DELELTE!</p></a>
+        </div>
     {% empty %}
         <h1>Oohps!, It looks u haven't Evaluate yet.</h1>
     {% endfor %}
+
 {% endblock body %}
