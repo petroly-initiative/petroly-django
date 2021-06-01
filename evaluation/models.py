@@ -32,6 +32,7 @@ class Instructor(models.Model):
             result['teaching__avg'] = round(result['teaching__avg'])
             result['personality__avg'] = round(result['personality__avg'])
             result['overall'] = round((result['grading__avg'] + result['teaching__avg'] + result['personality__avg'])/60)
+            result['overall_float'] = round((result['grading__avg'] + result['teaching__avg'] + result['personality__avg'])/60, 1)
         except:
             result_ = {}
             for key in zip(result):

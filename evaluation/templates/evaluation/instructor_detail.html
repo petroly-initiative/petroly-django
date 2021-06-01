@@ -46,31 +46,7 @@
                 <h1 style="border-style:none;">{{ object.name }}</h1>
                 <div  style="font-size: 20px; color: #7b7c7e; margin-top: 50px;">Department name</div>
                 <h3 style="border-style: none;">{{ object.department }}</h3>
-                {% comment %}
-                <h5 style="border-style: none;">email</h5>
-                <h5 style="border-style: none;">website</h5>
-                <h5 style="border-style: none;">office</h5>
-                <div class="table-responsive" style="">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>day</th>
-                                <th>time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Sun</td>
-                                <td>10:30-12:00AM</td>
-                            </tr>
-                            <tr>
-                                <td>Mon</td>
-                                <td>1:00-3:00PM</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                {% endcomment %}
+
                 </div>
                 <div class="col-12 col-lg-7 mx-auto m-3 shadow" style="border-radius: 6px; border-style: none;background: #ffffff;">
 
@@ -80,11 +56,11 @@
                             <h4 style="margin-bottom: 0px;text-align: center;">Overall</h4>
                             <div class="rounded-circle p-2 text-center" style="display:flex;flex-direction: column; align-items: center ;border: 6px solid springgreen;box-shadow: 0px 0px 20px 2px springgreen;border-radius: 80px; text-align: center;border-radius: 10px;height:160px;width: 160px;margin-top: 30px;">
                             <div style="font-size: 40px;color: rgb(23,209,196); height: fit-content;" id="average-score">
-                              <strong>10</strong>
+                              <strong>{{ instructor.avg.overall_float|default:'#' }}</strong>
                             </div>
                             
                             <div style="font-size: 40px; border-top: 3px solid #7b7c7e; color: #7b7c7e;width: 70px;
-                             "><strong>10</strong></div>
+                             "><strong>5</strong></div>
                             </div>
                         </div>
 
