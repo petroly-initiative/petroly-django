@@ -227,8 +227,10 @@ input {
   }
 }
 
-.rounded-circle.d-inline.float-left.instructor_pic {
+.instructor_pic {
   background-color: rgb(255,255,255);
+  border: 4px solid springgreen;
+  border-radius: 40.5px;
   padding: 2px;
   width: 81px;
   height: 81px;
@@ -290,26 +292,13 @@ input {
   }
 }
 
-@media (min-width: 300px) {
-  #searchbar {
-  }
-}
+
 
 .instrucotr_collapse_button {
   font-size: 2rem;
-  transition: font-size 0.3s;
 }
 
-.d-xl-flex.align-items-xl-center.instrucotr_collapse_button {
-}
 
-.instrucotr_collapse_button:hover {
-  font-size: 2.5rem;
-  transform: translateY(11%);
-}
-
-.card.instructors {
-}
 
 .grading_elements {
   font-size: 1em;
@@ -437,8 +426,7 @@ input {
   }
 }
 
-#third_container {
-}
+
 
 .instructor_column {
   max-width: 562px;
@@ -453,8 +441,6 @@ input {
   margin: 16px;
 }
 
-#instructor_form_info {
-}
 
 @media (min-width: 768px) {
   #stats_list-1 {
@@ -483,10 +469,7 @@ input {
   }
 }
 
-@media (min-width: 1200px) {
-  .col-5.col-sm-4.col-md-4.col-lg-3.col-xl-4.d-flex.align-items-center.justify-content-xl-end {
-  }
-}
+
 
 @media (min-width: 1200px) {
   .categories {
@@ -501,11 +484,7 @@ input {
   }
 }
 
-.d-flex.flex-column.align-items-lg-center.align-items-xl-center {
-}
 
-.d-flex.flex-column.align-items-lg-center.align-items-xl-center {
-}
 
 @media (min-width: 992px) {
   #category_container {
@@ -517,8 +496,6 @@ input {
   font-size: 1rem;
 }
 
-.col.d-flex.align-items-lg-center.progress_indicators {
-}
 
 #searchbar::placeholder {
   opacity: 0.7;
@@ -530,10 +507,6 @@ input {
   }
 }
 
-@media (min-width: 300px) {
-  #search_container {
-  }
-}
 
 #serachbar_div {
   display: flex;

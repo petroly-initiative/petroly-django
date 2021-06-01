@@ -9,30 +9,42 @@
 {% block body %}
 
 {% comment %} Body {% endcomment %}
+<header id="heading"><span id="top_header"><strong><em>Instructors Evaluation</em></strong></span>
+    <sub  id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your instructor easily and quickly!</sub></header>
+
     {% if messages %}
     <div style="display: flex;justify-content: center;margin: 22px;">
         <ul class="messages">
     </div>
     {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    <div class="shadow m-auto text-center p-4 align-items-center" style="display: flex; border-radius: 4px; border: none; width: 50vw; background-color: #ffffff;">
+        <i class="fas fa-exclamation-circle" style="color: rgb(255, 41, 41); margin-right: 12px;"></i>
+        <div style="font-size: 18px; color:#7b7c7e"  {% if message.tags %} class="{{ message.tags }}"{% endif %}> <strong>{{ message }}</strong></div>
+    </div>
     {% endfor %}
         </ul>
     {% endif %}
 
-    <header id="heading"><span id="top_header"><strong><em>Instructors Evaluation</em></strong></span>
-    <sub  id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your instructor easily and quickly!</sub></header>
-
+    
 {% comment %} Side Card {% endcomment %}
     <div style="margin-top: 50px;">
-        <div class="container-fluid p-4">
+        <div class="container-fluid p-4" >
+            <div id="instructor_styler-5"
+                            style="height: 120px;background-image: url(&quot;{% static 'evaluation/instructors/assets/img/bg-pattern.png' %}&quot;);background-color: rgba(54,162,177,0);position: absolute;width: 100%;z-index: 1;">
+                        </div>
             <div class="row">
                 
-                <div class="col-8 col-lg-3 m-auto p-5" style="text-align: center;border-style: none;box-shadow: 0px 0px 4px 1px;border-radius: 16px; 
+                <div class="col-8 col-lg-3 p-5 shadow" style="text-align: center;border-style: none;border-radius: 6px;margin: auto; 
                 background: #ffffff; ">
-                <img class="rounded-circle" style="text-align: center;background: var(--dark);border-style: solid;border-radius: 10px;height: 
-                80px;width: 80px;margin-top: 30px;" src={{ object.profile_pic.url }} />
-
+                <div id="instructor_styler-5"
+                style="height: 120px;background-image: url(&quot;{% static 'evaluation/instructors/assets/img/bg-pattern.png' %}&quot;);background-color: rgba(54,162,177,0);position: absolute;width: 100%;z-index: 1; top: 20px;">
+            </div>
+                <div class="m-3" style="font-size: 28px">Instructor information</div>
+                <img class="rounded-circle instructor-pic" style="background-color: rgb(255,255,255);
+                border: 6px solid springgreen;border-radius: 60px; text-align: center;border-radius: 10px;height:120px;width: 120px;margin-top: 30px;" src={{ object.profile_pic.url }} />
+                <div  style="font-size: 20px; color: #7b7c7e; margin-top: 50px;">Instructor name</div>
                 <h1 style="border-style:none;">{{ object.name }}</h1>
+                <div  style="font-size: 20px; color: #7b7c7e; margin-top: 50px;">Department name</div>
                 <h3 style="border-style: none;">{{ object.department }}</h3>
                 {% comment %}
                 <h5 style="border-style: none;">email</h5>
@@ -60,13 +72,20 @@
                 </div>
                 {% endcomment %}
                 </div>
-                <div class="col-12 col-lg-7 mx-auto m-3" style="border-radius: 15px; border-style: none; box-shadow: 0px 0px 10px 2px;background: #ffffff;">
+                <div class="col-12 col-lg-7 mx-auto m-3 shadow" style="border-radius: 6px; border-style: none;background: #ffffff;">
 
                     <div class="row p-4 h-20" style="padding-bottom: 20px;">
                         
-                        <div class="col-12 col-lg-3 align-self-center" style="border-style: none; text-align: center;">
+                        <div class="col-12 col-lg-3 align-self-center" style="border-style: none; text-align: center; border-radius: 55px; height:120px;width: 120px">
                             <h4 style="margin-bottom: 0px;text-align: center;">Overall</h4>
-                            <img class="rounded-circle" style="text-align: right;background: var(--dark);border-style: solid;border-radius: 10px;height: 80px;width: 80px;margin-top: 30px;">
+                            <div class="rounded-circle p-2 text-center" style="display:flex;flex-direction: column; align-items: center ;border: 6px solid springgreen;box-shadow: 0px 0px 20px 2px springgreen;border-radius: 80px; text-align: center;border-radius: 10px;height:160px;width: 160px;margin-top: 30px;">
+                            <div style="font-size: 40px;color: rgb(23,209,196); height: fit-content;" id="average-score">
+                              <strong>10</strong>
+                            </div>
+                            
+                            <div style="font-size: 40px; border-top: 3px solid #7b7c7e; color: #7b7c7e;width: 70px;
+                             "><strong>10</strong></div>
+                            </div>
                         </div>
 
                         <div class="col-12 col-lg-9">
@@ -93,10 +112,11 @@
 
 
 {% comment %} Comments and bottom Area {% endcomment %}
-                    <div class="text-capitalize text-center m-3 p-5 h-60 align-content-center" style="border-radius:16px;
-                    border-style: none;
-                    box-shadow: 0px 0px 4px 1px ;">
-                        <h4 class="p-2">Comments</h4>
+<h4 class="p-2 text-center " style="margin-top: 20px; color: #7b7c7e;"><i class="fas fa-comment-alt" style="margin-right: 12px;"></i>Comments</h4>
+                    <div class="text-capitalize text-center m-3 p-3 h-60 align-content-center" style="border-radius:6px;
+                    border: 1px solid rgb(192, 192, 192);
+                    ">
+                        
 
                         <div
                         style="overflow-y: scroll; height: 300px;">
@@ -104,13 +124,12 @@
                             {% for i in object.evaluation_set.all %}
                                 {% if i.comment == "" %}
                                 {% else %}
-                                    <div class="m-3 p-2" style="border-style: none; 
-                                    box-shadow: 0px 0px 4px 1px;border-bottom: 2px solid #7b7c7e; border-radius: 5px;text-align: left;">
+                                    <div class="m-3 p-2" style="font-size: 18px;border: 1px solid rgb(192, 192, 192); border-radius: 5px;text-align: left;">
                                         {{ i.comment }}
                                     </div>
                                 {% endif %}
                             {% empty %}
-                                <h4>No commnets yet:(</h4>
+                                <h4>No commnets yet&nbsp;:(</h4>
                             {% endfor %}    
 
                         </div>
@@ -121,8 +140,8 @@
                     
 
                     {% if user.is_authenticated %}
-                        <div><a class="btn btn-primary btn-lg modal_buttons" role="button" data-toggle="modal"
-                                href="#formModal" style="color: rgb(255,255,255);">Evaluate Instructor</a></div> <br>
+                        <div style="display: flex; justify-content: center; align-content: center;"><a class="btn btn-primary btn-lg modal_buttons text-center" role="button" data-toggle="modal"
+                                href="#formModal" style="font-size: 20px;color: rgb(255,255,255); width: 180px; height: 40px;"><strong>Evaluate</strong> </a></div> <br>
                         
                     {% else %}
                         <a href="{% url 'login' %}?next={% url 'evaluation:detail' object.pk %}"><strong>LogIn To Rate</strong></a>

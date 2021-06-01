@@ -87,7 +87,7 @@
 }
 .form-header {
   text-align: center;
-  color: #02a6d2;
+  color: #00c8ff;
 }
 .form-group {
   margin-left: auto;
@@ -97,7 +97,7 @@
 
 .form-group i {
   margin-right: 0.5em;
-  background-image: linear-gradient(#2aff80 20%, 70%, #03caffff 90%);
+  background-color: #20ddd4;
   background-size: 100%;
   background-clip: text;
   text-fill-color: transparent;
@@ -106,6 +106,7 @@
   -webkit-text-fill-color: transparent;
   -moz-background-clip: text;
   -moz-text-fill-color: transparent;
+  font-size: 20px;
 }
 .form-group input:not(.form-check-input) {
   display: inline-block;
