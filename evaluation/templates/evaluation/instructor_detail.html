@@ -120,7 +120,7 @@
                                 href="#formModal" style="font-size: 20px;color: rgb(255,255,255); width: 180px; height: 40px;"><strong>Evaluate</strong> </a></div> <br>
                         
                     {% else %}
-                        <a href="{% url 'login' %}?next={% url 'evaluation:detail' object.pk %}"><strong>LogIn To Rate</strong></a>
+                        <a href="{% url 'login' %}?next={% url 'evaluation:instructor_detail' object.pk %}"><strong>LogIn To Rate</strong></a>
                     {% endif %}
 
                 </div>
