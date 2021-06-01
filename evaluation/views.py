@@ -42,6 +42,9 @@ class Evaluate(LoginRequiredMixin, UpdateView):
 
     model = Instructor
 
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        return HttpResponseRedirect(reverse('evaluation:instructor_detail', kwargs={'pk':1}))
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         rating_1 = int(request.POST.get("rating", 0)) * 20
