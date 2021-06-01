@@ -179,6 +179,7 @@ html {
 
 #main-doc {
   padding-top: 51px;
+  padding-bottom: 20px;
   position: relative;
   z-index: initial;
   width: 100%;
@@ -242,16 +243,19 @@ html {
 }
 
 #search_btn {
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   width: 2rem;
-  align-content: center;
-  height: 2rem;
+  align-items: center;
+  height: 2.45rem !important;
+  background-color: rgb(25, 180, 241) !important;
+  margin-left: 8px;
 }
 
 #search_container {
   align-items: center;
   margin: 0 auto;
+  margin-bottom: 10px;
 }
 
 #search_container {
