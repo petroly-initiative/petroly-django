@@ -122,7 +122,7 @@
 
                     {% if user.is_authenticated %}
                         <div><a class="btn btn-primary btn-lg modal_buttons" role="button" data-toggle="modal"
-                                href="#formModal" style="color: rgb(255,255,255);">Rate instructor</a></div> <br>
+                                href="#formModal" style="color: rgb(255,255,255);">Evaluate Instructor</a></div> <br>
                         
                     {% else %}
                         <a href="{% url 'login' %}?next={% url 'evaluation:detail' object.pk %}"><strong>LogIn To Rate</strong></a>
