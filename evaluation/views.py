@@ -55,7 +55,7 @@ class Evaluate(LoginRequiredMixin, UpdateView):
         if Evaluation.objects.filter(user=request.user, instructor=self.object):
             messages.success(request, """You have RATED this instructor before, 
                 click `My Evaluations` from your profile to edit it""")
-            return redirect(reverse("evaluation:detail", kwargs={"pk": self.object.pk}))
+            return redirect(reverse("evaluation:instructor_detail", kwargs={"pk": self.object.pk}))
         
         rating = Evaluation.objects.create(
             comment=comment,
@@ -67,7 +67,7 @@ class Evaluate(LoginRequiredMixin, UpdateView):
         )
 
         messages.success(request, "Evaluation Was Submitted.")
-        return redirect(reverse("evaluation:detail", kwargs={"pk": self.object.pk}))
+        return redirect(reverse("evaluation:instructor_detail", kwargs={"pk": self.object.pk}))
 
 
 class InstructorCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
