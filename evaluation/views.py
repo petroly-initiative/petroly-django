@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import *
 from django.urls.base import reverse_lazy, reverse
 from django.views.generic.base import TemplateView
 from .models import Instructor, Evaluation
@@ -38,7 +38,7 @@ class InstructorListView(ListView):
         return context
 
 
-class Evaluate(UpdateView):
+class Evaluate(LoginRequiredMixin, UpdateView):
 
     model = Instructor
 
@@ -90,9 +90,20 @@ class InstructorDetailView(DetailView):
     model = Instructor
 
 
-class EvaluationListView(ListView):
+class EvaluationListView(LoginRequiredMixin, ListView):
 
     model = Evaluation
+    paginate_by = 10
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        # Prevent accessing other users' evaluations
+        if int(self.kwargs.get('pk')) != self.request.user.pk:
+            return HttpResponseForbidden('You have no permission')
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        pk = self.kwargs.get('pk')
+        return super().get_context_data(object_list=Evaluation.objects.filter(user__pk=pk), **kwargs)
 
 
 class EvaluationUpdateView(UpdateView):
