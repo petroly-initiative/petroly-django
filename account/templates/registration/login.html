@@ -48,15 +48,15 @@
 
             <div class="row no-gutters form-selection">
                 <div class="col-6">
-                    <button style="width: 120px; border-color: #edeef7; padding-left: 15px: padding-right: 15px" type="button" class="btn signup-button active shadow border"><strong>Sign up</strong></button>
+                    <button style="width: 120px; border-color: #edeef7; padding-left: 15px: padding-right: 15px" type="button" class="btn signup-button shadow border"><strong>Sign up</strong></button>
                 </div>
                 <div class="col-6">
-                    <button style="width: 120px;border-color: #edeef7" type="button" class="btn login-button shadow border"><strong>Log in</strong></button>
+                    <button style="width: 120px;border-color: #edeef7" type="button" class="btn login-button shadow border active"><strong>Log in</strong></button>
                 </div>
             </div>
             
             {% comment %} Login {% endcomment %}
-            <div id="login" class="form-container">
+            <div id="login" class="form-container show">
                 <form method="post" action="{% url 'login' %}" >
                 <input type="hidden" name="next" value="{{ next }}" />
                 {% csrf_token %}
@@ -81,7 +81,7 @@
             </div>
 
             {% comment %} Register {% endcomment %}
-            <div id="signup" class="form-container show align-self-center";>
+            <div id="signup" class="form-container align-self-center";>
                 <form method="post" action='{% url 'login' %}' enctype='multipart/form-data'>
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}" style="width: 100%"/>
