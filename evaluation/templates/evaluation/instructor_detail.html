@@ -141,7 +141,7 @@
 
                     {% if user.is_authenticated %}
                         <div style="display: flex; justify-content: center; align-content: center;"><a class="btn btn-primary btn-lg modal_buttons text-center" role="button" data-toggle="modal"
-                                href="#formModal" style="font-size: 20px;color: rgb(255,255,255); width: 180px; height: 50px;"><strong>Rate instructor</strong> </a></div> <br>
+                                href="#formModal" style="font-size: 20px;color: rgb(255,255,255); width: 180px; height: 40px;"><strong>Evaluate</strong> </a></div> <br>
                         
                     {% else %}
                         <a href="{% url 'register' %}?next={% url 'evaluation:detail' object.pk %}"><strong>LogIn To Rate</strong></a>
