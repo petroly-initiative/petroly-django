@@ -292,19 +292,10 @@ input {
 
 .instrucotr_collapse_button {
   font-size: 2rem;
-  transition: font-size 0.3s;
 }
 
-.d-xl-flex.align-items-xl-center.instrucotr_collapse_button {
-}
 
-.instrucotr_collapse_button:hover {
-  font-size: 2.5rem;
-  transform: translateY(11%);
-}
 
-.card.instructors {
-}
 
 .grading_elements {
   font-size: 1em;
