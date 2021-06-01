@@ -43,28 +43,26 @@ class Evaluate(LoginRequiredMixin, UpdateView):
     model = Instructor
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
-        return HttpResponseRedirect(reverse('evaluation:instructor_detail', kwargs={'pk':1}))
+        pk = self.kwargs.get('pk')
+        return HttpResponseRedirect(reverse('evaluation:instructor_detail', kwargs={'pk':pk}))
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        rating_1 = int(request.POST.get("rating", 0)) * 20
-        rating_2 = int(request.POST.get("ratingtwo", 0)) * 20
-        rating_3 = int(request.POST.get("ratingthree", 0)) * 20
-        comment = request.POST["comment"]
 
         if Evaluation.objects.filter(user=request.user, instructor=self.object):
             messages.success(request, """You have RATED this instructor before, 
                 click `My Evaluations` from your profile to edit it""")
             return redirect(reverse("evaluation:instructor_detail", kwargs={"pk": self.object.pk}))
         
-        rating = Evaluation.objects.create(
-            comment=comment,
-            grading=rating_1,
-            teaching=rating_2,
-            personality=rating_3,
-            user=request.user,
-            instructor=self.object,
-        )
+        data = {
+            'grading': int(request.POST.get("rating", 0)) * 20,
+            'teaching': int(request.POST.get("ratingtwo", 0)) * 20,
+            'personality': int(request.POST.get("ratingthree", 0)) * 20,
+            'comment': request.POST["comment"],
+            'user':request.user,
+            'instructor':self.object,
+        }
+        Evaluation.objects.create(**data)
 
         messages.success(request, "Evaluation Was Submitted.")
         return redirect(reverse("evaluation:instructor_detail", kwargs={"pk": self.object.pk}))
@@ -97,6 +95,7 @@ class EvaluationListView(LoginRequiredMixin, ListView):
 
     model = Evaluation
     paginate_by = 10
+    ordering = 'date'
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
         # Prevent accessing other users' evaluations
@@ -113,10 +112,19 @@ class EvaluationUpdateView(UpdateView):
 
     model = Evaluation
     fields = ["grading", "teaching", "personality", "comment"]
-    success_url = reverse_lazy("evaluation:instructors")
 
     def post(self, request, *args, **kwargs):
-        super().post(request, *args, **kwargs)
+        # super().post(request, *args, **kwargs)
+        print('POST: ', request.POST)
+        self.object = self.get_object()
+        evaluation = Evaluation.objects.filter(pk=self.object.pk)
+        data = {
+            'grading': int(request.POST.get("rating", evaluation[0].grading//20)) * 20,
+            'teaching': int(request.POST.get("ratingtwo", evaluation[0].teaching//20)) * 20,
+            'personality': int(request.POST.get("ratingthree", evaluation[0].personality//20)) * 20,
+            'comment': request.POST["comment"],
+        }        
+        evaluation.update(**data)
 
         messages.success(request, "Evaluation Was Updated.")
         return redirect(reverse("evaluation:evaluation_list", kwargs={"pk": request.user.pk}))

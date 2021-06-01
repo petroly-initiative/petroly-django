@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
+{% load mathfilters %}
 
 {% block title %}My Evaluations{% endblock title %}
 
@@ -34,18 +35,127 @@
             <img class="rounded-circle m-3 instructor_pic" style="width: 120px;height: 120px;margin-left: 22px;margin-right: 48px; border-radius: 60px;" src={{ i.instructor.profile_pic.url }} /> <br>
             <div><i class="fas fa-calendar-alt m-2" style="color: #7b7c7e; font-size: 20px; margin-right: 8px;"></i><strong style="color: rgb(80 77 77);">Date</strong></div>
             <h5 style="border-style: none; color: rgb(13, 132, 230); font-size: 25px; margin-bottom: 16px;">{{ i.date }}</h5>
-            <div><i class="fas fa-id-card m-2" style="color: #7b7c7e; font-size: 20px; margin-right: 8px;"></i><strong style="color: rgb(80 77 77);">Instructor name</strong></div>
+            <div><i class="fas fa-id-card m-2" style="color: #7b7c7e; font-size: 20px; margin-right: 8px;"></i><strong style="color: rgb(80 77 77);">Instructor</strong></div>
             <h5 style="border-style: none; color: rgb(13, 132, 230); font-size: 25px; margin-bottom: 16px;">{{ i.instructor.name }} </h5>
             <div><i class="fas fa-building m-2" style="color: #7b7c7e; font-size: 20px; margin-right: 8px;"></i><strong style="color: rgb(80 77 77);">Department</strong></div>
             <h5 style="border-style: none; color: rgb(13, 132, 230); font-size: 25px; margin-bottom: 16px;">({{ i.instructor.department }}) </h5>
             <h5>Comment</h5><div style="word-break: break-all; padding: 16px;color:rgb(13, 132, 230);">{{ i.comment }}</div> 
-            
-            <br>    
-            <a href="{% url 'evaluation:evaluation_form' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
-            <div class="m-1" style="display: flex;align-items: center; justify-content: center ;font-size:20px; margin: 8px; background-color: rgb(25 151 255);; width: 160px; height: 60px; border-radius: 30px; color: white; margin: auto;"><i class="fas fa-edit" style="margin-right: 8px;"></i>Edit</div></a>
-            <a href="{% url 'evaluation:evaluation_delete' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
-              <div class="m-1" style="display: flex;align-items: center; justify-content: center ;font-size:20px; margin: 8px; background-color: rgb(255 73 118);; width: 160px; height: 60px; border-radius: 30px; color: white; margin: auto;"><i class="fas fa-trash-alt" style="margin-right: 8px;"></i>Delete</div></a>
+            <br>   
+			 
+            <a href="#formModal-{{ i.pk }}" role="button" data-toggle="modal">
+				<div class="m-1" style="display: flex;align-items: center; justify-content: center ;font-size:20px; margin: 8px; background-color: rgb(25 151 255);; width: 160px; height: 60px; border-radius: 30px; color: white; margin: auto;">
+				<i class="fas fa-edit" style="margin-right: 8px;"></i>Edit</div></a>
+
+			<a href="{% url 'evaluation:evaluation_delete' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
+				<div class="m-1" style="display: flex;align-items: center; justify-content: center ;font-size:20px; margin: 8px; background-color: rgb(255 73 118);; width: 160px; height: 60px; border-radius: 30px; color: white; margin: auto;">
+				<i class="fas fa-trash-alt" style="margin-right: 8px;"></i>Delete</div></a>
         </div>
+
+
+		{% comment %} Form {% endcomment %}
+		<div class="modal fade text-center" role="dialog" tabindex="-1" id="formModal-{{ i.pk }}" style="width: large;margin: auto;">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header text-left d-flex" style="padding-bottom: 0;">
+						<div>
+							<h3 class="d-block" style="width: 100%;text-align: left;"><em>Evaluation form</em></h3>
+							<p class="lead float-left" style="font-size: 18px;">Choose your satisfaction level for each given category</p>
+						</div><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+
+					<div class="modal-body"
+						style="padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 11px;">
+						{% comment %} The FORM {% endcomment %}
+						<form method="POST" action="{% url 'evaluation:evaluation_update' i.pk %}">
+							{% csrf_token %}
+							<div class="form-row">
+								<div class="col-xl-12 d-flex justify-content-center justify-content-lg-center"
+									style="width: 100%;border: 1px solid var(--gray) ;border-top-width: 0px;border-right-width: 0px;border-bottom-width: 2px;border-bottom-color: rgb(222,226,230);border-left-width: 0px;">
+									<div class="d-flex flex-column align-items-center align-items-lg-center align-items-xl-center"
+										id="instructor_form_info" style="padding-bottom: 13px;"><img
+											class="d-flex d-lg-flex justify-content-lg-center" id="form_pic"
+											src="{{ i.instructor.profile_pic.url }}">
+									</div>
+											
+								</div>
+							<p>Leaving the stars empty won't change the prevoius value.</p>
+								<div class="col"
+									style="padding-top: 17px;border-width: 1px;border-color: rgb(222,226,230);border-bottom-width: 1px;border-bottom-color: rgb(222,226,230);">
+									<h3 class="d-inline" style="text-align: left;color: rgb(23,209,196);">Grading</h3>
+									<legend style="font-size: 18px;margin-bottom: 0px;">grading system, efficiency and fairness
+									</legend>
+									<fieldset class="rating rating-stars">
+										<input type="radio" id="star5-{{ i }}" name="rating" value="5" /><label for="star5-{{ i }}"
+											title="Excellent"><span>&#9733</span></label>
+										<input type="radio" id="star4-{{ i }}" name="rating" value="4" /><label for="star4-{{ i }}"
+											title="good"><span>&#9733</span></label>
+										<input type="radio" id="star3-{{ i }}" name="rating" value="3" /><label for="star3-{{ i }}"
+											title="Average"><span>&#9733</span></label>
+										<input type="radio" id="star2-{{ i }}" name="rating" value="2" /><label for="star2-{{ i }}"
+											title="Acceptable"><span>&#9733</span></label>
+										<input type="radio" id="star1-{{ i }}" name="rating" value="1" /><label for="star1-{{ i }}"
+											title="Very bad"><span>&#9733</span></label>
+									</fieldset>
+									Before: {{ i.grading|intdiv:20 }} Stars
+								</div>
+								<div class="col-12" style="padding-top: 17px;">
+									<h3 class="d-inline" style="text-align: left;color: rgb(23,209,196);">Teaching</h3>
+									<legend style="font-size: 18px;margin-bottom: 0px;">Sound, material delivery&nbsp;
+									</legend>
+									<fieldset class="rating">
+										<input type="radio" id="star5-1-{{ i }}" name="ratingtwo" value="5" /><label for="star5-1-{{ i }}"
+											title="Excellent"><span>&#9733</span></label>
+										<input type="radio" id="star4-1-{{ i }}" name="ratingtwo" value="4" /><label for="star4-1-{{ i }}"
+											title="Good"><span>&#9733</span></label>
+										<input type="radio" id="star3-1-{{ i }}" name="ratingtwo" value="3" /><label for="star3-1-{{ i }}"
+											title="Average"><span>&#9733</span></label>
+										<input type="radio" id="star2-1-{{ i }}" name="ratingtwo" value="2" /><label for="star2-1-{{ i }}"
+											title="Acceptable"><span>&#9733</span></label>
+										<input type="radio" id="star1-1-{{ i }}" name="ratingtwo" value="1" /><label for="star1-1-{{ i }}"
+											title="Very bad"><span>&#9733</span></label>
+									</fieldset>
+									Before: {{ i.teaching|intdiv:20 }} Stars
+								</div>
+								<div class="col-12" style="padding-top: 17px; width: 100%">
+									<h3 class="d-inline" style="text-align: left;color: rgb(23,209,196);">Personality</h3>
+									<legend style="font-size: 18px;margin-bottom: 0px;">flexibility, communication, general mood
+									</legend>
+									<fieldset class="rating">
+										<input type="radio" id="star5-2-{{ i }}" name="ratingthree" value="5" /><label for="star5-2-{{ i }}"
+											title="Excellent"><span>&#9733</span></label>
+										<input type="radio" id="star4-2-{{ i }}" name="ratingthree" value="4" /><label for="star4-2-{{ i }}"
+											title="Good"><span>&#9733</span></label>
+										<input type="radio" id="star3-2-{{ i }}" name="ratingthree" value="3" /><label for="star3-2-{{ i }}"
+											title="Average"><span>&#9733</span></label>
+										<input type="radio" id="star2-2-{{ i }}" name="ratingthree" value="2" /><label for="star2-2-{{ i }}"
+											title="Acceptable"><span>&#9733</span></label>
+										<input type="radio" id="star1-2-{{ i }}" name="ratingthree" value="1" /><label for="star1-2-{{ i }}"
+											title="Very bad"><span>&#9733</span></label>
+									</fieldset>
+									Before: {{ i.personality|intdiv:20 }} Stars
+								</div>
+								<div class="col-12" style="padding-top: 17px;">
+									<div class="d-flex flex-column align-items-xl-center">
+										<h3 class="d-inline"
+											style="text-align: center;color: rgb(23,209,196);width: 100%;height: 32px;">Comments
+										</h3><sub style="height: 37px;"><em>optional</em></sub><textarea class="form-control"
+											style="width: 100%;font-size: 16px;height: 73px; " name="comment">{{ i.comment }}</textarea>
+									</div>
+									
+									<input type="hidden"  id="instructor_pk" name="instructor_pk" value="{{ i.pk }}">
+									
+								</div>
+								<button class="btn btn-primary" type="submit"
+									style="border-width: 0px;border-color: rgb(23,209,196);background: #17d1c4;width: 100%;
+									padding: 0 0;height: 35px;margin-top: 26px;margin-bottom: 18px;color: white; margin-left: auto; margin-right: auto">
+									<strong style="margin:auto">Submit</strong></button>
+
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
     {% empty %}
         <p>Oops!, It looks you haven't Evaluated yet.</p>
     {% endfor %}
