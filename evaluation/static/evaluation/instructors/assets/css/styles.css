@@ -179,6 +179,7 @@ html {
 
 #main-doc {
   padding-top: 51px;
+  padding-bottom: 20px;
   position: relative;
   z-index: initial;
   width: 100%;

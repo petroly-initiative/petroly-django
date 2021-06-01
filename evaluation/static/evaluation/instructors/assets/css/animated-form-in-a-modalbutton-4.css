@@ -268,25 +268,7 @@ input {
     bottom: 33px;
   }
 }
-#searchbar
-{
-  width: 50rem;
-}
 
-
-@media (min-width: 300px) {
-  #searchbar {
-    display: flex;
-    width: 90em;
-  }
-}
-
-@media (min-width: 576px) {
-  #searchbar {
-    max-width: 25rem;
-    margin: auto;
-  }
-}
 
 
 

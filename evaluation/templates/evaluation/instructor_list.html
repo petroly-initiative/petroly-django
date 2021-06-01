@@ -5,6 +5,7 @@
 {% block body %}
 
 <link rel="stylesheet" href="../../static/evaluation/instructors/assets/css/pagination.css">
+
 <script>
     function submit(id) {
         document.getElementById("instructor_id").setAttribute("value", id);
@@ -23,26 +24,25 @@
         </ul>
     {% endif %}
     {% if perms.evaluation %}
-        <a href={% url 'evaluation:instructor_form' %}>Add New Instructor</a> <br>
+        <a  class="shadow" style="background-color:white;border-radius: 6px ;display: flex; align-items: center; justify-content: center; color: #7b7c7e; width: 250px; padding: 8px; margin: auto;" class="m-auto" href={% url 'evaluation:instructor_form' %}><i style="margin-right: 8px;" class="fas fa-user-plus"></i><strong>Add New Instructor</strong> </a> <br>
     {% endif %}
 
-    <div id="heading"><span id="top_header">Instructors Evaluation</span></div>
+    <div style="margin-bottom: 28px;" id="heading"><span id="top_header">Instructors Evaluation</span></div>
 
 {% comment %} Search {% endcomment %}
 <form
-    class="flex-row flex-grow-0 flex-fill justify-content-center align-content-center align-self-center align-items-sm-center"
+    class="col-9 flex-row flex-grow-0 flex-fill justify-content-center align-content-center align-self-center"
     data-toggle="tooltip" data-bs-tooltip="" data-placement="right" id="search_container" method="get"
-    style="background: rgba(255,255,255,0); max-width: 60vw;">
+    style="background: rgba(255,255,255,0); width: 70vw;">
     {% csrf_token %}
     <l>
         {% comment %} {{filter.form.as_p}} {% endcomment %}
-         <div class="d-flex d-md-flex align-items-sm-center justify-content-md-center" style="display: flex;padding-bottom: 5px; padding-top: 15px" id="search_container"  >
+         <div class="d-flex d-md-flex justify-content-md-center" style="display: flex;padding-bottom: 5px; padding-top: 15px" id="search_container"  >
         <input class="border rounded form-control d-xl-flex align-items-xl-center"  id="searchbar" placeholder="enter the name of the instructor" autofocus="" autocomplete="on" style="width: 100%; padding: 16px;margin: 0px;color: var(--dark);margin-left: 2px;text-align: center;font-size: 1rem;border-radius: 0px;" 
         type="" name="name__icontains" value="{{ selected_name }}"/> <br>
         </form>
 
-       <button class="btn btn-primary d-flex justify-content-sm-center" id="search_btn" type="submit" style="background: rgba(0,123,255,0);padding: 0;border-width: 0px;width: 45px;height: 45px;"><img class="rounded-circle  justify-content-xl-center" data-toggle="tooltip" data-bs-tooltip="" id="search_icon" 
-       src="{% static 'evaluation/instructors/assets/img/icons8-google-web-search.svg' %} " type="submit" style="display: inline-flex;margin-right: 4px;width: 45px;min-width: 9px;height: 45px;"></button>
+       <button class="btn btn-primary d-flex justify-content-sm-center" id="search_btn" type="submit" style="background: rgba(0,123,255,0);padding: 0;border-width: 0px;width: 45px;height: 45px;"><i class="fas fa-search text-center" style="font-size: 24px; color: #fff;; display: flex; align-items: center;"></i></button>
         </div>
         <select class="scstyle-1" style="border: none;outline:none; font-size: 20px;margin-bottom: 25px; padding: 4px ;margin-left: 7px;width: 400px;border-radius: 6px;height: 36px;border-width: 0px; max-height: 150px; overflow-y: scroll" name="department" id="" default="{{ selected_department }}"/>
             <option style="color: white;" value="" selected disabled><strong>Department</strong></option>
@@ -52,10 +52,10 @@
         </select>
 
 {% comment %} Cards {% endcomment %}
-<div class="row" id="instructors_container" style="width: 50em; margin-bottom: 29px;margin-right: 0;margin-left: 0;">
+<div class="row" id="instructors_container" style="width:90vw; margin-bottom: 29px;margin-right: 0;margin-left: 0;">
     {% for i in instructor_list %}
         <div class="col-md-6 col-lg-6 col-xl-7 instructor_column" style="margin-bottom: 28px;">
-            <div role="tablist" id="accordion-{{i.id}}" style="background: rgba(231,231,231,0);border-radius: 0;">
+            <div class="shadow" role="tablist" id="accordion-{{i.id}}" style="background: rgba(231,231,231,0);border-radius: 0;">
 
                 <div class="card instructors"
                     style="border-radius: 11px;box-shadow: 0px 5px 7px rgba(33,37,41,0.44);margin-bottom: 14px;">

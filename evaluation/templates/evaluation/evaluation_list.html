@@ -18,25 +18,36 @@
     {% endif %}
 
 {% block body %}
-    <h1>My Evaluations:</h1>
+    <h1 class="text-center m-5">My Evaluations</h1>
     {% for i in evaluation_list %}
-        <div class="col-9  m-auto" style="text-align: center;border-style: none;box-shadow: 0px 0px 4px 1px;
-        border-radius: 16px; background: #ffffff; ">
-            <img class="rounded-circle" style="text-align: center;background: var(--dark);border-style: solid;border-radius: 10px;height: 
-            80px;width: 80px;margin-top: 30px;" src={{ i.instructor.profile_pic.url }} /> <br>
-
-            <h5 style="border-style: none;">{{ i.date }}</h5>
-            <h5 style="border-style: none;">{{ i.instructor.name }} ({{ i.instructor.department }})</h5>
-            <h3>Comment: </h3> {{ i.comment }}
+        <div class="col-9 col-lg-7 col-xl-5 shadow" style="text-align: center;
+        border-style: none;
+        border-radius: 6px;
+        background: #ffffff;
+        padding: 12px;
+        display: flex;
+        margin: auto;
+        margin-bottom: 16px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;">
+            <img class="rounded-circle m-3 instructor_pic" style="width: 120px;height: 120px;margin-left: 22px;margin-right: 48px; border-radius: 60px;" src={{ i.instructor.profile_pic.url }} /> <br>
+            <div><i class="fas fa-calendar-alt m-2" style="color: #7b7c7e; font-size: 20px; margin-right: 8px;"></i><strong style="color: rgb(80 77 77);">Date</strong></div>
+            <h5 style="border-style: none; color: rgb(13, 132, 230); font-size: 25px; margin-bottom: 16px;">{{ i.date }}</h5>
+            <div><i class="fas fa-id-card m-2" style="color: #7b7c7e; font-size: 20px; margin-right: 8px;"></i><strong style="color: rgb(80 77 77);">Instructor name</strong></div>
+            <h5 style="border-style: none; color: rgb(13, 132, 230); font-size: 25px; margin-bottom: 16px;">{{ i.instructor.name }} </h5>
+            <div><i class="fas fa-building m-2" style="color: #7b7c7e; font-size: 20px; margin-right: 8px;"></i><strong style="color: rgb(80 77 77);">Department</strong></div>
+            <h5 style="border-style: none; color: rgb(13, 132, 230); font-size: 25px; margin-bottom: 16px;">({{ i.instructor.department }}) </h5>
+            <h5>Comment</h5><div style="word-break: break-all; padding: 16px;color:rgb(13, 132, 230);">{{ i.comment }}</div> 
             
             <br>    
             <a href="{% url 'evaluation:evaluation_form' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
-            <p style="font-size:12pt">EDIT</p></a>
+            <div class="m-1" style="display: flex;align-items: center; justify-content: center ;font-size:20px; margin: 8px; background-color: rgb(25 151 255);; width: 160px; height: 60px; border-radius: 30px; color: white; margin: auto;"><i class="fas fa-edit" style="margin-right: 8px;"></i>Edit</div></a>
             <a href="{% url 'evaluation:evaluation_delete' i.pk %}?next={% url 'evaluation:evaluation_list' user.pk %}">
-            <p style="font-size:12pt">DELELTE!</p></a>
+              <div class="m-1" style="display: flex;align-items: center; justify-content: center ;font-size:20px; margin: 8px; background-color: rgb(255 73 118);; width: 160px; height: 60px; border-radius: 30px; color: white; margin: auto;"><i class="fas fa-trash-alt" style="margin-right: 8px;"></i>Delete</div></a>
         </div>
     {% empty %}
-        <p>Oohps!, It looks u haven't Evaluate yet.</p>
+        <p>Oops!, It looks you haven't Evaluated yet.</p>
     {% endfor %}
 
     {% if is_paginated %}

@@ -281,14 +281,14 @@ input {
 
 @media (min-width: 300px) {
   #searchbar {
-    display: block;
-    width: 90em;
+    display: flex;
+    width: 70vw !important;
   }
 }
 
 @media (min-width: 576px) {
   #searchbar {
-    max-width: 20rem;
+    max-width: 30rem;
   }
 }
 
