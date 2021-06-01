@@ -13,7 +13,7 @@ urlpatterns = [
     path("evaluate/<int:pk>/", views.Evaluate.as_view(), name="evaluate"),
     path("instructor/<int:pk>/", views.InstructorDetailView.as_view(), name="instructor_detail"),
     path("my_evaluations/<pk>", views.EvaluationListView.as_view(), name="evaluation_list"),
-    path("update/<int:pk>", views.EvaluationUpdateView.as_view(), name="evaluation_form"),
+    path("update/<int:pk>", views.EvaluationUpdateView.as_view(), name="evaluation_update"),
     path("evaluation/delete/<int:pk>/", views.EvaluationDeleteView.as_view(), name="evaluation_delete"),
     path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema)),
 ]
