@@ -4,7 +4,9 @@
 
 {% block body %}
 
-<link rel="stylesheet" href="../../static/evaluation/instructors/assets/css/pagination.css">
+{% block head %}
+    <link rel="stylesheet" href="{% static 'evaluation/instructors/assets/css/pagination.css' %}">
+{% endblock head %}
 
 <script>
     function submit(id) {
@@ -111,7 +113,7 @@
                                             <div class="col-6 col-sm-4 col-md-5 col-lg-4 col-xl-5 text-center d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex justify-content-center justify-content-sm-center justify-content-lg-center justify-content-xl-center categories"
                                                 style="height: auto;margin-top: 0px;"><span
                                                     class="d-md-flex justify-content-xl-center"
-                                                    style="font-size: 22px;text-align: center;width: 100%;"><strong>Grading</strong></span>
+                                                    style="font-size: 20px;text-align: center;width: 100%;"><strong>Grading</strong></span>
                                             </div>
                                             <div class="col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center progress_indicators"
                                                 style="height: auto;text-align: center;">
@@ -129,7 +131,7 @@
                                             <div class="col-6 col-sm-4 col-md-5 col-lg-4 col-xl-5 d-md-flex categories"
                                                 style="height: auto;margin-top: 0px;text-align: center;"><span
                                                     class="d-md-flex justify-content-xl-center"
-                                                    style="font-size: 22px;text-align: center;width: 100%;"><strong>Teaching</strong></span>
+                                                    style="font-size: 20px;text-align: center;width: 100%;"><strong>Teaching</strong></span>
                                             </div>
                                             <div class="col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center"
                                                 style="height: auto;text-align: center;width: 100%;">
@@ -147,7 +149,7 @@
                                             <div class="col-md-5 col-lg-4 col-xl-5 d-md-flex categories"
                                                 style="height: auto;margin-top: 0px;text-align: center;padding-left: 6px;">
                                                 <span class="d-md-flex justify-content-xl-center"
-                                                    style="font-size: 22px;text-align: center;width: 100%;"><strong>Personality</strong><br></span>
+                                                    style="font-size: 20px;text-align: center;width: 100%;"><strong>Personality</strong><br></span>
                                             </div>
                                             <div class="col-sm-8 col-md-7 col-xl-8 d-flex align-items-md-center align-items-lg-center"
                                                 style="height: auto;text-align: center;width: 100%;">
