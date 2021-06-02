@@ -33,6 +33,11 @@ class UserRegistrationForm(UserCreationForm):
         REGEX = r'^\w+@kfupm.edu.sa$'
         email = self.cleaned_data['email']
 
+        if User.objects.filter(email=email):
+            raise forms.ValidationError(
+                'The email address is already exist'
+                )
+
         if email and not re.match(REGEX, email):
             raise forms.ValidationError('You must use a KFUPM email')
 
