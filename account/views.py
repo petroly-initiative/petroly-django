@@ -108,10 +108,9 @@ class RegisterView(LoginView, forms.Form):
                     verified = user.status.verified
                 except:
                     # For old accounts
-                    verified = user.is_active
+                    verified = True
                 
                 if not verified:
-                    print("not verified")
                     return render(request, 'registration/login.html', context={'not_verified':True})
                 return self.form_valid(form)
             else:
