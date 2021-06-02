@@ -30,16 +30,21 @@
             <img src={% static 'account/login_page/assets/img/logo.png' %} alt="logo.png">
         </a>
         </div>
-         {% if form.errors %}
+         {% if form.errors or not_verified %}
             <p>
             <h1 style="text-align:center">Oops :(</h1>
             {% for field, field_errors in form.errors.items %}
                 <h6 style="text-align:center">
                     {% for error in field_errors %}
-                        <p style='color:red;'> {{ error|escape }} </p><br>
+                        <p style='color:red;'> {{ error|escape }} </p>
                     {% endfor %} 
                 </h6> 
             {% endfor %}
+            {% if not_verified %}
+                <h6 style="text-align:center">
+                    <p style='color:red;'>Your account is not yet verified, please check your email box.</p>
+                </h6>
+            {% endif %}
             </p>
         {% endif %}
 

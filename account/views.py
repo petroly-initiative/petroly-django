@@ -1,4 +1,4 @@
-from django.forms import forms
+from django import forms
 from .forms import UserRegistrationForm, ProfileForm, UserForm
 from .models import Profile, User
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -76,7 +76,7 @@ class IndexView(TemplateView):
     template_name = "index.html"
 
 
-class RegisterView(LoginView):
+class RegisterView(LoginView, forms.Form):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -105,13 +105,14 @@ class RegisterView(LoginView):
                 # To check is user verified
                 user = User.objects.get(username=request.POST.get('username'))
                 try:
-                    verified = user.status.verified or user.is_active
+                    verified = user.status.verified
                 except:
                     # For old accounts
                     verified = user.is_active
                 
                 if not verified:
-                    return HttpResponse('Your account is not yet activated, please check your email box.')
+                    print("not verified")
+                    return render(request, 'registration/login.html', context={'not_verified':True})
                 return self.form_valid(form)
             else:
                 return self.form_invalid(form)
@@ -119,8 +120,8 @@ class RegisterView(LoginView):
         # For Registering
         elif "register" in request.POST:
             if user_form.is_valid() and profile_form.is_valid():
-                new_user = user_form.save(commit=True)
-                new_user.is_active= False
+                new_user = user_form.save()
+                new_user.is_active = True
                 new_user.save()
 
                 new_profile = profile_form.save(commit=False)
