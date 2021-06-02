@@ -48,7 +48,7 @@
        <button class="btn btn-primary d-flex justify-content-sm-center" id="search_btn" type="submit" style="background: rgba(0,123,255,0);padding: 0;border-width: 0px;width: 45px;height: 45px;"><i class="fas fa-search text-center" style="font-size: 24px; color: #fff;; display: flex; align-items: center;"></i></button>
         </div>
         <select class="scstyle-1" style="border: none;outline:none; font-size: 20px;margin-bottom: 25px; padding: 4px ;margin-left: 7px;width: 320px;border-radius: 6px;height: 36px;border-width: 0px; max-height: 150px; overflow-y: scroll" 
-        name="department" id="" default="{{ selected_department }}"/>
+        name="department" id="" default="{{ selected_department }}" onchange="document.getElementById('search_btn').click()">
             <option style="color: white;" value="" selected><strong>All Departments</strong></option>
             {% for key, name in departments %}
                 <option value={{ key }} {% if key == selected_department %}selected{% endif %}>{{ key }}</option>
