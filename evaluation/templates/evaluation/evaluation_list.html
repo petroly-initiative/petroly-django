@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
+{% load static %}
 {% load mathfilters %}
 
 {% block title %}My Evaluations{% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="../../static/evaluation/instructors/assets/css/pagination.css">
+    <link rel="stylesheet" href="{% static 'base/assets/css/pagination.css' %}">
 {% endblock head %}
 
     {% if messages %}
