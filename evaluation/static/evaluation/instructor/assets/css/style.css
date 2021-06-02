@@ -1,0 +1,6 @@
+/* For instructor-card font for small screens */
+@media screen and (max-width: 520px) {
+  .reduce-font{
+    font-size: 20px;
+  }
+}
