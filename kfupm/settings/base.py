@@ -122,7 +122,7 @@ LOGIN_URL = 'login'
 
 # Email verification
 def verified_callback(user):
-    user.is_active = True
+    user.status.verified = True
 
 
 EMAIL_VERIFIED_CALLBACK = verified_callback
