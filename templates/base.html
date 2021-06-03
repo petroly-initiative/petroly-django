@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli">
     <link rel="stylesheet" href={% static 'base/assets/bootstrap/css/bootstrap.min.css' %}>
-    <link rel="stylesheet" href={% static 'base/assets/css/Caviar%20Dreams.css' %}>
+    <link rel="stylesheet" href={% static 'base/assets/css/Caviar-Dreams.css' %}>
     <link rel="stylesheet" href={% static 'base/assets/css/Raleway.css' %}>
     <link rel="stylesheet" href={% static 'base/assets/fonts/ionicons.min.css' %}>
     <link rel="stylesheet" href={% static 'base/assets/css/16-scrollbar-styles-1.css' %}>
@@ -40,7 +40,9 @@
     <nav class="navbar navbar-light navbar-expand-md fixed-top shadow" id="navbar"
         style="box-shadow: 0px 2px 6px 0px var(--gray);background: #ffffff;">
         <div class="container-fluid"><img id="header_pattern" src={% static 'base/assets/img/header_pattern.svg' %}>
-            <a class="navbar-brand" href={% url 'index' %}> {% include 'design.html' %} </a>
+            <a class="navbar-brand" href={% url 'index' %}> 
+                <img src="{% static 'img/Logo.svg' %}" alt="Petroly.co" width="90px">
+            </a>
 
             {% comment %} for mobile {% endcomment %}
             {% if user.is_authenticated %}
