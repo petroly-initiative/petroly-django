@@ -90,6 +90,16 @@ class InstructorDetailView(DetailView):
 
     model = Instructor
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if Evaluation.objects.filter(instructor__pk=self.kwargs['pk'], user__pk=self.request.user.pk):
+            context['evaluated'] = True
+        else:
+            context['evaluated'] = False
+        
+        return context
+
 
 class EvaluationListView(LoginRequiredMixin, ListView):
 
