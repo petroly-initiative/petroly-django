@@ -126,7 +126,7 @@ def verified_callback(user):
 
 
 EMAIL_VERIFIED_CALLBACK = verified_callback
-EMAIL_FROM_ADDRESS = 'no-reply@petroly.co'
+EMAIL_FROM_ADDRESS = 'support@petroly.co'
 EMAIL_MAIL_SUBJECT = 'Confirm Your Email'
 EMAIL_MAIL_HTML = 'email_body.html'
 EMAIL_MAIL_PLAIN = 'email_body.txt'
