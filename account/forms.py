@@ -14,7 +14,7 @@ class UserRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["email"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "s20xxxxxxx@kfupm.edu.sa", "required": "true"}
+            {"class": "form-control", "placeholder": "example@gamil.com, etc.", "required": "true"}
         )
         self.fields["username"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Enter your username"}
@@ -39,7 +39,9 @@ class UserRegistrationForm(UserCreationForm):
                 )
 
         if email and not re.match(REGEX, email):
-            raise forms.ValidationError('You must use a KFUPM email')
+            # all email addresses are allowed
+            # raise forms.ValidationError('You must use a KFUPM email')
+            pass
 
         return email
 
