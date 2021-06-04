@@ -6,10 +6,14 @@ from django.conf import settings
 import django
 from cloudinary.uploader import upload_image
 import cloudinary
+import sys
 
+
+settings_type = sys.argv[1]
+departments = [] + sys.argv[2:]
 
 # settings.configure()
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kfupm.settings.prod')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kfupm.settings.'+settings_type)
 
 print(os.environ.get('DJANGO_SETTINGS_MODULE'))
 django.setup()
@@ -40,13 +44,14 @@ def populate(name, dep, url):
 
     print(new_obj)
 
-deps = [
+deps = departments if departments else [
     # 'AE', 'ARC', 'ARE', 'CE', 'CEM', 'CHE', 
     # 'CHEM', 'COE', 
     # 'CRP', 'EE', 'GS', 'ICS', 'ISOM',
-    # 'LS', 'MATH', 'ME', 'MGT', 'PE', 'PHYS', 'SE'
-    'IAS'
+    # 'LS', 'MATH', 'ME', 'MGT', 'PE', 'PHYS', 'SE', 'IAS'
+    'ELD'
 ]
+
 
 for dep in deps:
     print('\n>>>>>>>>>>>>>>>>>>>>>>>> ' + dep)
