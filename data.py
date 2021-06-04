@@ -7,7 +7,7 @@ years = [
 ]
 
 departments = [
-	("ACCT", "Accounting"),
+	("AF", "Accounting & Finance"),
 	("AE", "Aerospace Engineering"),
 	("ARE", "Architectural Engineering"),
 	("ARC", "Architecture"),
