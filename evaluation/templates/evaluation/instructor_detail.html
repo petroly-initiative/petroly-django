@@ -113,22 +113,25 @@
 
                     {% if user.is_authenticated %}
                         {% if evaluated %}
-                            <p>You have evaluated this instructor <br>
+                            <p class="text-center">You have evaluated this instructor <br>
                             Got to My Evaluations page to manage them</p>
-                <div class="d-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-xl-center"
-                    style="height: 75px;">   
+                        <div class="d-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-xl-center"
+                            style="height: 75px;">   
                             <div style="display: flex; justify-content: center; align-content: center;">
                             <a class="btn btn-primary btn-lg modal_buttons text-center" role="button"
                                 href="{% url 'evaluation:evaluation_list' user.pk %}" style="font-size: 20px;color: rgb(255,255,255); width: 180px; height: 40px;"><strong>My Evaluations</strong> </a>
                             </div> <br>
+                        </div>
                         {% else %}
                             <div style="display: flex; justify-content: center; align-content: center;"><a class="btn btn-primary btn-lg modal_buttons text-center" role="button" data-toggle="modal"
                                 href="#formModal" style="font-size: 20px;color: rgb(255,255,255); width: 180px; height: 40px;"><strong>Evaluate</strong> </a></div> <br>
                         {% endif %}
                     {% else %}
+                    <div class="d-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-xl-center"
+                            style="height: 75px;">   
                         <a href="{% url 'login' %}?next={% url 'evaluation:instructor_detail' object.pk %}"><strong>LogIn To Evaluate</strong></a>
+                    </div>
                     {% endif %}
-                </div>
             </div>
         </div>
     </div>
