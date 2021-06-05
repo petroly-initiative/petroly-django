@@ -10,6 +10,7 @@ urlpatterns = [
     path("instructors/", views.InstructorListView.as_view(), name="instructors"),
     path("instructor/create/", views.InstructorCreateView.as_view(), name="instructor_form",),
     path("instructor/<int:pk>/delete", views.InstructorDeleteView.as_view(), name="instructor_delete",),
+    path("instructor/<int:pk>/update", views.InstructorUpdateView.as_view(), name="instructor_update",),
     path("evaluate/<int:pk>/", views.Evaluate.as_view(), name="evaluate"),
     path("instructor/<int:pk>/", views.InstructorDetailView.as_view(), name="instructor_detail"),
     path("my_evaluations/<pk>", views.EvaluationListView.as_view(), name="evaluation_list"),

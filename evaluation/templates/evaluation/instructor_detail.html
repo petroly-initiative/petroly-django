@@ -8,6 +8,13 @@
 
 {% block body %}
 
+    {% if perms.evaluation %}
+        <a  class="shadow" style="background-color:white;border-radius: 6px ;display: flex; align-items: center; justify-content: center; color: #7b7c7e; width: 250px; padding: 8px; margin: auto;" class="m-auto" 
+            href={% url 'evaluation:instructor_update' instructor.pk %}><i style="margin-right: 8px;" class="fas fa-user-plus"></i>
+            <strong>Update Instructor</strong> 
+        </a> <br>
+    {% endif %}
+
 {% comment %} Body {% endcomment %}
 <header id="heading"><span id="top_header"><strong><em>Instructors Evaluation</em></strong></span>
     <sub  id="sub_header" style="word-wrap: break-word;height: 49px;">Evaluate your instructor easily and quickly!</sub></header>
