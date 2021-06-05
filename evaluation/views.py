@@ -94,7 +94,12 @@ class InstructorCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateV
         
         name = request.POST['name']
         department = request.POST['department']
-        profile_pic = upload_image_(request.FILES['profile_pic'], name)
+        file = request.FILES.get('profile_pic')
+        profile_pic = None
+        
+        if file:
+            profile_pic = upload_image_(file, name)
+        
         instructor = Instructor.objects.get_or_create(
             name=name, 
             department=department, 
