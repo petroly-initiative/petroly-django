@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.http import *
 from django.urls.base import reverse_lazy, reverse
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import FormView
 from .models import Instructor, Evaluation
 from .filters import InstructorFilter
 from django.urls import reverse
@@ -18,6 +19,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from data import departments
 from cloudinary.uploader import upload_image
+from .forms import InstructorForm
 
 
 def upload_image_(img, name):
@@ -86,9 +88,9 @@ class InstructorCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateV
 
     permission_required = ["evaluation.add_instructor"]
     model = Instructor
-    fields = ["name", "department", "profile_pic"]
     success_url = reverse_lazy("evaluation:instructors")
     success_message = "The instructor was added"
+    fields = ["name", "department", "profile_pic"]
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         
@@ -106,6 +108,29 @@ class InstructorCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateV
             profile_pic=profile_pic
             )
         
+        return HttpResponseRedirect(reverse('evaluation:instructor_detail', kwargs={'pk':instructor[0].pk}))
+
+
+
+class InstructorUpdateView(PermissionRequiredMixin, UpdateView):
+
+    permission_required = ["evaluation.update_instructor"]
+    model = Instructor
+    fields = ["name", "department", "profile_pic"]
+
+    def post(self, request:HttpRequest, *args, **kwargs) -> HttpResponse:
+        name = request.POST['name']
+        department = request.POST['department']
+        instructor = Instructor.objects.filter(pk=self.kwargs['pk'])
+
+        if file := request.FILES.get('profile_pic'):
+            profile_pic = upload_image_(file, name)
+            instructor.update(name=name, department=department, profile_pic=profile_pic)
+        elif 'profile_pic-clear' in request.POST:
+            instructor.update(name=name, department=department, profile_pic=None)
+        else:
+            instructor.update(name=name, department=department)
+
         return HttpResponseRedirect(reverse('evaluation:instructor_detail', kwargs={'pk':instructor[0].pk}))
 
 
