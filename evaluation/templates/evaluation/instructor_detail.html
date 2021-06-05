@@ -51,10 +51,12 @@
                 <div class="m-3" style="font-size: 28px">Instructor information</div>
                 <img class="rounded-circle instructor-pic" style="background-color: rgb(255,255,255);
                 border: 6px solid springgreen;border-radius: 60px; text-align: center;border-radius: 10px;height:120px;width: 120px;margin-top: 30px;" src={{ object.profile_pic.url }} />
-                <div  style="font-size: 20px; color: #7b7c7e; margin-top: 50px;">Instructor name</div>
+                <div  style="font-size: 20px; color: #7b7c7e; margin-top: 50px;">Instructor</div>
                 <h1 style="border-style:none; font-size:36px;">{{ object.name }}</h1>
-                <div  style="font-size: 20px; color: #7b7c7e; margin-top: 50px;">Department name</div>
+                <div  style="font-size: 20px; color: #7b7c7e; margin-top: 50px;">Department</div>
                 <h3 style="border-style: none;">{{ object.department }}</h3>
+                <div  style="font-size: 20px; color: #7b7c7e; margin-top: 50px;">Number of Evaluations</div>
+                <h3 style="border-style: none;">{{ object.evaluation_set.count }}</h3>
 
                 </div>
                 <div class=" col-md-10 col-sm-11 col-12 col-lg-9 col-xl-6 mx-auto m-3 shadow" style="border-radius: 6px; border-style: none;background: #ffffff;">
