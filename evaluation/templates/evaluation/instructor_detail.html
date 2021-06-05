@@ -10,6 +10,10 @@
 
     {% if perms.evaluation %}
         <a  class="shadow" style="background-color:white;border-radius: 6px ;display: flex; align-items: center; justify-content: center; color: #7b7c7e; width: 250px; padding: 8px; margin: auto;" class="m-auto" 
+            href={% url 'evaluation:instructor_create' %}><i style="margin-right: 8px;" class="fas fa-user-plus"></i>
+            <strong>Add New Instructor</strong> 
+        </a> <br>
+        <a  class="shadow" style="background-color:white;border-radius: 6px ;display: flex; align-items: center; justify-content: center; color: #7b7c7e; width: 250px; padding: 8px; margin: auto;" class="m-auto" 
             href={% url 'evaluation:instructor_update' instructor.pk %}><i style="margin-right: 8px;" class="fas fa-user-plus"></i>
             <strong>Update Instructor</strong> 
         </a> <br>
