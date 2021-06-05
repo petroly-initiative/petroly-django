@@ -17,7 +17,21 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from data import departments
+from cloudinary.uploader import upload_image
 
+
+def upload_image_(img, name):
+    return upload_image(
+                    file=img,
+                    folder='instructors/profile_pics',
+                    public_id=name,
+                    overwrite=True,
+                    invalidate=True,
+                    transformation=[
+                        {'width': 300, 'crop': "limit"}
+                    ],
+                    format='jpg'
+                )
 
 class InstructorListView(ListView):
 
@@ -75,6 +89,19 @@ class InstructorCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateV
     fields = ["name", "department", "profile_pic"]
     success_url = reverse_lazy("evaluation:instructors")
     success_message = "The instructor was added"
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        
+        name = request.POST['name']
+        department = request.POST['department']
+        profile_pic = upload_image_(request.FILES['profile_pic'], name)
+        instructor = Instructor.objects.get_or_create(
+            name=name, 
+            department=department, 
+            profile_pic=profile_pic
+            )
+        
+        return HttpResponseRedirect(reverse('evaluation:instructor_detail', kwargs={'pk':instructor[0].pk}))
 
 
 class InstructorDeleteView(PermissionRequiredMixin, DeleteView):
