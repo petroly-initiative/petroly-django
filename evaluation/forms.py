@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import instructor
+from .models import Instructor
 
 
 # class insForm(ModelForm):
