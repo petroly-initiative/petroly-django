@@ -10,7 +10,9 @@ from data import departments, years
 
 
 class Profile(models.Model):
-    """A general user profile info model that extends `User` fields. """
+    """
+    A general user profile info model that has a field of :model:`auth.User`. 
+    """
 
     # Connect to the admin User object by on-to-one relation
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -25,8 +27,8 @@ class Profile(models.Model):
     major = models.CharField(default="", max_length=25, choices=departments)
     year = models.CharField(blank=True, max_length=25, choices=years)
 
-
-    def get_absolute_url(self):
+    # Some views need this to redirect to a url
+    def get_absolute_url(self) -> str:
         return reverse("index", kwargs={})
 
     # For a nice representation for an object
