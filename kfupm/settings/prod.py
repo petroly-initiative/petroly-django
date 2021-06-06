@@ -7,6 +7,12 @@ import os
 import cloudinary
 from cloudinary import config
 
+# Extra app
+
+INSTALLED_APPS += [
+    'django.contrib.admindocs',
+]
+
 
 SECRET_KEY = os.environ.get("SECRET_KEY", default='')
 
