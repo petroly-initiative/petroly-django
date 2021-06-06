@@ -10,6 +10,11 @@ import re
 
 
 class UserRegistrationForm(UserCreationForm):
+    '''
+    This form inherits from `UserCreationForm`, to provide the fields, with thier html attrs,
+    for register a new user.
+    It's useful for creating an `auth.User` object.
+    '''
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -29,7 +34,8 @@ class UserRegistrationForm(UserCreationForm):
             {"class": "form-control", "placeholder": "Enter your password again"}
         )
 
-    def clean_email(self):
+    # It was used for requiring a KFUPM eamail address
+    def clean_email(self) -> str:
         REGEX = r'^\w+@kfupm.edu.sa$'
         email = self.cleaned_data['email']
 
@@ -45,8 +51,6 @@ class UserRegistrationForm(UserCreationForm):
 
         return email
 
-
-
     class Meta:
         model = User
         fields = UserCreationForm.Meta.fields + ('email', 'first_name')
@@ -54,15 +58,23 @@ class UserRegistrationForm(UserCreationForm):
 
 
 class UserForm(forms.ModelForm):
+    '''
+    Similar to the class `UserRegistrationForm`, except it has no passowrd fields.
+    It's useful for updating an existing `auth.User` object.
+    '''
+
     class Meta:
         model = User
         fields = ("username", "first_name", "email")
 
 
 class ProfileForm(forms.ModelForm):
-    """A form for the additional `UserProfile` fields"""
+    '''
+    A form for the additional `UserProfile` fields.
+    It's used for updating an existing `Profile` object.
+    '''
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.fields["year"].widget.attrs.update({"class": "form-control"})
         self.fields["major"].widget.attrs.update({"class": "form-control", "placeholder": "PHYS, ICS, etc."})
