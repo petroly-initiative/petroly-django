@@ -9,6 +9,10 @@ from cloudinary.uploader import upload, upload_image
 
 
 class Instructor(models.Model):
+    '''
+    It constructs the instructor info: name, department, and profile_pic
+    It calculates the average values for using in template rendering.
+    '''
 
     name = models.CharField(max_length=250, unique=True)
     department = models.CharField(
@@ -22,6 +26,8 @@ class Instructor(models.Model):
     )
 
     def avg(self):
+        '''Uses the Aggregation function `Avg` to find the avg values for each criterion.'''
+        
         result = self.evaluation_set.aggregate(
             Avg("grading"),
             Avg("teaching"),
@@ -31,14 +37,14 @@ class Instructor(models.Model):
             result['grading__avg'] = round(result['grading__avg'])
             result['teaching__avg'] = round(result['teaching__avg'])
             result['personality__avg'] = round(result['personality__avg'])
+            # Overall avg in `integer`
             result['overall'] = round((result['grading__avg'] + result['teaching__avg'] + result['personality__avg'])/60)
+            # Overall avg in `float`
             result['overall_float'] = round((result['grading__avg'] + result['teaching__avg'] + result['personality__avg'])/60, 1)
+        
+        # If cannot find the avg, assign 0
         except:
-            result_ = {}
-            for key in zip(result):
-                result_[key] = 0
-            result_['overall'] = 0
-            result = result_
+            result['overall'] = result['overall_float'] = 0
 
         return result
 
@@ -47,11 +53,19 @@ class Instructor(models.Model):
 
 
 class Evaluation(models.Model):
+    '''
+    It constructs the evaluation info and criteria. It has a ForeignKey relation to the :model:`evluation.Instructor` to which this 
+    evaluation belongs to.
+    Also, this model has field for :model:`auth.User` for who is done this evaluation.
+    '''
 
     starts = [(0, "NO star"), (20, "1 star"), (40, "2 stars"), 
     (60, "3 stars"), (80, "4 stars"), (100, "5 stars")]
     comment = models.TextField(_("Comment"), blank=True, default='')
     date = models.DateTimeField(auto_now_add=True)
+    # term = models.IntegerField(_("Term"), default="", choices=[(192, 192)])
+    
+    # course = models.CharField(_("Course"), max_length=50, default="", )
     grading = models.IntegerField(choices=starts, blank=False)
     teaching = models.IntegerField(choices=starts, blank=False)
     personality = models.IntegerField(choices=starts, blank=False)
