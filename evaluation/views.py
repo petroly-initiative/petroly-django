@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.views.generic import *
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import *
 from data import departments
 from cloudinary.uploader import upload_image
 
