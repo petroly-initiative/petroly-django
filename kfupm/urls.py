@@ -18,6 +18,8 @@ from django.urls import path,include
 from django.contrib.staticfiles.urls import static
 from kfupm.settings import dev
 import debug_toolbar
+from graphene_django.views import GraphQLView
+
 
 urlpatterns = [
     path('', include('account.urls')),
@@ -28,6 +30,10 @@ urlpatterns = [
     path('roommate/', include('roommate.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
     path('maintenance-mode/', include('maintenance_mode.urls')),
+    path('ingredients/', include('ingredients.urls')),
+    path('graphql/', GraphQLView.as_view(graphiql=True)),
+
+
 ]
 # WARNING: this setting is only for development environment
 urlpatterns += static(dev.MEDIA_URL, document_root=dev.MEDIA_ROOT)
