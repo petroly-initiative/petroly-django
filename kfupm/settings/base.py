@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'graphql_auth',
     'mathfilters',
+    'ingredients',
 ]
 
 MIDDLEWARE = [
@@ -178,4 +179,7 @@ GRAPHQL_AUTH = {
     "EMAIL_TEMPLATE_SECONDARY_EMAIL_ACTIVATION": "email/activation_email.html",
     "EMAIL_TEMPLATE_PASSWORD_SET": "email/password_set_email.html",
     "EMAIL_TEMPLATE_PASSWORD_RESET": "email/password_reset_email.html",
+}
+GRAPHENE = {
+    'SCHEMA': 'kfupm.schema.schema'
 }

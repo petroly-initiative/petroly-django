@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.http import *
 from django.urls import reverse_lazy, reverse
 from .models import Instructor, Evaluation
-from .filters import InstructorFilter
+#from .filters import InstructorFilter
 from django.urls import reverse
 from django.views.generic import *
 from django.contrib.messages.views import SuccessMessageMixin
@@ -45,7 +45,7 @@ class InstructorListView(ListView):
         department = self.request.GET.get("department", default="")
 
         # filter the Instructor queryset
-        filter_qs = InstructorFilter(self.request.GET, Instructor.objects.all().order_by('name'))
+      #  filter_qs = InstructorFilter(self.request.GET, Instructor.objects.all().order_by('name'))
         context = super().get_context_data(**kwargs, object_list = filter_qs.qs)
         # departments list for the selector inout
         context['departments'] = departments 

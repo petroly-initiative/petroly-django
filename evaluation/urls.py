@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
 from graphene_django.views import GraphQLView
-from .schema import schema
 
 app_name = "evaluation"
 
@@ -16,5 +15,5 @@ urlpatterns = [
     path("my_evaluations/<pk>", views.EvaluationListView.as_view(), name="evaluation_list"),
     path("update/<int:pk>", views.EvaluationUpdateView.as_view(), name="evaluation_update"),
     path("evaluation/delete/<int:pk>/", views.EvaluationDeleteView.as_view(), name="evaluation_delete"),
-    path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema)),
+  #  path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema)),
 ]
