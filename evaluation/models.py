@@ -61,12 +61,14 @@ class Evaluation(models.Model):
 
     starts = [(0, "NO star"), (20, "1 star"), (40, "2 stars"), 
     (60, "3 stars"), (80, "4 stars"), (100, "5 stars")]
+    date = models.DateTimeField(auto_now_add=True)
     comment = models.TextField(_("Comment"), blank=True, default='')
     course = models.CharField(_("Course"), max_length=20, default='')
-    date = models.DateTimeField(auto_now_add=True)
+   
     grading = models.IntegerField(choices=starts, blank=False)
     teaching = models.IntegerField(choices=starts, blank=False)
     personality = models.IntegerField(choices=starts, blank=False)
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
 
