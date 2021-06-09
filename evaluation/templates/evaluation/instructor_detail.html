@@ -29,7 +29,7 @@
     </div>
     {% for message in messages %}
     <div class="shadow m-auto text-center p-4 align-items-center" style="display: flex; border-radius: 4px; border: none; width: 50vw; background-color: #ffffff;">
-        <i class="fas fa-exclamation-circle" style="color: rgb(255, 41, 41); margin-right: 12px;"></i>
+        <i class="fas fa-check-circle" style="color: #04c304; margin-right: 12px;"></i>
         <div style="font-size: 18px; color:#7b7c7e"  {% if message.tags %} class="{{ message.tags }}"{% endif %}> <strong>{{ message }}</strong></div>
     </div>
     {% endfor %}
