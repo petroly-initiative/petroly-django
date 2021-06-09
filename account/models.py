@@ -5,6 +5,8 @@ from PIL import Image
 from cloudinary.models import CloudinaryField
 from cloudinary import CloudinaryImage
 from data import departments, years
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
 
@@ -35,3 +37,8 @@ class Profile(models.Model):
     def __str__(self) -> str:
         return "@{}".format(self.user.username)
 
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
