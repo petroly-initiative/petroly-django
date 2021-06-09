@@ -21,13 +21,10 @@ class InstructorType(DjangoObjectType):
     class Meta:
         model = models.Instructor
         fields = ['name', 'department', 'profile_pic']
-        filter_fields = ['name']
-
-        
-        #filter_fields = {
-         #   'name': ['exact', 'icontains', 'istartswith'],
-           # 'department': ['exact', 'icontains', 'istartswith'],
-        #}
+        filter_fields = {
+            'name': ['exact', 'icontains', 'istartswith'],
+            'department': ['exact', 'icontains', 'istartswith'],
+        }
         interfaces = (relay.Node, )
 
 # A type for Evaluation model with thier fields
@@ -39,6 +36,12 @@ class EvaluationType(DjangoObjectType):
             'comment', 'date', 'grading', 'grading',
             'teaching', 'personality', 'user', 'instructor',
         ]
+        filter_fields = [
+            'comment', 'date', 'grading', 'grading',
+            'teaching', 'personality', 'user', 'instructor',
+        ]
+        interfaces = (relay.Node, )
+
 
 # Main entry for all the query types
 # Now only provides all Instructor & Evaluation objects
@@ -46,13 +49,9 @@ class Query(ObjectType):
     instructor = relay.Node.Field(InstructorType)
     all_instructors = DjangoFilterConnectionField(InstructorType)
 
+    evaluation = relay.Node.Field(EvaluationType)
+    all_evaluations = DjangoFilterConnectionField(EvaluationType)
     
-    all_evaluations = graphene.List(EvaluationType)
-    
-    
-    # return to the query all Evaluation objects 
-   # def resolve_all_evaluations(root, info):
-     #   return models.Evaluation.objects.all()
 
 
 # Main entry for mutaion of Instructor model; for editing its data 
