@@ -84,6 +84,7 @@ class Evaluate(LoginRequiredMixin, UpdateView):
             'grading': int(request.POST.get("rating", 0)) * 20,
             'teaching': int(request.POST.get("ratingtwo", 0)) * 20,
             'personality': int(request.POST.get("ratingthree", 0)) * 20,
+            'course': request.POST["course"],
             'comment': request.POST["comment"],
             'user':request.user,
             'instructor':self.object,
@@ -228,6 +229,7 @@ class EvaluationUpdateView(UpdateView):
             'grading': int(request.POST.get("rating", evaluation[0].grading//20)) * 20,
             'teaching': int(request.POST.get("ratingtwo", evaluation[0].teaching//20)) * 20,
             'personality': int(request.POST.get("ratingthree", evaluation[0].personality//20)) * 20,
+            'course': request.POST["course"],
             'comment': request.POST["comment"],
         }        
         evaluation.update(**data)

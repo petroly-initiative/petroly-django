@@ -62,10 +62,8 @@ class Evaluation(models.Model):
     starts = [(0, "NO star"), (20, "1 star"), (40, "2 stars"), 
     (60, "3 stars"), (80, "4 stars"), (100, "5 stars")]
     comment = models.TextField(_("Comment"), blank=True, default='')
+    course = models.CharField(_("Course"), max_length=20, default='')
     date = models.DateTimeField(auto_now_add=True)
-    # term = models.IntegerField(_("Term"), default="", choices=[(192, 192)])
-    
-    # course = models.CharField(_("Course"), max_length=50, default="", )
     grading = models.IntegerField(choices=starts, blank=False)
     teaching = models.IntegerField(choices=starts, blank=False)
     personality = models.IntegerField(choices=starts, blank=False)
