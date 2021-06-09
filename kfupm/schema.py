@@ -10,4 +10,9 @@ class Query(ingredients.schema.Query, evaluation.schema.Query, account.schema.Qu
     # as we begin to add more apps to our project
     pass
 
-schema = graphene.Schema(query=Query)
+class Mutation(evaluation.schema.Mutation, account.schema.Mutation, graphene.ObjectType):
+
+    pass
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
