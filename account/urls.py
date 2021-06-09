@@ -12,6 +12,6 @@ urlpatterns = [
     path('profile/<int:pk>/', views.ProfileDetailView.as_view(), name='profile_detail'),
     path('profile/update/', views.ProfileUpdateView.as_view(), name='profile_form'),
     path('email_confirm/', views.ConfirmView.as_view(), name='email_confirm'),
-    path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
+  #  path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('activate/<token>', views.ActivateView.as_view(), name='activate')
 ]
