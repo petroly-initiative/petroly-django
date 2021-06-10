@@ -7,44 +7,42 @@ from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 from .models import Profile
 
-from graphql_auth.mixins import VerifyAccountMixin
 
+# graphene doesn't know how to handle a CloudinaryField
+# so we need to register it
 @convert_django_field.register(CloudinaryField)
-def convert_profile_pic(field, registry=None):
+def convert_profile_pic(field: CloudinaryField, registry=None) -> str:
+    return field.value_to_string()
 
-    return "TEST"
 
 class UserType(DjangoObjectType):
+    '''
+    A type for the django model `account.User`.
+    '''
+
     class Meta:
         model = User
         fields = ["username", 'email', 'is_active']
 
+
 class ProfileType(DjangoObjectType):
+    '''
+    A type for the django model `account.Profile`.
+    '''
+
+    # define the GraphQL field type
     profile_pic = graphene.String()
 
     class Meta:
         model = Profile
-        fields = ['profile_pic', 'year', 'major']
-
-
-# class Query(graphene.ObjectType):
-#     viewer = graphene.Field(UserType)
-
-#     def resolve_viewer(self, info, **kwargs):
-#         user = info.context.user
-#         if not user.is_authenticated:
-#             raise Exception('Authentication credentials were not provided')
-#         return user
-
-# class Mutation(graphene.ObjectType):
-#     token_auth = graphql_jwt.ObtainJSONWebToken.Field()
-#     verify_token = graphql_jwt.Verify.Field()
-#     refresh_token = graphql_jwt.Refresh.Field()
-
-class Query(UserQuery, MeQuery, graphene.ObjectType):
-    pass
+        fields = ['year', 'major']
 
 class AuthMutation(graphene.ObjectType):
+    '''
+    All authintication mutations.
+    It inherits from `django-graphql-auth` and `django-graphql-jwt`.
+    '''
+
     register = mutations.Register.Field()
     verify_account = mutations.VerifyAccount.Field()
     resend_activation_email = mutations.ResendActivationEmail.Field()
@@ -55,6 +53,8 @@ class AuthMutation(graphene.ObjectType):
     update_account = mutations.UpdateAccount.Field()
     delete_account = mutations.DeleteAccount.Field()
     archive_account = mutations.ArchiveAccount.Field()
+
+    # we don't use a secondary email
     # send_secondary_email_activation =  mutations.SendSecondaryEmailActivation.Field()
     # verify_secondary_email = mutations.VerifySecondaryEmail.Field()
     # swap_emails = mutations.SwapEmails.Field()
@@ -66,9 +66,20 @@ class AuthMutation(graphene.ObjectType):
     refresh_token = mutations.RefreshToken.Field()
     revoke_token = mutations.RevokeToken.Field()
 
-class Mutation(AuthMutation, graphene.ObjectType):
+
+class Query(UserQuery, MeQuery, graphene.ObjectType):
+    '''
+    Main entry for all query type for `account` app.
+    It inherits `UserQuery` and `MeQuery`.
+    '''
+
     pass
 
 
-
-#schema = graphene.Schema(query=Query, mutation=Mutation)
+class Mutation(AuthMutation, graphene.ObjectType):
+    '''
+    Main entry for all `Mutation` types for `account` app.
+    It inherits from `AuthMutation`.
+    '''
+    
+    pass
