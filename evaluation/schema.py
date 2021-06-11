@@ -9,14 +9,14 @@ from cloudinary.models import CloudinaryField
 
 # To accept Cloudinary field
 @convert_django_field.register(CloudinaryField)
-def convert_profile_pic(field, registry=None):
-
-    return "TEST"
+def convert_profile_pic(field: CloudinaryField, registry=None) -> str:
+    return str(field)
 
 # Make a type of the model Instructor
 class InstructorType(DjangoObjectType):
 
-   # profile_pic = graphene.String()
+    # the CloudinaryField
+    profile_pic = graphene.String()
 
     class Meta:
         model = models.Instructor
