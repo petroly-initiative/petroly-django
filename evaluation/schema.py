@@ -181,7 +181,7 @@ class EvaluationUpdateMutation(graphene.Mutation):
         instructor.save()
         return InstructorUpdateMutation(instructor=instructor)
 
-class InstructorDeleteMutation(graphene.Mutation):
+class InstructorDelete2Mutation(graphene.Mutation):
 
     instructor = graphene.Field(InstructorType)
 
