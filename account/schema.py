@@ -1,10 +1,14 @@
 import graphene
+from graphene import relay, ObjectType
 from graphene_django import DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.converter import convert_django_field
 from graphql_auth.schema import UserQuery, MeQuery
 from graphql_auth import mutations
+from graphql_jwt.decorators import login_required
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+
 from .models import Profile
 
 
@@ -12,30 +16,37 @@ from .models import Profile
 # so we need to register it
 @convert_django_field.register(CloudinaryField)
 def convert_profile_pic(field: CloudinaryField, registry=None) -> str:
-    return field.value_to_string()
+    return str(field)
 
 
-class UserType(DjangoObjectType):
-    '''
-    A type for the django model `account.User`.
-    '''
+class ProfileNode(DjangoObjectType):
 
-    class Meta:
-        model = User
-        fields = ["username", 'email', 'is_active']
-
-
-class ProfileType(DjangoObjectType):
-    '''
-    A type for the django model `account.Profile`.
-    '''
-
-    # define the GraphQL field type
     profile_pic = graphene.String()
 
     class Meta:
         model = Profile
-        fields = ['year', 'major']
+        filter_fields = ['year']
+        interfaces = (relay.Node, )
+
+class ProfileMutation(graphene.Mutation):
+
+    class Arguments:
+        year = graphene.String()
+        major = graphene.String()
+        profile_pic = graphene.String(required=False)
+
+    profile = graphene.Field(ProfileNode)
+
+    @classmethod
+    @login_required
+    def mutate(cls, root, info, year, major, profile_pic=None, **kwargs):
+        profile: Profile = info.context.user.profile
+        profile.year = year
+        profile.major = major
+        profile.profile_pic = profile_pic
+        profile.save()
+
+        return ProfileMutation(profile=profile)
 
 class AuthMutation(graphene.ObjectType):
     '''
@@ -54,12 +65,6 @@ class AuthMutation(graphene.ObjectType):
     delete_account = mutations.DeleteAccount.Field()
     archive_account = mutations.ArchiveAccount.Field()
 
-    # we don't use a secondary email
-    # send_secondary_email_activation =  mutations.SendSecondaryEmailActivation.Field()
-    # verify_secondary_email = mutations.VerifySecondaryEmail.Field()
-    # swap_emails = mutations.SwapEmails.Field()
-    # remove_secondary_email = mutations.RemoveSecondaryEmail.Field()
-
     # django-graphql-jwt inheritances
     token_auth = mutations.ObtainJSONWebToken.Field()
     verify_token = mutations.VerifyToken.Field()
@@ -72,8 +77,8 @@ class Query(UserQuery, MeQuery, graphene.ObjectType):
     Main entry for all query type for `account` app.
     It inherits `UserQuery` and `MeQuery`.
     '''
-
-    pass
+    profile = relay.Node.Field(ProfileNode)
+    profiles = DjangoFilterConnectionField(ProfileNode)
 
 
 class Mutation(AuthMutation, graphene.ObjectType):
@@ -82,4 +87,4 @@ class Mutation(AuthMutation, graphene.ObjectType):
     It inherits from `AuthMutation`.
     '''
     
-    pass
+    update_profile = ProfileMutation.Field()
