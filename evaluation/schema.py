@@ -1,15 +1,19 @@
-from typing_extensions import Required
 import graphene
 from graphene import relay, ObjectType
 from graphene_django import DjangoObjectType
 from graphene_django.converter import convert_django_field
 from graphene_django.filter import DjangoFilterConnectionField
-from .forms import insForm 
-from . import models
-from cloudinary.models import CloudinaryField
 from graphene_django.forms.mutation import DjangoModelFormMutation
+from django.contrib.auth.models import User, Group
+from cloudinary.models import CloudinaryField
+
+# CRUD
+from graphql import GraphQLError
+from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
+
+from . import models
 from .models import Evaluation, Instructor
-import evaluation
+
 
 
 # To accept Cloudinary field
@@ -18,7 +22,7 @@ def convert_profile_pic(field: CloudinaryField, registry=None) -> str:
     return str(field)
 
 # Make a type of the model Instructor
-class InstructorType(DjangoObjectType):
+class InstructorNode(DjangoObjectType):
 
     # the CloudinaryField
     profile_pic = graphene.String()
@@ -33,7 +37,7 @@ class InstructorType(DjangoObjectType):
         interfaces = (relay.Node, )
 
 # A type for Evaluation model with thier fields
-class EvaluationType(DjangoObjectType):
+class EvaluationNode(DjangoObjectType):
 
     class Meta:
         model = models.Evaluation
@@ -51,11 +55,11 @@ class EvaluationType(DjangoObjectType):
 # Main entry for all the query types
 # Now only provides all Instructor & Evaluation objects
 class Query(ObjectType):
-    instructor = relay.Node.Field(InstructorType)
-    all_instructors = DjangoFilterConnectionField(InstructorType)
+    instructor = relay.Node.Field(InstructorNode)
+    all_instructors = DjangoFilterConnectionField(InstructorNode)
 
-    evaluation = relay.Node.Field(EvaluationType)
-    all_evaluations = DjangoFilterConnectionField(EvaluationType)
+    evaluation = relay.Node.Field(EvaluationNode)
+    all_evaluations = DjangoFilterConnectionField(EvaluationNode)
     
 
 
@@ -67,7 +71,7 @@ class Query(ObjectType):
 # Now to create an instructor
 class InstructorCreateMutation(graphene.Mutation):
 
-    instructor = graphene.Field(InstructorType)
+    instructor = graphene.Field(InstructorNode)
 
     class Arguments:
         name = graphene.String(required=True)
@@ -85,7 +89,7 @@ class InstructorCreateMutation(graphene.Mutation):
 
 class InstructorUpdateMutation(graphene.Mutation):
 
-    instructor = graphene.Field(InstructorType)
+    instructor = graphene.Field(InstructorNode)
 
     class Arguments:
         id = graphene.ID(Required=True)
@@ -107,7 +111,7 @@ class InstructorUpdateMutation(graphene.Mutation):
 
 class InstructorDeleteMutation(graphene.Mutation):
 
-    instructor = graphene.Field(InstructorType)
+    instructor = graphene.Field(InstructorNode)
 
     class Arguments:
         id = graphene.ID(Required=True)
@@ -126,7 +130,7 @@ class InstructorDeleteMutation(graphene.Mutation):
 # Now to create an Evaluation
 class EvaluationCreateMutation(graphene.Mutation):
 
-    evaluation = graphene.Field(EvaluationType)
+    evaluation = graphene.Field(EvaluationNode)
 
     class Arguments:
         comment = graphene.String()
@@ -137,9 +141,9 @@ class EvaluationCreateMutation(graphene.Mutation):
         instructorID = graphene.ID(required=True)
 
     @classmethod
-    def mutate(cls, root, info, comment=None, course, grading, teaching, personality, instructerID):
+    def mutate(cls, root, info, comment, course, grading, teaching, personality, instructerID):
         instructor = Instructor.objects.get(id=instructerID)
-        if Evaluation.objects.filter(user=info.context.request.user, instructor=instructer):
+        if Evaluation.objects.filter(user=info.context.request.user, instructor=instructor):
             return "you rated this instructer before"
         
         data = {
@@ -157,7 +161,7 @@ class EvaluationCreateMutation(graphene.Mutation):
 
 class EvaluationUpdateMutation(graphene.Mutation):
 
-    evaluation = graphene.Field(EvaluationType)
+    evaluation = graphene.Field(EvaluationNode)
 
     class Arguments:
         id = graphene.ID(required=True)
@@ -169,7 +173,7 @@ class EvaluationUpdateMutation(graphene.Mutation):
         instructorID = graphene.ID(required=True)
 
     @classmethod
-    def mutate(cls, root, info,id, comment=None, course, grading, teaching, personality, instructerID):
+    def mutate(cls, root, info,id, comment, course, grading, teaching, personality, instructerID):
         evaluation = Evaluation.objects.get(id=id)
         instructor = Instructor.objects.get(pk=instructerID)
         if name:
@@ -183,7 +187,7 @@ class EvaluationUpdateMutation(graphene.Mutation):
 
 class InstructorDelete2Mutation(graphene.Mutation):
 
-    instructor = graphene.Field(InstructorType)
+    instructor = graphene.Field(InstructorNode)
 
     class Arguments:
         id = graphene.ID(Required=True)
@@ -198,7 +202,7 @@ class InstructorDelete2Mutation(graphene.Mutation):
 
 class InstructorDeleteMutation(graphene.Mutation):
 
-    instructor = graphene.Field(InstructorType)
+    instructor = graphene.Field(InstructorNode)
 
     class Arguments:
         id = graphene.ID(required=True)
@@ -251,7 +255,7 @@ class EvaluationCreateMutation(graphene.Mutation):
 
 class EvaluationUpdateMutation(graphene.Mutation):
 
-    evaluation = graphene.Field(EvaluationType)
+    evaluation = graphene.Field(EvaluationNode)
 
     class Arguments:
         id = graphene.ID(required=True)
@@ -277,7 +281,7 @@ class EvaluationUpdateMutation(graphene.Mutation):
 
 class InstructorDeleteMutation(graphene.Mutation):
 
-    instructor = graphene.Field(InstructorType)
+    instructor = graphene.Field(InstructorNode)
 
     class Arguments:
         id = graphene.ID(required=True)
