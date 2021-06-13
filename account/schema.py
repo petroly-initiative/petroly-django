@@ -19,7 +19,7 @@ from .models import Profile
 # graphene doesn't know how to handle a CloudinaryField
 # so we need to register it
 @convert_django_field.register(CloudinaryField)
-def convert_profile_pic(field, registry=None) -> str:
+def convert_profile_pic(field: CloudinaryField, registry=None) -> str:
     return str(field)
 
 class UserType(DjangoGrapheneCRUD):
