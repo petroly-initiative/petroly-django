@@ -1,16 +1,20 @@
+from typing import Dict, Any
+
 import graphene
 from graphene import relay, ObjectType
 from graphene_django import DjangoObjectType
 from graphene_django.converter import convert_django_field
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.forms.mutation import DjangoModelFormMutation
-from django.contrib.auth.models import User, Group
 from cloudinary.models import CloudinaryField
+from graphene_file_upload.scalars import Upload
 
 # CRUD
 from graphql import GraphQLError
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
 
+from django.contrib.auth.models import User, Group
+from graphql_auth.decorators import login_required
 from . import models
 from .models import Evaluation, Instructor
 
@@ -51,78 +55,64 @@ class EvaluationNode(DjangoObjectType):
         ]
         interfaces = (relay.Node, )
 
+class InstructorType(DjangoGrapheneCRUD):
+
+    profile_pic = graphene.String()
+
+    @classmethod
+    def before_create(cls, parent, info, instance, data):
+        user: User = info.context.user
+        if user.has_perm("evaluation.add_instructor"):
+            raise GraphQLError("You don't have permission")
+        return
+    @classmethod
+
+    def before_update(cls, parent, info, instance, data):
+        user: User = info.context.user
+        if not user.has_perm("evaluation.add_instructor"):
+            raise GraphQLError("You don't have permission")
+        return
+    @classmethod
+
+    def before_delete(cls, parent, info, instance, data):
+        user: User = info.context.user
+        if user.has_perm("evaluation.add_instructor"):
+            raise GraphQLError("You don't have permission")
+        return
+
+    class Meta:
+        model = Instructor
+        # exclude it to handle manually
+        exclude_fields = ['profile_pic']
+        input_exclude_fields = ['profile_pic']
+
+class EvaluationType(DjangoGrapheneCRUD):
+
+    @classmethod
+    def before_create(cls, parent, info, instance: Evaluation, data: Dict[str, Any]) -> None:
+        pk = data['instructor']['connect']['id']['equals']
+        
+        if Evaluation.objects.filter(user=info.context.user, instructor__pk=pk):
+            raise GraphQLError("You have evaluated this instructor before, you can edit it in My Evaluations")
+        return
+
+    class Meta:
+        model = Evaluation
 
 # Main entry for all the query types
 # Now only provides all Instructor & Evaluation objects
 class Query(ObjectType):
-    instructor = relay.Node.Field(InstructorNode)
-    all_instructors = DjangoFilterConnectionField(InstructorNode)
+    # instructor = relay.Node.Field(InstructorNode)
+    # all_instructors = DjangoFilterConnectionField(InstructorNode)
 
-    evaluation = relay.Node.Field(EvaluationNode)
-    all_evaluations = DjangoFilterConnectionField(EvaluationNode)
-    
+    # evaluation = relay.Node.Field(EvaluationNode)
+    # all_evaluations = DjangoFilterConnectionField(EvaluationNode)
 
+    evaluation_crud = EvaluationType.ReadField()
+    evaluations_crud = EvaluationType.BatchReadField()
 
-
-
-
-
-# Main entry for mutaion of Instructor model; for editing its data 
-# Now to create an instructor
-class InstructorCreateMutation(graphene.Mutation):
-
-    instructor = graphene.Field(InstructorNode)
-
-    class Arguments:
-        name = graphene.String(required=True)
-        department = graphene.String(required=True)
-        profile_pic = graphene.Upload()
-
-    @classmethod
-    def mutate(cls, root, info, name, department, profile_pic=None):
-        if profile_pic:
-            instructor = Instructor(name=name, department=department, profile_pic=profile_pic)
-        else:
-            instructor = Instructor(name=name, department=department, profile_pic=None)
-        instructor.save()
-        return InstructorCreateMutation(instructor=instructor)
-
-class InstructorUpdateMutation(graphene.Mutation):
-
-    instructor = graphene.Field(InstructorNode)
-
-    class Arguments:
-        id = graphene.ID(Required=True)
-        name = graphene.String()
-        department = graphene.String()
-        profile_pic = graphene.Upload()
-
-    @classmethod
-    def mutate(cls, root, info, id,  name, department, profile_pic):
-        instructor = Instructor.objects.get(pk=id)
-        if name:
-            instructor.name = name
-        if instructor:
-            instructor.department = department
-        if profile_pic:
-            instructor.profile_pic = profile_pic
-        instructor.save()
-        return InstructorUpdateMutation(instructor=instructor)
-
-class InstructorDeleteMutation(graphene.Mutation):
-
-    instructor = graphene.Field(InstructorNode)
-
-    class Arguments:
-        id = graphene.ID(Required=True)
-
-
-    @classmethod
-    def mutate(cls, root, info, id,  name, department, profile_pic):
-        instructor = Instructor.objects.get(pk=id)
-  
-        instructor.delete()
-        return 
+    instructor_crud = InstructorType.ReadField()
+    instructors_crud = InstructorType.BatchReadField()
 
 
 
@@ -185,12 +175,12 @@ class EvaluationUpdateMutation(graphene.Mutation):
         instructor.save()
         return InstructorUpdateMutation(instructor=instructor)
 
-class InstructorDelete2Mutation(graphene.Mutation):
+class InstructorDeleteMutation(graphene.Mutation):
 
     instructor = graphene.Field(InstructorNode)
 
     class Arguments:
-        id = graphene.ID(Required=True)
+        id = graphene.ID(required=True)
 
 
     @classmethod
@@ -301,3 +291,11 @@ class Mutation(ObjectType):
     create_instructor = InstructorCreateMutation.Field()
     update_instructor = InstructorUpdateMutation.Field()
     delete_instructor = InstructorDeleteMutation.Field()
+
+    evaluation_create = EvaluationType.CreateField()
+    evaluation_update = EvaluationType.UpdateField()
+    evaluation_delete = EvaluationType.DeleteField()
+
+    instructor_create = InstructorType.CreateField()
+    instructor_update = InstructorType.UpdateField()
+    instructor_delete = InstructorType.DeleteField()
