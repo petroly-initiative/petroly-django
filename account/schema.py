@@ -8,6 +8,10 @@ from graphql_auth import mutations
 from graphql_jwt.decorators import login_required
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+# CRUD
+from graphql import GraphQLError
+from django.contrib.auth.models import User, Group
+from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
 
 from .models import Profile
 
@@ -17,6 +21,21 @@ from .models import Profile
 @convert_django_field.register(CloudinaryField)
 def convert_profile_pic(field: CloudinaryField, registry=None) -> str:
     return str(field)
+
+class UserType(DjangoGrapheneCRUD):
+    class Meta:
+        model = User
+        exclude_fields = ("password",)
+        input_exclude_fields = ("last_login", "date_joined")
+
+class ProfileType(DjangoGrapheneCRUD):
+    
+    profile_pic = graphene.String()
+
+    class Meta:
+        model = Profile
+        exclude_fields = ['profile_pic']
+        input_exclude_fields = ['profile_pic']
 
 
 class ProfileNode(DjangoObjectType):
@@ -80,6 +99,9 @@ class Query(UserQuery, MeQuery, graphene.ObjectType):
     profile = relay.Node.Field(ProfileNode)
     profiles = DjangoFilterConnectionField(ProfileNode)
 
+    user_CRUD = UserType.ReadField()
+    users_CRUD = UserType.BatchReadField()
+
 
 class Mutation(AuthMutation, graphene.ObjectType):
     '''
@@ -88,3 +110,6 @@ class Mutation(AuthMutation, graphene.ObjectType):
     '''
     
     update_profile = ProfileMutation.Field()
+    profile_create = ProfileType.CreateField()
+    profile_update = ProfileType.UpdateField()
+    profile_delete = ProfileType.DeleteField
