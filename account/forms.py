@@ -44,10 +44,9 @@ class UserRegistrationForm(UserCreationForm):
                 'The email address is already exist'
                 )
 
-        if email and not re.match(REGEX, email):
+        if email and re.match(REGEX, email):
             # all email addresses are allowed
-            # raise forms.ValidationError('You must use a KFUPM email')
-            pass
+            raise forms.ValidationError("We don't support KFUPM Email yet")
 
         return email
 
