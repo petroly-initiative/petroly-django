@@ -26,8 +26,8 @@ class Profile(models.Model):
         blank=True,
         max_length=350,
     )
-    major = models.CharField(default="", max_length=25, choices=departments)
-    year = models.CharField(blank=True, max_length=25, choices=years)
+    major = models.CharField(blank=False, null=True, max_length=25, choices=departments)
+    year = models.CharField(blank=False, null=True, max_length=25, choices=years)
 
     # Some views need this to redirect to a url
     def get_absolute_url(self) -> str:
@@ -35,7 +35,7 @@ class Profile(models.Model):
 
     # For a nice representation for an object
     def __str__(self) -> str:
-        return "@{}".format(self.user.username)
+        return "Profile: @{}".format(self.user.username)
 
 
 @receiver(post_save, sender=User)
