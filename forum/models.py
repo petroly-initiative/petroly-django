@@ -45,6 +45,6 @@ class Tag(models.Model):
 
 
     def __str__(self):
-        return f'{body} tag'
+        return f'{self.body} tag'
 
 
