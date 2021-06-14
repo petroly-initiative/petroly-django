@@ -7,15 +7,13 @@ from .models import Tag,Question,Answer
 class Question(DjangoGrapheneCRUD):
     class Meta:
         model = Question
-        exclude_fields = None
-        input_exclude_fields = ("created")
-
-
+        #exclude_fields = None
+        fields = "__all__"
+        input_exclude_fields = ("created", 'active')
 
     @resolver_hints(
       only=["body", "user", "created"]
     )
-  
 
     @classmethod
     def get_queryset(cls, parent, info, **kwargs):
@@ -24,21 +22,16 @@ class Question(DjangoGrapheneCRUD):
 
     @classmethod
     def before_mutate(cls, parent, info, instance, data):
-        if not info.context.user.is_staff:
-            raise GraphQLError('not permited, only staff user')
-
-        if "password" in data.keys():
-            instance.set_password(data.pop("password"))
+        data['question'] = data['question'] + "555555555"
+        return 
+            
 
 
 class Query(graphene.ObjectType):
 
-    me = graphene.Field(UserType)
-    user = UserType.ReadField()
-    users = UserType.BatchReadField()
-
-    group = GroupType.ReadField()
-    groups = GroupType.BatchReadField()
+    
+    question = Question.ReadField()
+    questions = Question.BatchReadField()
 
     def resolve_me(parent, info, **kwargs):
         if not info.context.user.is_authenticated:
@@ -48,11 +41,8 @@ class Query(graphene.ObjectType):
 
 class Mutation(graphene.ObjectType):
 
-    user_create = UserType.CreateField()
-    user_update = UserType.UpdateField()
-    user_delete = UserType.DeleteField()
+    question_create = Question.CreateField()
+    question_update = Question.UpdateField()
+    question_delete = Question.DeleteField()
 
-    group_create = GroupType.CreateField()
-    group_update = GroupType.UpdateField()
-    group_delete = GroupType.DeleteField()
 
