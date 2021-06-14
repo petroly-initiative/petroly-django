@@ -99,21 +99,6 @@ class EvaluationType(DjangoGrapheneCRUD):
     class Meta:
         model = Evaluation
 
-# Main entry for all the query types
-# Now only provides all Instructor & Evaluation objects
-class Query(ObjectType):
-    # instructor = relay.Node.Field(InstructorNode)
-    # all_instructors = DjangoFilterConnectionField(InstructorNode)
-
-    # evaluation = relay.Node.Field(EvaluationNode)
-    # all_evaluations = DjangoFilterConnectionField(EvaluationNode)
-
-    evaluation_crud = EvaluationType.ReadField()
-    evaluations_crud = EvaluationType.BatchReadField()
-
-    instructor_crud = InstructorType.ReadField()
-    instructors_crud = InstructorType.BatchReadField()
-
 
 
 # Main entry for mutaion of Evaluation model; for editing its data 
@@ -149,148 +134,19 @@ class EvaluationCreateMutation(graphene.Mutation):
         
         return EvaluationCreateMutation(evaluation=evaluation)
 
-class EvaluationUpdateMutation(graphene.Mutation):
 
-    evaluation = graphene.Field(EvaluationNode)
+# Main entry for all the query types
+# Now only provides all Instructor & Evaluation objects
+class Query(ObjectType):
 
-    class Arguments:
-        id = graphene.ID(required=True)
-        comment = graphene.String()
-        course = graphene.String(required=True)
-        grading = graphene.Int(required=True)
-        teaching = graphene.Int(required=True)
-        personality = graphene.Int(required=True)
-        instructorID = graphene.ID(required=True)
+    evaluation_crud = EvaluationType.ReadField()
+    evaluations_crud = EvaluationType.BatchReadField()
 
-    @classmethod
-    def mutate(cls, root, info,id, comment, course, grading, teaching, personality, instructerID):
-        evaluation = Evaluation.objects.get(id=id)
-        instructor = Instructor.objects.get(pk=instructerID)
-        if name:
-            instructor.name = name
-        if instructor:
-            instructor.department = department
-        if profile_pic:
-            instructor.profile_pic = profile_pic
-        instructor.save()
-        return InstructorUpdateMutation(instructor=instructor)
-
-class InstructorDeleteMutation(graphene.Mutation):
-
-    instructor = graphene.Field(InstructorNode)
-
-    class Arguments:
-        id = graphene.ID(required=True)
-
-
-    @classmethod
-    def mutate(cls, root, info, id,  name, department, profile_pic):
-        instructor = Instructor.objects.get(pk=id)
-  
-        instructor.delete()
-        return 
-
-class InstructorDeleteMutation(graphene.Mutation):
-
-    instructor = graphene.Field(InstructorNode)
-
-    class Arguments:
-        id = graphene.ID(required=True)
-
-
-    @classmethod
-    def mutate(cls, root, info, id,  name, department, profile_pic):
-        instructor = Instructor.objects.get(pk=id)
-  
-        instructor.delete()
-        return 
-
-
-
-# Main entry for mutaion of Evaluation model; for editing its data 
-# Now to create an Evaluation
-class EvaluationCreateMutation(graphene.Mutation):
-
-    create_instructor = InstructorCreateMutation.Field()
-    update_instructor = InstructorUpdateMutation.Field()
-    delete_instructor = InstructorDeleteMutation.Field()
-
-
-    class Arguments:
-        comment = graphene.String()
-        course = graphene.String(required=True)
-        grading = graphene.Int(required=True)
-        teaching = graphene.Int(required=True)
-        personality = graphene.Int(required=True)
-        instructorID = graphene.ID(required=True)
-
-    @classmethod
-    def mutate(cls, root, info, course, grading, teaching, personality, instructerID, comment=None):
-        instructor = Instructor.objects.get(id=instructerID)
-        if Evaluation.objects.filter(user=info.context.request.user, instructor=instructor):
-            return "you rated this instructor before"
-        
-        data = {
-            'grading': grading * 20,
-            'teaching': teaching * 20,
-            'personality': personality * 20,
-            'course': course,
-            'comment': comment,
-            'user':info.context.request.user,
-            'instructor':instructor,
-        }
-        evaluation = Evaluation.objects.create(**data)
-        
-        return EvaluationCreateMutation(evaluation=evaluation)
-
-class EvaluationUpdateMutation(graphene.Mutation):
-
-    evaluation = graphene.Field(EvaluationNode)
-
-    class Arguments:
-        id = graphene.ID(required=True)
-        comment = graphene.String()
-        course = graphene.String(required=False)
-        grading = graphene.Int(required=False)
-        teaching = graphene.Int(required=False)
-        personality = graphene.Int(required=False)
-        instructorID = graphene.ID(required=False)
-
-    @classmethod
-    def mutate(cls, root, info,id, course, grading, teaching, personality, instructerID, comment=None):
-        evaluation = Evaluation.objects.get(id=id)
-        instructor = Instructor.objects.get(pk=instructerID)
-        if name:
-            instructor.name = name
-        if instructor:
-            instructor.department = department
-        if profile_pic:
-            instructor.profile_pic = profile_pic
-        instructor.save()
-        return InstructorUpdateMutation(instructor=instructor)
-
-class InstructorDeleteMutation(graphene.Mutation):
-
-    instructor = graphene.Field(InstructorNode)
-
-    class Arguments:
-        id = graphene.ID(required=True)
-
-
-    @classmethod
-    def mutate(cls, root, info, id,  name, department, profile_pic):
-        instructor = Instructor.objects.get(pk=id)
-  
-        instructor.delete()
-        return 
-
+    instructor_crud = InstructorType.ReadField()
+    instructors_crud = InstructorType.BatchReadField()
 
 # Main entry for all Mutation types
 class Mutation(ObjectType):
-
-    create_instructor = InstructorCreateMutation.Field()
-    update_instructor = InstructorUpdateMutation.Field()
-    delete_instructor = InstructorDeleteMutation.Field()
 
     evaluation_create = EvaluationType.CreateField()
     evaluation_update = EvaluationType.UpdateField()
