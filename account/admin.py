@@ -1,14 +1,23 @@
+from django.contrib.admin.filters import BooleanFieldListFilter
 from django_email_verification.tests.settings import verified
 from django.contrib import admin
 from .models import Profile
 from django.apps import apps
 from graphql_auth.models import UserStatus
+from django.contrib.auth.admin import UserAdmin
+from graphql_auth.models import UserStatus
 # Register your models here.
+
+@admin.decorators.display(description="Verified", boolean=True)
+def is_verified(obj):
+    return obj.status.verified
 
 admin.site.site_title = 'Petroly'
 admin.site.index_title = 'Administration'
 admin.site.site_header = 'Petroly Administration'
 admin.site.login_template = 'registration/login.html'
+UserAdmin.list_display = ("username", "email", "is_staff", is_verified, "date_joined")
+
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
