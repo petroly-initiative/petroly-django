@@ -19,41 +19,11 @@ from . import models
 from .models import Evaluation, Instructor
 
 
-
-# To accept Cloudinary field
+# To accept CloudinaryField
 @convert_django_field.register(CloudinaryField)
 def convert_profile_pic(field: CloudinaryField, registry=None) -> str:
     return str(field)
 
-# Make a type of the model Instructor
-class InstructorNode(DjangoObjectType):
-
-    # the CloudinaryField
-    profile_pic = graphene.String()
-
-    class Meta:
-        model = models.Instructor
-        fields = ['name', 'department', 'profile_pic']
-        filter_fields = {
-            'name': ['exact', 'icontains', 'istartswith'],
-            'department': ['exact', 'icontains', 'istartswith'],
-        }
-        interfaces = (relay.Node, )
-
-# A type for Evaluation model with thier fields
-class EvaluationNode(DjangoObjectType):
-
-    class Meta:
-        model = models.Evaluation
-        fileds = [
-            'comment', 'date', 'grading', 'grading',
-            'teaching', 'personality', 'user', 'instructor',
-        ]
-        filter_fields = [
-            'comment', 'date', 'grading', 'grading',
-            'teaching', 'personality', 'user', 'instructor',
-        ]
-        interfaces = (relay.Node, )
 
 class InstructorType(DjangoGrapheneCRUD):
 
@@ -65,15 +35,15 @@ class InstructorType(DjangoGrapheneCRUD):
         if user.has_perm("evaluation.add_instructor"):
             raise GraphQLError("You don't have permission")
         return
+    
     @classmethod
-
     def before_update(cls, parent, info, instance, data):
         user: User = info.context.user
         if not user.has_perm("evaluation.add_instructor"):
             raise GraphQLError("You don't have permission")
         return
+    
     @classmethod
-
     def before_delete(cls, parent, info, instance, data):
         user: User = info.context.user
         if user.has_perm("evaluation.add_instructor"):
@@ -101,49 +71,16 @@ class EvaluationType(DjangoGrapheneCRUD):
 
 
 
-# Main entry for mutaion of Evaluation model; for editing its data 
-# Now to create an Evaluation
-class EvaluationCreateMutation(graphene.Mutation):
-
-    evaluation = graphene.Field(EvaluationNode)
-
-    class Arguments:
-        comment = graphene.String()
-        course = graphene.String(required=True)
-        grading = graphene.Int(required=True)
-        teaching = graphene.Int(required=True)
-        personality = graphene.Int(required=True)
-        instructorID = graphene.ID(required=True)
-
-    @classmethod
-    def mutate(cls, root, info, comment, course, grading, teaching, personality, instructerID):
-        instructor = Instructor.objects.get(id=instructerID)
-        if Evaluation.objects.filter(user=info.context.request.user, instructor=instructor):
-            return "you rated this instructer before"
-        
-        data = {
-            'grading': grading * 20,
-            'teaching': teaching * 20,
-            'personality': personality * 20,
-            'course': course,
-            'comment': comment,
-            'user':info.context.request.user,
-            'instructor':instructor,
-        }
-        evaluation = Evaluation.objects.create(**data)
-        
-        return EvaluationCreateMutation(evaluation=evaluation)
-
-
 # Main entry for all the query types
 # Now only provides all Instructor & Evaluation objects
 class Query(ObjectType):
 
-    evaluation_crud = EvaluationType.ReadField()
-    evaluations_crud = EvaluationType.BatchReadField()
+    evaluation = EvaluationType.ReadField()
+    evaluations = EvaluationType.BatchReadField()
 
-    instructor_crud = InstructorType.ReadField()
-    instructors_crud = InstructorType.BatchReadField()
+    instructor = InstructorType.ReadField()
+    instructors = InstructorType.BatchReadField()
+
 
 # Main entry for all Mutation types
 class Mutation(ObjectType):
