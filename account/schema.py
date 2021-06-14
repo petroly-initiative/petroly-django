@@ -1,17 +1,20 @@
 import graphene
-from graphene import relay, ObjectType
+from graphene import relay, ObjectType, String, Scalar
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-from graphene_django.converter import convert_django_field
+# from graphene_django.converter import convert_django_field
 from graphql_auth.schema import UserQuery, MeQuery
 from graphql_auth import mutations
 from graphql_jwt.decorators import login_required
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+from graphene_file_upload.scalars import Upload
 # CRUD
 from graphql import GraphQLError
 from django.contrib.auth.models import User, Group
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
+from graphene_django_crud.converter import convert_django_field
+from graphene_django_crud.utils import is_required
 
 from .models import Profile
 
@@ -19,8 +22,11 @@ from .models import Profile
 # graphene doesn't know how to handle a CloudinaryField
 # so we need to register it
 @convert_django_field.register(CloudinaryField)
-def convert_profile_pic(field: CloudinaryField, registry=None) -> str:
-    return str(field)
+def convert_profile_pic(field: CloudinaryField, registry=None, input_flag=None) -> String:
+    return String(
+        description="CloudinaryField for profile_pic",
+        required=is_required(field) and input_flag == "create",
+    )
 
 class UserType(DjangoGrapheneCRUD):
     class Meta:
@@ -30,12 +36,12 @@ class UserType(DjangoGrapheneCRUD):
 
 class ProfileType(DjangoGrapheneCRUD):
     
-    profile_pic = graphene.String()
+    file = Upload()
 
     class Meta:
         model = Profile
-        exclude_fields = ['profile_pic']
-        input_exclude_fields = ['profile_pic']
+        exclude_fields = ()
+        input_exclude_fields = ()
 
 
 class ProfileNode(DjangoObjectType):
