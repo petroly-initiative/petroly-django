@@ -13,6 +13,8 @@ class Question(models.Model):
     
     class Meta:
         ordering = ['-created']
+    def __str__(self):
+        return f'{self.body}'
 
  
 class Answer(models.Model):
@@ -32,7 +34,7 @@ class Answer(models.Model):
         ordering = ('-created',)
 
     def __str__(self):
-        return f'reply by {self.user} on {self.question.body}'
+        return f'{self.body}'
 
 
 class Tag(models.Model):
