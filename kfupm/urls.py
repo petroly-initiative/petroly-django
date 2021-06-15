@@ -20,6 +20,10 @@ from kfupm.settings import dev
 import debug_toolbar
 from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
+class PrivateGraphQLView(PermissionRequiredMixin, GraphQLView):
+    permission_required = "auth.view_user"
 
 
 urlpatterns = [
@@ -31,7 +35,8 @@ urlpatterns = [
     path('roommate/', include('roommate.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
     path('maintenance-mode/', include('maintenance_mode.urls')),
-    path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    path('endpoint/', csrf_exempt(GraphQLView.as_view(graphiql=False))),
+    path('graphql/', csrf_exempt(PrivateGraphQLView.as_view(graphiql=True))),
 ]
 
 # WARNING: this setting is only for development environment
