@@ -1,7 +1,7 @@
 from typing import Dict, Any
 
 import graphene
-from graphene import relay, ObjectType
+from graphene import relay, ObjectType, String
 from graphene_django import DjangoObjectType
 from graphene_django.converter import convert_django_field
 from graphene_django.filter import DjangoFilterConnectionField
@@ -12,6 +12,7 @@ from graphene_file_upload.scalars import Upload
 # CRUD
 from graphql import GraphQLError
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
+from graphene_django_crud.utils import is_required
 
 from django.contrib.auth.models import User, Group
 from graphql_auth.decorators import login_required
@@ -19,10 +20,14 @@ from . import models
 from .models import Evaluation, Instructor
 
 
-# To accept CloudinaryField
+# graphene doesn't know how to handle a CloudinaryField
+# so we need to register it
 @convert_django_field.register(CloudinaryField)
-def convert_profile_pic(field: CloudinaryField, registry=None) -> str:
-    return str(field)
+def convert_profile_pic(field: CloudinaryField, registry=None, input_flag=None) -> String:
+    return String(
+        description="CloudinaryField for profile_pic",
+        required=is_required(field) and input_flag == "create",
+    )
 
 
 class InstructorType(DjangoGrapheneCRUD):
@@ -39,14 +44,14 @@ class InstructorType(DjangoGrapheneCRUD):
     @classmethod
     def before_update(cls, parent, info, instance, data):
         user: User = info.context.user
-        if not user.has_perm("evaluation.add_instructor"):
+        if not user.has_perm("evaluation.update_instructor"):
             raise GraphQLError("You don't have permission")
         return
     
     @classmethod
     def before_delete(cls, parent, info, instance, data):
         user: User = info.context.user
-        if user.has_perm("evaluation.add_instructor"):
+        if user.has_perm("evaluation.delete_instructor"):
             raise GraphQLError("You don't have permission")
         return
 
