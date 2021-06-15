@@ -1,10 +1,14 @@
 # imports for typing
 from typing import Any, Dict
 from cloudinary import CloudinaryImage
+from django.core.signing import BadSignature, SignatureExpired
 from django.http.request import HttpRequest
 
 # needed imports
 from django import forms
+from graphql_auth.constants import Messages
+from graphql_auth.exceptions import TokenScopeError, UserAlreadyVerified
+from graphql_auth.models import UserStatus
 from .forms import UserRegistrationForm, ProfileForm, UserForm
 from .models import Profile, User
 from django.http import *
@@ -45,23 +49,19 @@ class ActivateView(TemplateView):
         return render(request, 'email_confirm.html')
 
     def post(self, request: HttpRequest, token: str, *args, **kwargs) -> HttpResponse:
-        url =  'http://' + get_current_site(request).domain + '/account/graphql/'
-        payload = '''
-            mutation{
-                verifyAccount(token:"%s"){
-                    success
-                    errors
-                }
-            }
-        ''' % token
-        r = requests.post(url, json={'query': payload})
-        success = r.json()['data']['verifyAccount']['success']
-        if r.status_code == 200:
-            return render(request, 'email_done.html', context={'success':success})
-        else:
-            # You can either return an `Excption` or thr `HttpResponse`
-            raise Exception(f"Query failed to run with a {r.status_code}.")
-            return HttpResponse(r)
+        try:
+            UserStatus.verify(token)
+            return render(request, 'email_done.html', context={'success':True})
+        except UserAlreadyVerified:
+            return render(request, 'email_done.html', context={'success':False, 
+                "messages":Messages.ALREADY_VERIFIED})
+        except SignatureExpired:
+            return render(request, 'email_done.html', context={'success':False, 
+                "messages":Messages.EXPIRED_TOKEN})
+        except (BadSignature, TokenScopeError):
+            return render(request, 'email_done.html', context={'success':False, 
+                "messages":Messages.INVALID_TOKEN})
+
 
 class ConfirmView(TemplateView):
     '''

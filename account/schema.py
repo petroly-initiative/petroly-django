@@ -1,71 +1,71 @@
 import graphene
-from graphene import relay, ObjectType
+from graphene import relay, ObjectType, String, Scalar
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-from graphene_django.converter import convert_django_field
+# from graphene_django.converter import convert_django_field
 from graphql_auth.schema import UserQuery, MeQuery
 from graphql_auth import mutations
 from graphql_jwt.decorators import login_required
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+from graphene_file_upload.scalars import Upload
 # CRUD
 from graphql import GraphQLError
 from django.contrib.auth.models import User, Group
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
+from graphene_django_crud.converter import convert_django_field
+from graphene_django_crud.utils import is_required
 
 from .models import Profile
+from graphql_auth.models import UserStatus
 
 
-# graphene doesn't know how to handle a CloudinaryField
-# so we need to register it
+
 @convert_django_field.register(CloudinaryField)
-def convert_profile_pic(field: CloudinaryField, registry=None) -> str:
-    return str(field)
+def convert_profile_pic(field: CloudinaryField, registry=None, input_flag=None) -> String:
+    """graphene doesn't know how to handle a CloudinaryField
+    so we need to register it"""
+    return String(
+        description="CloudinaryField for profile_pic",
+        required=is_required(field) and input_flag == "create",
+    )
+
+class StatusType(DjangoGrapheneCRUD):
+    """
+    A type for `UserStatus` from graphql_auth lib.
+    It is defined to enable accessing to verified value for a user.
+    """
+
+    class Meta:
+        model = UserStatus
 
 class UserType(DjangoGrapheneCRUD):
+    """
+    A type for `auth.User`. It is used to be found in other types.
+    """
+
     class Meta:
         model = User
         exclude_fields = ("password",)
         input_exclude_fields = ("last_login", "date_joined")
 
-class ProfileType(DjangoGrapheneCRUD):
-    
-    profile_pic = graphene.String()
-
-    class Meta:
-        model = Profile
-        exclude_fields = ['profile_pic']
-        input_exclude_fields = ['profile_pic']
-
-
-class ProfileNode(DjangoObjectType):
-
-    profile_pic = graphene.String()
-
-    class Meta:
-        model = Profile
-        filter_fields = ['year']
-        interfaces = (relay.Node, )
-
-class ProfileMutation(graphene.Mutation):
-
-    class Arguments:
-        year = graphene.String()
-        major = graphene.String()
-        profile_pic = graphene.String(required=False)
-
-    profile = graphene.Field(ProfileNode)
-
     @classmethod
-    @login_required
-    def mutate(cls, root, info, year, major, profile_pic=None, **kwargs):
-        profile: Profile = info.context.user.profile
-        profile.year = year
-        profile.major = major
-        profile.profile_pic = profile_pic
-        profile.save()
+    def get_queryset(cls, parent, info, **kwargs):
+        if not info.context.user.has_perm("auth.view_user"):
+            raise GraphQLError("forbidden")
+        return super().get_queryset(parent, info, **kwargs)
 
-        return ProfileMutation(profile=profile)
+
+class ProfileType(DjangoGrapheneCRUD):
+    """
+    A type for `account.Profile` model.
+    """
+    
+    file = Upload()
+
+    class Meta:
+        model = Profile
+
 
 class AuthMutation(graphene.ObjectType):
     '''
@@ -91,16 +91,16 @@ class AuthMutation(graphene.ObjectType):
     revoke_token = mutations.RevokeToken.Field()
 
 
-class Query(UserQuery, MeQuery, graphene.ObjectType):
+class Query(MeQuery, graphene.ObjectType):
     '''
     Main entry for all query type for `account` app.
     It inherits `UserQuery` and `MeQuery`.
     '''
-    profile = relay.Node.Field(ProfileNode)
-    profiles = DjangoFilterConnectionField(ProfileNode)
+    profile = ProfileType.ReadField()
+    profiles = ProfileType.BatchReadField()
 
-    user_CRUD = UserType.ReadField()
-    users_CRUD = UserType.BatchReadField()
+    # user = UserType.ReadField()
+    users = UserType.BatchReadField()
 
 
 class Mutation(AuthMutation, graphene.ObjectType):
@@ -109,7 +109,6 @@ class Mutation(AuthMutation, graphene.ObjectType):
     It inherits from `AuthMutation`.
     '''
     
-    update_profile = ProfileMutation.Field()
     profile_create = ProfileType.CreateField()
     profile_update = ProfileType.UpdateField()
     profile_delete = ProfileType.DeleteField
