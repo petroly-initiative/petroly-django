@@ -13,6 +13,8 @@ class Question(models.Model):
     
     class Meta:
         ordering = ['-created']
+    def __str__(self):
+        return f'{self.body}'
 
  
 class Answer(models.Model):
@@ -25,19 +27,18 @@ class Answer(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, blank=True, null=True)
     active = models.BooleanField(default=True)
-    answers = models.ManyToManyField('self', symmetrical=False,
-                             related_name='answersfor2m', null=True)
+    answers = models.ForeignKey('self', on_delete=models.CASCADE,
+                             related_name='answersfor2m', blank=True,null=True)
 
     class Meta:
         ordering = ('-created',)
 
     def __str__(self):
-        return f'reply by {self.user} on {self.qa}'
+        return f'{self.body}'
 
 
 class Tag(models.Model):
-    question = models.ForeignKey(Question,
-                             on_delete=models.CASCADE,
+    question = models.ManyToManyField(Question,
                              related_name='tags')
     
     body = models.TextField()
@@ -46,6 +47,6 @@ class Tag(models.Model):
 
 
     def __str__(self):
-        return f'{body} tag'
+        return f'{self.body} tag'
 
 
