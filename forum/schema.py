@@ -4,55 +4,71 @@ from django.contrib.auth.models import User, Group
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
 from .models import Tag,Question,Answer
 
-class Question(DjangoGrapheneCRUD):
-    class Meta:
-        model = Question
-        exclude_fields = None
-        input_exclude_fields = ("created")
-
-
-
+class QuestionCRUD(DjangoGrapheneCRUD):
+    
     @resolver_hints(
-      only=["body", "user", "created"]
+      only=["body", "user", "created",'active']
     )
-  
-
-    @classmethod
-    def get_queryset(cls, parent, info, **kwargs):
-            return Question.objects.all()
-
 
     @classmethod
     def before_mutate(cls, parent, info, instance, data):
-        if not info.context.user.is_staff:
-            raise GraphQLError('not permited, only staff user')
+        if not info.context.user.is_authenticated:
+            return GraphQLError("not logged in")
+        else:
+            return None
 
-        if "password" in data.keys():
-            instance.set_password(data.pop("password"))
+
+    class Meta:
+        model = Question
+        fields = "__all__"
+        input_exclude_fields = ("created", 'active')
+
+class AnswerCRUD(DjangoGrapheneCRUD):
+    
+    @resolver_hints(
+      only=["question", "user", "body",'created','updated','active','answers']
+    )
+
+    class Meta:
+        model = Answer
+        fields = "__all__"
+        input_exclude_fields = ("created", 'active','updated','answers')
+
+
+class TagCRUD(DjangoGrapheneCRUD):
+    
+    @resolver_hints(
+      only=["question", "body"]
+    )
+
+    class Meta:
+        model = Question
+        fields = "__all__"
+        input_exclude_fields = ("created", 'active')
+
+    
+
 
 
 class Query(graphene.ObjectType):
+    question = QuestionCRUD.ReadField()
+    questions = QuestionCRUD.BatchReadField()
+    answer = AnswerCRUD.ReadField()
+    answers = AnswerCRUD.BatchReadField()
+    tag = TagCRUD.ReadField()
+    tags = TagCRUD.BatchReadField()
 
-    me = graphene.Field(UserType)
-    user = UserType.ReadField()
-    users = UserType.BatchReadField()
 
-    group = GroupType.ReadField()
-    groups = GroupType.BatchReadField()
-
-    def resolve_me(parent, info, **kwargs):
-        if not info.context.user.is_authenticated:
-            return None
-        else:
-            return info.context.user
 
 class Mutation(graphene.ObjectType):
+    question_create = QuestionCRUD.CreateField()
+    question_update = QuestionCRUD.UpdateField()
+    question_delete = QuestionCRUD.DeleteField()
+    answer_create = AnswerCRUD.CreateField()
+    answer_update = AnswerCRUD.UpdateField()
+    answer_delete = AnswerCRUD.DeleteField()
+    tag_create = TagCRUD.CreateField()
+    tag_update = TagCRUD.UpdateField()
+    tag_delete = TagCRUD.DeleteField()
 
-    user_create = UserType.CreateField()
-    user_update = UserType.UpdateField()
-    user_delete = UserType.DeleteField()
-
-    group_create = GroupType.CreateField()
-    group_update = GroupType.UpdateField()
-    group_delete = GroupType.DeleteField()
 

@@ -190,7 +190,7 @@ class InstructorDeleteMutation(graphene.Mutation):
         instructor.delete()
         return 
 
-class InstructorDeleteMutation(graphene.Mutation):
+class InstructorDeleteMutation2(graphene.Mutation):
 
     instructor = graphene.Field(InstructorNode)
 
@@ -211,9 +211,9 @@ class InstructorDeleteMutation(graphene.Mutation):
 # Now to create an Evaluation
 class EvaluationCreateMutation(graphene.Mutation):
 
-    create_instructor = InstructorCreateMutation.Field()
-    update_instructor = InstructorUpdateMutation.Field()
-    delete_instructor = InstructorDeleteMutation.Field()
+    #create_instructor = InstructorCreateMutation.Field()
+    #update_instructor = InstructorUpdateMutation.Field()
+    #delete_instructor = InstructorDeleteMutation.Field()
 
 
     class Arguments:
@@ -288,9 +288,9 @@ class InstructorDeleteMutation(graphene.Mutation):
 # Main entry for all Mutation types
 class Mutation(ObjectType):
 
-    create_instructor = InstructorCreateMutation.Field()
-    update_instructor = InstructorUpdateMutation.Field()
-    delete_instructor = InstructorDeleteMutation.Field()
+    #create_instructor = InstructorCreateMutation.Field()
+    #update_instructor = InstructorUpdateMutation.Field()
+    #delete_instructor = InstructorDeleteMutation.Field()
 
     evaluation_create = EvaluationType.CreateField()
     evaluation_update = EvaluationType.UpdateField()
