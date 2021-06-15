@@ -146,15 +146,15 @@ class RegisterView(LoginView, forms.Form):
         elif "register" in request.POST:
             if user_form.is_valid() and profile_form.is_valid():
                 # Create the `User` object
-                new_user = user_form.save()
+                new_user: User = user_form.save()
 
-                # Create the `Profile` object, without saving it to the db
-                new_profile = profile_form.save(commit=False)
-                new_profile.user = new_user
+                # Fill in the `Profile` object, without saving it to the db
+                new_user.profile.year = request.POST["year"]
+                new_user.profile.major = request.POST["major"]
 
                 if "profile_pic" in request.FILES:
-                    new_profile.profile_pic = upload_image_(request.FILES["profile_pic"], new_user)
-                new_profile.save()
+                    new_user.profile.profile_pic = upload_image_(request.FILES["profile_pic"], new_user)
+                new_user.profile.save()
 
                 # Send the verification email
                 send_email(new_user)
