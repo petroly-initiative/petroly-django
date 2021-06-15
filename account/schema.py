@@ -20,37 +20,51 @@ from .models import Profile
 from graphql_auth.models import UserStatus
 
 
-# graphene doesn't know how to handle a CloudinaryField
-# so we need to register it
+
 @convert_django_field.register(CloudinaryField)
 def convert_profile_pic(field: CloudinaryField, registry=None, input_flag=None) -> String:
+    """graphene doesn't know how to handle a CloudinaryField
+    so we need to register it"""
     return String(
         description="CloudinaryField for profile_pic",
         required=is_required(field) and input_flag == "create",
     )
 
 class StatusType(DjangoGrapheneCRUD):
+    """
+    A type for `UserStatus` from graphql_auth lib.
+    It is defined to enable accessing to verified value for a user.
+    """
 
     class Meta:
         model = UserStatus
 
 class UserType(DjangoGrapheneCRUD):
-
+    """
+    A type for `auth.User`. It is used to be found in other types.
+    """
 
     class Meta:
         model = User
         exclude_fields = ("password",)
         input_exclude_fields = ("last_login", "date_joined")
 
+    @classmethod
+    def get_queryset(cls, parent, info, **kwargs):
+        if not info.context.user.has_perm("auth.view_user"):
+            raise GraphQLError("forbidden")
+        return super().get_queryset(parent, info, **kwargs)
+
 
 class ProfileType(DjangoGrapheneCRUD):
+    """
+    A type for `account.Profile` model.
+    """
     
     file = Upload()
 
     class Meta:
         model = Profile
-        exclude_fields = ()
-        input_exclude_fields = ()
 
 
 class AuthMutation(graphene.ObjectType):
@@ -77,7 +91,7 @@ class AuthMutation(graphene.ObjectType):
     revoke_token = mutations.RevokeToken.Field()
 
 
-class Query(UserQuery, MeQuery, graphene.ObjectType):
+class Query(MeQuery, graphene.ObjectType):
     '''
     Main entry for all query type for `account` app.
     It inherits `UserQuery` and `MeQuery`.
@@ -85,8 +99,8 @@ class Query(UserQuery, MeQuery, graphene.ObjectType):
     profile = ProfileType.ReadField()
     profiles = ProfileType.BatchReadField()
 
-    user_CRUD = UserType.ReadField()
-    users_CRUD = UserType.BatchReadField()
+    user = UserType.ReadField()
+    users = UserType.BatchReadField()
 
 
 class Mutation(AuthMutation, graphene.ObjectType):
