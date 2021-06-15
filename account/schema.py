@@ -99,7 +99,7 @@ class Query(MeQuery, graphene.ObjectType):
     profile = ProfileType.ReadField()
     profiles = ProfileType.BatchReadField()
 
-    user = UserType.ReadField()
+    # user = UserType.ReadField()
     users = UserType.BatchReadField()
 
 
