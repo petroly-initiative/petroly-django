@@ -1,4 +1,5 @@
 from typing import Dict, Any
+from django.db.models.base import Model
 
 import graphene
 from graphene import relay, ObjectType, String
@@ -15,9 +16,9 @@ from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
 from graphene_django_crud.utils import is_required
 
 from django.contrib.auth.models import User, Group
+from graphql_auth.constants import Messages
 from graphql_auth.decorators import login_required
 from . import models
-from .models import Evaluation, Instructor
 
 
 # graphene doesn't know how to handle a CloudinaryField
@@ -28,6 +29,7 @@ def convert_profile_pic(field: CloudinaryField, registry=None, input_flag=None) 
         description="CloudinaryField for profile_pic",
         required=is_required(field) and input_flag == "create",
     )
+
 
 
 class InstructorType(DjangoGrapheneCRUD):
@@ -56,23 +58,44 @@ class InstructorType(DjangoGrapheneCRUD):
         return
 
     class Meta:
-        model = Instructor
+        model = models.Instructor
         # exclude it to handle manually
         exclude_fields = ['profile_pic']
         input_exclude_fields = ['profile_pic']
 
+
+def is_owner(user: User, obj: Model) -> bool:
+    """Check if this user owns the object"""
+    if user.pk == obj.user.pk:
+        return True
+    raise GraphQLError("You don't own this Evaluation")
+
 class EvaluationType(DjangoGrapheneCRUD):
+    """
+    A type for the `evaluation.Evaluatio` model. 
+    """
+
+    class Meta:
+        model = models.Evaluation
 
     @classmethod
-    def before_create(cls, parent, info, instance: Evaluation, data: Dict[str, Any]) -> None:
+    def before_create(cls, parent, info, instance, data) -> None:
         pk = data['instructor']['connect']['id']['equals']
         
-        if Evaluation.objects.filter(user=info.context.user, instructor__pk=pk):
+        if models.Evaluation.objects.filter(user=info.context.user, instructor__pk=pk):
             raise GraphQLError("You have evaluated this instructor before, you can edit it in My Evaluations")
         return
 
-    class Meta:
-        model = Evaluation
+    # Forbid user to change other users' evaluation
+    @classmethod
+    def before_update(cls, parent, info, instance, data) -> None:
+        is_owner(info.context.user, instance)
+        return
+            
+    @classmethod
+    def before_update(cls, parent, info, instance, data) -> None:
+        is_owner(info.context.user, instance)
+        return
 
 
 
