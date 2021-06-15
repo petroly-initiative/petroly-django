@@ -12,5 +12,8 @@
         {{ user.username }}, your account is confirmed!
     {% else %}
         <h2>Error, invalid token!</h2>
+        {% for message in messages %}
+            <h5>{{ message.message }}</h5>
+        {% endfor %}
     {% endif %}
 {% endblock big_text %}
