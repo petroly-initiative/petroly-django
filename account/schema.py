@@ -70,7 +70,7 @@ class ProfileType(DjangoGrapheneCRUD):
 class AuthMutation(graphene.ObjectType):
     '''
     All authintication mutations.
-    It inherits from `django-graphql-auth` and `django-graphql-jwt`.
+    It inherits from `django_graphql_auth` and `django_graphql_jwt`.
     '''
 
     register = mutations.Register.Field()
