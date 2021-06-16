@@ -51,9 +51,8 @@ class UserType(DjangoGrapheneCRUD):
         input_exclude_fields = ("last_login", "date_joined")
 
     @classmethod
+    @staff_member_required
     def get_queryset(cls, parent, info, **kwargs):
-        if not info.context.user.has_perm("auth.view_user"):
-            raise GraphQLError("forbidden")
         return super().get_queryset(parent, info, **kwargs)
 
 
