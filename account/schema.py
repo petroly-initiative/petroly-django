@@ -1,21 +1,22 @@
+from cloudinary.models import CloudinaryField
+
 import graphene
+from graphql import GraphQLError
 from graphene import relay, ObjectType, String, Scalar
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 # from graphene_django.converter import convert_django_field
 from graphql_auth.schema import UserQuery, MeQuery
 from graphql_auth import mutations
-from graphql_jwt.decorators import login_required
-from django.contrib.auth.models import User
-from cloudinary.models import CloudinaryField
+from graphql_jwt.decorators import *
 from graphene_file_upload.scalars import Upload
+
 # CRUD
-from graphql import GraphQLError
-from django.contrib.auth.models import User, Group
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
 from graphene_django_crud.converter import convert_django_field
 from graphene_django_crud.utils import is_required
 
+from django.contrib.auth.models import User
 from .models import Profile
 from graphql_auth.models import UserStatus
 
