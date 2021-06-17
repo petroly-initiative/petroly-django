@@ -1,6 +1,7 @@
 from cloudinary.models import CloudinaryField
 
 import graphene
+import graphene_django
 from graphql import GraphQLError
 from graphene import relay, ObjectType, String, Scalar
 from graphene_django import DjangoObjectType
@@ -66,6 +67,16 @@ class ProfileType(DjangoGrapheneCRUD):
     class Meta:
         model = Profile
 
+class ProfileNode(DjangoObjectType):
+    """
+    A type for `account.Profile` model.
+    This class is for graphql_auth methods.
+    """
+    
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
 
 class AuthMutation(graphene.ObjectType):
     '''
@@ -96,8 +107,8 @@ class Query(MeQuery, graphene.ObjectType):
     Main entry for all query type for `account` app.
     It inherits `UserQuery` and `MeQuery`.
     '''
-    profile = ProfileType.ReadField()
-    profiles = ProfileType.BatchReadField()
+    # profile = ProfileType.ReadField()
+    # profiles = ProfileType.BatchReadField()
 
     # user = UserType.ReadField()
     users = UserType.BatchReadField()
