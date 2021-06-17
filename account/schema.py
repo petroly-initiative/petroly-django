@@ -82,7 +82,7 @@ class ProfileNode(DjangoObjectType):
     
     class Meta:
         model = Profile
-        fields = '__all__'
+        exclude = ('user', )
 
 
 class AuthMutation(graphene.ObjectType):
