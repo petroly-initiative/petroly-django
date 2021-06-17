@@ -71,7 +71,7 @@ class ProfileType(DjangoGrapheneCRUD):
         exclude_fields = ('user', )
 
     def resolve_profile_pic(self, info):
-        return self.profile_pic.url
+        return self.profile_pic.build_url()
 
     @classmethod
     @is_owner
