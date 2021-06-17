@@ -109,6 +109,4 @@ class Mutation(AuthMutation, graphene.ObjectType):
     It inherits from `AuthMutation`.
     '''
     
-    profile_create = ProfileType.CreateField()
     profile_update = ProfileType.UpdateField()
-    profile_delete = ProfileType.DeleteField
