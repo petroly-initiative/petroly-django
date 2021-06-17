@@ -23,12 +23,21 @@ def send_message_email(self, request, queryset):
                 html_message=html, recipient_list=[user.email, ])
             print(user.email)
 
+@admin.action(description='Create a UserStatus object')
+def create_status(self, request, queryset):
+    for user in queryset:
+        try:
+            obj = UserStatus.objects.get_or_create(user=user)
+            print(obj)
+        except Exception as e:
+            print(e)
+
 admin.site.site_title = 'Petroly'
 admin.site.index_title = 'Administration'
 admin.site.site_header = 'Petroly Administration'
 admin.site.login_template = 'registration/login.html'
 UserAdmin.list_display = ["username", "email", "is_staff", is_verified, "date_joined"]
-UserAdmin.actions += [send_message_email]
+UserAdmin.actions += [send_message_email, create_status]
 
 
 @admin.register(Profile)
