@@ -3,13 +3,14 @@ import graphene
 import evaluation.schema
 import account.schema
 import forum.schema
+import whatsapp.schema
 
-class Query(evaluation.schema.Query, account.schema.Query, forum.schema.Query, graphene.ObjectType):
+class Query(evaluation.schema.Query, account.schema.Query, forum.schema.Query,whatsapp.schema.Query, graphene.ObjectType):
     # This class will inherit from multiple Queries
     # as we begin to add more apps to our project
     pass
 
-class Mutation(evaluation.schema.Mutation, account.schema.Mutation, forum.schema.Mutation, graphene.ObjectType):
+class Mutation(evaluation.schema.Mutation, account.schema.Mutation, forum.schema.Mutation,whatsapp.schema.Mutation, graphene.ObjectType):
 
     pass
 
