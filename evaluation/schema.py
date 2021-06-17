@@ -72,7 +72,7 @@ def is_owner(user: User, obj: Model) -> bool:
 
 class EvaluationType(DjangoGrapheneCRUD):
     """
-    A type for the `evaluation.Evaluatio` model. 
+    A type for the `evaluation.Evaluation` model. 
     """
 
     class Meta:
