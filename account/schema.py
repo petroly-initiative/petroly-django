@@ -18,6 +18,7 @@ from graphene_django_crud.utils import is_required
 
 from django.contrib.auth.models import User
 from .models import Profile
+from .permissions import *
 from graphql_auth.models import UserStatus
 
 
@@ -65,6 +66,13 @@ class ProfileType(DjangoGrapheneCRUD):
 
     class Meta:
         model = Profile
+        input_exclude_fields = ('user')
+        exclude_fields = ('user')
+
+    @classmethod
+    @is_owner
+    def before_update(cls, parent, info, instance, data):
+        return
 
 class ProfileNode(DjangoObjectType):
     """
