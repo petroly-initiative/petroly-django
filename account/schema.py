@@ -52,7 +52,7 @@ class UserType(DjangoGrapheneCRUD):
         input_exclude_fields = ("last_login", "date_joined")
 
     @classmethod
-    @staff_member_required
+    # @staff_member_required
     def get_queryset(cls, parent, info, **kwargs):
         return super().get_queryset(parent, info, **kwargs)
 
@@ -71,7 +71,7 @@ class ProfileType(DjangoGrapheneCRUD):
         exclude_fields = ('user', )
 
     def resolve_profile_pic(self, info):
-        return self.profile_pic
+        return self.profile_pic.url
 
     @classmethod
     @is_owner
