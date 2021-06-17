@@ -6,6 +6,10 @@
     Instructor Details
 {% endblock title %}
 
+{% block head %}
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ object.profile_pic.url }}">
+{% endblock head %}
+
 {% block body %}
 
     {% if perms.evaluation %}
