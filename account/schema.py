@@ -7,7 +7,6 @@ from graphene import relay, ObjectType, String, Scalar
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 # from graphene_django.converter import convert_django_field
-from graphql_auth.schema import UserQuery, MeQuery
 from graphql_auth import mutations
 from graphql_jwt.decorators import *
 from graphene_file_upload.scalars import Upload
@@ -102,7 +101,7 @@ class AuthMutation(graphene.ObjectType):
     revoke_token = mutations.RevokeToken.Field()
 
 
-class Query(MeQuery, graphene.ObjectType):
+class Query(graphene.ObjectType):
     '''
     Main entry for all query type for `account` app.
     It inherits `UserQuery` and `MeQuery`.
@@ -112,6 +111,12 @@ class Query(MeQuery, graphene.ObjectType):
 
     # user = UserType.ReadField()
     users = UserType.BatchReadField()
+
+    me = graphene.Field(UserType)
+
+    @login_required
+    def resolve_me(self, info):
+        return info.context.user
 
 
 class Mutation(AuthMutation, graphene.ObjectType):
