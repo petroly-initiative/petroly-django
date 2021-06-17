@@ -66,8 +66,8 @@ class ProfileType(DjangoGrapheneCRUD):
 
     class Meta:
         model = Profile
-        input_exclude_fields = ('user')
-        exclude_fields = ('user')
+        input_exclude_fields = ('user', )
+        exclude_fields = ('user', )
 
     @classmethod
     @is_owner
