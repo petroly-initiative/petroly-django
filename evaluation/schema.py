@@ -60,8 +60,8 @@ class InstructorType(DjangoGrapheneCRUD):
     class Meta:
         model = models.Instructor
         # exclude it to handle manually
-        exclude_fields = ['profile_pic']
-        input_exclude_fields = ['profile_pic']
+        exclude_fields = ('profile_pic', )
+        input_exclude_fields = ('profile_pic', )
 
 
 def is_owner(user: User, obj: Model) -> bool:
@@ -77,6 +77,7 @@ class EvaluationType(DjangoGrapheneCRUD):
 
     class Meta:
         model = models.Evaluation
+        exclude_fields = ('user', )
 
     @classmethod
     def before_create(cls, parent, info, instance, data) -> None:
@@ -93,7 +94,7 @@ class EvaluationType(DjangoGrapheneCRUD):
         return
             
     @classmethod
-    def before_update(cls, parent, info, instance, data) -> None:
+    def before_delete(cls, parent, info, instance, data) -> None:
         is_owner(info.context.user, instance)
         return
 
