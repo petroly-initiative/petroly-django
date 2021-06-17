@@ -63,11 +63,15 @@ class ProfileType(DjangoGrapheneCRUD):
     """
     
     file = Upload()
+    profile_pic = graphene.String()
 
     class Meta:
         model = Profile
         input_exclude_fields = ('user', )
         exclude_fields = ('user', )
+
+    def resolve_profile_pic(self, info):
+        return self.profile_pic
 
     @classmethod
     @is_owner
