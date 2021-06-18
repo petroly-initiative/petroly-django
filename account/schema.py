@@ -127,7 +127,7 @@ class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
 
     @login_required
-    def resolve_me(self, info):
+    def resolve_me(parent, info):
         return info.context.user
 
 
