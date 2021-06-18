@@ -31,6 +31,32 @@ class InstructorType(DjangoGrapheneCRUD):
     class Meta:
         model = models.Instructor
 
+    grading_avg = graphene.Int()
+    teaching_avg = graphene.Int()
+    personality_avg = graphene.Int()
+    overall_float = graphene.Float()
+    overall = graphene.Int()
+
+    @staticmethod
+    def resolve_grading_avg(parent, info):
+        return parent.avg()['grading__avg']
+    
+    @staticmethod
+    def resolve_teaching_avg(parent, info):
+        return parent.avg()['teaching__avg']
+    
+    @staticmethod
+    def resolve_personality_avg(parent, info):
+        return parent.avg()['personality__avg']
+    
+    @staticmethod
+    def resolve_overall(parent, info):
+        return parent.avg()['overall']
+    
+    @staticmethod
+    def resolve_overall_float(parent, info):
+        return parent.avg()['overall_float']
+
     @classmethod
     def before_create(cls, parent, info, instance, data):
         user: User = info.context.user
