@@ -13,9 +13,9 @@
 {% endblock small_text %}
 
 {% block body %}
-    {% if user.bid %}
+    {% if user.offer %}
         <center>
-            <a href="{% url 'roommate:bid_delete' user.bid.pk %}"><h1>DELETE MY OFFER!</h1></a>
+            <a href="{% url 'roommate:offer_delete' user.offer.pk %}"><h1>DELETE MY OFFER!</h1></a>
         </center>
     {% endif %}
     <form action="" method="post">

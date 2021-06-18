@@ -6,10 +6,10 @@ from graphene_django.views import GraphQLView
 app_name = 'roommate'
 
 urlpatterns = [
-    path('list/', views.BidListView.as_view(), name='bid_list'),
-    path('detail/<int:pk>/', views.BidDetailView.as_view(), name='bid_detail'),
-    path('create/', views.BidCreateView.as_view(), name='bid_create'),
-    path('update/<int:pk>', views.BidUpdateView.as_view(), name='bid_update'),
-    path('delete/<int:pk>', views.BidDeleteView.as_view(), name='bid_delete'),
+    path('list/', views.OfferListView.as_view(), name='offer_list'),
+    path('detail/<int:pk>/', views.OfferDetailView.as_view(), name='offer_detail'),
+    path('create/', views.OfferCreateView.as_view(), name='offer_create'),
+    path('update/<int:pk>', views.OfferUpdateView.as_view(), name='offer_update'),
+    path('delete/<int:pk>', views.OfferDeleteView.as_view(), name='offer_delete'),
     path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema)),
 ]
