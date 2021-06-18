@@ -82,6 +82,9 @@ class EvaluationType(DjangoGrapheneCRUD):
 
 
 class Data(ObjectType):
+    '''
+    This class is to provide general pourpose data.
+    '''
 
     department_list = graphene.List(String, short=Boolean())
 
