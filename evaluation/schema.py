@@ -2,15 +2,11 @@ from typing import Dict, Any
 from django.db.models.base import Model
 
 import graphene
-from graphene import relay, ObjectType, String
+from graphene import ObjectType
 from graphene_django import DjangoObjectType
-from graphene_django.converter import convert_django_field
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.forms.mutation import DjangoModelFormMutation
-from cloudinary.models import CloudinaryField
 from graphene_file_upload.scalars import Upload
-
-# CRUD
 from graphql import GraphQLError
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
 from graphene_django_crud.utils import is_required
@@ -19,22 +15,18 @@ from django.contrib.auth.models import User, Group
 from graphql_auth.constants import Messages
 from graphql_auth.decorators import login_required
 from . import models
+from .utils import is_owner
 
-
-# graphene doesn't know how to handle a CloudinaryField
-# so we need to register it
-@convert_django_field.register(CloudinaryField)
-def convert_profile_pic(field: CloudinaryField, registry=None, input_flag=None) -> String:
-    return String(
-        description="CloudinaryField for profile_pic",
-        required=is_required(field) and input_flag == "create",
-    )
 
 
 
 class InstructorType(DjangoGrapheneCRUD):
+    '''
+    A type for the `evaluation.Instructor` model. 
+    '''
 
-    profile_pic = graphene.String()
+    class Meta:
+        model = models.Instructor
 
     @classmethod
     def before_create(cls, parent, info, instance, data):
@@ -57,18 +49,6 @@ class InstructorType(DjangoGrapheneCRUD):
             raise GraphQLError("You don't have permission")
         return
 
-    class Meta:
-        model = models.Instructor
-        # exclude it to handle manually
-        exclude_fields = ['profile_pic']
-        input_exclude_fields = ['profile_pic']
-
-
-def is_owner(user: User, obj: Model) -> bool:
-    """Check if this user owns the object"""
-    if user.pk == obj.user.pk:
-        return True
-    raise GraphQLError("You don't own this Evaluation")
 
 class EvaluationType(DjangoGrapheneCRUD):
     """
@@ -88,13 +68,13 @@ class EvaluationType(DjangoGrapheneCRUD):
 
     # Forbid user to change other users' evaluation
     @classmethod
+    @is_owner
     def before_update(cls, parent, info, instance, data) -> None:
-        is_owner(info.context.user, instance)
         return
             
     @classmethod
-    def before_update(cls, parent, info, instance, data) -> None:
-        is_owner(info.context.user, instance)
+    @is_owner
+    def before_delete(cls, parent, info, instance, data) -> None:
         return
 
 
