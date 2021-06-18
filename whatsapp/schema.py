@@ -11,35 +11,41 @@ class GroupCRUD(DjangoGrapheneCRUD):
       only=["link", "major", "course",'report', 'verified']
     )
 
-    #@classmethod
-    #def before_mutate(cls, parent, info, instance, data):
-     #   if not info.context.user.is_authenticated:
-      #      return GraphQLError("You need to login")
-       # else:
-        #    return None
+  #  @classmethod
+   # def before_mutate(cls, parent, info, instance, data):
+    #    if not info.context.user.is_authenticated:
+     #       return GraphQLError("not authenticated,You need to login")
+      #  else:
+       #     return None
     
-    #@classmethod
-    #def before_create(cls, parent, info, instance, data):
-     #   if not info.context.user.is_authenticated:
-      #      return GraphQLError("You need to login")
-       # else:
-        #    return None
+    @classmethod
+    def before_create(cls, parent, info, instance, data):
+     #   instance.user = info.context.user
+      #  return None
+        pass
+
     
     @classmethod
     def before_update(cls, parent, info, instance, data):
-        if not has_object_permission(info.context, instance):
-            raise GraphQLError('not authorized, you must update your questions only')
-        else:
-            instance.user = info.context.user
-            return None
+        #if not has_object_permission(info.context, instance):
+            
+            #raise GraphQLError('not authorized, you must update your questions only')
+       # else:
+          #  if data['report'] != 1:
+           #     raise GraphQLError('you can add one report only')
+           # else:
+             #   print(instance)
+
+        return None
+            
+
 
     @classmethod
     def before_delete(cls, parent, info, instance, data):
-        if not has_object_permission(info.context, instance):
-            raise GraphQLError('not authorized, you must delete your questions only')
-        else:
-            instance.user = info.context.user
-            return None
+       # if not has_object_permission(info.context, instance):
+        #    raise GraphQLError('not authorized, you must update your questions only')
+        #else:
+        return None    
 
 
     class Meta:
