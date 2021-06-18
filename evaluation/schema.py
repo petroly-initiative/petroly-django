@@ -1,8 +1,10 @@
 from typing import Dict, Any
 from django.db.models.base import Model
+import json
 
 import graphene
-from graphene import ObjectType
+from graphene import *
+from graphene.types.scalars import String
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.forms.mutation import DjangoModelFormMutation
@@ -16,6 +18,7 @@ from graphql_auth.constants import Messages
 from graphql_auth.decorators import login_required
 from . import models
 from .utils import is_owner
+from data import departments
 
 
 
@@ -78,10 +81,26 @@ class EvaluationType(DjangoGrapheneCRUD):
         return
 
 
+class Data(ObjectType):
+
+    department_list = graphene.List(String, short=Boolean())
+
+    @staticmethod
+    def resolve_department_list(parent, info, short=True):
+        dep_short = []
+        dep_long = []
+        for short_, long_ in departments:
+            dep_short.append(short_)
+            dep_long.append(long_)
+            
+        if short:
+            return dep_short
+        return dep_long
+
 
 # Main entry for all the query types
 # Now only provides all Instructor & Evaluation objects
-class Query(ObjectType):
+class Query(Data, ObjectType):
 
     evaluation = EvaluationType.ReadField()
     evaluations = EvaluationType.BatchReadField()
