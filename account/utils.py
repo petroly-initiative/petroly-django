@@ -19,19 +19,6 @@ class ProfilePic(Scalar):
         print('serilize', dt)
         return dt.url
 
-    @staticmethod
-    def parse_literal(node):
-        print('parse_literal: ', node)
-        return
-        if isinstance(node, ast.StringValue):
-            return datetime.datetime.strptime(
-                node.value, "%Y-%m-%dT%H:%M:%S.%f")
-
-    @staticmethod
-    def parse_value(value):
-        print('parse_value: ', value)
-        return
-        return datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
 
 @convert_django_field.register(CloudinaryField)
 def convert_profile_pic(field: CloudinaryField, registry=None, input_flag=None) -> ProfilePic:
