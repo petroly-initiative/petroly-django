@@ -19,7 +19,7 @@ class ProfilePic(Scalar):
         print('serilize', dt)
         return dt.url
 
-
+@convert_django_field_crud.register(CloudinaryField)
 @convert_django_field.register(CloudinaryField)
 def convert_profile_pic(field: CloudinaryField, registry=None, input_flag=None) -> ProfilePic:
     '''Register CloudinaryField `DjangoObjectType` classes'''
@@ -28,13 +28,6 @@ def convert_profile_pic(field: CloudinaryField, registry=None, input_flag=None) 
         required=is_required(field) and input_flag == "create",
     )
 
-@convert_django_field_crud.register(CloudinaryField)
-def convert_profile_pic(field: CloudinaryField, registry=None, input_flag=None) -> ProfilePic:
-    '''Register CloudinaryField `DjangoGrapheneCRUD` classes'''
-    return ProfilePic(
-        description="CloudinaryField for profile_pic",
-        required=is_required(field) and input_flag == "create",
-    )
 
 
 def is_owner_(user: User, obj: Model) -> bool:
