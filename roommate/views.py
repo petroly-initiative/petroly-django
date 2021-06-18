@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Bid
+from .models import Offer
 from django.views.generic import (
     TemplateView,
     ListView,
@@ -13,8 +13,8 @@ from django.urls import reverse_lazy, reverse
 from django import forms
 
 
-class BidCreateView(LoginRequiredMixin, CreateView):
-    model = Bid
+class OfferCreateView(LoginRequiredMixin, CreateView):
+    model = Offer
     fields = [
         'name', 'email', 'phone', 'smoking', 'sociable', 
         'staying_up', 'temperature', 'hometown', 'comment'
@@ -35,22 +35,22 @@ class BidCreateView(LoginRequiredMixin, CreateView):
         else:
             return self.form_invalid(form)
 
-class BidDeleteView(DeleteView):
-    model = Bid
-    success_url = reverse_lazy('roommate:bid_list')
+class OfferDeleteView(DeleteView):
+    model = Offer
+    success_url = reverse_lazy('roommate:offer_list')
 
 
-class BidUpdateView(UpdateView):
-    model = Bid
+class OfferUpdateView(UpdateView):
+    model = Offer
     fields = [
         'name', 'email', 'phone', 'smoking', 'sociable', 
         'staying_up', 'temperature', 'hometown', 'comment'
     ]
 
 
-class BidDetailView(DetailView):
-    model = Bid
+class OfferDetailView(DetailView):
+    model = Offer
 
 
-class BidListView(ListView):
-    model = Bid
+class OfferListView(ListView):
+    model = Offer
