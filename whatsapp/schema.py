@@ -11,42 +11,48 @@ class GroupCRUD(DjangoGrapheneCRUD):
       only=["link", "major", "course",'report', 'verified']
     )
 
-  #  @classmethod
-   # def before_mutate(cls, parent, info, instance, data):
-    #    if not info.context.user.is_authenticated:
-     #       return GraphQLError("not authenticated,You need to login")
-      #  else:
-       #     return None
+    @classmethod
+    def before_mutate(cls, parent, info, instance, data):
+        if not info.context.user.is_authenticated:
+            return GraphQLError("not authenticated,You need to login")
+        else:
+            return None
     
     @classmethod
     def before_create(cls, parent, info, instance, data):
-     #   instance.user = info.context.user
-      #  return None
-        pass
+       instance.user = info.context.user
+
 
     
     @classmethod
     def before_update(cls, parent, info, instance, data):
-        #if not has_object_permission(info.context, instance):
-            
-            #raise GraphQLError('not authorized, you must update your questions only')
-       # else:
-          #  if data['report'] != 1:
-           #     raise GraphQLError('you can add one report only')
-           # else:
-             #   print(instance)
+        if not has_object_permission(info.context, instance):  # user report without being owner
+          if len(data) == 1 and data.get('report'):
+            if data.get('report') != 1:
+              raise GraphQLError('you can add one report only')
+            else: # user report while being owner 
+              data['report'] += instance.report  
+          else:       
+            raise GraphQLError('not authorized, you must update your questions only')
+        else:
+          if data.get('report'):
+            if data.get('report') != 1:
+              raise GraphQLError('you can add one report only')
+            else: # user report while being owner 
+              data['report'] += instance.report
 
-        return None
+
+
+
             
 
 
     @classmethod
     def before_delete(cls, parent, info, instance, data):
-       # if not has_object_permission(info.context, instance):
-        #    raise GraphQLError('not authorized, you must update your questions only')
-        #else:
-        return None    
-
+      if not has_object_permission(info.context, instance.question):
+        raise GraphQLError('not authorized, you must delete your questions only')
+      else:
+        return None
 
     class Meta:
         model = Group
