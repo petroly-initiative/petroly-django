@@ -47,8 +47,11 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 
+# To get Email when >500 error happens
 ADMINS = [
     ('Ammar', 'A@ammarf.com')
 ]
+# To get 404 errors
+MANAGERS = ADMINS
 
 django_heroku.settings(locals())
