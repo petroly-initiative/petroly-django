@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 class Group(models.Model):    
-    link = models.TextField()
+    link = models.URLField()
     major = models.TextField()
     course = models.TextField()
     report = models.IntegerField(default=0)
