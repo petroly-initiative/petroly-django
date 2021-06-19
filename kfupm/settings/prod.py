@@ -47,5 +47,8 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 
+ADMINS = [
+    ('Ammar', 'A@ammarf.com')
+]
 
 django_heroku.settings(locals())
