@@ -6,6 +6,7 @@ import django_heroku
 import os
 import cloudinary
 from cloudinary import config
+import re
 
 # Extra app
 
@@ -48,10 +49,17 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 # To get Email when >500 error happens
+SERVER_EMAIL = 'Error@petroly.co'
 ADMINS = [
     ('Ammar', 'A@ammarf.com')
 ]
 # To get 404 errors
 MANAGERS = ADMINS
+# Ignore these pattern errors
+IGNORABLE_404_URLS = [
+    re.compile(r'^/apple-touch-icon.*\.png$'),
+    re.compile(r'^/favicon\.ico$'),
+    re.compile(r'^/robots\.txt$'),
+]
 
 django_heroku.settings(locals())
