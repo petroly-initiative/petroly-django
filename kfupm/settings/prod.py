@@ -19,7 +19,7 @@ MIDDLEWARE += [
 ]
 
 # For Discord notification
-DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/856143009502724107/neOxJtCzBJOeq5dXhgjbNilRTwM9RvP_XgDx6dkrBbe42S204j7jIjP43W2mNT6ar48p'
+DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", default='')
 
 
 SECRET_KEY = os.environ.get("SECRET_KEY", default='')
