@@ -14,6 +14,13 @@ INSTALLED_APPS += [
     'django.contrib.admindocs',
 ]
 
+MIDDLEWARE += [
+    'account.middleware.DiscordNotificationMiddleware',
+]
+
+# For Discord notification
+DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/856141114577518623/vIpUXk6JQPrPxJTtmpnBQ8hTfckYYiEDcQwsG3gGw2Gc95RHHO7-GSz9cDHBmNYKyslC'
+
 
 SECRET_KEY = os.environ.get("SECRET_KEY", default='')
 
