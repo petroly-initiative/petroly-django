@@ -3,6 +3,7 @@ from graphql import GraphQLError
 from django.contrib.auth.models import User, Group
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
 from .models import Tag,Question,Answer
+from .permissions import has_object_permission
 
 class QuestionCRUD(DjangoGrapheneCRUD):
     
@@ -13,15 +14,31 @@ class QuestionCRUD(DjangoGrapheneCRUD):
     @classmethod
     def before_mutate(cls, parent, info, instance, data):
         if not info.context.user.is_authenticated:
-            return GraphQLError("not logged in")
+            return GraphQLError("You need to login")
         else:
+            return None
+    
+    @classmethod
+    def before_update(cls, parent, info, instance, data):
+        if not has_object_permission(info.context, instance):
+            raise GraphQLError('not authorized, you must update your questions only')
+        else:
+            instance.user = info.context.user
+            return None
+
+    @classmethod
+    def before_delete(cls, parent, info, instance, data):
+        if not has_object_permission(info.context, instance):
+            raise GraphQLError('not authorized, you must delete your questions only')
+        else:
+            instance.user = info.context.user
             return None
 
 
     class Meta:
         model = Question
         fields = "__all__"
-        input_exclude_fields = ("created", 'active')
+        input_exclude_fields = ("created", 'active', 'user')
 
 class AnswerCRUD(DjangoGrapheneCRUD):
     
@@ -29,10 +46,33 @@ class AnswerCRUD(DjangoGrapheneCRUD):
       only=["question", "user", "body",'created','updated','active','answers']
     )
 
+    @classmethod
+    def before_mutate(cls, parent, info, instance, data):
+        if not info.context.user.is_authenticated:
+            return GraphQLError("You need to login")
+        else:
+            return None
+    
+    @classmethod
+    def before_update(cls, parent, info, instance, data):
+        if not has_object_permission(info.context, instance):
+            raise GraphQLError('not authorized, you must update your questions only')
+        else:
+            instance.user = info.context.user
+            return None
+
+    @classmethod
+    def before_delete(cls, parent, info, instance, data):
+        if not has_object_permission(info.context, instance):
+            raise GraphQLError('not authorized, you must delete your questions only')
+        else:
+            instance.user = info.context.user
+            return None
+
     class Meta:
         model = Answer
         fields = "__all__"
-        input_exclude_fields = ("created", 'active','updated','answers')
+        input_exclude_fields = ("created", 'active','updated','answers', 'user')
 
 
 class TagCRUD(DjangoGrapheneCRUD):
@@ -40,6 +80,26 @@ class TagCRUD(DjangoGrapheneCRUD):
     @resolver_hints(
       only=["question", "body"]
     )
+    @classmethod
+    def before_mutate(cls, parent, info, instance, data):
+        if not info.context.user.is_authenticated:
+            return GraphQLError("You need to login")
+        else:
+            return None
+    
+    @classmethod
+    def before_update(cls, parent, info, instance, data):
+        if not has_object_permission(info.context, instance.question):
+            raise GraphQLError('not authorized, you must update your questions only')
+        else:
+            return None
+
+    @classmethod
+    def before_delete(cls, parent, info, instance, data):
+        if not has_object_permission(info.context, instance.question):
+            raise GraphQLError('not authorized, you must delete your questions only')
+        else:
+            return None
 
     class Meta:
         model = Question
