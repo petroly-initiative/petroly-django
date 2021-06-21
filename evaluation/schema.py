@@ -86,6 +86,7 @@ class EvaluationType(DjangoGrapheneCRUD):
 
     class Meta:
         model = models.Evaluation
+        exclude_fields = ('user', )
 
     @classmethod
     def before_create(cls, parent, info, instance, data) -> None:
