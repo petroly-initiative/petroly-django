@@ -1,3 +1,22 @@
+User-Agent: googlebot
+Disallow: /account/
+Disallow: /roommate/
+Disallow: /admin/
+Disallow: /evaluation/my_evaluations/
+
+User-Agent: bingbot
+Disallow: /account/
+Disallow: /roommate/
+Disallow: /admin/
+Disallow: /evaluation/my_evaluations/
+
+User-Agent: Yahoo! Slurp
+Disallow: /account/
+Disallow: /roommate/
+Disallow: /admin/
+Disallow: /evaluation/my_evaluations/
+
+
 User-Agent: *
 
 Disallow: /
