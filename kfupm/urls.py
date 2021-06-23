@@ -40,6 +40,3 @@ urlpatterns = [
     path('graphql/', csrf_exempt(PrivateGraphQLView.as_view(graphiql=True))),
     path("robots.txt",TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 ]
-
-# WARNING: this setting is only for development environment
-urlpatterns += static(dev.MEDIA_URL, document_root=dev.MEDIA_ROOT)
