@@ -11,5 +11,4 @@ urlpatterns = [
     path('create/', views.OfferCreateView.as_view(), name='offer_create'),
     path('update/<int:pk>', views.OfferUpdateView.as_view(), name='offer_update'),
     path('delete/<int:pk>', views.OfferDeleteView.as_view(), name='offer_delete'),
-    path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema)),
 ]
