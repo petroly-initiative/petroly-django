@@ -54,7 +54,20 @@ class OfferUpdateView(UpdateView):
         'name', 'email', 'phone', 'smoking', 'sociable', 
         'staying_up', 'temperature', 'hometown', 'comment'
     ]
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
 
+        if 'use-default-email' in self.request.POST:
+            self.object.email = self.request.user.email
+        return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 class OfferDetailView(DetailView):
     model = Offer
