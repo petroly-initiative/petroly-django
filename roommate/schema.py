@@ -4,12 +4,15 @@ from graphql import GraphQLError
 from graphene import ObjectType
 from graphene_django import DjangoObjectType
 from graphene_django_crud import DjangoGrapheneCRUD
+from graphql_auth.types import ExpectedErrorType
 from graphql_jwt.decorators import *
+from graphql_auth.decorators import login_required as login_
+from graphql_auth.bases import Output
 
 from .models import Offer
-from .utils import is_owner
+from .utils import is_owner, LoginRequired
 
-class OfferType(DjangoGrapheneCRUD):
+class OfferType(DjangoGrapheneCRUD, Output):
 
     class Meta:
         model = Offer
@@ -18,16 +21,14 @@ class OfferType(DjangoGrapheneCRUD):
 
     @classmethod
     def get_queryset(cls, parent, info, **kwargs):
-        print(info.context.META)
-        print(info.context.POST)
-        print(info.context.GET)
         return super().get_queryset(parent, info, **kwargs)
 
     @classmethod
     @login_required
     def before_create(cls, parent, info, instance, data):
-        if info.context.user.offer:
+        if Offer.objects.filter(user=info.context.user).exists():
             raise GraphQLError('You already have created an offer')
+        instance.user = info.context.user
 
     @classmethod
     @is_owner
