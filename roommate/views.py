@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from typing import Any
+from django.http import *
+from django.shortcuts import redirect, render
 from .models import Offer
 from django.views.generic import (
     TemplateView,
@@ -19,6 +21,12 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
         'name', 'email', 'phone', 'smoking', 'sociable', 
         'staying_up', 'temperature', 'hometown', 'comment'
     ]
+
+    def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        offer = Offer.objects.filter(user=request.user)
+        if offer:
+            return redirect('roommate:offer_update', pk=offer[0].pk)
+        return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
