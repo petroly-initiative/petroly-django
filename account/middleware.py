@@ -12,7 +12,7 @@ class DiscordNotificationMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         """Send broken link emails for relevant 404 NOT FOUND responses."""
 
-        if response.status_code == 404 or response.status_code >= 500 and not settings.DEBUG:
+        if response.status_code >= 500 and not settings.DEBUG:
             domain = request.get_host()
             path = request.get_full_path()
             referer = request.META.get('HTTP_REFERER', '')
