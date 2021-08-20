@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model, get_user
 from django.views.generic.edit import CreateView
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+import json
 
 from .models import Offer
 from .views import OfferCreateView
@@ -188,3 +189,76 @@ class OfferViewTestCase(OfferTestCase):
         self.assertEqual(self.client.get(f'/roommate/delete/{offer.pk}').status_code, 404)
         with self.assertRaises(ObjectDoesNotExist):
             Offer.objects.get(user=user)
+
+class OfferGraphQLTestCase(OfferTestCase):
+    
+    def setUp(self) -> None:
+        super().setUp()
+        self.client = Client()
+        self.client.force_login(self.user1, settings.AUTHENTICATION_BACKENDS[1])
+
+
+
+    def test_offers_query(self):
+        offers_query = '''
+        query Offers{
+            offers(
+                limit: 1
+            ){
+                data{
+                id, name, phone, email,
+                smoking, stayingUp, sociable, temperature, 
+                hometown, comment,
+                success,
+                errors,
+                }
+            }
+        }
+        '''
+        response = self.client.post('/endpoint/',
+                        data={'query': offers_query})
+        self.assertEqual(response.status_code, 200)
+        
+        json_data = json.loads(response.content)
+        first_offer = json_data['data']['offers']['data'][0]
+
+        self.assertEqual(first_offer['success'], True)
+        self.assertEqual(int(first_offer['id']), self.offer1.pk)
+        self.assertEqual(first_offer['name'], self.offer1.name)
+        self.assertEqual(first_offer['name'], self.offer1.name)
+        self.assertEqual(first_offer['phone'], self.offer1.phone)
+        self.assertEqual(first_offer['email'], self.offer1.email)
+        self.assertEqual(first_offer['smoking'], self.offer1.smoking)
+        self.assertEqual(first_offer['stayingUp'], self.offer1.staying_up)
+        self.assertEqual(first_offer['sociable'], self.offer1.sociable)
+        self.assertEqual(first_offer['temperature'], self.offer1.temperature)
+        self.assertEqual(first_offer['hometown'], self.offer1.hometown)
+        self.assertEqual(first_offer['comment'], self.offer1.comment)
+
+    def test_crud_offer(self):
+        offer_create = '''
+        mutation{
+            offerCreate(
+                input: {
+                name: "name", email: "email@c.com",
+                phone: "0123456789", 
+                smoking: true, stayingUp: false, 
+                sociable: false, temperature: "Hot",
+                hometown: "Dhahran", comment:"Anyone.",
+                }
+            ){
+                ok
+                result{
+                id
+                }
+            }
+        }
+        '''
+        # A user trying to add two offers
+        response = self.client.post('/endpoint/', data={'query': offer_create})
+        self.assertEqual(response.status_code, 200)
+        result = json.loads(response.content)
+        self.assertEqual(result['errors'][0]['message'], 'You already have created an offer')
+
+        # Updating an Offer object
+        
