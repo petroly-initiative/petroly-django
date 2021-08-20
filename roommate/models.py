@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 
 
-class Bid(models.Model):
+class Offer(models.Model):
 
     # Basic
     name = models.CharField(_("Name"), max_length=100)
@@ -27,4 +27,4 @@ class Bid(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("roommate:bid_update", kwargs={"pk": self.pk})
+        return reverse("roommate:offer_update", kwargs={"pk": self.pk})

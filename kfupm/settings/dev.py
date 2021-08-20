@@ -34,14 +34,18 @@ INTERNAL_IPS = ("127.0.0.1", "172.17.0.1", 'localhost')
 INSTALLED_APPS += [
     'debug_toolbar',
     'django.contrib.admindocs',
+    'corsheaders',
 ]
 
 # Extra middleware
 
-MIDDLEWARE += [
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-]
+] + MIDDLEWARE
 
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

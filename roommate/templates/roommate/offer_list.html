@@ -2,16 +2,16 @@
 {% load static %}
 
 {% block body %}
-    {% if user.bid %}
-        <a href="{% url 'roommate:bid_update' user.bid.pk  %}"><h2>EDIT My Roommate Offer</h2></a>
+    {% if user.offer %}
+        <a href="{% url 'roommate:offer_update' user.offer.pk  %}"><h2>EDIT My Roommate Offer</h2></a>
     {% else %}
-        <a href="{% url 'roommate:bid_create' %}"><h2>CREATE My Roommate Offer</h2></a>
+        <a href="{% url 'roommate:offer_create' %}"><h2>CREATE My Roommate Offer</h2></a>
     {% endif %}
 
 
     {% comment %} Cards {% endcomment %}
 <div class="row" id="instructors_container" style="margin-bottom: 29px;margin-right: 0;margin-left: 0;">
-    {% for i in bid_list %}
+    {% for i in offer_list %}
         <div class="col-md-6 col-lg-6 col-xl-4 instructor_column" style="margin-bottom: 28px;">
             <div role="tablist" id="accordion-{{i.pk}}" style="background: rgba(231,231,231,0);border-radius: 0;">
 
