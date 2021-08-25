@@ -38,7 +38,7 @@ class UserType(DjangoGrapheneCRUD):
         input_exclude_fields = ("last_login", "date_joined")
 
     @classmethod
-    @staff_member_required
+    @login_required
     def get_queryset(cls, parent, info, **kwargs):
         return super().get_queryset(parent, info, **kwargs)
 
@@ -103,7 +103,7 @@ class Query(graphene.ObjectType):
     # profiles = ProfileType.BatchReadField()
 
     # user = UserType.ReadField()
-    users = UserType.BatchReadField()
+    # users = UserType.BatchReadField()
 
     me = graphene.Field(UserType)
 
