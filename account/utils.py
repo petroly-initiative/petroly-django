@@ -16,7 +16,6 @@ class ProfilePic(Scalar):
 
     @staticmethod
     def serialize(dt):
-        print('serilize', dt)
         return dt.url
 
 @convert_django_field_crud.register(CloudinaryField)
