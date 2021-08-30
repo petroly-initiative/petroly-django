@@ -34,13 +34,11 @@ INTERNAL_IPS = ("127.0.0.1", "172.17.0.1", 'localhost')
 INSTALLED_APPS += [
     'debug_toolbar',
     'django.contrib.admindocs',
-    'corsheaders',
 ]
 
 # Extra middleware
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ] + MIDDLEWARE
 
