@@ -120,6 +120,12 @@ class Data(ObjectType):
     '''
 
     department_list = graphene.List(String, short=Boolean())
+    has_evaluated = graphene.Boolean(id=graphene.Int())
+
+    @staticmethod
+    @login_required
+    def resolve_has_evaluated(parent, info, id):
+        return models.Evaluation.objects.filter(user=info.context.user, instructor__pk=id).exists()
 
     @staticmethod
     def resolve_department_list(parent, info, short=True):
