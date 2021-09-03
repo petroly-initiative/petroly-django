@@ -68,6 +68,10 @@ class Evaluation(models.Model):
     grading = models.IntegerField(choices=starts, blank=False)
     teaching = models.IntegerField(choices=starts, blank=False)
     personality = models.IntegerField(choices=starts, blank=False)
+
+    grading_comment = models.TextField(_("Grading Comment"), blank=True, default="")
+    teaching_comment = models.TextField(_("Teaching Comment"), blank=True, default="")
+    personality_comment = models.TextField(_("Personality Comment"), blank=True, default="")
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
