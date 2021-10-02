@@ -64,6 +64,7 @@ class Evaluation(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     comment = models.TextField(_("Comment"), blank=True, default='')
     course = models.CharField(_("Course"), max_length=20, default='')
+    term = models.IntegerField(_("Term"), null=True, default=None)
    
     grading = models.IntegerField(choices=starts, blank=False)
     teaching = models.IntegerField(choices=starts, blank=False)
