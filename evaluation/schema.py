@@ -92,8 +92,8 @@ class EvaluationType(DjangoGrapheneCRUD):
     @classmethod
     @login_required
     def before_create(cls, parent, info, instance, data) -> None:
-        instructor_pk = data['instructor']['connect']['id']['equals']
-        username = data['user']['connect']['username']['equals']
+        instructor_pk = data['instructor']['connect']['id']['exact']
+        username = data['user']['connect']['username']['exact']
 
         if info.context.user.username != username:
             raise GraphQLError("The logged user and the provided user must match.")
