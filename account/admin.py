@@ -19,7 +19,7 @@ def send_message_email(self, request, queryset):
     with open('./templates/message_email.html', 'r') as f:
         html = f.read()
         for user in queryset:
-            send_mail("An pology", message=None, from_email=None, 
+            send_mail("مبادرة بترولي تشكرك", message=None, from_email='support@petroly.co', 
                 html_message=html, recipient_list=[user.email, ])
             print(user.email)
 
