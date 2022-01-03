@@ -17,18 +17,20 @@ class Community(models.Model):
         ('telegram', 'Telegram'),
     )
     name = models.CharField(_('Name'), max_length = 20)
+    description = models.TextField(_('Description'), max_length = 500)
     link = models.URLField(_('Link'))
     platform =  models.CharField(_('Platform'), max_length = 12, choices = platforms)
-    category = models.CharField(_('Category'), max_length = 10, choices = community_categories)
+    category = models.CharField(_('Category'), max_length = 12, choices = community_categories)
     likes = models.IntegerField(_('likes'), default=0)  
     section = models.CharField(_('Section'), max_length=10, default="") 
     report = models.IntegerField(_('Report'), default=0)
     verified = models.BooleanField(_('Verified'), default=True)
+    archived = models.BooleanField(_('Archived'), default=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                             verbose_name=_("User"), default=None)
 
     def __str__(self):
-        return f'{self.course}'
+        return f'{self.name, self.report}'
 
 @receiver(post_save, sender=Community)
 def create_profile(sender, instance, created, **kwargs):
