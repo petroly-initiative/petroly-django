@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'graphql_auth',
     'mathfilters',
     'forum',
-    'whatsapp',
+    'communities',
     'corsheaders',
 ]
 

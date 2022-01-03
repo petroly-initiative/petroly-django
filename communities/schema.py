@@ -1,22 +1,18 @@
 import graphene
 from graphql import GraphQLError
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User 
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
-from .models import Group
+from .models import Community
 from forum.permissions import has_object_permission
+from graphql_jwt.decorators import login_required
 
-class GroupCRUD(DjangoGrapheneCRUD):
-    
-    @resolver_hints(
-      only=["link", "major", "course",'report', 'verified']
-    )
+class CommunityType(DjangoGrapheneCRUD):
+
 
     @classmethod
+    @login_required
     def before_mutate(cls, parent, info, instance, data):
-        if not info.context.user.is_authenticated:
-            return GraphQLError("not authenticated,You need to login")
-        else:
-            return None
+        pass
     
     @classmethod
     def before_create(cls, parent, info, instance, data):
@@ -55,7 +51,7 @@ class GroupCRUD(DjangoGrapheneCRUD):
         return None
 
     class Meta:
-        model = Group
+        model = Community
         fields = "__all__"
         input_exclude_fields = ('verified')
 
@@ -63,16 +59,15 @@ class GroupCRUD(DjangoGrapheneCRUD):
 
 
 class Query(graphene.ObjectType):
-    group = GroupCRUD.ReadField()
-    groups = GroupCRUD.BatchReadField()
-
+    community = CommunityType.ReadField()
+    communities = CommunityType.BatchReadField()
+  
 
 
 
 class Mutation(graphene.ObjectType):
-    group_create = GroupCRUD.CreateField()
-    group_update = GroupCRUD.UpdateField()
-    group_delete = GroupCRUD.DeleteField()
-
+    community_create = CommunityType.CreateField()
+    community_update = CommunityType.UpdateField()
+    community_delete = CommunityType.DeleteField()
 
 
