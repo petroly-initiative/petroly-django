@@ -21,7 +21,7 @@ class Community(models.Model):
     link = models.URLField(_('Link'))
     platform =  models.CharField(_('Platform'), max_length = 12, choices = platforms)
     category = models.CharField(_('Category'), max_length = 12, choices = community_categories)
-    likes = models.IntegerField(_('likes'), default=0)  
+    likes = models.IntegerField(_('Likes'), default=0)  
     section = models.CharField(_('Section'), max_length=10, default="") 
     report = models.IntegerField(_('Report'), default=0)
     verified = models.BooleanField(_('Verified'), default=True)
