@@ -27,7 +27,7 @@ class Community(models.Model):
     verified = models.BooleanField(_('Verified'), default=True)
     archived = models.BooleanField(_('Archived'), default=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                            verbose_name=_("User"), default=None)
+                            verbose_name=_("user"), default=None)
 
     def __str__(self):
         return f'{self.name, self.report}'
