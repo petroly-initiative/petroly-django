@@ -30,7 +30,7 @@ class Community(models.Model):
                             verbose_name=_("user"), default=None)
 
     def __str__(self):
-        return f'{self.name, self.report}'
+        return f'{self.name} - {self.report}'
 
 @receiver(post_save, sender=Community)
 def create_profile(sender, instance, created, **kwargs):
