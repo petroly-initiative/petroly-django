@@ -4,7 +4,6 @@ from django.dispatch import receiver
 from django.conf import settings
 from django.utils.translation import gettext as _
 
-
 class Community(models.Model):
     community_categories = (
         ('edu', 'Educational'),
@@ -18,7 +17,8 @@ class Community(models.Model):
     )
     name = models.CharField(_('Name'), max_length = 20)
     description = models.TextField(_('Description'), max_length = 500)
-    link = models.URLField(_('Link'))
+    link = models.URLField(_('Link')) 
+    date = models.DateField(_('Date'), auto_now_add=True)
     platform =  models.CharField(_('Platform'), max_length = 12, choices = platforms)
     category = models.CharField(_('Category'), max_length = 12, choices = community_categories)
     likes = models.IntegerField(_('likes'), default=0)  
