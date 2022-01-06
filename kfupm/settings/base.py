@@ -1,5 +1,6 @@
 from datetime import timedelta
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -102,6 +103,11 @@ MAINTENANCE_MODE_IGNORE_TESTS = True
 
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'ar-SA'
+
+LANGUAGES = [
+    ('ar', _('Arabic')),
+    ('en', _('English')),
+]
 
 TIME_ZONE = 'Asia/Riyadh'
 
