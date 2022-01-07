@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 import graphene
 from graphql import GraphQLError
 from django.contrib.auth.models import User 
@@ -25,15 +26,15 @@ class CommunityType(DjangoGrapheneCRUD):
         if not has_object_permission(info.context, instance):  # user report without being owner
           if len(data) == 1 and data.get('report'):
             if data.get('report') != 1:
-              raise GraphQLError('you can add one report only')
+              raise GraphQLError(_('you can add one report only'))
             else: # user report while being owner 
               data['report'] += instance.report  
           else:       
-            raise GraphQLError('not authorized, you must update your questions only')
+            raise GraphQLError(_('not authorized, you must update your questions only'))
         else:
           if data.get('report'):
             if data.get('report') != 1:
-              raise GraphQLError('you can add one report only')
+              raise GraphQLError(_('you can add one report only'))
             else: # user report while being owner 
               data['report'] += instance.report
 
@@ -46,7 +47,7 @@ class CommunityType(DjangoGrapheneCRUD):
     @classmethod
     def before_delete(cls, parent, info, instance, data):
       if not has_object_permission(info.context, instance.question):
-        raise GraphQLError('not authorized, you must delete your questions only')
+        raise GraphQLError(_('not authorized, you must delete your questions only'))
       else:
         return None
 
