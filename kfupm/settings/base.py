@@ -101,8 +101,8 @@ MAINTENANCE_MODE_IGNORE_TESTS = True
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-# LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'ar-SA'
+LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'ar-SA'
 
 LANGUAGES = [
     ('ar', _('Arabic')),
