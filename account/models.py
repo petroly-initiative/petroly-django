@@ -7,6 +7,7 @@ from cloudinary import CloudinaryImage
 from data import departments, years
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.utils.translation import gettext as _
 
 # Create your models here.
 
@@ -28,6 +29,7 @@ class Profile(models.Model):
     )
     major = models.CharField(blank=False, null=True, max_length=25, choices=departments)
     year = models.CharField(blank=False, null=True, max_length=25, choices=years)
+    language = models.CharField(_("language"), max_length=10, default='en-US')
 
     # Some views need this to redirect to a url
     def get_absolute_url(self) -> str:
