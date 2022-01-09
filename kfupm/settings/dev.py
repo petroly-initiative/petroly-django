@@ -1,4 +1,5 @@
 from .base import *
+from corsheaders.defaults import default_headers
 
 from pathlib import Path
 import environ
@@ -44,6 +45,9 @@ MIDDLEWARE = [
 
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Accept-Language'
+]
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
