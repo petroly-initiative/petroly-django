@@ -28,8 +28,8 @@ class Profile(models.Model):
         blank=True,
         max_length=350,
     )
-    major = models.CharField(blank=False, null=True, max_length=25, choices=departments)
-    year = models.CharField(blank=False, null=True, max_length=25, choices=years)
+    major = models.CharField(blank=True, null=True, max_length=25, choices=departments)
+    year = models.CharField(blank=True, null=True, max_length=25, choices=years)
     language = models.CharField(_("language"), max_length=10, default='en-US')
 
     # Some views need this to redirect to a url
