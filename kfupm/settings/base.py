@@ -105,8 +105,8 @@ LANGUAGE_CODE = 'en-us'
 # LANGUAGE_CODE = 'ar-SA'
 
 LANGUAGES = [
-    ('ar', _('Arabic')),
-    ('en', _('English')),
+    ('ar-SA', _('Arabic')),
+    ('en-US', _('English')),
 ]
 
 LOCALE_PATHS = [
