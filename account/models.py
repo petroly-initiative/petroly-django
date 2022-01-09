@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -29,7 +30,7 @@ class Profile(models.Model):
     )
     major = models.CharField(blank=False, null=True, max_length=25, choices=departments)
     year = models.CharField(blank=False, null=True, max_length=25, choices=years)
-    language = models.CharField(_("language"), max_length=10, default='en-US')
+    language = models.CharField(_("language"), max_length=10, default='en-US', choices=settings.LANGUAGES)
 
     # Some views need this to redirect to a url
     def get_absolute_url(self) -> str:
