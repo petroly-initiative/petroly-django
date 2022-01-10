@@ -27,7 +27,7 @@ class Community(models.Model):
     archived = models.BooleanField(_('Archived'), default=False)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_("likes"), 
         related_name='liked_communities',  default=None, blank=True)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
         related_name='owned_communities', verbose_name=_("owner"), null=True, default=None)
 
     def __str__(self):
