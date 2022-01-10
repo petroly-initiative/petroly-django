@@ -21,12 +21,12 @@ class Community(models.Model):
     date = models.DateField(_('Date'), auto_now_add=True)
     platform =  models.CharField(_('Platform'), max_length = 12, choices = platforms)
     category = models.CharField(_('Category'), max_length = 12, choices = community_categories)
-    section = models.CharField(_('Section'), max_length=10, default="") 
+    section = models.CharField(_('Section'), max_length=10, default="", blank=True) 
     report = models.IntegerField(_('Report'), default=0)
     verified = models.BooleanField(_('Verified'), default=True)
     archived = models.BooleanField(_('Archived'), default=False)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_("likes"), 
-        related_name='liked_communities', default=None, blank=True)
+        related_name='liked_communities',  default=None, blank=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         related_name='owned_communities', verbose_name=_("owner"), null=True, default=None)
 
