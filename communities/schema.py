@@ -8,7 +8,9 @@ from forum.permissions import has_object_permission
 from graphql_jwt.decorators import login_required
 
 class CommunityType(DjangoGrapheneCRUD):
-
+    class Meta:
+        model = Community
+        input_exclude_fields = ('verified', 'owner')
 
     @classmethod
     @login_required
@@ -19,8 +21,6 @@ class CommunityType(DjangoGrapheneCRUD):
     def before_create(cls, parent, info, instance, data):
        instance.owner = info.context.user   # owener is the logged user
 
-
-    
     @classmethod
     def before_update(cls, parent, info, instance, data):
         if not has_object_permission(info.context, instance):  # user report without being owner
@@ -51,10 +51,6 @@ class CommunityType(DjangoGrapheneCRUD):
       else:
         return None
 
-    class Meta:
-        model = Community
-        fields = "__all__"
-        input_exclude_fields = ('verified')
 
 
 
