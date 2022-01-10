@@ -17,7 +17,7 @@ class CommunityType(DjangoGrapheneCRUD):
     
     @classmethod
     def before_create(cls, parent, info, instance, data):
-       instance.user = info.context.user
+       instance.owner = info.context.user   # owener is the logged user
 
 
     
