@@ -13,7 +13,6 @@ class CommunityType(DjangoGrapheneCRUD):
         model = Community
         input_exclude_fields = ('verified', 'owner')
 
-    # like_community = graphene.Field(graphene.ID, id_=None)
 
     def resolver_like_community(id, **kwargs):
         pass
@@ -44,12 +43,6 @@ class CommunityType(DjangoGrapheneCRUD):
             else: # user report while being owner 
               data['report'] += instance.report
 
-
-
-
-            
-
-
     @classmethod
     def before_delete(cls, parent, info, instance, data):
       if not has_object_permission(info.context, instance.question):
@@ -58,12 +51,15 @@ class CommunityType(DjangoGrapheneCRUD):
         return None
 
 
-
-
-
 class Query(graphene.ObjectType):
     community = CommunityType.ReadField()
     communities = CommunityType.BatchReadField()
+    has_liked_community = graphene.Boolean(id=graphene.ID()) 
+
+    @staticmethod
+    @login_required
+    def resolve_has_liked_community(parent, info, id): # TODO document this query
+        return Community.objects.filter(pk=id, likes__pk=info.context.user.pk).exists()
   
 
 class ToggleLikeCommunity(graphene.Mutation):
