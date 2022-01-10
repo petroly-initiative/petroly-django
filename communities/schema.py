@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 import graphene
 from graphql import GraphQLError
@@ -11,6 +12,11 @@ class CommunityType(DjangoGrapheneCRUD):
     class Meta:
         model = Community
         input_exclude_fields = ('verified', 'owner')
+
+    # like_community = graphene.Field(graphene.ID, id_=None)
+
+    def resolver_like_community(id, **kwargs):
+        pass
 
     @classmethod
     @login_required
@@ -60,6 +66,28 @@ class Query(graphene.ObjectType):
     communities = CommunityType.BatchReadField()
   
 
+class ToggleLikeCommunity(graphene.Mutation):
+    class Arguments:
+        ID = graphene.ID()
+    
+    ok = graphene.Boolean()
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, ID):
+        try:
+            likes = Community.objects.get(pk=ID).likes
+        except ObjectDoesNotExist:
+            return ToggleLikeCommunity(ok=False)
+        user = info.context.user
+        has_liked = Community.objects.filter(pk=ID, likes__pk=user.pk).exists()
+
+        if has_liked:
+           likes.remove(user)   # Unlike
+        else:
+           likes.add(user)      # Like
+
+        return ToggleLikeCommunity(ok = True)
 
 
 class Mutation(graphene.ObjectType):
@@ -67,4 +95,5 @@ class Mutation(graphene.ObjectType):
     community_update = CommunityType.UpdateField()
     community_delete = CommunityType.DeleteField()
 
-
+    toggle_like_community = ToggleLikeCommunity.Field(
+        description='This will toggle the community like for the logged user')
