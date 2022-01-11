@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -34,8 +34,12 @@ class Community(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-@receiver(pre_save, sender=Community)
-def archive_community(sender, instance, **kwargs):
-    num = instance.reports.count()  # count of prevoius reports
-    if num + 1 == 6:
-        instance.archived = True
+@receiver(m2m_changed, sender=Community.reports.through)
+def archive_community(sender, instance, action, **kwargs):
+    if action == 'post_add':
+        num = instance.reports.count()  # count of reports
+
+        if num >= 2:
+            instance.archived = True
+            instance.save()
+            
