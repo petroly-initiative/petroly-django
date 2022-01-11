@@ -43,12 +43,12 @@ class CommunityType(DjangoGrapheneCRUD):
             else: # user report while being owner 
               data['report'] += instance.report
 
-    @classmethod
-    def before_delete(cls, parent, info, instance, data):
-      if not has_object_permission(info.context, instance.question):
-        raise GraphQLError(_('not authorized, you must delete your questions only'))
-      else:
-        return None
+    # @classmethod TODO Validate that the one who is deleting is logged in and is the owner.
+    # def before_delete(cls, parent, info, instance, data):
+    #   if not has_object_permission(info.context, instance.question):
+    #     raise GraphQLError(_('not authorized, you must delete your questions only'))
+    #   else:
+    #     return None
 
 
 class Query(graphene.ObjectType):
