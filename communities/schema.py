@@ -13,10 +13,6 @@ class CommunityType(DjangoGrapheneCRUD):
         model = Community
         input_exclude_fields = ('verified', 'owner')
 
-
-    def resolver_like_community(id, **kwargs):
-        pass
-
     @classmethod
     @login_required
     def before_mutate(cls, parent, info, instance, data):
