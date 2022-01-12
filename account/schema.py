@@ -124,6 +124,8 @@ class UploadMutation(graphene.Mutation):
 
     success = graphene.Boolean()
 
+    @staticmethod
+    @login_required
     def mutate(self, info, file, **kwargs):
         user: User = info.context.user
         res = upload_image(
