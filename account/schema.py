@@ -1,3 +1,4 @@
+from io import FileIO
 from cloudinary.models import CloudinaryField
 
 import graphene
@@ -128,17 +129,21 @@ class UploadMutation(graphene.Mutation):
     @login_required
     def mutate(self, info, file, **kwargs):
         user: User = info.context.user
-        res = upload_image(
-            file,
-            folder="profile_pics",
-            public_id=user.username,
-            overwrite=True,
-            invalidate=True,
-            transformation=[{"width": 200, "height": 200, "crop": "fill"}],
-            format="jpg",
-        )
-        user.profile.profile_pic = res
-        user.profile.save()
+
+        try:
+            res = upload_image(
+                file,
+                folder="profile_pics",
+                public_id=user.username,
+                overwrite=True,
+                invalidate=True,
+                transformation=[{"width": 200, "height": 200, "crop": "fill"}],
+                format="jpg",
+            )
+            user.profile.profile_pic = res
+            user.profile.save()
+        except:
+            return UploadMutation(success=False)
 
         return UploadMutation(success=True)
 
