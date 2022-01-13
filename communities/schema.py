@@ -22,22 +22,22 @@ class CommunityType(DjangoGrapheneCRUD):
     def before_create(cls, parent, info, instance, data):
        instance.owner = info.context.user   # owener is the logged user
 
-    @classmethod
-    def before_update(cls, parent, info, instance, data):
-        if not has_object_permission(info.context, instance):  # user report without being owner
-          if len(data) == 1 and data.get('report'):
-            if data.get('report') != 1:
-              raise GraphQLError(_('you can add one report only'))
-            else: # user report while being owner 
-              data['report'] += instance.report  
-          else:       
-            raise GraphQLError(_('not authorized, you must update your questions only'))
-        else:
-          if data.get('report'):
-            if data.get('report') != 1:
-              raise GraphQLError(_('you can add one report only'))
-            else: # user report while being owner 
-              data['report'] += instance.report
+    # @classmethod // TODO Validate that the one who is updating is logged in and is the owner.
+    # def before_update(cls, parent, info, instance, data):
+    #     if not has_object_permission(info.context, instance):  # user report without being owner
+    #       if len(data) == 1 and data.get('report'):
+    #         if data.get('report') != 1:
+    #           raise GraphQLError(_('you can add one report only'))
+    #         else: # user report while being owner 
+    #           data['report'] += instance.report  
+    #       else:       
+    #         raise GraphQLError(_('not authorized, you must update your questions only'))
+    #     else:
+    #       if data.get('report'):
+    #         if data.get('report') != 1:
+    #           raise GraphQLError(_('you can add one report only'))
+    #         else: # user report while being owner 
+    #           data['report'] += instance.report
 
     # @classmethod TODO Validate that the one who is deleting is logged in and is the owner.
     # def before_delete(cls, parent, info, instance, data):
