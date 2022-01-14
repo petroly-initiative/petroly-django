@@ -58,8 +58,13 @@ class ProfileType(DjangoGrapheneCRUD):
         exclude_fields = ("user",)
 
     @classmethod
+    @login_required
+    def get_queryset(cls, parent, info, **kwargs):
+        return super().get_queryset(parent, info, **kwargs)
+
+    @classmethod
     @is_owner
-    def before_update(cls, parent, info, instance, data):
+    def before_mutate(cls, parent, info, instance, data):
         return
 
 
