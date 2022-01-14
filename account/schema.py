@@ -1,3 +1,4 @@
+from io import FileIO
 from cloudinary.models import CloudinaryField
 
 import graphene
@@ -15,7 +16,7 @@ from django.contrib.auth.models import User
 from .models import Profile
 from .utils import is_owner
 from graphql_auth.models import UserStatus
-
+from cloudinary.uploader import upload_image
 
 
 class StatusType(DjangoGrapheneCRUD):
@@ -26,6 +27,7 @@ class StatusType(DjangoGrapheneCRUD):
 
     class Meta:
         model = UserStatus
+
 
 class UserType(DjangoGrapheneCRUD):
     """
@@ -46,42 +48,48 @@ class ProfileType(DjangoGrapheneCRUD):
     """
     A type for `account.Profile` model.
     """
-    
+
     file = Upload()
 
     class Meta:
         model = Profile
-        input_exclude_fields = ('user', )
-        exclude_fields = ('user', )
+        input_exclude_fields = ("user",)
+        exclude_fields = ("user",)
+
+    @classmethod
+    @login_required
+    def get_queryset(cls, parent, info, **kwargs):
+        return super().get_queryset(parent, info, **kwargs)
 
     @classmethod
     @is_owner
-    def before_update(cls, parent, info, instance, data):
+    def before_mutate(cls, parent, info, instance, data):
         return
+
 
 class ProfileNode(DjangoObjectType):
     """
     A type for `account.Profile` model.
     This class is for graphql_auth methods.
     """
-    
+
     class Meta:
         model = Profile
-        exclude = ('user', )
+        exclude = ("user",)
 
 
 class AuthMutation(graphene.ObjectType):
-    '''
+    """
     All authintication mutations.
     It inherits from `django_graphql_auth` and `django_graphql_jwt`.
-    '''
+    """
 
     register = mutations.Register.Field()
     verify_account = mutations.VerifyAccount.Field()
     resend_activation_email = mutations.ResendActivationEmail.Field()
     send_password_reset_email = mutations.SendPasswordResetEmail.Field()
     password_reset = mutations.PasswordReset.Field()
-    password_set = mutations.PasswordSet.Field() # For passwordless registration
+    password_set = mutations.PasswordSet.Field()  # For passwordless registration
     password_change = mutations.PasswordChange.Field()
     update_account = mutations.UpdateAccount.Field()
     delete_account = mutations.DeleteAccount.Field()
@@ -95,9 +103,10 @@ class AuthMutation(graphene.ObjectType):
 
 
 class Query(graphene.ObjectType):
-    '''
+    """
     Main entry for all query type for `account` app.
-    '''
+    """
+
     # profile = ProfileType.ReadField()
     # profiles = ProfileType.BatchReadField()
 
@@ -111,10 +120,43 @@ class Query(graphene.ObjectType):
         return info.context.user
 
 
+from graphene_file_upload.scalars import Upload
+
+
+class UploadMutation(graphene.Mutation):
+    class Arguments:
+        file = Upload(required=True)
+
+    success = graphene.Boolean()
+
+    @staticmethod
+    @login_required
+    def mutate(self, info, file, **kwargs):
+        user: User = info.context.user
+
+        try:
+            res = upload_image(
+                file,
+                folder="profile_pics",
+                public_id=user.username,
+                overwrite=True,
+                invalidate=True,
+                transformation=[{"width": 200, "height": 200, "crop": "fill"}],
+                format="jpg",
+            )
+            user.profile.profile_pic = res
+            user.profile.save()
+        except:
+            return UploadMutation(success=False)
+
+        return UploadMutation(success=True)
+
+
 class Mutation(AuthMutation, graphene.ObjectType):
-    '''
+    """
     Main entry for all `Mutation` types for `account` app.
     It inherits from `AuthMutation`.
-    '''
-    
+    """
+
+    profile_pic_update = UploadMutation.Field()
     profile_update = ProfileType.UpdateField()

@@ -1,5 +1,6 @@
 from datetime import timedelta
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -99,8 +101,17 @@ MAINTENANCE_MODE_IGNORE_TESTS = True
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-# LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'ar-SA'
+LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'ar-SA'
+
+LANGUAGES = [
+    ('ar-SA', _('Arabic')),
+    ('en-US', _('English')),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale'
+]
 
 TIME_ZONE = 'Asia/Riyadh'
 
