@@ -16,7 +16,7 @@ class Community(models.Model):
         ('telegram', 'Telegram'),
     )
     name = models.CharField(_('Name'), max_length = 20)
-    description = models.TextField(_('Description'), max_length = 500)
+    description = models.TextField(_('Description'), max_length = 500, default='', blank=True)
     link = models.URLField(_('Link')) 
     date = models.DateField(_('Date'), auto_now_add=True)
     platform =  models.CharField(_('Platform'), max_length = 12, choices = platforms)
