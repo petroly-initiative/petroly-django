@@ -44,7 +44,7 @@ class CommunityType(DjangoGrapheneCRUD):
     @classmethod
     @login_required
     def after_mutate(cls, parent, info, instance: Community, data):
-        if 'icon' in data.keys():
+        if 'icon' in data.keys() and data['icon'].upload:
             try:
                 instance.icon = upload_image(
                     data['icon'].upload,
