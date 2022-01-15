@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.db import models
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
@@ -17,15 +18,18 @@ class CloudinaryFieldCostom(CloudinaryField):
             return super().to_python(value)
 
 class Community(models.Model):
+    class Meta:
+        verbose_name = _('community')
+        verbose_name_plural = _('Communities')
     community_categories = (
-        ('edu', 'Educational'),
-        ('section', 'Section'), # If this choice is chosen, then the field section should be filled. 
-        ('entertaining', 'Entertaining'), # could not find a better word :(
+        ('edu', _('Educational')),
+        ('section', _('Section')), # If this choice is chosen, then the field section should be filled). 
+        ('entertaining', _('Entertaining')), # could not find a better word ):(
     )
     platforms = (
-        ('whatsapp', 'Whatsapp'),
-        ('discord', 'Discord'),
-        ('telegram', 'Telegram'),
+        ('whatsapp', _('Whatsapp')),
+        ('discord', _('Discord')),
+        ('telegram', _('Telegram')),
     )
     name = models.CharField(_('Name'), max_length = 20)
     description = models.TextField(_('Description'), max_length = 500, default='', blank=True)
