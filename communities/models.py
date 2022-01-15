@@ -3,6 +3,18 @@ from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from cloudinary.models import CloudinaryField
+
+class CloudinaryFieldCostom(CloudinaryField):
+    '''
+    This is needed to modify to_python, to deal with the FileInput from `graphene`.
+    '''
+    def to_python(self, value):
+        if isinstance(value, dict):
+            # ignore it
+            pass
+        else:
+            return super().to_python(value)
 
 class Community(models.Model):
     community_categories = (
@@ -24,6 +36,7 @@ class Community(models.Model):
     section = models.CharField(_('Section'), max_length=10, default="", blank=True) 
     verified = models.BooleanField(_('Verified'), default=True)
     archived = models.BooleanField(_('Archived'), default=False)
+    icon = CloudinaryFieldCostom(_('icon'), default=None, null=True,  blank=True, max_length=350)
     reports = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_("reports"), 
         related_name='reported_communities', blank=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_("likes"), 

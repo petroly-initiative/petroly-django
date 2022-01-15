@@ -1,12 +1,40 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 import graphene
+from graphene import Field
 from graphql import GraphQLError
 from django.contrib.auth.models import User 
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
+from graphene_django_crud.converter import convert_django_field
+from graphene_django_crud.input_types import FileInput
+from graphene_django_crud.base_types import File
+from graphene_django_crud.utils import is_required
 from .models import Community
-from forum.permissions import has_object_permission
 from graphql_jwt.decorators import login_required
+from cloudinary.models import CloudinaryField
+from cloudinary.uploader import upload_image
+
+
+@convert_django_field.register(CloudinaryField)
+def convert_CloudinaryField_to_file(field, registry=None, input_flag=None):
+    '''
+    Register the icon filed of type `CloudinaryField`.
+    '''
+    if input_flag:
+        if input_flag == 'create' or input_flag == 'update':
+            return FileInput(
+                description=field.help_text or field.verbose_name,
+                required=is_required(field) and input_flag == "create",
+            )
+        else:
+            return None
+    return Field(
+        File,
+        description=field.help_text or field.verbose_name,
+    )
+
+
+
 
 class CommunityType(DjangoGrapheneCRUD):
     class Meta:
@@ -15,8 +43,21 @@ class CommunityType(DjangoGrapheneCRUD):
 
     @classmethod
     @login_required
-    def before_mutate(cls, parent, info, instance, data):
-        pass
+    def after_mutate(cls, parent, info, instance: Community, data):
+        if 'icon' in data.keys():
+            try:
+                instance.icon = upload_image(
+                    data['icon'].upload,
+                    folder="communities/icons",
+                    public_id=instance.pk,
+                    overwrite=True,
+                    invalidate=True,
+                    transformation=[{"width": 200, "height": 200, "crop": "fill"}],
+                    format="jpg",
+                )
+                instance.save()
+            except Exception as e:
+                raise GraphQLError(_('Error while uploading the icon'))
     
     @classmethod
     def before_create(cls, parent, info, instance, data):
