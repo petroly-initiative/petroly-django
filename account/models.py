@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
@@ -14,6 +15,9 @@ from django.utils.translation import gettext as _
 
 
 class Profile(models.Model):
+    class Meta:
+        verbose_name = _('profile')
+        verbose_name_plural = _('profiles')
     """
     A general user profile info model that has a field of :model:`auth.User`. 
     """
@@ -23,7 +27,7 @@ class Profile(models.Model):
 
     # Additional fields
     profile_pic = CloudinaryField(
-        'image', 
+        _('profile picture'), 
         default='https://res.cloudinary.com/petroly-initiative/image/upload/v1622359053/profile_pics/blank_profile.png',
         blank=True,
         max_length=350,
