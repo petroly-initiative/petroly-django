@@ -33,7 +33,7 @@ class Community(models.Model):
     )
     name = models.CharField(_('Name'), max_length = 100)
     description = models.TextField(_('Description'), max_length = 500, default='', blank=True)
-    link = models.URLField(_('Link')) 
+    link = models.URLField(_('Link'), unique=True) 
     date = models.DateField(_('Date'), auto_now_add=True)
     platform =  models.CharField(_('Platform'), max_length = 12, choices = platforms)
     category = models.CharField(_('Category'), max_length = 12, choices = community_categories)
