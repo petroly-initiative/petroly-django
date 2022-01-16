@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-06 18:39+0300\n"
+"POT-Creation-Date: 2022-01-16 10:33+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,102 +19,194 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
+#: account/models.py:19
+msgid "profile"
+msgstr "الملف الشخصي"
+
+#: account/models.py:20
+msgid "profiles"
+msgstr "الملفات الشخصية"
+
+#: account/models.py:30
+#, fuzzy
+#| msgid "profile"
+msgid "profile picture"
+msgstr "الصورة الشخصي"
+
+#: account/models.py:37
+msgid "language"
+msgstr "اللغة"
+
+#: account/models.py:38
+msgid "theme"
+msgstr "المظهر"
+
+#: account/utils.py:38 account/utils.py:46
+#, fuzzy
+#| msgid "You don't own this Offer"
+msgid "You don't own this Profile"
+msgstr "أنت لاتملك هذا الملف الشخصي"
+
+#: communities/models.py:22
+msgid "community"
+msgstr "المجتمع"
+
+#: communities/models.py:23
+msgid "Communities"
+msgstr "المجتمعات"
+
+#: communities/models.py:25
+msgid "Educational"
+msgstr "تعليمي"
+
+#: communities/models.py:26 communities/models.py:40
+msgid "Section"
+msgstr "الشعبة"
+
+#: communities/models.py:27
+msgid "Entertaining"
+msgstr "ترفيهي"
+
+#: communities/models.py:30
+msgid "Whatsapp"
+msgstr "وتساب"
+
+#: communities/models.py:31
+msgid "Discord"
+msgstr "ديسكورد"
+
+#: communities/models.py:32
+msgid "Telegram"
+msgstr "تيليقرام"
+
+#: communities/models.py:34 roommate/models.py:9
+msgid "Name"
+msgstr "الاسم"
+
+#: communities/models.py:35
+msgid "Description"
+msgstr "الوصف"
+
+#: communities/models.py:36
+msgid "Link"
+msgstr "الرابط"
+
+#: communities/models.py:37
+msgid "Date"
+msgstr "التاريخ"
+
+#: communities/models.py:38
+msgid "Platform"
+msgstr "المنصة"
+
+#: communities/models.py:39
+msgid "Category"
+msgstr "الفئة"
+
+#: communities/models.py:41
+msgid "Verified"
+msgstr "موثق"
+
+#: communities/models.py:42
+msgid "Archived"
+msgstr "مؤرشف"
+
+#: communities/models.py:43
+msgid "icon"
+msgstr "الأيقونة"
+
+#: communities/models.py:44
+msgid "reports"
+msgstr "التبليغات"
+
+#: communities/models.py:46
+msgid "likes"
+msgstr "الإعجابات"
+
+#: communities/models.py:49
+msgid "owner"
+msgstr "المالك"
+
+#: communities/schema.py:60
+msgid "Error while uploading the icon"
+msgstr "خطأ، أثناء رفع الأيقونة"
+
 #: evaluation/models.py:65 roommate/models.py:20
 msgid "Comment"
-msgstr ""
+msgstr "التعليق"
 
-#: evaluation/models.py:66 whatsapp/models.py:11
+#: evaluation/models.py:66
 msgid "Course"
-msgstr ""
+msgstr "المادة"
 
 #: evaluation/models.py:67
 msgid "Term"
-msgstr ""
+msgstr "الفصل"
 
 #: evaluation/models.py:73
 msgid "Grading Comment"
-msgstr ""
+msgstr "تعليق التصحيح"
 
 #: evaluation/models.py:74
 msgid "Teaching Comment"
-msgstr ""
+msgstr "تعليق التدريس"
 
 #: evaluation/models.py:75
 msgid "Personality Comment"
-msgstr ""
+msgstr "تعليق الشخصية"
 
 #: kfupm/settings/base.py:108
 msgid "Arabic"
-msgstr ""
+msgstr "العربية"
 
 #: kfupm/settings/base.py:109
 msgid "English"
-msgstr ""
-
-#: roommate/models.py:9
-msgid "Name"
-msgstr ""
+msgstr "الإنجليزية"
 
 #: roommate/models.py:10
 msgid "Phone Number"
-msgstr ""
+msgstr "رقم الجوال"
 
 #: roommate/models.py:11
 msgid "Personal Email"
-msgstr ""
+msgstr "الإيميل الشخصي"
 
-#: roommate/models.py:12 whatsapp/models.py:15
+#: roommate/models.py:12
 msgid "User"
-msgstr ""
+msgstr "المستخدم"
 
 #: roommate/models.py:15
 msgid "Do You Smoke"
-msgstr ""
+msgstr "هل تدخن"
 
 #: roommate/models.py:16
 msgid "Do Stay Up Late"
-msgstr ""
+msgstr "هل تسهر"
 
 #: roommate/models.py:17
 msgid "Sociable Person"
-msgstr ""
+msgstr "شخص إجتماعي"
 
 #: roommate/models.py:18
 msgid "Room Temperature You Like"
-msgstr ""
+msgstr "حرارة الغرفة المفضلة"
 
 #: roommate/models.py:19
 msgid "Your Hometown"
-msgstr ""
+msgstr "مدينة المنشأ"
 
 #: roommate/models.py:23
 msgid "offer"
-msgstr ""
+msgstr "عرض"
 
 #: roommate/models.py:24
 msgid "offers"
-msgstr ""
+msgstr "عروض"
 
 #: roommate/utils.py:23
 msgid "You need to log in"
-msgstr ""
+msgstr "يجب تسجيل الدخول"
 
 #: roommate/utils.py:26
 msgid "You don't own this Offer"
-msgstr ""
-
-#: whatsapp/models.py:9
-msgid "Link"
-msgstr ""
-
-#: whatsapp/models.py:10
-msgid "Major"
-msgstr ""
-
-#: whatsapp/models.py:12
-msgid "Report"
-msgstr ""
-
-#: whatsapp/models.py:13
-msgid "Verified"
-msgstr ""
+msgstr "أنت لاتملك هذا العرض"
