@@ -13,6 +13,7 @@ from graphene_file_upload.scalars import Upload
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
 
 from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
 from .models import Profile
 from .utils import is_owner
 from graphql_auth.models import UserStatus
@@ -135,9 +136,11 @@ class UploadMutation(graphene.Mutation):
         user: User = info.context.user
 
         try:
+            # to prvent colliding with dev & prod
+            ext =  get_current_site(info.context).domain
             res = upload_image(
                 file,
-                folder="profile_pics",
+                folder=f"profile_pics/{ext}",
                 public_id=user.username,
                 overwrite=True,
                 invalidate=True,
