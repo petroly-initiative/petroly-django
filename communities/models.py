@@ -49,7 +49,7 @@ class Community(models.Model):
         related_name='owned_communities', verbose_name=_("owner"), null=True)
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.name}, {self.link}'
 
 @receiver(m2m_changed, sender=Community.reports.through)
 def archive_community(sender, instance, action, **kwargs):
