@@ -31,7 +31,7 @@ class Community(models.Model):
         ('discord', _('Discord')),
         ('telegram', _('Telegram')),
     )
-    name = models.CharField(_('Name'), max_length = 20)
+    name = models.CharField(_('Name'), max_length = 100)
     description = models.TextField(_('Description'), max_length = 500, default='', blank=True)
     link = models.URLField(_('Link')) 
     date = models.DateField(_('Date'), auto_now_add=True)
