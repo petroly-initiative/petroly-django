@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
 from django.db.models.base import Model
@@ -34,7 +35,7 @@ def is_owner_(user: User, obj: Model) -> bool:
     
     if user.pk == obj.user.pk:
         return True
-    raise GraphQLError("You don't own this Profile")
+    raise GraphQLError(_("You don't own this Profile"))
 
 def is_owner(func):
     """A decorator to check if the logged user owns the instance"""
@@ -42,6 +43,6 @@ def is_owner(func):
     @login_required
     def wrapper(cls, parent, info, instance, data):
         if not info.context.user == instance.user:
-            raise GraphQLError("You don't own this Profile")
+            raise GraphQLError(_("You don't own this Profile"))
         return func(cls, parent, info, instance, data)
     return wrapper
