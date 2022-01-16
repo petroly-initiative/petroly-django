@@ -67,6 +67,14 @@ class CommunityType(DjangoGrapheneCRUD):
     @classmethod
     def before_create(cls, parent, info, instance, data):
        instance.owner = info.context.user   # owener is the logged user
+    
+    @classmethod
+    def before_update(cls, parent, info, instance, data):
+        if 'icon' in data.keys() and data['icon'].upload is None:
+            # remove the None value of icon to keep the old one
+            del data['icon']
+
+
 
     # @classmethod // TODO Validate that the one who is updating is logged in and is the owner.
     # def before_update(cls, parent, info, instance, data):
