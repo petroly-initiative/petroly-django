@@ -13,6 +13,8 @@ from .models import Community
 from graphql_jwt.decorators import login_required
 from cloudinary.models import CloudinaryField
 from cloudinary.uploader import upload_image
+from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings
 
 
 @convert_django_field.register(CloudinaryField)
@@ -41,14 +43,17 @@ class CommunityType(DjangoGrapheneCRUD):
         model = Community
         input_exclude_fields = ('verified', 'owner')
 
+
     @classmethod
     @login_required
     def after_mutate(cls, parent, info, instance: Community, data):
         if 'icon' in data.keys() and data['icon'].upload:
             try:
+                # to prvent colliding with dev & prod
+                ext =  get_current_site(info.context).domain
                 instance.icon = upload_image(
                     data['icon'].upload,
-                    folder="communities/icons",
+                    folder=f"communities/{ext}/icons",
                     public_id=instance.pk,
                     overwrite=True,
                     invalidate=True,
