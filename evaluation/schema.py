@@ -93,10 +93,9 @@ class EvaluationType(DjangoGrapheneCRUD):
     @login_required
     def before_create(cls, parent, info, instance, data) -> None:
         instructor_pk = data['instructor']['connect']['id']['exact']
-        username = data['user']['connect']['username']['exact']
 
-        if info.context.user.username != username:
-            raise GraphQLError("The logged user and the provided user must match.")
+        # the logged use is the evaluator 
+        instance.user = info.context.user
         
         if models.Evaluation.objects.filter(user=info.context.user, instructor__pk=instructor_pk):
             raise GraphQLError("You have evaluated this instructor before, you can edit it in My Evaluations.")
