@@ -198,6 +198,6 @@ GRAPHQL_AUTH = {
     "EMAIL_TEMPLATE_ACTIVATION_RESEND": "activation_email.html",
     "EMAIL_TEMPLATE_PASSWORD_RESET": "password_reset_email.html",
     "EMAIL_TEMPLATE_VARIABLES": {
-        "frontend_domain": "petroly.com"
+        "frontend_domain": "petroly.co"
     }
 }
