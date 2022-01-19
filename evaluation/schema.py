@@ -17,7 +17,7 @@ from graphene_django_crud.utils import is_required
 from graphql_jwt.decorators import login_required
 from django.contrib.auth.models import User, Group
 from graphql_auth.constants import Messages
-from . import models
+from .models import Evaluation, Instructor
 from .utils import is_owner
 from data import departments
 
@@ -30,7 +30,7 @@ class InstructorType(DjangoGrapheneCRUD):
     '''
 
     class Meta:
-        model = models.Instructor
+        model = Instructor
 
     grading_avg = graphene.Int()
     teaching_avg = graphene.Int()
@@ -86,7 +86,7 @@ class EvaluationType(DjangoGrapheneCRUD):
     """
 
     class Meta:
-        model = models.Evaluation
+        model = Evaluation
         exclude_fields = ('user', )
 
     @classmethod
@@ -97,7 +97,7 @@ class EvaluationType(DjangoGrapheneCRUD):
         # the logged use is the evaluator 
         instance.user = info.context.user
         
-        if models.Evaluation.objects.filter(user=info.context.user, instructor__pk=instructor_pk):
+        if Evaluation.objects.filter(user=info.context.user, instructor__pk=instructor_pk):
             raise GraphQLError("You have evaluated this instructor before, you can edit it in My Evaluations.")
         return
 
@@ -120,11 +120,12 @@ class Data(ObjectType):
 
     department_list = graphene.List(String, short=Boolean())
     has_evaluated = graphene.Boolean(id=graphene.Int())
+    evaluated_instructors = graphene.List(graphene.String)
 
     @staticmethod
     @login_required
     def resolve_has_evaluated(parent, info, id):
-        return models.Evaluation.objects.filter(user=info.context.user, instructor__pk=id).exists()
+        return Evaluation.objects.filter(user=info.context.user, instructor__pk=id).exists()
 
     @staticmethod
     def resolve_department_list(parent, info, short=True):
@@ -137,6 +138,14 @@ class Data(ObjectType):
         if short:
             return dep_short
         return dep_long
+    
+    @staticmethod
+    def resolve_evaluated_instructors(parent, info, short=True):
+        ids = []
+        for i in Instructor.objects.all():
+            if i.evaluation_set.exists():
+                ids.append(str(i.pk))
+        return ids
 
 
 # Main entry for all the query types
