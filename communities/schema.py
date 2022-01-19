@@ -115,6 +115,9 @@ class ReportType(DjangoGrapheneCRUD):
     @classmethod
     def before_create(cls, parent, info, instance, data):
        instance.reporter = info.context.user   # reporter is the logged user
+       if (Community.objects.get(pk=data['community']['connect']['id']['exact']).reports.filter(reporter__pk=instance.reporter.pk).exists()):
+         raise GraphQLError("You have reported this community Already")
+       
     @classmethod
     def before_update(cls, parent, info, instance, data):
         pass
