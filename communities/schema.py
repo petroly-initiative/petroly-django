@@ -9,7 +9,7 @@ from graphene_django_crud.converter import convert_django_field
 from graphene_django_crud.input_types import FileInput
 from graphene_django_crud.base_types import File
 from graphene_django_crud.utils import is_required
-from .models import Community
+from .models import Community, Report
 from graphql_jwt.decorators import login_required
 from cloudinary.models import CloudinaryField
 from cloudinary.uploader import upload_image
@@ -101,17 +101,43 @@ class CommunityType(DjangoGrapheneCRUD):
     #     return None
 
 
+class ReportType(DjangoGrapheneCRUD):
+    class Meta:
+        model = Report
+        input_exclude_fields = ('reporter')
+
+
+    @classmethod
+    @login_required
+    def after_mutate(cls, parent, info, instance: Community, data):
+        pass
+    
+    @classmethod
+    def before_create(cls, parent, info, instance, data):
+       instance.reporter = info.context.user   # reporter is the logged user
+    @classmethod
+    def before_update(cls, parent, info, instance, data):
+        pass
+
+
+
+
 class Query(graphene.ObjectType):
     community = CommunityType.ReadField()
     communities = CommunityType.BatchReadField()
+    report = ReportType.ReadField()
+    reports = ReportType.BatchReadField()
     has_liked_community = graphene.Boolean(id=graphene.ID()) 
+    has_reproted_community = graphene.Boolean(id=graphene.ID()) 
 
     @staticmethod
     @login_required
     def resolve_has_liked_community(parent, info, id): # TODO document this query
         return Community.objects.filter(pk=id, likes__pk=info.context.user.pk).exists()
-  
-
+    @staticmethod  # TODO Make this one work
+    @login_required
+    def resolve_has_reproted_community(parent, info, id): # TODO document this query
+        return Community.objects.get(pk=id).reports.filter(reporter__pk=info.context.user.pk).exists()
 class ToggleLikeCommunity(graphene.Mutation):
     class Arguments:
         ID = graphene.ID()
@@ -140,6 +166,9 @@ class Mutation(graphene.ObjectType):
     community_create = CommunityType.CreateField()
     community_update = CommunityType.UpdateField()
     community_delete = CommunityType.DeleteField()
+    report_create    = ReportType.CreateField()
+    report_update    = ReportType.UpdateField()
+    report_delete    = ReportType.DeleteField()
 
     toggle_like_community = ToggleLikeCommunity.Field(
         description='This will toggle the community like for the logged user')

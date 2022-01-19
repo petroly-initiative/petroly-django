@@ -67,12 +67,11 @@ class Report(models.Model):
         ('link', _('invalidLink')),
         ('other', _('other')),
     )
-    reporter = models.OneToOneField(
+    reporter = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        primary_key=True,
     )
     reason = models.CharField(_('Reason'), max_length = 8, choices = reasons)
-    other_reason = models.CharField(_('Other_reason'), max_length=10, default="", blank=True) 
+    other_reason = models.CharField(_('Other_reason'), max_length=100, default="", blank=True) 
     community = models.ForeignKey(Community, on_delete=models.CASCADE,
-        related_name='reports', verbose_name=_("community"), null=True)
+        related_name='reports', verbose_name=_("community"))
