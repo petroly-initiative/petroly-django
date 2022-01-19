@@ -5,7 +5,6 @@ class HideIntrospectMiddleware:
     return None
     """
     def resolve(self, next, root, info, **args):
-        print(info.field_name)
-        if info.field_name == '__schema' or info.field_name == '__type':
+        if info.field_name == '__schema':
             return None
         return next(root, info, **args)
