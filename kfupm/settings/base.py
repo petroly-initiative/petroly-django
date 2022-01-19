@@ -194,9 +194,6 @@ GRAPHQL_JWT = {
 GRAPHQL_AUTH = {
     "ACTIVATION_PATH_ON_EMAIL": "confirm",
     "PASSWORD_RESET_PATH_ON_EMAIL": "password-reset",
-    "EMAIL_TEMPLATE_ACTIVATION": "activation_email.html",
-    "EMAIL_TEMPLATE_ACTIVATION_RESEND": "activation_email.html",
-    "EMAIL_TEMPLATE_PASSWORD_RESET": "password_reset_email.html",
     "EMAIL_TEMPLATE_VARIABLES": {
         "frontend_domain": "petroly.co"
     }
