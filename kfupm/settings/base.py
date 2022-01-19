@@ -167,6 +167,7 @@ AUTHENTICATION_BACKENDS = [
 GRAPHENE = {
     'SCHEMA': 'kfupm.schema.schema',
     'MIDDLEWARE': [
+        'middleware.schema.HideIntrospectMiddleware',
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
 }
