@@ -8,6 +8,6 @@ class EvaluationAdmmin(admin.ModelAdmin):
 
 @admin.register(Instructor)
 class InstructorAdmin(admin.ModelAdmin):
-
+    search_fields = ['name']
     list_display = ['name', 'department']
     list_filter = ['department']
