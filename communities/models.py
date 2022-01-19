@@ -67,7 +67,7 @@ class Report(models.Model):
         ('link', _('invalid link')),
         ('other', _('other')),
     )
-    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_on = models.DateField(_("Created on"), auto_now_add=True)
     reason = models.CharField(_('Reason'), max_length = 8, choices = reasons)
     other_reason = models.CharField(_('Other_reason'), max_length=100, default="", blank=True) 
