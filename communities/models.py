@@ -49,7 +49,7 @@ class Community(models.Model):
         related_name='owned_communities', verbose_name=_("owner"), null=True)
 
     def __str__(self):
-        return f'{self.name}, {self.link}'
+        return f'{self.name}'
 
 # This Should be in report model
 # @receiver(m2m_changed, sender=Community.reports.through)
@@ -63,14 +63,15 @@ class Community(models.Model):
             
 class Report(models.Model):
     reasons = (
-        ('content', _('Content')),
-        ('link', _('invalidLink')),
+        ('content', _('inappropriate content')),
+        ('link', _('invalid link')),
         ('other', _('other')),
     )
     reporter = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
+    created_on = models.DateField(_("Created on"), auto_now_add=True)
     reason = models.CharField(_('Reason'), max_length = 8, choices = reasons)
     other_reason = models.CharField(_('Other_reason'), max_length=100, default="", blank=True) 
     community = models.ForeignKey(Community, on_delete=models.CASCADE,
