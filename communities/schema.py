@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 import graphene
-from graphene import Field
+from graphene import Field, String, Boolean, List, ID
 from graphql import GraphQLError
 from django.contrib.auth.models import User 
 from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
@@ -78,26 +78,32 @@ class CommunityType(DjangoGrapheneCRUD):
 class ReportType(DjangoGrapheneCRUD):
     class Meta:
         model = Report
-        input_exclude_fields = ('reporter')
-
-
-    @classmethod
-    @login_required
-    def after_mutate(cls, parent, info, instance: Community, data):
-        pass
+        input_exclude_fields = ('reporter', 'created_on')
     
     @classmethod
+    @login_required
     def before_create(cls, parent, info, instance, data):
        instance.reporter = info.context.user   # reporter is the logged user
        community = Community.objects.get(pk=data['community']['connect']['id']['exact'])
        if (Report.objects.filter(reporter=instance.reporter, community=community).exists()):
          raise GraphQLError("You have reported this community Already")
-       
-    @classmethod
-    def before_update(cls, parent, info, instance, data):
-        pass
 
 
+class InteractedCommunityMutation(graphene.Mutation):
+    class Arguments:
+        ID = graphene.ID(required=True)
+
+    liked = Field(Boolean)
+    reported = Field(Boolean)
+
+    @staticmethod
+    @login_required
+    def mutate(root, info, ID):
+        user = info.context.user
+        interactions = {}
+        interactions['liked'] = Community.objects.filter(pk=ID, likes=user).exists()
+        interactions['reported'] = Community.objects.filter(pk=ID, reports__reporter=user).exists()
+        return InteractedCommunityMutation(**interactions)
 
 
 class Query(graphene.ObjectType):
@@ -105,17 +111,8 @@ class Query(graphene.ObjectType):
     communities = CommunityType.BatchReadField()
     report = ReportType.ReadField()
     reports = ReportType.BatchReadField()
-    has_liked_community = graphene.Boolean(id=graphene.ID()) 
-    has_reproted_community = graphene.Boolean(id=graphene.ID()) 
 
-    @staticmethod
-    @login_required
-    def resolve_has_liked_community(parent, info, id): # TODO document this query
-        return Community.objects.filter(pk=id, likes__pk=info.context.user.pk).exists()
-    @staticmethod  # TODO Make this one work
-    @login_required
-    def resolve_has_reproted_community(parent, info, id): # TODO document this query
-        return Community.objects.get(pk=id).reports.filter(reporter__pk=info.context.user.pk).exists()
+
 class ToggleLikeCommunity(graphene.Mutation):
     class Arguments:
         ID = graphene.ID()
@@ -144,9 +141,9 @@ class Mutation(graphene.ObjectType):
     community_create = CommunityType.CreateField()
     community_update = CommunityType.UpdateField()
     community_delete = CommunityType.DeleteField()
+    
     report_create    = ReportType.CreateField()
-    report_update    = ReportType.UpdateField()
-    report_delete    = ReportType.DeleteField()
 
+    has_interacted_community = InteractedCommunityMutation.Field()
     toggle_like_community = ToggleLikeCommunity.Field(
         description='This will toggle the community like for the logged user')
