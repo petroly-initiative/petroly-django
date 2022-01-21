@@ -4,6 +4,8 @@ from .models import Instructor, Evaluation
 
 @admin.register(Evaluation)
 class EvaluationAdmmin(admin.ModelAdmin):
+    ordering = ["date"]
+    date_hierarchy = "date"
     search_fields = ["instructor__name"]
     list_display = ["user", "instructor", "comment", "date"]
 
