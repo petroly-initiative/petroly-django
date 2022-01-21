@@ -8,22 +8,31 @@ from django.contrib.auth.admin import UserAdmin
 from graphql_auth.models import UserStatus
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
-# Register your models here.
+
 
 @admin.decorators.display(description="Verified", boolean=True)
 def is_verified(obj):
     return obj.status.verified
 
+
 @admin.action(description="Send them the message email")
 def send_message_email(self, request, queryset):
-    with open('./templates/message_email.html', 'r') as f:
+    with open("./templates/message_email.html", "r") as f:
         html = f.read()
         for user in queryset:
-            send_mail("مبادرة بترولي تشكرك", message=None, from_email='support@petroly.co', 
-                html_message=html, recipient_list=[user.email, ])
+            send_mail(
+                "مبادرة بترولي تشكرك",
+                message=None,
+                from_email="support@petroly.co",
+                html_message=html,
+                recipient_list=[
+                    user.email,
+                ],
+            )
             print(user.email)
 
-@admin.action(description='Create a UserStatus object')
+
+@admin.action(description="Create a UserStatus object")
 def create_status(self, request, queryset):
     for user in queryset:
         try:
@@ -32,10 +41,11 @@ def create_status(self, request, queryset):
         except Exception as e:
             print(e)
 
-admin.site.site_title = 'Petroly'
-admin.site.index_title = 'Administration'
-admin.site.site_header = 'Petroly Administration'
-admin.site.login_template = 'registration/login.html'
+
+admin.site.site_title = "Petroly"
+admin.site.index_title = "Administration"
+admin.site.site_header = "Petroly Administration"
+admin.site.login_template = "registration/login.html"
 UserAdmin.list_display = ["username", "email", "is_staff", is_verified, "date_joined"]
 UserAdmin.actions += [send_message_email, create_status]
 
@@ -43,7 +53,7 @@ UserAdmin.actions += [send_message_email, create_status]
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
 
-    list_display = ['user', 'major', 'year']
+    list_display = ["user", "major", "year"]
 
 
 # app = apps.get_app_config('graphql_auth')
@@ -54,10 +64,10 @@ class ProfileAdmin(admin.ModelAdmin):
 @admin.register(UserStatus)
 class UserStatusAdmin(admin.ModelAdmin):
 
-    list_display = ['user', 'verified', 'archived']
-    list_filter = ['verified']
-    actions = ['make_verified', 'make_unverified', 'make_archived', 'make_unarchived']
-    
+    list_display = ["user", "verified", "archived"]
+    list_filter = ["verified"]
+    actions = ["make_verified", "make_unverified", "make_archived", "make_unarchived"]
+
     def make_verified(self, request, queryset):
         queryset.update(verified=True)
 
