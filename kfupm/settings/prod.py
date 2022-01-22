@@ -1,4 +1,6 @@
 from .base import *
+from .constants import COSTOM_LOGGING
+
 
 from pathlib import Path
 import dj_database_url 
@@ -74,14 +76,7 @@ IGNORABLE_404_URLS = [
     re.compile(r'^/robots\.txt$'),
     re.compile(r'^/ads\.txt$'),
 ]
-LOGGING = {
-    'filters': {
-        'require_not_maintenance_mode_503': {
-            '()': 'maintenance_mode.logging.RequireNotMaintenanceMode503',
-        },
-    },
-    'handlers': {
-    },
-}
+LOGGING = COSTOM_LOGGING
+
 
 django_heroku.settings(locals())
