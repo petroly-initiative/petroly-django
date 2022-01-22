@@ -98,7 +98,7 @@ MAINTENANCE_MODE = None
 MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 MAINTENANCE_MODE_IGNORE_TESTS = True
-MAINTENANCE_MODE_IGNORE_URLS = ['/endpoint']
+MAINTENANCE_MODE_IGNORE_URLS = ['/endpoint', '/account/login/']
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
