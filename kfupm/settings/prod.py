@@ -74,5 +74,12 @@ IGNORABLE_404_URLS = [
     re.compile(r'^/robots\.txt$'),
     re.compile(r'^/ads\.txt$'),
 ]
+LOGGING = {
+    'filters': {
+        'require_not_maintenance_mode_503': {
+            '()': 'maintenance_mode.logging.RequireNotMaintenanceMode503',
+        },
+    },
+}
 
 django_heroku.settings(locals())
