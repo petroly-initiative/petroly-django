@@ -80,6 +80,8 @@ LOGGING = {
             '()': 'maintenance_mode.logging.RequireNotMaintenanceMode503',
         },
     },
+    'handlers': {
+    },
 }
 
 django_heroku.settings(locals())
