@@ -10,7 +10,7 @@ class CommunityAdmin(admin.ModelAdmin):
     date_hierarchy = "date"
     list_display = ["name", "verified", "archived", "date", "owner"]
     list_filter = ["verified", "archived"]
-    actions = ["make_verified", "make_unverified", "make_archived"]
+    actions = ["make_verified", "make_unverified", "make_archived", "make_unarchived"]
     search_fields = ["name"]
     filter_horizontal = [
         "likes",
