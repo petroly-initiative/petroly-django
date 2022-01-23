@@ -1,6 +1,6 @@
 from tabnanny import verbose
 from django.db import models
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import receiver
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -50,16 +50,6 @@ class Community(models.Model):
 
     def __str__(self):
         return f'{self.name}'
-
-# This Should be in report model
-# @receiver(m2m_changed, sender=Community.reports.through)
-# def archive_community(sender, instance, action, **kwargs):
-#     if action == 'post_add':
-#         num = instance.reports.count()  # count of reports
-
-#         if num >= 2:
-#             instance.archived = True
-#             instance.save()
             
 class Report(models.Model):
     reasons = (
@@ -73,3 +63,10 @@ class Report(models.Model):
     other_reason = models.CharField(_('Other_reason'), max_length=100, default="", blank=True) 
     community = models.ForeignKey(Community, on_delete=models.CASCADE,
         related_name='reports', verbose_name=_("community"))
+
+@receiver(post_save, sender=Report)
+def archive_community(sender, instance, created, **kwargs):
+    """To archieve a community if it has many reports"""
+    if created and instance.community.reports.count() >= 3:
+        instance.community.archived = True
+        instance.community.save()
