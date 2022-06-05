@@ -131,7 +131,7 @@ class RegisterView(LoginView, forms.Form):
                 # Check wether the user is verified
                 user = User.objects.get(username=request.POST.get('username'))
                 try:
-                    verified = user.status.verified
+                    verified = user.status.verified or user.is_superuser
                 except:
                     # For old accounts that has no `Status` object
                     verified = True
