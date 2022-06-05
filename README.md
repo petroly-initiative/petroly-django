@@ -27,7 +27,6 @@ To clone this repo:
    ```
 4) Open VS Code, then from the top menu `File > Open` Folder and navigate to Petroly.
 
-<!-- ### Setup Instructions
 
 Please, refer to these documents for each module setup.
 Once you clone this repo you'll have to use each module individually.
@@ -109,6 +108,4 @@ Refer to [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 
 Examples :
 `main_view.python`
 `settings_controller.python`
-dd
-
 
