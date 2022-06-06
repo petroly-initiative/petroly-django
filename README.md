@@ -15,17 +15,59 @@ Steps:
 3) Move to the directory where you want. For example:
 4) Clone the repo that you forked:
 
-   ```bash
+   ```shell
    git clone https://github.com/YOUR_NAME/petroly.git
    ```
 
 5) Open a new VS Code window, then drag & drop the cloned folder into VS Code.
 
-### The main branch
+### Setup python env
+
+We really prefer to set up your python env:
+
+1) install latest python 3.9
+2) create env
+
+   ```shell
+   python3 -m venv env
+   ```
+
+3) activate env
+
+   ```shell
+   source env/bin/activate
+   ```
+
+4) install `requirements.txt`
+
+   ```shell
+   pip install -r requirements.txt
+   ```
+
+   If you face an error in installing `psycopg2-binary`, delete first line temporarily
+   from `` file. Then repeat installing.
+   > This package is meant for production only. not needed in dev stage.
+
+### Run Django
+
+1) For first time you need to create a SQLite database, by running the command
+
+   ```shell
+   python manage.py migrate
+   ```
+
+2) Run the server
+
+   ```shell
+   python manage.py runserver
+   ```
+
+Done, enjoy 🤩.
+
+## The main branch
 
 The main branch is the one that gets deployed into Heroku automaticaly,
 once any commit detected.
-> **Please, do not pull or push any code to this branch** without an approve.
 
 ## Contribute to This Project
 
