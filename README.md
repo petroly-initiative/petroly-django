@@ -21,6 +21,9 @@ This is Petroly backend for our website [Visit us](https://petroly.co)
     <a href="https://www.heroku.com" target="_blank" rel="noreferrer">
         <img src="https://brand.heroku.com/static/media/heroku-logo-solid.ab0c1b46.svg" alt="postgresql" width="40" height="40" />
     </a>
+    <a href="https://www.djangoproject.com" target="_blank" rel="noreferrer">
+        <img src="https://static.djangoproject.com/img/logos/django-logo-negative.png" alt="postgresql" height="40" />
+    </a>
 </p>
 
 ## Project Setup
