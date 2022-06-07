@@ -24,6 +24,9 @@ This is Petroly backend for our website [Visit us](https://petroly.co)
     <a href="https://www.djangoproject.com" target="_blank" rel="noreferrer">
         <img src="https://static.djangoproject.com/img/logos/django-logo-negative.png" alt="postgresql" height="40" />
     </a>
+    <a href="https://cloudinary.com" target="_blank" rel="noreferrer">
+        <img src="https://res.cloudinary.com/cloudinary-marketing/image/upload/v1638385862/cloudinary_cloud_glyph_blue_png.png" alt="postgresql" height="40" />
+    </a>
 </p>
 
 ## Project Setup
