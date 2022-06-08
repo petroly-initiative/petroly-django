@@ -28,7 +28,7 @@ class Profile(models.Model):
     # Additional fields
     profile_pic = CloudinaryField(
         _('profile picture'), 
-        default='https://res.cloudinary.com/petroly-initiative/image/upload/v1622359053/profile_pics/blank_profile.png',
+        default='https://res.cloudinary.com/petroly-initiative/image/upload/v1622359053/profile_pics/blank_profile',
         blank=True,
         max_length=350,
     )
