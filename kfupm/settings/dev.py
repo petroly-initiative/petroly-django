@@ -8,7 +8,7 @@ import cloudinary
 env = environ.Env()
 env.read_env()
 
-SECRET_KEY = env.str("SECRET_KEY", default='')
+SECRET_KEY = 'yur&ad_w+9v+f25z@c@@t=yy(hht-!^08@a+4f6^m-%mn+#+jt'
 
 DEBUG = True
 
