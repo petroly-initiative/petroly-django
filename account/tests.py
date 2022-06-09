@@ -1,13 +1,12 @@
-import profile
-from django.test import TestCase, Client, TransactionTestCase
+from django.test import TestCase, TransactionTestCase
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
-from django.conf import settings
-import json
+from cloudinary.uploader import upload_image
 
-from account.models import Profile
 
+from .models import Profile
+from data import departments, years
 
 
 class UserTestCase(TransactionTestCase):
@@ -30,10 +29,6 @@ class ProfileTestCase(UserTestCase):
     Test case for `Profile` model.
     '''
 
-    def setUp(self) -> None:
-        # once user is created, a profile is created
-        super().setUp()
-
     def test_auto_create_profile(self):
         # try to get the user's profile
         self.assertTrue(hasattr(self.user, 'profile'))
@@ -49,13 +44,6 @@ class ProfileTestCase(UserTestCase):
     def test_crud_prfile(self):
         # Note User:Profile is 1:1 relationship
         # user cannot create profile without a User object
-        data = {
-            'profile_pic': None,
-            'major': None,
-            'year': None,
-            'language': 'ar-SA',
-            'theme': 'dark',
-        }
 
         # create another user
         new_user = get_user_model().objects.create_user(
@@ -79,6 +67,35 @@ class ProfileTestCase(UserTestCase):
 
         with self.assertRaises(ObjectDoesNotExist):
             get_user_model().objects.get(username='sad-orea')
+        
+        
+        # update profile
+        origin_img_url = 'https://res.cloudinary.com/petroly-initiative/image/upload/v1622359053/profile_pics/blank_profile.png'
+        res = upload_image(
+            origin_img_url,
+            folder="profile_pics/test/",
+            public_id=self.user.username,
+            overwrite=True,
+            invalidate=True,
+            transformation=[{"width": 200, "height": 200, "crop": "fill"}],
+            format="jpg",
+        )
+
+        self.user.profile.profile_pic = res
+        self.user.profile.major = departments[7][0]
+        self.user.profile.year = years[2][0]
+        self.user.profile.language = 'ar-SA'
+        self.user.profile.theme = 'dark'
+        self.user.profile.save()
+
+        self.assertEqual(self.user.profile.profile_pic.public_id, f'profile_pics/test/{self.user.username}')
+        self.assertEqual(self.user.profile.profile_pic.metadata['original_filename'], 'blank_profile')
+        self.assertEqual(self.user.profile.profile_pic.metadata['width'], 200)
+        self.assertEqual(self.user.profile.profile_pic.metadata['format'], 'jpg')
+        self.assertEqual(self.user.profile.major, departments[7][0])
+        self.assertEqual(self.user.profile.year, years[2][0])
+        self.assertEqual(self.user.profile.language, 'ar-SA')
+        self.assertEqual(self.user.profile.theme, 'dark')
 
 
 class UserRegisterTestCase(TestCase):
