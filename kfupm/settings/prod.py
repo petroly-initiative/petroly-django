@@ -5,9 +5,8 @@ from .constants import COSTOM_LOGGING
 from pathlib import Path
 import dj_database_url 
 import django_heroku
+import cloudinary
 import os
-import cloudinary
-import cloudinary
 import re
 
 # Extra app
