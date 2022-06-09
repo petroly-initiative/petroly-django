@@ -44,7 +44,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.common.BrokenLinkEmailsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'maintenance_mode.middleware.MaintenanceModeMiddleware',
 ]
 
