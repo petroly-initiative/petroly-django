@@ -10,7 +10,6 @@ import os
 import re
 
 # Extra app
-
 INSTALLED_APPS += [
     'django.contrib.admindocs',
 ]
@@ -51,22 +50,12 @@ cloudinary.config(
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+DATABASES = {
+    'default': dj_database_url.config(conn_max_age=500)
+}
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-
-else:
-    DATABASES = {
-        'default': dj_database_url.config(conn_max_age=500)
-    }
 
 STATIC_URL = '/static/'
-
 MEDIA_URL = '/media/'
 
 # To get Email when >500 error happens
