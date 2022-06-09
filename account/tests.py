@@ -103,3 +103,4 @@ class UserRegisterTestCase(TestCase):
     def setUp(self) -> None:
         super().setUp()
 
+    
