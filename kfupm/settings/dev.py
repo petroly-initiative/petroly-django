@@ -14,17 +14,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-EMAIL_HOST = env.str("EMAIL_HOST")
-EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+EMAIL_HOST = 'mail.privateemail.com'
+EMAIL_HOST_USER = 'support@petroly.co'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
-EMAIL_PORT = env.int("EMAIL_PORT")
-EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", "")
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
 
 
 cloudinary.config(
-    cloud_name = env.str("CLOUDINARY_NAME", ''), 
-    api_key = env.str("CLOUDINARY_API_KEY", ''), 
+    cloud_name = 'petroly-initiative',
+    api_key = '777263134962661',
     api_secret = env.str("CLOUDINARY_API_SECRET", '') 
 )
 
