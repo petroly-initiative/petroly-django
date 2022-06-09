@@ -7,7 +7,7 @@ import dj_database_url
 import django_heroku
 import os
 import cloudinary
-from cloudinary import config
+import cloudinary
 import re
 
 # Extra app
@@ -35,18 +35,18 @@ CSRF_COOKIE_SECURE = True
 
 CORS_ALLOWED_ORIGINS = ['https://petroly.vercel.app', 'https://react.petroly.co', 'https://petroly.co']
 
-EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST = 'mail.privateemail.com'
+EMAIL_HOST_USER = 'support@petroly.co'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-EMAIL_PORT = os.environ.get("EMAIL_PORT")
-EMAIL_USE_SSL = (os.environ.get("EMAIL_USE_SSL") == 'True')
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+
 
 # Clouddinary: for media
-
-config(
-    cloud_name = os.environ.get("CLOUDINARY_NAME", ''), 
-    api_key = os.environ.get("CLOUDINARY_API_KEY", ''), 
+cloudinary.config(
+    cloud_name = 'petroly-initiative',
+    api_key = '777263134962661',
     api_secret = os.environ.get("CLOUDINARY_API_SECRET", '') 
 )
 
