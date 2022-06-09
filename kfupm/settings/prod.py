@@ -1,3 +1,4 @@
+import warnings
 from .base import *
 from .constants import COSTOM_LOGGING
 
@@ -10,6 +11,7 @@ import os
 import re
 
 # Extra app
+
 INSTALLED_APPS += [
     'django.contrib.admindocs',
 ]
@@ -50,6 +52,8 @@ cloudinary.config(
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+# Check if DATABASE_URL is provided
+# otherwise fallback to basic db
 DATABASES = {
     'default': dj_database_url.config(conn_max_age=500)
 }
