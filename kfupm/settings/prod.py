@@ -24,9 +24,9 @@ MIDDLEWARE += [
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", default='')
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY", default='')
+SECRET_KEY = os.environ.get("SECRET_KEY", '')
 
-DEBUG = (os.environ.get("DEBUG", default=True) == 'True')
+DEBUG = os.environ.get("DEBUG", 'False') == 'True'
 
 ALLOWED_HOSTS = ['.petroly.co', '.petroly-main.herokuapp.com']
 SECURE_SSL_REDIRECT = True
