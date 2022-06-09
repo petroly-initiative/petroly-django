@@ -24,7 +24,7 @@ MIDDLEWARE += [
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", default='')
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY", '')
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.environ.get("DEBUG", 'False') == 'True'
 
