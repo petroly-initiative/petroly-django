@@ -1,4 +1,7 @@
+from http import client
 import json
+from pydoc import cli
+from django.conf import settings
 from django.core import mail
 from django.test import TestCase, TransactionTestCase, Client
 from django.contrib.auth import get_user_model
@@ -471,4 +474,58 @@ class AccountGraphQLTestCase(TestCase):
         self.assertTrue(data["passwordReset"]["success"])
 
     def test_profile_update(self):
-        ...
+        profileUpdate = """
+        mutation {
+            profileUpdate(
+            where: { id: { exact: %s } }
+            input: { language: "ar-SA", theme: "dark" }
+            ) {
+            ok
+            errors {
+                field
+                messages
+            }            
+            result {
+                id
+                theme
+                language
+            }
+            }
+        }
+        """
+
+        # update profile info, with logged out user; causes error
+        res = self.client.post(
+            self.endpoint,
+            data={"query": profileUpdate % self.user.profile.pk},
+            content_type="application/json",
+        )
+        self.assertEqual(res.status_code, 200)
+        errors = json.loads(res.content)["errors"]
+        self.assertEqual(errors[0]['message'], 'You do not have permission to perform this action')
+        self.assertEqual(res.wsgi_request.content_type, "application/json")
+
+        # login the user and pass its token in the HTTP header 
+        self.client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[1])
+        # update other user's profile
+        res = self.client.post(
+            self.endpoint,
+            data={"query": profileUpdate % self.user2.profile.pk},
+            content_type="application/json",
+        )
+        self.assertEqual(res.status_code, 200)
+        errors = json.loads(res.content)["errors"]
+        self.assertEqual(errors[0]['message'], "You don't own this Profile")
+        
+        # update the user profile
+        res = self.client.post(
+            self.endpoint,
+            data={"query": profileUpdate % self.user.profile.pk},
+            content_type="application/json",
+        )
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.content)["data"]['profileUpdate']
+        self.assertEqual(res.wsgi_request.content_type, "application/json")
+        self.assertTrue(data["ok"])
+        self.assertEqual(data['result']['language'], 'ar-SA')
+        self.assertEqual(data['result']['theme'], 'dark')
