@@ -209,6 +209,14 @@ class AccountGraphQLTestCase(TestCase):
         )
         cls.user.status.verified = True
         cls.user.status.save()
+        # another user to test reset password
+        cls.user2 = get_user_model().objects.create_user(
+            username="no-username",
+            password="im-done",
+            email="siuuu@cccc.com",
+        )
+        cls.user2.status.verified = True
+        cls.user2.status.save()
 
     def test_user_cycle(self):
         register = """
@@ -411,9 +419,56 @@ class AccountGraphQLTestCase(TestCase):
         self.assertFalse(data["refreshToken"]["success"])
 
     def test_resset_password(self):
-        # TODO send password email request
-        # TODO set new pass
-        pass
+        sendPasswordResetEmail = """
+        mutation {
+            sendPasswordResetEmail(email: "%s") {
+            success
+            }
+        }
+        """
+        passwordReset = """
+        mutation {
+            passwordReset(
+            token: "%s"
+            newPassword1: "new-day-new-strugles"
+            newPassword2: "new-day-new-strugles"
+            ) {
+            success
+            }
+        }
+        """
+
+        # send resset password email
+        res = self.client.post(
+            self.endpoint,
+            data={"query": sendPasswordResetEmail % self.user2.email},
+            content_type="application/json",
+        )
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.content)["data"]
+        self.assertEqual(res.wsgi_request.content_type, "application/json")
+        self.assertTrue(data["sendPasswordResetEmail"]["success"])
+        self.assertEqual(len(mail.outbox), 1)  # there is an email sent
+        self.assertEqual(mail.outbox[0].subject, "Reset your password on petroly.co")
+        self.assertIn(self.user2.email, mail.outbox[0].to)
+
+        # extract the token from the resset-password email
+        token = ""
+        for l in str(mail.outbox[0].message()).split("\n"):
+            l = l.strip().removesuffix('"')
+            if "petroly.co/password-reset" in l:
+                token = l.split("/")[-1]
+                break
+        # resset password
+        res = self.client.post(
+            self.endpoint,
+            data={"query": passwordReset % token},
+            content_type="application/json",
+        )
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.content)["data"]
+        self.assertEqual(res.wsgi_request.content_type, "application/json")
+        self.assertTrue(data["passwordReset"]["success"])
 
     def test_profile_update(self):
         ...
