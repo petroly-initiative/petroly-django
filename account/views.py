@@ -94,6 +94,8 @@ class IndexView(TemplateView):
     template_name = "index.html"
 
 
+# NOTE this view is not used,  instesad `django.contrib.auth` is used
+# NOTE cannot regsiter a user anymore
 class RegisterView(LoginView, forms.Form):
     '''
     All the Login and Registration is done here.
