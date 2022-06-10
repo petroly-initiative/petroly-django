@@ -44,7 +44,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.common.BrokenLinkEmailsMiddleware',
-    'maintenance_mode.middleware.MaintenanceModeMiddleware',
+    'account.middleware.AllowOnlyStaffMiddleware',
 ]
 
 ROOT_URLCONF = 'kfupm.urls'
@@ -93,7 +93,7 @@ CONTEXT_PROCESSORS = [
     'maintenance_mode.context_processors.maintenance_mode'
 ]
 
-MAINTENANCE_MODE = True
+MAINTENANCE_MODE = False
 MAINTENANCE_MODE_STATUS_CODE = 200
 MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
