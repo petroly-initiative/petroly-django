@@ -1,4 +1,5 @@
 import re
+import sys
 from urllib.parse import urlparse
 import requests
 
@@ -69,8 +70,19 @@ class AllowOnlyStaffMiddleware(MiddlewareMixin):
     This middleware used after authenticating middlewares, 
     to block non-staff users from some urls.
     '''
-    
-    
+
+    def is_testing(self):
+        '''To ignore testing.'''
+        
+        if (len(sys.argv) > 0 and 'runtests' in sys.argv[0]) \
+                or (len(sys.argv) > 1 and sys.argv[1] == 'test'):
+            # python runtests.py | python manage.py test | python
+            # setup.py test | django-admin.py test
+            return True
+        
+        else:
+            return False
+
     def process_response(self, request, response):
         ALLOWED_PATHS = [
             '/account/login/',
