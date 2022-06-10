@@ -7,7 +7,6 @@ from django.views.decorators.csrf import csrf_exempt
 urlpatterns = [
     
     path('', views.IndexView.as_view(), name='index'),
-    path('login/', views.RegisterView.as_view(), name='login'),
     path('', include('django.contrib.auth.urls')),
     path('profile/<int:pk>/', views.ProfileDetailView.as_view(), name='profile_detail'),
     path('profile/update/', views.ProfileUpdateView.as_view(), name='profile_form'),
