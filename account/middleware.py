@@ -74,6 +74,7 @@ class AllowOnlyStaffMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         ALLOWED_PATHS = [
             '/account/login/',
+            '/account/logout/',
             '/endpoint/',
         ]
 
