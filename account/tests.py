@@ -1,11 +1,14 @@
-from django.test import TestCase, TransactionTestCase
+from pprint import pp
+from django.test import TestCase, TransactionTestCase, Client
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
 from cloudinary.uploader import upload_image
+import django.contrib.auth.views as auth_views
 
 
 from .models import Profile
+from . import views
 from data import departments, years
 
 
@@ -97,6 +100,81 @@ class ProfileTestCase(UserTestCase):
         self.assertEqual(self.user.profile.language, 'ar-SA')
         self.assertEqual(self.user.profile.theme, 'dark')
 
+
+
+class AccountViewTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.client = Client()
+
+        # create fake user
+        cls.user = get_user_model().objects.create_user(
+            username = 'freshman',
+            email = 'sadness@kfupm.com',
+            password = 'stay-strong',
+        )
+        cls.admin = get_user_model().objects.create_user(
+            username = 'senior',
+            email = 'happieness@kfupm.com',
+            password = 'stay-whatsoever',
+            is_staff = True,
+        )
+
+    def test_forbidden_user(self):
+        # non admin user cannot open any page
+        # except the login page
+        res = self.client.get('/account/login/', follow=True)
+        
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.wsgi_request.path, '/account/login/')
+        self.assertTemplateUsed(res, 'registration/login.html')
+        self.assertEqual(res.resolver_match.func.__name__, auth_views.LoginView.as_view().__name__)
+
+        # login with wrong credientials user
+        res = self.client.post(
+            '/account/login/', follow=True, 
+            data={'username':'blah', 'password':'im tired writing tests'}
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertTemplateUsed(res, 'registration/login.html')
+
+        # login a non-staff user
+        res = self.client.post(
+            '/account/login/', follow=True, 
+            data={'username':'freshman', 'password':'stay-strong'}
+        )
+        self.assertEqual(res.status_code, 403)  # not allowed
+        self.assertEqual(res.wsgi_request.path, '/account/')
+        self.assertEqual(res.resolver_match.func.__name__, views.IndexView.as_view().__name__)
+
+        # logout this user
+        res = self.client.post('/account/logout/', follow=True)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.wsgi_request.path, '/account/logout/')
+        self.assertEqual(res.resolver_match.func.__name__, auth_views.LogoutView.as_view().__name__)
+
+
+    def test_staff_user(self):
+        # login a staff user
+        res = self.client.post(
+            '/account/login/', follow=True, 
+            data={'username':'senior', 'password':'stay-whatsoever'}
+        )
+        
+        self.assertEqual(res.status_code, 200)  # allowed
+        self.assertEqual(res.wsgi_request.path, '/account/')
+        self.assertEqual(res.resolver_match.func.__name__, views.IndexView.as_view().__name__)
+        
+        # logout this user
+        res = self.client.post('/account/logout/', follow=True)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.wsgi_request.path, '/account/logout/')
+        self.assertEqual(res.resolver_match.func.__name__, auth_views.LogoutView.as_view().__name__)
+
+        
 
 class UserRegisterTestCase(TestCase):
 
