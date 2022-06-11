@@ -1,3 +1,4 @@
+import base64
 from http import client
 import json
 from pydoc import cli
@@ -502,10 +503,12 @@ class AccountGraphQLTestCase(TestCase):
         )
         self.assertEqual(res.status_code, 200)
         errors = json.loads(res.content)["errors"]
-        self.assertEqual(errors[0]['message'], 'You do not have permission to perform this action')
+        self.assertEqual(
+            errors[0]["message"], "You do not have permission to perform this action"
+        )
         self.assertEqual(res.wsgi_request.content_type, "application/json")
 
-        # login the user and pass its token in the HTTP header 
+        # login the user and pass its token in the HTTP header
         self.client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[1])
         # update other user's profile
         res = self.client.post(
@@ -515,8 +518,8 @@ class AccountGraphQLTestCase(TestCase):
         )
         self.assertEqual(res.status_code, 200)
         errors = json.loads(res.content)["errors"]
-        self.assertEqual(errors[0]['message'], "You don't own this Profile")
-        
+        self.assertEqual(errors[0]["message"], "You don't own this Profile")
+
         # update the user profile
         res = self.client.post(
             self.endpoint,
@@ -524,8 +527,47 @@ class AccountGraphQLTestCase(TestCase):
             content_type="application/json",
         )
         self.assertEqual(res.status_code, 200)
-        data = json.loads(res.content)["data"]['profileUpdate']
+        data = json.loads(res.content)["data"]["profileUpdate"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["ok"])
-        self.assertEqual(data['result']['language'], 'ar-SA')
-        self.assertEqual(data['result']['theme'], 'dark')
+        self.assertEqual(data["result"]["language"], "ar-SA")
+        self.assertEqual(data["result"]["theme"], "dark")
+
+    # TODO test upload profile_pic
+    def test_profile_pic(self):
+        from graphene_file_upload.django.testing import file_graphql_query
+
+        profilePicUpdate = """      
+        mutation ($file: Upload!) {
+            profilePicUpdate(file: $file) {
+            success
+            }
+        }
+        """
+
+        # without loging in
+        res = file_graphql_query(
+            query=profilePicUpdate,
+            client=self.client,
+            files={"file": open("static/img/blank_profile.png", "rb")},
+            graphql_url=self.endpoint,
+        )
+        self.assertEqual(res.status_code, 200)
+        errors = json.loads(res.content)["errors"]
+        self.assertEqual(
+            errors[0]["message"], "You do not have permission to perform this action"
+        )
+        self.assertEqual(res.wsgi_request.content_type, "multipart/form-data")
+        
+        # loging in the user
+        self.client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[1])
+        res = file_graphql_query(
+            query=profilePicUpdate,
+            client=self.client,
+            files={"file": open("static/img/blank_profile.png", "rb")},
+            graphql_url=self.endpoint,
+        )
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.content)["data"]["profilePicUpdate"]
+        self.assertEqual(res.wsgi_request.content_type, "multipart/form-data")
+        self.assertTrue(data["success"])
