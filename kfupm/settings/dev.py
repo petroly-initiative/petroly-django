@@ -12,13 +12,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-EMAIL_HOST = 'mail.privateemail.com'
-EMAIL_HOST_USER = 'support@petroly.co'
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-
 
 cloudinary.config(
     cloud_name = 'petroly-initiative',
