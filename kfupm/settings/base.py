@@ -3,6 +3,8 @@ from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 import os
 
+from gqlauth.settings_type import GqlAuthSettings
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -124,22 +126,6 @@ LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'login'
 
 
-
-# Email verification
-def verified_callback(user):
-    user.status.verified = True
-    user.status.save()
-
-
-EMAIL_VERIFIED_CALLBACK = verified_callback
-EMAIL_FROM_ADDRESS = 'support@petroly.co'
-EMAIL_MAIL_SUBJECT = 'Confirm Your Email'
-EMAIL_MAIL_HTML = 'email_body.html'
-EMAIL_MAIL_PLAIN = 'email_body.txt'
-EMAIL_PAGE_TEMPLATE = 'email_done.html'
-EMAIL_PAGE_DOMAIN = 'https://www.petroly.co/'
-EMAIL_TOKEN_LIFE = 60 * 60 * 5
-
 EMAIL_HOST = 'mail.privateemail.com'
 EMAIL_HOST_USER = 'support@petroly.co'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
@@ -193,7 +179,6 @@ GRAPHQL_AUTH = {
     }
 }
 
-from gqlauth.settings_type import GqlAuthSettings
 
 GQL_AUTH = GqlAuthSettings(
     LOGIN_REQUIRED_FIELDS = ['username', 'password'],
