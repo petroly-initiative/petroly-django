@@ -18,14 +18,12 @@ from django.urls import path,include
 from django.contrib.staticfiles.urls import static
 from kfupm.settings import dev
 import debug_toolbar
-from graphene_django.views import GraphQLView
-from graphene_file_upload.django import FileUploadGraphQLView
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic.base import TemplateView 
 
-class PrivateGraphQLView(PermissionRequiredMixin, GraphQLView):
-    permission_required = "auth.view_user"
+from strawberry.django.views import GraphQLView
+from .schema import schema
 
 
 urlpatterns = [
@@ -36,8 +34,6 @@ urlpatterns = [
     path('evaluation/', include('evaluation.urls')),
     path('roommate/', include('roommate.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
-    path('maintenance-mode/', include('maintenance_mode.urls')),
-    path('endpoint/', csrf_exempt(FileUploadGraphQLView.as_view(graphiql=False))),
-    path('graphql/', csrf_exempt(PrivateGraphQLView.as_view(graphiql=True))),
+    path('endpoint/', csrf_exempt(GraphQLView.as_view(graphiql=False, schema=schema))),
     path("robots.txt",TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 ]
