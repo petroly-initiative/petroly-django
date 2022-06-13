@@ -158,16 +158,16 @@ GRAPHQL_JWT = {
     'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
     # 'JWT_ALLOW_ARGUMENT': True,
     "JWT_ALLOW_ANY_CLASSES": [
-        "graphql_auth.mutations.Register",
-        "graphql_auth.mutations.VerifyAccount",
-        "graphql_auth.mutations.ResendActivationEmail",
-        "graphql_auth.mutations.SendPasswordResetEmail",
-        "graphql_auth.mutations.PasswordReset",
-        "graphql_auth.mutations.ObtainJSONWebToken",
-        "graphql_auth.mutations.VerifyToken",
-        "graphql_auth.mutations.RefreshToken",
-        "graphql_auth.mutations.RevokeToken",
-        "graphql_auth.mutations.VerifySecondaryEmail",
+        "gqlauth.user.arg_mutations.Register",
+        "gqlauth.user.arg_mutations.VerifyAccount",
+        "gqlauth.user.arg_mutations.ResendActivationEmail",
+        "gqlauth.user.arg_mutations.SendPasswordResetEmail",
+        "gqlauth.user.arg_mutations.PasswordReset",
+        "gqlauth.user.arg_mutations.ObtainJSONWebToken",
+        "gqlauth.user.arg_mutations.VerifyToken",
+        "gqlauth.user.arg_mutations.RefreshToken",
+        "gqlauth.user.arg_mutations.RevokeToken",
+        "gqlauth.user.arg_mutations.VerifySecondaryEmail",
     ],
 }
 
@@ -185,4 +185,5 @@ GQL_AUTH = GqlAuthSettings(
     ALLOW_LOGIN_NOT_VERIFIED = False,
     LOGIN_REQUIRE_CAPTCHA = False,
     REGISTER_REQUIRE_CAPTCHA=False,
+    EMAIL_FROM="support@petroly.co"
 )
