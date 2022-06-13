@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from .schema import schema
 
 app_name = 'roommate'
 
