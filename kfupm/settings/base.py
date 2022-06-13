@@ -9,7 +9,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
 INSTALLED_APPS = [
-    'maintenance_mode',
     'account.apps.AccountConfig',
     'evaluation.apps.EvaluationConfig' ,
     'roommate.apps.RoommateConfig' ,
@@ -19,18 +18,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_filters',
-    'bootstrapform',
-    'widget_tweaks',
     'cloudinary',
     'django_email_verification',
-    'graphene_django',
-    'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
-    'graphql_auth',
-    'mathfilters',
     'forum',
     'communities',
     'corsheaders',
+    'strawberry.django',
+    'gqlauth',
+    'strawberry_django_jwt.refresh_token',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +57,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'maintenance_mode.context_processors.maintenance_mode',
             ],
         },
     },
@@ -89,16 +83,7 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
-CONTEXT_PROCESSORS = [
-    'maintenance_mode.context_processors.maintenance_mode'
-]
 
-MAINTENANCE_MODE = False
-MAINTENANCE_MODE_STATUS_CODE = 200
-MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True
-MAINTENANCE_MODE_IGNORE_SUPERUSER = True
-MAINTENANCE_MODE_IGNORE_TESTS = True
-MAINTENANCE_MODE_IGNORE_URLS = ['/endpoint', '/account/login/']
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -160,8 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
 AUTHENTICATION_BACKENDS = [
-    # 'graphql_jwt.backends.JSONWebTokenBackend',
-    'graphql_auth.backends.GraphQLAuthBackend',
+    "gqlauth.backends.GraphQLAuthBackend",
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -201,3 +185,12 @@ GRAPHQL_AUTH = {
         "frontend_domain": "petroly.co"
     }
 }
+
+from gqlauth.settings_type import GqlAuthSettings
+
+GQL_AUTH = GqlAuthSettings(
+    LOGIN_REQUIRED_FIELDS = ['username', 'password'],
+    ALLOW_LOGIN_NOT_VERIFIED = False,
+    LOGIN_REQUIRE_CAPTCHA = False,
+    REGISTER_REQUIRE_CAPTCHA=False,
+)

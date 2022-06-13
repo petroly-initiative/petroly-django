@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Profile
 from django.apps import apps
-from graphql_auth.models import UserStatus
+# from graphql_auth.models import UserStatus
 from django.contrib.auth.admin import UserAdmin
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
@@ -43,14 +43,14 @@ class UserAdminCostom(UserAdmin):
                 )
                 print(user.email)
 
-    @admin.action(description="Create a UserStatus object")
-    def create_status(self, request, queryset):
-        for user in queryset:
-            try:
-                obj = UserStatus.objects.get_or_create(user=user)
-                print(obj)
-            except Exception as e:
-                print(e)
+    # @admin.action(description="Create a UserStatus object")
+    # def create_status(self, request, queryset):
+    #     for user in queryset:
+    #         try:
+    #             obj = UserStatus.objects.get_or_create(user=user)
+    #             print(obj)
+    #         except Exception as e:
+    #             print(e)
 
 
 @admin.register(Profile)
@@ -64,21 +64,21 @@ class ProfileAdmin(admin.ModelAdmin):
 #     admin.site.register(model)
 
 
-@admin.register(UserStatus)
-class UserStatusAdmin(admin.ModelAdmin):
+# @admin.register(UserStatus)
+# class UserStatusAdmin(admin.ModelAdmin):
 
-    list_display = ["user", "verified", "archived"]
-    list_filter = ["verified"]
-    actions = ["make_verified", "make_unverified", "make_archived", "make_unarchived"]
+#     list_display = ["user", "verified", "archived"]
+#     list_filter = ["verified"]
+#     actions = ["make_verified", "make_unverified", "make_archived", "make_unarchived"]
 
-    def make_verified(self, request, queryset):
-        queryset.update(verified=True)
+#     def make_verified(self, request, queryset):
+#         queryset.update(verified=True)
 
-    def make_unverified(self, request, queryset):
-        queryset.update(verified=False)
+#     def make_unverified(self, request, queryset):
+#         queryset.update(verified=False)
 
-    def make_archived(self, request, queryset):
-        queryset.update(archived=True)
+#     def make_archived(self, request, queryset):
+#         queryset.update(archived=True)
 
-    def make_unarchived(self, request, queryset):
-        queryset.update(archived=False)
+#     def make_unarchived(self, request, queryset):
+#         queryset.update(archived=False)

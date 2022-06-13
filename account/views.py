@@ -6,9 +6,9 @@ from django.http.request import HttpRequest
 
 # needed imports
 from django import forms
-from graphql_auth.constants import Messages
-from graphql_auth.exceptions import TokenScopeError, UserAlreadyVerified
-from graphql_auth.models import UserStatus
+# from graphql_auth.constants import Messages
+# from graphql_auth.exceptions import TokenScopeError, UserAlreadyVerified
+# from graphql_auth.models import UserStatus
 from .forms import UserRegistrationForm, ProfileForm, UserForm
 from .models import Profile, User
 from django.http import *
@@ -48,19 +48,19 @@ class ActivateView(TemplateView):
     def get(self, request: HttpRequest, token: str, *args, **kwargs) -> HttpResponse:
         return render(request, 'email_confirm.html')
 
-    def post(self, request: HttpRequest, token: str, *args, **kwargs) -> HttpResponse:
-        try:
-            UserStatus.verify(token)
-            return render(request, 'email_done.html', context={'success':True})
-        except UserAlreadyVerified:
-            return render(request, 'email_done.html', context={'success':False, 
-                "messages":Messages.ALREADY_VERIFIED})
-        except SignatureExpired:
-            return render(request, 'email_done.html', context={'success':False, 
-                "messages":Messages.EXPIRED_TOKEN})
-        except (BadSignature, TokenScopeError):
-            return render(request, 'email_done.html', context={'success':False, 
-                "messages":Messages.INVALID_TOKEN})
+    # def post(self, request: HttpRequest, token: str, *args, **kwargs) -> HttpResponse:
+    #     try:
+    #         UserStatus.verify(token)
+    #         return render(request, 'email_done.html', context={'success':True})
+    #     except UserAlreadyVerified:
+    #         return render(request, 'email_done.html', context={'success':False, 
+    #             "messages":Messages.ALREADY_VERIFIED})
+    #     except SignatureExpired:
+    #         return render(request, 'email_done.html', context={'success':False, 
+    #             "messages":Messages.EXPIRED_TOKEN})
+    #     except (BadSignature, TokenScopeError):
+    #         return render(request, 'email_done.html', context={'success':False, 
+    #             "messages":Messages.INVALID_TOKEN})
 
 
 class ConfirmView(TemplateView):
