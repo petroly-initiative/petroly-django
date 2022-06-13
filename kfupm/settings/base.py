@@ -1,6 +1,7 @@
 from datetime import timedelta
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -139,6 +140,12 @@ EMAIL_PAGE_TEMPLATE = 'email_done.html'
 EMAIL_PAGE_DOMAIN = 'https://www.petroly.co/'
 EMAIL_TOKEN_LIFE = 60 * 60 * 5
 
+EMAIL_HOST = 'mail.privateemail.com'
+EMAIL_HOST_USER = 'support@petroly.co'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
 
 # Models
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
