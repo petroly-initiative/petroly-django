@@ -1,23 +1,19 @@
-from io import FileIO
 from cloudinary.models import CloudinaryField
-
-# import graphene
-# import graphene_django
-# from graphql import GraphQLError
-# from graphene import relay, ObjectType, String, Scalar
-# from graphene_django import DjangoObjectType
-# from graphene_django.filter import DjangoFilterConnectionField
-# from graphql_auth import mutations
-# from graphql_jwt.decorators import *
-# from graphene_file_upload.scalars import Upload
-# from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
-# from graphql_auth.models import UserStatus
-
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
+
 from .models import Profile
+from .types import UserType, ProfileType
+
 # from .utils import is_owner
+
 from cloudinary.uploader import upload_image
+
+
+import strawberry
+from gqlauth.user.queries import UserQueries
+from gqlauth.user import arg_mutations
+from typing import Optional
 
 
 # class StatusType(DjangoGrapheneCRUD):
@@ -103,24 +99,6 @@ from cloudinary.uploader import upload_image
 #     revoke_token = mutations.RevokeToken.Field()
 
 
-# class Query(graphene.ObjectType):
-#     """
-#     Main entry for all query type for `account` app.
-#     """
-
-#     # profile = ProfileType.ReadField()
-#     # profiles = ProfileType.BatchReadField()
-
-#     # user = UserType.ReadField()
-#     # users = UserType.BatchReadField()
-
-#     me = graphene.Field(UserType)
-
-#     @login_required
-#     def resolve_me(parent, info):
-#         return info.context.user
-
-
 # from graphene_file_upload.scalars import Upload
 
 
@@ -155,24 +133,9 @@ from cloudinary.uploader import upload_image
 #         return UploadMutation(success=True)
 
 
-# class Mutation(AuthMutation, graphene.ObjectType):
-#     """
-#     Main entry for all `Mutation` types for `account` app.
-#     It inherits from `AuthMutation`.
-#     """
-
-#     profile_pic_update = UploadMutation.Field()
-#     profile_update = ProfileType.UpdateField()
-
-
-
-import strawberry
-from gqlauth.user.queries import UserQueries
-from gqlauth.user import arg_mutations
-
 @strawberry.type
 class UserMutations:
-    token_auth = arg_mutations.ObtainJSONWebToken.Field # login mutation
+    token_auth = arg_mutations.ObtainJSONWebToken.Field  # login mutation
     verify_token = arg_mutations.VerifyToken.Field
     refresh_token = arg_mutations.RefreshToken.Field
     revoke_token = arg_mutations.RevokeToken.Field
@@ -190,3 +153,35 @@ class UserMutations:
     # swap_emails = arg_mutations.SwapEmails.Field
     # remove_secondary_email = arg_mutations.RemoveSecondaryEmail.Field
     # send_secondary_email_activation = arg_mutations.SendSecondaryEmailActivation.Field
+
+from gqlauth.backends import GraphQLAuthBackend
+gd = GraphQLAuthBackend()
+
+@strawberry.type
+class Query:
+    """
+    Main entry for all query type for `account` app.
+    """
+
+    @strawberry.django.field
+    def profile(self, info) -> Optional[ProfileType]:
+        user = info.context.request.user
+        if not user.is_anonymous:
+            return user.profile
+
+    @strawberry.django.field
+    def me(self, info) -> Optional[UserType]:
+        user = info.context.request.user
+        if not user.is_anonymous:
+            return user
+
+
+
+class Mutation(UserMutations):
+    """
+    Main entry for all `Mutation` types for `account` app.
+    It inherits from `AuthMutation`.
+    """
+
+    # profile_pic_update = UploadMutation.Field()
+    # profile_update = ProfileType.UpdateField()
