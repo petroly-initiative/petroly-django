@@ -142,14 +142,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# GraphQL
-GRAPHENE = {
-    'SCHEMA': 'kfupm.schema.schema',
-    'MIDDLEWARE': [
-        'middleware.schema.HideIntrospectMiddleware',
-        'graphql_jwt.middleware.JSONWebTokenMiddleware',
-    ],
-}
+
 
 GRAPHQL_JWT = {
     "JWT_VERIFY_EXPIRATION": True,
@@ -171,13 +164,6 @@ GRAPHQL_JWT = {
     ],
 }
 
-GRAPHQL_AUTH = {
-    "ACTIVATION_PATH_ON_EMAIL": "confirm",
-    "PASSWORD_RESET_PATH_ON_EMAIL": "password-reset",
-    "EMAIL_TEMPLATE_VARIABLES": {
-        "frontend_domain": "petroly.co"
-    }
-}
 
 
 GQL_AUTH = GqlAuthSettings(
@@ -185,5 +171,9 @@ GQL_AUTH = GqlAuthSettings(
     ALLOW_LOGIN_NOT_VERIFIED = False,
     LOGIN_REQUIRE_CAPTCHA = False,
     REGISTER_REQUIRE_CAPTCHA=False,
-    EMAIL_FROM="support@petroly.co"
+    EMAIL_FROM="support@petroly.co",
+    ACTIVATION_PATH_ON_EMAIL="confirm",
+    EMAIL_TEMPLATE_VARIABLES={
+        'frontend_domain': 'petroly.co'
+    },
 )
