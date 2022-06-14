@@ -377,6 +377,19 @@ class AccountGraphQLTestCase(TestCase):
             }
         }
         """
+        me = '''
+        query {
+            me{
+                username
+                profile{
+                    id
+                    user{
+                        username
+                    }
+                }
+            }
+        }        
+        '''
 
         res = self.client.post(
             self.endpoint,
@@ -415,6 +428,21 @@ class AccountGraphQLTestCase(TestCase):
         r_token = data["refreshPayload"]["refreshToken"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
+
+        # TODO ask for me with AUTHORIZATION header
+        res = self.client.post(
+            self.endpoint,
+            data={"query": me},
+            content_type="application/json",
+            HTTP_AUTHORIZATION='JWT ' + data['refreshPayload']['token'],
+        )
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.content)["data"]["me"]
+        self.assertEqual(res.wsgi_request.content_type, "application/json")
+        self.assertIsNotNone(data)
+        self.assertEqual(data['username'], self.user.username)
+        self.assertEqual(int(data['profile']['id']), self.user.profile.pk)
+
 
         # revoke that token
         res = self.client.post(
