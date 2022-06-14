@@ -27,10 +27,10 @@ import strawberry
 
 import strawberry
 from strawberry.tools import merge_types
-from account.schema import UserMutations, UserQueries
+import account.schema
 
-Query = merge_types("RootQuery", (UserQueries,))
+Query = merge_types("RootQuery", (account.schema.Query,))
 
-Mutation = merge_types("RootMutation", (UserMutations,))
+Mutation = merge_types("RootMutation", (account.schema.Mutation,))
 
 schema = strawberry.Schema(query=Query, mutation=Mutation)
