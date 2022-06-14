@@ -442,7 +442,7 @@ class AccountGraphQLTestCase(TestCase):
         sendPasswordResetEmail = """
         mutation {
             sendPasswordResetEmail(email: "%s") {
-            success
+                success
             }
         }
         """
@@ -453,7 +453,7 @@ class AccountGraphQLTestCase(TestCase):
             newPassword1: "new-day-new-strugles"
             newPassword2: "new-day-new-strugles"
             ) {
-            success
+                success
             }
         }
         """
