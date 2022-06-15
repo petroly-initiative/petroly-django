@@ -1,4 +1,5 @@
 import json
+from pydoc import cli
 from django.conf import settings
 from django.core import mail
 from django.test import TestCase, TransactionTestCase, Client
@@ -296,7 +297,7 @@ class AccountGraphQLTestCase(TestCase):
         data = json.loads(res.content)["data"]["tokenAuth"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertFalse(data["success"])
-        self.assertEqual(data['errors']['nonFieldErrors'][0]['code'], 'not_verified')
+        self.assertEqual(data["errors"]["nonFieldErrors"][0]["code"], "not_verified")
         # told ya, he's not verified
 
         # extract the token from the activation email
@@ -377,7 +378,7 @@ class AccountGraphQLTestCase(TestCase):
             }
         }
         """
-        me = '''
+        me = """
         query {
             me{
                 username
@@ -389,7 +390,7 @@ class AccountGraphQLTestCase(TestCase):
                 }
             }
         }        
-        '''
+        """
 
         res = self.client.post(
             self.endpoint,
@@ -400,10 +401,12 @@ class AccountGraphQLTestCase(TestCase):
         )
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["tokenAuth"]
-        r_token = data['obtainPayload']["refreshToken"]
+        r_token = data["obtainPayload"]["refreshToken"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
-        self.assertTrue(data["obtainPayload"]['payload']["username"], self.user.username)
+        self.assertTrue(
+            data["obtainPayload"]["payload"]["username"], self.user.username
+        )
 
         # verify that token
         res = self.client.post(
@@ -415,7 +418,9 @@ class AccountGraphQLTestCase(TestCase):
         data = json.loads(res.content)["data"]["verifyToken"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
-        self.assertEqual(data['verifyPayload']['payload']['username'], self.user.username)
+        self.assertEqual(
+            data["verifyPayload"]["payload"]["username"], self.user.username
+        )
 
         # refresh that token
         res = self.client.post(
@@ -424,7 +429,7 @@ class AccountGraphQLTestCase(TestCase):
             content_type="application/json",
         )
         self.assertEqual(res.status_code, 200)
-        data = json.loads(res.content)["data"]['refreshToken']
+        data = json.loads(res.content)["data"]["refreshToken"]
         r_token = data["refreshPayload"]["refreshToken"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
@@ -434,15 +439,14 @@ class AccountGraphQLTestCase(TestCase):
             self.endpoint,
             data={"query": me},
             content_type="application/json",
-            HTTP_AUTHORIZATION='JWT ' + data['refreshPayload']['token'],
+            HTTP_AUTHORIZATION="JWT " + data["refreshPayload"]["token"],
         )
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["me"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertIsNotNone(data)
-        self.assertEqual(data['username'], self.user.username)
-        self.assertEqual(int(data['profile']['id']), self.user.profile.pk)
-
+        self.assertEqual(data["username"], self.user.username)
+        self.assertEqual(int(data["profile"]["id"]), self.user.profile.pk)
 
         # revoke that token
         res = self.client.post(
@@ -578,38 +582,42 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(data["result"]["theme"], "dark")
 
     def test_profile_pic(self):
-        from graphene_file_upload.django.testing import file_graphql_query
+        from .test_utils import file_graphql_query
 
         profilePicUpdate = """      
-        mutation ($file: Upload!) {
-            profilePicUpdate(file: $file) {
-            success
+        mutation File($file: Upload!){
+            profilePicUpdate(file: $file){
+                success
+                profilePic
             }
         }
         """
 
         # without loging in
-        res = file_graphql_query(
-            query=profilePicUpdate,
-            client=self.client,
-            files={"file": open("static/img/blank_profile.png", "rb")},
-            graphql_url=self.endpoint,
-        )
+        with open("static/img/blank_profile.png", "rb") as file:
+            res = file_graphql_query(
+                query=profilePicUpdate,
+                client=self.client,
+                files={"file": file},
+                graphql_url=self.endpoint,
+            )
         self.assertEqual(res.status_code, 200)
+        print(res.content)
         errors = json.loads(res.content)["errors"]
         self.assertEqual(
             errors[0]["message"], "You do not have permission to perform this action"
         )
         self.assertEqual(res.wsgi_request.content_type, "multipart/form-data")
-        
+
         # loging in the user
         self.client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[1])
-        res = file_graphql_query(
-            query=profilePicUpdate,
-            client=self.client,
-            files={"file": open("static/img/blank_profile.png", "rb")},
-            graphql_url=self.endpoint,
-        )
+        with open("static/img/blank_profile.png", "rb") as file:
+            res = file_graphql_query(
+                query=profilePicUpdate,
+                client=self.client,
+                files={"file": file},
+                graphql_url=self.endpoint,
+            )
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["profilePicUpdate"]
         self.assertEqual(res.wsgi_request.content_type, "multipart/form-data")

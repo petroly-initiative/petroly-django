@@ -1,8 +1,8 @@
-import typing
 import strawberry
 import strawberry_django
-import strawberry_django_jwt
+
 from strawberry import auto, ID
+from strawberry.file_uploads import Upload
 
 from django.contrib.auth import get_user_model
 
@@ -22,12 +22,13 @@ class UserType:
     is_staff: auto
     is_active: auto
     date_joined: auto
-    profile: 'ProfileType'
+    profile: "ProfileType"
+
 
 @strawberry_django.type(models.Profile)
 class ProfileType:
     id: ID
-    user: 'UserType'
+    user: "UserType"
     profile_pic: str
     major: str
     year: str
@@ -35,3 +36,12 @@ class ProfileType:
     theme: str
 
 
+@strawberry.input
+class FileInput:
+    file: Upload
+
+
+@strawberry.type
+class ProfilePicUpdateType:
+    success: bool
+    profile_pic: str
