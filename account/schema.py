@@ -123,6 +123,8 @@ class Mutation(UserMutations):
     It inherits from `AuthMutation`.
     """
 
+    # TODO better handling for the Permission 
+    # maybe create custom login_required decorator
     @strawberry.mutation
     @login_required
     def profile_pic_update(self, info, file: Upload) -> ProfilePicUpdateType:
