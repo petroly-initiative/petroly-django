@@ -1,6 +1,4 @@
-import json
-from django.forms import ValidationError
-from graphql import OperationType
+import dataclasses
 import strawberry
 import strawberry_django
 from strawberry import auto, ID, BasePermission, Private
@@ -81,6 +79,7 @@ class IsAuthenticated(BasePermission):
         return True
 
 
+@dataclasses.dataclass
 class OwnsObjPerm(ConditionDirective):
 
     message: Private[str] = "You do not own this object."
@@ -92,5 +91,5 @@ class OwnsObjPerm(ConditionDirective):
                 pk = int(pk)
             except:
                 raise ValueError("The field `id` is not valid.")
-            return  user.profile.pk == int(pk)
+            return  user.profile.pk == pk
         raise ValueError('The field `id` must be provided.')
