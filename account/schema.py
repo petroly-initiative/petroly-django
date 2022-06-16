@@ -126,7 +126,7 @@ class Mutation(UserMutations):
     """
 
     profile_update: ProfileType = gql.django.update_mutation(
-        ProfileInput, directives=[OwnsObjPerm()]
+        ProfileInput, directives=[IsAuthenticated(), OwnsObjPerm()]
     )
 
     # TODO better handling for the Permission Exception
