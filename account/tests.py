@@ -524,62 +524,68 @@ class AccountGraphQLTestCase(TestCase):
 
     def test_profile_update(self):
         profileUpdate = """
-        mutation {
+        mutation Update($id: ID, $language: String, $theme: String) {
             profileUpdate(
-            where: { id: { exact: %s } }
-            input: { language: "ar-SA", theme: "dark" }
+                input: { 
+                    id: $id 
+                    language: $language 
+                    theme: $theme
+                }
             ) {
-            ok
-            errors {
-                field
-                messages
-            }            
-            result {
-                id
-                theme
-                language
-            }
+                __typename,
+                ... on ProfileType {
+                    id
+                    language
+                    theme
+                }
+                ... on OperationInfo{
+                    messages{
+                        kind,
+                        message,
+                        field
+                    }
+                }
             }
         }
         """
 
-        # update profile info, with logged out user; causes error
-        res = self.client.post(
-            self.endpoint,
-            data={"query": profileUpdate % self.user.profile.pk},
-            content_type="application/json",
-        )
-        self.assertEqual(res.status_code, 200)
-        errors = json.loads(res.content)["errors"]
-        self.assertEqual(
-            errors[0]["message"], "You do not have permission to perform this action"
-        )
-        self.assertEqual(res.wsgi_request.content_type, "application/json")
+        # update profile info, with logged out user; rasises error
+        from strawberry_django_plus.test.client import TestClient
+
+        self.client = TestClient(self.endpoint)
+        res = self.client.query(profileUpdate, {"id": self.user.profile.pk})
+        self.assertIsNone(res.errors)
+        self.assertIsNotNone(res.data)
+        data = res.data["profileUpdate"]
+        self.assertEqual(data["__typename"], "OperationInfo")
+        self.assertEqual(data["messages"][0]["message"], "User is not authenticated.")
 
         # login the user and pass its token in the HTTP header
-        self.client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[1])
+        client = Client()
+        client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[1])
+        self.client = TestClient(self.endpoint, client)
         # update other user's profile
-        res = self.client.post(
-            self.endpoint,
-            data={"query": profileUpdate % self.user2.profile.pk},
-            content_type="application/json",
+        res = self.client.query(
+            profileUpdate,
+            {"id": self.user2.profile.pk, "theme": "dark", "language": "ar-SA"},
         )
-        self.assertEqual(res.status_code, 200)
-        errors = json.loads(res.content)["errors"]
-        self.assertEqual(errors[0]["message"], "You don't own this Profile")
+
+        self.assertIsNone(res.errors)
+        self.assertIsNotNone(res.data)
+        data = res.data["profileUpdate"]
+        self.assertEqual(data["messages"][0]["message"], "You don't own this Profile.")
 
         # update the user profile
-        res = self.client.post(
-            self.endpoint,
-            data={"query": profileUpdate % self.user.profile.pk},
-            content_type="application/json",
+        res = self.client.query(
+            profileUpdate,
+            {"id": self.user.profile.pk, "theme": "dark", "language": "ar-SA"},
         )
-        self.assertEqual(res.status_code, 200)
-        data = json.loads(res.content)["data"]["profileUpdate"]
-        self.assertEqual(res.wsgi_request.content_type, "application/json")
-        self.assertTrue(data["ok"])
-        self.assertEqual(data["result"]["language"], "ar-SA")
-        self.assertEqual(data["result"]["theme"], "dark")
+
+        self.assertIsNone(res.errors)
+        self.assertIsNotNone(res.data)
+        data = res.data["profileUpdate"]
+        self.assertEqual(data["language"], "ar-SA")
+        self.assertEqual(data["theme"], "dark")
 
     def test_profile_pic(self):
         from .test_utils import file_graphql_query
