@@ -1,10 +1,20 @@
 import strawberry
-from typing import Optional
+from typing import List, Optional
 from strawberry.file_uploads import Upload
-from gqlauth.user.queries import UserQueries
-from gqlauth.user import arg_mutations
+from strawberry_django import mutations
+from strawberry_django_plus import gql
+from strawberry_django_plus.permissions import IsAuthenticated
 from strawberry_django_jwt.decorators import login_required
+from gqlauth.user import arg_mutations
+from .types import (
+    UserType,
+    ProfileType,
+    ProfilePicUpdateType,
+    ProfileInput,
+    OwnsObjPerm,
+)
 
+from .models import Profile
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 
@@ -13,8 +23,6 @@ from cloudinary.uploader import upload_image
 
 # from .utils import is_owner
 
-from .types import UserType, ProfileType, ProfilePicUpdateType
-from .models import Profile
 
 # class StatusType(DjangoGrapheneCRUD):
 #     """
@@ -104,12 +112,6 @@ class Query:
     """
 
     @strawberry.django.field
-    def profile(self, info) -> Optional[ProfileType]:
-        user = info.context.request.user
-        if not user.is_anonymous:
-            return user.profile
-
-    @strawberry.django.field
     def me(self, info) -> Optional[UserType]:
         user = info.context.request.user
         if not user.is_anonymous:
@@ -123,7 +125,11 @@ class Mutation(UserMutations):
     It inherits from `AuthMutation`.
     """
 
-    # TODO better handling for the Permission 
+    profile_update: ProfileType = gql.django.update_mutation(
+        ProfileInput, directives=[OwnsObjPerm()]
+    )
+
+    # TODO better handling for the Permission Exception
     # maybe create custom login_required decorator
     @strawberry.mutation
     @login_required
@@ -134,8 +140,8 @@ class Mutation(UserMutations):
         The pic will be save in the current logged in user's profile.
         """
 
+        user: User = info.context.request.user
         try:
-            user: User = info.context.request.user
             # to prvent colliding with dev & prod
             ext = get_current_site(info.context.request).domain
             res = upload_image(
@@ -156,5 +162,3 @@ class Mutation(UserMutations):
         return ProfilePicUpdateType(
             success=True, profile_pic=str(user.profile.profile_pic)
         )
-
-    # profile_update = ProfileType.UpdateField()
