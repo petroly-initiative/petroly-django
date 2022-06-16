@@ -82,7 +82,7 @@ class IsAuthenticated(BasePermission):
 @dataclasses.dataclass
 class OwnsObjPerm(ConditionDirective):
 
-    message: Private[str] = "You do not own this object."
+    message: Private[str] = "You don't own this object."
 
     def check_condition(self, root: Any, info: GraphQLResolveInfo, user: UserType):
         pk = info.variable_values["id"]
