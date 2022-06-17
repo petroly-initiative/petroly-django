@@ -1,5 +1,4 @@
 from typing import List, Optional
-from graphql import GraphQLError
 
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
@@ -15,7 +14,7 @@ from strawberry_django_plus.permissions import IsAuthenticated
 from cloudinary.uploader import upload_image
 
 from .models import Community, Report
-from .types import CommunityFilter, CommunityType, CommunityInteractionsType
+from .types import CommunityType, CommunityInteractionsType
 
 
 # class CommunityType(DjangoGrapheneCRUD):
@@ -70,15 +69,6 @@ from .types import CommunityFilter, CommunityType, CommunityInteractionsType
 
 #     @classmethod
 #     @login_required
-#     def before_create(cls, parent, info, instance, data):
-#         instance.reporter = info.context.user  # reporter is the logged user
-#         community = Community.objects.get(
-#             pk=data["community"]["connect"]["id"]["exact"]
-#         )
-#         if Report.objects.filter(
-#             reporter=instance.reporter, community=community
-#         ).exists():
-#             raise GraphQLError("You have reported this community Already")
 
 
 def resolve_community_interactions(
@@ -110,6 +100,26 @@ def rsolve_toggle_like_community(root, info: Info, pk: ID) -> bool:
     return True
 
 
+def resolve_report(
+    root, info: Info, pk: ID, reason: str, other_reason: Optional[str] = ""
+) -> bool:
+    
+    user: User = info.context.request.user
+    community = Community.objects.get(pk=pk)
+    
+    # if Report.objects.filter(reporter=user, community=community).exists():
+    #     raise Exception("You have reported this community Already")
+
+    obj = Report.objects.get_or_create(
+        reporter=user,  # reporter is the logged user
+        reason=reason,
+        other_reason=other_reason,
+        community=community,
+    )
+
+    return obj[1]   # created ?
+
+
 @gql.type
 class Query:
 
@@ -127,6 +137,7 @@ class Mutation:
     # community_delete = CommunityType.DeleteField()
 
     # report_create = ReportType.CreateField()
+    report_create = gql.mutation(resolve_report, directives=[IsAuthenticated()])
 
     toggle_like_community = gql.mutation(
         rsolve_toggle_like_community,
