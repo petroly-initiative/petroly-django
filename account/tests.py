@@ -607,7 +607,6 @@ class AccountGraphQLTestCase(TestCase):
                 graphql_url=self.endpoint,
             )
         self.assertEqual(res.status_code, 200)
-        print(res.content)
         errors = json.loads(res.content)["errors"]
         self.assertEqual(
             errors[0]["message"], "You do not have permission to perform this action"
