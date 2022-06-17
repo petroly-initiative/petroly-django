@@ -1,11 +1,9 @@
 from typing import List, Optional
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.translation import gettext_lazy as _
-
 from graphql import GraphQLError
-from django.contrib.auth.models import User
 
-from cloudinary.uploader import upload_image
+from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Count
 
@@ -13,6 +11,8 @@ from strawberry import ID
 from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
+
+from cloudinary.uploader import upload_image
 
 from .models import Community, Report
 from .types import CommunityFilter, CommunityType, CommunityInteractionsType
@@ -81,51 +81,8 @@ from .types import CommunityFilter, CommunityType, CommunityInteractionsType
 #             raise GraphQLError("You have reported this community Already")
 
 
-# class InteractedCommunityMutation(graphene.Mutation):
-#     class Arguments:
-#         ID = graphene.ID(required=True)
-
-#     liked = Field(Boolean)
-#     reported = Field(Boolean)
-
-#     @staticmethod
-#     @login_required
-#     def mutate(root, info, ID):
-#         user = info.context.user
-#         interactions = {}
-#         interactions["liked"] = Community.objects.filter(pk=ID, likes=user).exists()
-#         interactions["reported"] = Community.objects.filter(
-#             pk=ID, reports__reporter=user
-#         ).exists()
-#         return InteractedCommunityMutation(**interactions)
-
-
-# class ToggleLikeCommunity(graphene.Mutation):
-#     class Arguments:
-#         ID = graphene.ID()
-
-#     ok = graphene.Boolean()
-
-#     @staticmethod
-#     @login_required
-#     def mutate(root, info, ID):
-#         try:
-#             likes = Community.objects.get(pk=ID).likes
-#         except ObjectDoesNotExist:
-#             return ToggleLikeCommunity(ok=False)
-#         user = info.context.user
-#         has_liked = Community.objects.filter(pk=ID, likes__pk=user.pk).exists()
-
-#         if has_liked:
-#             likes.remove(user)  # Unlike
-#         else:
-#             likes.add(user)  # Like
-
-#         return ToggleLikeCommunity(ok=True)
-
-
 def resolve_community_interactions(
-    self, info: Info, pk: ID
+    root, info: Info, pk: ID
 ) -> CommunityInteractionsType:
 
     user: User = info.context.request.user
@@ -134,6 +91,23 @@ def resolve_community_interactions(
         liked=Community.objects.filter(pk=pk, likes=user).exists(),
         reported=Community.objects.filter(pk=pk, reports__reporter=user).exists(),
     )
+
+
+def rsolve_toggle_like_community(root, info: Info, pk: ID) -> bool:
+    try:
+        likes = Community.objects.get(pk=pk).likes
+    except ObjectDoesNotExist:
+        return False
+
+    user: User = info.context.request.user
+    has_liked = Community.objects.filter(pk=pk, likes__pk=user.pk).exists()
+
+    if has_liked:
+        likes.remove(user)  # Unlike
+    else:
+        likes.add(user)  # Like
+
+    return True
 
 
 @gql.type
@@ -148,14 +122,14 @@ class Query:
 
 @gql.type
 class Mutation:
-    ...
     # community_create = CommunityType.CreateField()
     # community_update = CommunityType.UpdateField()
     # community_delete = CommunityType.DeleteField()
 
     # report_create = ReportType.CreateField()
 
-    # has_interacted_community = InteractedCommunityMutation.Field()
-    # toggle_like_community = ToggleLikeCommunity.Field(
-    #     description="This will toggle the community like for the logged user"
-    # )
+    toggle_like_community = gql.mutation(
+        rsolve_toggle_like_community,
+        directives=[IsAuthenticated()],
+        description="This will toggle the community like for the logged user",
+    )

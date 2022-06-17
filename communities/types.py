@@ -42,7 +42,7 @@ class CommunityType:
     archived: auto
     icon: Optional[str]
     likes: Optional[List[UserType]]
-    owner: Optional[UserType]
+    # owner: Optional[UserType]
 
     def get_queryset(self, queryset: QuerySet, info: Info, filters, **kw) -> QuerySet:
         return queryset.filter(archived=False)
