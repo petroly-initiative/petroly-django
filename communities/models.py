@@ -69,14 +69,14 @@ class Community(models.Model):
 
 
 class Report(models.Model):
-    reasons = (
-        ("content", _("inappropriate content")),
-        ("link", _("invalid link")),
-        ("other", _("other")),
-    )
+    class ReasonEnum(models.TextChoices):
+        CONTENT = "content", _("inappropriate content")
+        LINK = "link", _("invalid link")
+        OTHER = "other", _("other")
+
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_on = models.DateField(_("Created on"), auto_now_add=True)
-    reason = models.CharField(_("Reason"), max_length=8, choices=reasons)
+    reason = TextChoicesField(choices_enum=ReasonEnum)
     other_reason = models.CharField(
         _("Other_reason"), max_length=100, default="", blank=True
     )
