@@ -48,9 +48,11 @@ class CommunityType:
         return queryset.filter(archived=False)
 
 
-@gql.type(
-    description="This type holds info about user's interactions with a community."
-)
+@gql.type
 class CommunityInteractionsType:
+    """
+    This type holds info about user's interactions with a community.
+    """
+
     liked: bool
     reported: bool
