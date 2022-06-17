@@ -27,14 +27,18 @@ import strawberry
 
 import strawberry
 from strawberry.tools import merge_types
-import account.schema
 from strawberry_django_jwt.middleware import JSONWebTokenMiddleware
 from strawberry_django_plus.optimizer import DjangoOptimizerExtension
 from strawberry_django_plus.directives import SchemaDirectiveExtension
 
-Query = merge_types("RootQuery", (account.schema.Query,))
+import account.schema
+import communities.schema
 
-Mutation = merge_types("RootMutation", (account.schema.Mutation,))
+Query = merge_types("RootQuery", (account.schema.Query, communities.schema.Query))
+
+Mutation = merge_types(
+    "RootMutation", (account.schema.Mutation, communities.schema.Mutation)
+)
 
 schema = strawberry.Schema(
     query=Query,
