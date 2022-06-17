@@ -155,10 +155,6 @@ class Query:
     community: CommunityType = gql.django.field()
     communities: List[CommunityType] = gql.django.field()
 
-    # community = CommunityType.ReadField()
-    # communities = CommunityType.BatchReadField()
-    # report = ReportType.ReadField()
-    # reports = ReportType.BatchReadField()
 
 
 @gql.type

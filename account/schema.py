@@ -162,7 +162,6 @@ class Mutation(UserMutations):
             user.profile.profile_pic = res
             user.profile.save()
         except Exception as e:
-            print(e)
             return ProfilePicUpdateType(success=False, profile_pic="")
 
         return ProfilePicUpdateType(
