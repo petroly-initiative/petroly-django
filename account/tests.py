@@ -1,4 +1,5 @@
 import json
+from black import err
 from django.conf import settings
 from django.core import mail
 from django.test import TestCase, TransactionTestCase, Client
@@ -607,10 +608,8 @@ class AccountGraphQLTestCase(TestCase):
                 graphql_url=self.endpoint,
             )
         self.assertEqual(res.status_code, 200)
-        errors = json.loads(res.content)["errors"]
-        self.assertEqual(
-            errors[0]["message"], "You do not have permission to perform this action"
-        )
+        data = json.loads(res.content)["data"]["profilePicUpdate"]
+        self.assertIsNone(data)
         self.assertEqual(res.wsgi_request.content_type, "multipart/form-data")
 
         # loging in the user
