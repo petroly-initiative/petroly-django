@@ -19,7 +19,7 @@ from django.db.models import Count
 from strawberry_django_plus import gql
 
 from .models import Community, Report
-from .types import CommunityType
+from .types import CommunityFilter, CommunityType
 
 # @convert_django_field.register(CloudinaryField)
 # def convert_CloudinaryField_to_file(field, registry=None, input_flag=None):
