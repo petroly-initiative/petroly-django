@@ -1,3 +1,4 @@
+from tkinter import N
 import strawberry
 from typing import List, Optional
 from strawberry.file_uploads import Upload
@@ -111,11 +112,12 @@ class Query:
     Main entry for all query type for `account` app.
     """
 
-    @strawberry.django.field
+    @strawberry.field
     def me(self, info) -> Optional[UserType]:
         user = info.context.request.user
-        if not user.is_anonymous:
-            return user
+        if user.is_anonymous:
+            return None
+        return user
 
 
 @strawberry.type
