@@ -14,6 +14,7 @@ from django.db.models.query import QuerySet
 from . import models
 from account.types import UserType
 
+
 @gql.enum
 class CategoryEnum(Enum):
     EDU = "edu"
@@ -25,6 +26,7 @@ class CategoryEnum(Enum):
 class CommunityFilter:
     name: auto
     category: auto
+
 
 @gql.django.type(models.Community, filters=CommunityFilter)
 class CommunityType:
@@ -42,5 +44,13 @@ class CommunityType:
     likes: Optional[List[UserType]]
     owner: Optional[UserType]
 
-    def get_queryset(self, queryset:QuerySet, info:Info, filters, **kw) -> QuerySet:
+    def get_queryset(self, queryset: QuerySet, info: Info, filters, **kw) -> QuerySet:
         return queryset.filter(archived=False)
+
+
+@gql.type(
+    description="This type holds info about user's interactions with a community."
+)
+class CommunityInteractionsType:
+    liked: bool
+    reported: bool
