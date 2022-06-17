@@ -42,5 +42,5 @@ class CommunityType:
     likes: Optional[List[UserType]]
     owner: Optional[UserType]
 
-    def get_queryset(self, queryset:QuerySet, info:Info, filters, **kw):
+    def get_queryset(self, queryset:QuerySet, info:Info, filters, **kw) -> QuerySet:
         return queryset.filter(archived=False)
