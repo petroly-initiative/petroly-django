@@ -1,5 +1,4 @@
 import json
-from black import err
 from django.conf import settings
 from django.core import mail
 from django.test import TestCase, TransactionTestCase, Client
