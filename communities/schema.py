@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.shortcuts import get_current_site
-from django.db.models import Count
 
 from strawberry import ID
 from strawberry.types import Info
@@ -19,46 +18,9 @@ from .types import (
     CommunityInteractionsType,
     CommunityInput,
     CommunityPartialInput,
+    MatchIdentity,
+    OwnsObjPerm,
 )
-
-
-# class CommunityType(DjangoGrapheneCRUD):
-#     class Meta:
-#         model = Community
-#         input_exclude_fields = ("verified", "owner")
-
-#     @classmethod
-#     def get_queryset(cls, parent, info, **kwargs):
-#         # descending order for number of likes
-#         return (
-#             Community.objects.filter(archived=False)
-#             .annotate(num_likes=Count("likes"))
-#             .order_by("-num_likes")
-#         )
-
-#     @classmethod
-#     @login_required
-#     def after_mutate(cls, parent, info, instance: Community, data):
-#         if "icon" in data.keys() and data["icon"].upload:
-#             try:
-#                 # to prvent colliding with dev & prod
-#                 ext = get_current_site(info.context).domain
-#                 instance.icon = upload_image(
-#                     data["icon"].upload,
-#                     folder=f"communities/{ext}/icons",
-#                     public_id=instance.pk,
-#                     overwrite=True,
-#                     invalidate=True,
-#                     transformation=[{"width": 200, "height": 200, "crop": "fill"}],
-#                     format="jpg",
-#                 )
-#                 instance.save()
-#             except Exception as e:
-#                 raise GraphQLError(_("Error while uploading the icon"))
-
-#     @classmethod
-#     def before_create(cls, parent, info, instance, data):
-#         instance.owner = info.context.user  # owener is the logged user
 
 #     @classmethod
 #     def before_update(cls, parent, info, instance, data):
@@ -116,6 +78,12 @@ def resolve_report(
     return obj[1]  # created ?
 
 
+def resolve_community_create(
+    root: CommunityInput, info: Info, input: CommunityInput
+) -> CommunityType:
+    ...
+
+
 @gql.type
 class Query:
 
@@ -128,9 +96,16 @@ class Query:
 
 @gql.type
 class Mutation:
-    # community_create = CommunityType.CreateField()
-    # community_update = CommunityType.UpdateField()
-    community_delete: CommunityType = gql.django.delete_mutation(CommunityPartialInput)
+
+    community_create: CommunityType = gql.django.create_mutation(
+        CommunityInput, directives=[MatchIdentity()]
+    )
+    community_update: CommunityType = gql.django.update_mutation(
+        CommunityPartialInput, directives=[OwnsObjPerm()]
+    )
+    community_delete: CommunityType = gql.django.delete_mutation(
+        CommunityPartialInput, directives=[OwnsObjPerm()]
+    )
 
     report_create = gql.mutation(resolve_report, directives=[IsAuthenticated()])
 

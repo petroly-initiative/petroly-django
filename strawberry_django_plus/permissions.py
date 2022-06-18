@@ -248,6 +248,7 @@ class AuthDirective(SchemaDirectiveWithResolver):
         *args,
         **kwargs,
     ):
+        print(args, kwargs)
         context = cast(StrawberryDjangoContext, info.context)
         resolver = functools.partial(_next, root, info, *args, **kwargs)
 
