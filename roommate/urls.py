@@ -1,7 +1,5 @@
 from django.urls import path
 from . import views
-from .schema import schema
-from graphene_django.views import GraphQLView
 
 app_name = 'roommate'
 

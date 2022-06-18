@@ -1,3 +1,4 @@
+import warnings
 from .base import *
 from .constants import COSTOM_LOGGING
 
@@ -5,9 +6,8 @@ from .constants import COSTOM_LOGGING
 from pathlib import Path
 import dj_database_url 
 import django_heroku
-import os
 import cloudinary
-from cloudinary import config
+import os
 import re
 
 # Extra app
@@ -24,9 +24,9 @@ MIDDLEWARE += [
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", default='')
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY", default='')
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-DEBUG = (os.environ.get("DEBUG", default=True) == 'True')
+DEBUG = os.environ.get("DEBUG", 'False') == 'True'
 
 ALLOWED_HOSTS = ['.petroly.co', '.petroly-main.herokuapp.com']
 SECURE_SSL_REDIRECT = True
@@ -35,31 +35,24 @@ CSRF_COOKIE_SECURE = True
 
 CORS_ALLOWED_ORIGINS = ['https://petroly.vercel.app', 'https://react.petroly.co', 'https://petroly.co']
 
-EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-EMAIL_PORT = os.environ.get("EMAIL_PORT")
-EMAIL_USE_SSL = (os.environ.get("EMAIL_USE_SSL") == 'True')
 
 # Clouddinary: for media
-
-config(
-    cloud_name = os.environ.get("CLOUDINARY_NAME", ''), 
-    api_key = os.environ.get("CLOUDINARY_API_KEY", ''), 
+cloudinary.config(
+    cloud_name = 'petroly-initiative',
+    api_key = '777263134962661',
     api_secret = os.environ.get("CLOUDINARY_API_SECRET", '') 
 )
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
+# Check if DATABASE_URL is provided
+# otherwise fallback to basic db
 DATABASES = {
     'default': dj_database_url.config(conn_max_age=500)
 }
 
 
 STATIC_URL = '/static/'
-
 MEDIA_URL = '/media/'
 
 # To get Email when >500 error happens

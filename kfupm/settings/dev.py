@@ -1,31 +1,22 @@
+import os
 from .base import *
 from corsheaders.defaults import default_headers
 
 from pathlib import Path
-import environ
 import cloudinary
 
-env = environ.Env()
-env.read_env()
 
-SECRET_KEY = env.str("SECRET_KEY", default='')
+SECRET_KEY = 'yur&ad_w+9v+f25z@c@@t=yy(hht-!^08@a+4f6^m-%mn+#+jt'
 
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-EMAIL_HOST = env.str("EMAIL_HOST")
-EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
-EMAIL_PORT = env.int("EMAIL_PORT")
-EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL")
-
 
 cloudinary.config(
-    cloud_name = env.str("CLOUDINARY_NAME", ''), 
-    api_key = env.str("CLOUDINARY_API_KEY", ''), 
-    api_secret = env.str("CLOUDINARY_API_SECRET", '') 
+    cloud_name = 'petroly-initiative',
+    api_key = '777263134962661',
+    api_secret = os.environ.get("CLOUDINARY_API_SECRET")
 )
 
 INTERNAL_IPS = ("127.0.0.1", "172.17.0.1", 'localhost')
