@@ -4,12 +4,14 @@ from enum import Enum
 import strawberry
 import strawberry_django
 
-from strawberry import ID, auto
+from strawberry import ID, auto, UNSET
+from strawberry.file_uploads import Upload
 from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django.filters import FilterLookup
 
 from django.db.models.query import QuerySet
+from django.db.models import Count
 
 from . import models
 from account.types import UserType
@@ -26,11 +28,34 @@ class CategoryEnum(Enum):
 class CommunityFilter:
     name: auto
     category: auto
+    platform: auto
+    section: auto
+
+
+@gql.django.input(models.Community)
+class CommunityInput:
+    pk: ID
+    name: auto
+    description: auto
+    link: auto
+    date: auto
+    category: auto
+    platform: auto
+    section: auto
+    verified: auto
+    archived: auto
+    icon: Optional[str]
+    likes: Optional[List[UserType]]
+
+
+@gql.django.input(models.Community, partial=True)
+class CommunityPartialInput:
+    pk: ID
 
 
 @gql.django.type(models.Community, filters=CommunityFilter)
 class CommunityType:
-    id: ID
+    pk: ID
     name: auto
     description: auto
     link: auto
@@ -45,7 +70,12 @@ class CommunityType:
     # owner: Optional[UserType]
 
     def get_queryset(self, queryset: QuerySet, info: Info, filters, **kw) -> QuerySet:
-        return queryset.filter(archived=False)
+        # descending order for number of likes
+        return (
+            models.Community.objects.filter(archived=False)
+            .annotate(num_likes=Count("likes"))
+            .order_by("-num_likes")
+        )
 
 
 @gql.type

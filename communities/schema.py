@@ -14,7 +14,7 @@ from strawberry_django_plus.permissions import IsAuthenticated
 from cloudinary.uploader import upload_image
 
 from .models import Community, Report
-from .types import CommunityType, CommunityInteractionsType
+from .types import CommunityType, CommunityInteractionsType, CommunityInput, CommunityPartialInput
 
 
 # class CommunityType(DjangoGrapheneCRUD):
@@ -61,14 +61,6 @@ from .types import CommunityType, CommunityInteractionsType
 #             # remove the None value of icon to keep the old one
 #             del data["icon"]
 
-
-# class ReportType(DjangoGrapheneCRUD):
-#     class Meta:
-#         model = Report
-#         input_exclude_fields = ("reporter", "created_on")
-
-#     @classmethod
-#     @login_required
 
 
 def resolve_community_interactions(
@@ -134,9 +126,8 @@ class Query:
 class Mutation:
     # community_create = CommunityType.CreateField()
     # community_update = CommunityType.UpdateField()
-    # community_delete = CommunityType.DeleteField()
+    community_delete: CommunityType = gql.django.delete_mutation(CommunityPartialInput)
 
-    # report_create = ReportType.CreateField()
     report_create = gql.mutation(resolve_report, directives=[IsAuthenticated()])
 
     toggle_like_community = gql.mutation(
