@@ -14,7 +14,12 @@ from strawberry_django_plus.permissions import IsAuthenticated
 from cloudinary.uploader import upload_image
 
 from .models import Community, Report
-from .types import CommunityType, CommunityInteractionsType, CommunityInput, CommunityPartialInput
+from .types import (
+    CommunityType,
+    CommunityInteractionsType,
+    CommunityInput,
+    CommunityPartialInput,
+)
 
 
 # class CommunityType(DjangoGrapheneCRUD):
@@ -62,7 +67,6 @@ from .types import CommunityType, CommunityInteractionsType, CommunityInput, Com
 #             del data["icon"]
 
 
-
 def resolve_community_interactions(
     root, info: Info, pk: ID
 ) -> CommunityInteractionsType:
@@ -95,10 +99,10 @@ def rsolve_toggle_like_community(root, info: Info, pk: ID) -> bool:
 def resolve_report(
     root, info: Info, pk: ID, reason: str, other_reason: Optional[str] = ""
 ) -> bool:
-    
+
     user: User = info.context.request.user
     community = Community.objects.get(pk=pk)
-    
+
     # if Report.objects.filter(reporter=user, community=community).exists():
     #     raise Exception("You have reported this community Already")
 
@@ -109,7 +113,7 @@ def resolve_report(
         community=community,
     )
 
-    return obj[1]   # created ?
+    return obj[1]  # created ?
 
 
 @gql.type
