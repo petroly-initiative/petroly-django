@@ -1,11 +1,16 @@
 from typing import Text
+
 from django.db import models
 from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import receiver
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from cloudinary.models import CloudinaryField
 from django_choices_field import TextChoicesField
+from django.conf import settings
+
+from cloudinary.models import CloudinaryField
+
+PATH = "dev" if settings.DEBUG else "prod"
 
 
 class CloudinaryFieldCostom(CloudinaryField):
@@ -47,8 +52,16 @@ class Community(models.Model):
     section = models.CharField(_("Section"), max_length=10, default="", blank=True)
     verified = models.BooleanField(_("Verified"), default=True)
     archived = models.BooleanField(_("Archived"), default=False)
-    icon = CloudinaryFieldCostom(
-        _("icon"), default=None, null=True, blank=True, max_length=350
+    icon = CloudinaryField(
+        _("icon"),
+        default=None,
+        null=True,
+        blank=True,
+        format="jpg",
+        overwrite=True,
+        invalidate=True,
+        transformation=[{"width": 200, "height": 200, "crop": "fill"}],
+        folder=f"communities/{PATH}/icons",
     )
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
