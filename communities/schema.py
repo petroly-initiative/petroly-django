@@ -103,8 +103,8 @@ def resolve_report(
     user: User = info.context.request.user
     community = Community.objects.get(pk=pk)
 
-    # if Report.objects.filter(reporter=user, community=community).exists():
-    #     raise Exception("You have reported this community Already")
+    if Report.objects.filter(reporter=user, community=community).exists():
+        raise Exception("You have reported this community Already")
 
     obj = Report.objects.get_or_create(
         reporter=user,  # reporter is the logged user
