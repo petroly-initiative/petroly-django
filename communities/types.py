@@ -110,8 +110,12 @@ class OwnsObjPerm(ConditionDirective):
 
     message: Private[str] = "You don't own this community."
 
-    def check_condition(self, root: Any, info: GraphQLResolveInfo, user: UserType):
-        pk = info.variable_values["pk"] # get community `pk`
+    # def resolve(self, helper: SchemaDirectiveHelper, _next: Callable, root: Any, info: GraphQLResolveInfo, *args, **kwargs):
+    #     return super().resolve(helper, _next, root, info, *args, **kwargs)
+
+    def check_condition(self, root: Any, info: GraphQLResolveInfo, user: UserType, kwargs):
+        print(kwargs)
+        pk = kwargs["input"]['pk'] # get community `pk`
         if models.Community.objects.filter(pk=pk, owner=user).exists():
             return True
 
