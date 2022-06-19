@@ -98,13 +98,13 @@ class Query:
 class Mutation:
 
     community_create: CommunityType = gql.django.create_mutation(
-        CommunityInput, directives=[MatchIdentity()]
+        CommunityInput, directives=[IsAuthenticated(), MatchIdentity()]
     )
     community_update: CommunityType = gql.django.update_mutation(
-        CommunityPartialInput, directives=[OwnsObjPerm()]
+        CommunityPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
     )
     community_delete: CommunityType = gql.django.delete_mutation(
-        CommunityPartialInput, directives=[OwnsObjPerm()]
+        CommunityPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
     )
 
     report_create = gql.mutation(resolve_report, directives=[IsAuthenticated()])
