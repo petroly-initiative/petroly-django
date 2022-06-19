@@ -27,7 +27,7 @@ six==1.16.0
 sqlparse==0.4.2
 strawberry-django-auth==0.3.2.1
 strawberry-django-jwt==0.2.0
-strawberry-django-plus==1.14.1
+strawberry-django-plus==1.14.2
 strawberry-graphql==0.114.2
 strawberry-graphql-django==0.3
 typing_extensions==4.2.0
