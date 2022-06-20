@@ -1,5 +1,6 @@
 import dataclasses
-from typing import Optional, List, Any
+import functools
+from typing import Callable, ClassVar, Optional, List, Any
 
 from strawberry import ID, auto, UNSET, Private
 from strawberry.types import Info
@@ -38,7 +39,7 @@ class CommunityInput:
 
 @gql.django.input(models.Community, partial=True)
 class CommunityPartialInput:
-    pk: ID
+    pk: Optional[ID]
     name: auto
     description: auto
     link: auto
@@ -110,9 +111,36 @@ class OwnsObjPerm(ConditionDirective):
 
     message: Private[str] = "You don't own this community."
 
-    def check_condition(self, root: Any, info: GraphQLResolveInfo, user: UserType):
-        pk = info.variable_values['pk'] # get community `pk`
+    def check_condition(self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs):
+        pk = kwargs["input"]['pk'] # get community `pk`
         if models.Community.objects.filter(pk=pk, owner=user).exists():
             return True
 
         return False
+
+
+# Example of implementing custom directive; is not courged
+from strawberry_django_plus.directives import SchemaDirectiveWithResolver, SchemaDirectiveHelper
+
+@dataclasses.dataclass
+class CustomDirective(SchemaDirectiveWithResolver):
+    """Base auth directive definition."""
+
+    has_resolver: ClassVar = True
+
+    def resolve(
+        self,
+        helper: SchemaDirectiveHelper,
+        _next: Callable,
+        root: Any,
+        info: GraphQLResolveInfo,
+        *args,
+        **kwargs,
+    ):
+        print(kwargs)
+        resolver = functools.partial(_next, root, info, *args, **kwargs)
+
+
+        if callable(resolver):
+            resolver = resolver()
+        return resolver
