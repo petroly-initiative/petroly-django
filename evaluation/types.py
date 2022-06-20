@@ -27,11 +27,32 @@ class InstructorType:
     evaluation_set: List["EvaluationType"]
 
 
+# TODO add filters
+# TODO add the custom fields: avg()
 @gql.django.type(models.Evaluation)
 class EvaluationType:
     pk: ID
 
     date: auto
+    comment: auto
+    course: auto
+    term: auto
+
+    grading: auto
+    teaching: auto
+    personality: auto
+
+    grading_comment: auto
+    teaching_comment: auto
+    personality_comment: auto
+
+    instructor: InstructorType
+
+
+@gql.django.input(models.Evaluation, partial=True)
+class EvaluationPartialInput:
+    pk: ID
+
     comment: auto
     course: auto
     term: auto
