@@ -20,6 +20,7 @@ class InstructorType:
     name: auto
     department: auto
     profile_pic: str
+    
     evaluation_set: List["EvaluationType"]
 
 
