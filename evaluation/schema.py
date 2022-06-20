@@ -20,7 +20,7 @@ from strawberry.types.info import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 
-from .types import InstructorType, EvaluationType
+from .types import InstructorType, EvaluationType, OwnsObjPerm, EvaluationInput
 
 from django.contrib.auth.models import User, Group
 from .models import Evaluation, Instructor
@@ -116,21 +116,6 @@ from data import departments
 #         return
 
 
-# class Data(ObjectType):
-#     '''
-#     This class is to provide general pourpose data.
-#     '''
-
-#     department_list = graphene.List(String, short=Boolean())
-#     has_evaluated = graphene.Boolean(id=graphene.Int())
-#     evaluated_instructors = graphene.List(graphene.String)
-
-#     @staticmethod
-#     @login_required
-#     def resolve_has_evaluated(parent, info, id):
-#         return Evaluation.objects.filter(user=info.context.user, instructor__pk=id).exists()
-
-
 def resolve_department_list(root, info: Info, short: bool = True) -> List[str]:
     dep_short: List[str] = []
     dep_long: List[str] = []
@@ -186,4 +171,6 @@ class Mutation:
     # gql.django.mutation()
     # evaluation_create = EvaluationType.CreateField()
     # evaluation_update = EvaluationType.UpdateField()
-    # evaluation_delete = EvaluationType.DeleteField()
+    evaluation_delete: EvaluationType = gql.django.delete_mutation(
+        EvaluationInput, directives=[IsAuthenticated(), OwnsObjPerm()]
+    )

@@ -1,3 +1,4 @@
+import dataclasses
 from typing import Callable, ClassVar, Optional, List, Any
 
 from strawberry import ID, auto, UNSET, Private
@@ -12,15 +13,17 @@ from django.db.models.query import QuerySet
 from django.utils.translation import gettext_lazy as _
 
 from . import models
+from account.types import UserType
+
 
 @gql.django.type(models.Instructor)
 class InstructorType:
     pk: ID
-    
+
     name: auto
     department: auto
     profile_pic: str
-    
+
     evaluation_set: List["EvaluationType"]
 
 
@@ -42,3 +45,23 @@ class EvaluationType:
     personality_comment: auto
 
     instructor: InstructorType
+
+
+@gql.django.input(models.Evaluation)
+class EvaluationInput:
+    pk: ID
+
+
+@dataclasses.dataclass
+class OwnsObjPerm(ConditionDirective):
+
+    message: Private[str] = "You don't have such evaluation."
+
+    def check_condition(
+        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
+    ):
+        pk = info.variable_values["pk"]  # get community `pk`
+        if models.Evaluation.objects.filter(pk=pk, user=user).exists():
+            return True
+
+        return False
