@@ -11,10 +11,16 @@
 
 # from graphql_jwt.decorators import login_required
 # from graphql_auth.constants import Messages
+# from .utils import is_owner
+from typing import List
+
+import strawberry
+from strawberry_django_plus import gql
+
+from .types import InstructorType, EvaluationType
 
 from django.contrib.auth.models import User, Group
 from .models import Evaluation, Instructor
-from .utils import is_owner
 from data import departments
 
 
@@ -146,22 +152,19 @@ from data import departments
 
 # Main entry for all the query types
 # Now only provides all Instructor & Evaluation objects
+@strawberry.type
 class Query:
-    ...
-    # evaluation = EvaluationType.ReadField()
-    # evaluations = EvaluationType.BatchReadField()
+    evaluation: EvaluationType = gql.django.field()
+    evaluations: List[EvaluationType] = gql.django.field()
 
-    # instructor = InstructorType.ReadField()
-    # instructors = InstructorType.BatchReadField()
+    instructor: InstructorType = gql.django.field()
+    instructors: List[InstructorType] = gql.django.field()
 
 
 # Main entry for all Mutation types
+@strawberry.type
 class Mutation:
     ...
     # evaluation_create = EvaluationType.CreateField()
     # evaluation_update = EvaluationType.UpdateField()
     # evaluation_delete = EvaluationType.DeleteField()
-
-    # instructor_create = InstructorType.CreateField()
-    # instructor_update = InstructorType.UpdateField()
-    # instructor_delete = InstructorType.DeleteField()
