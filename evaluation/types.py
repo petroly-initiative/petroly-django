@@ -16,7 +16,13 @@ from . import models
 from account.types import UserType
 
 
-@gql.django.type(models.Instructor)
+@gql.django.filter(models.Instructor, lookups=True)
+class InstructorFilter:
+    name: auto
+    department: auto
+
+
+@gql.django.type(models.Instructor, filters=InstructorFilter)
 class InstructorType:
     pk: ID
 
@@ -27,7 +33,7 @@ class InstructorType:
     evaluation_set: List["EvaluationType"]
 
 
-# TODO add filters
+
 # TODO add the custom fields: avg()
 @gql.django.type(models.Evaluation)
 class EvaluationType:
@@ -65,7 +71,7 @@ class EvaluationPartialInput:
     teaching_comment: auto
     personality_comment: auto
 
-    instructor: InstructorType
+    instructor: ID
 
 
 @gql.django.input(models.Evaluation)
@@ -81,7 +87,7 @@ class OwnsObjPerm(ConditionDirective):
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
     ):
-        pk = info.variable_values["pk"]  # get community `pk`
+        pk = info.variable_values["pk"]  # get evaluation's `pk`
         if models.Evaluation.objects.filter(pk=pk, user=user).exists():
             return True
 
