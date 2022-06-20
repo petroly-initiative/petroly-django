@@ -18,6 +18,7 @@ import strawberry
 from strawberry import ID
 from strawberry.types.info import Info
 from strawberry_django_plus import gql
+from strawberry_django_plus.permissions import IsAuthenticated
 
 from .types import InstructorType, EvaluationType
 
@@ -129,26 +130,6 @@ from data import departments
 #     def resolve_has_evaluated(parent, info, id):
 #         return Evaluation.objects.filter(user=info.context.user, instructor__pk=id).exists()
 
-#     @staticmethod
-#     def resolve_department_list(parent, info, short=True):
-#         dep_short = []
-#         dep_long = []
-#         for short_, long_ in departments:
-#             dep_short.append(short_)
-#             dep_long.append(long_)
-
-#         if short:
-#             return dep_short
-#         return dep_long
-
-#     @staticmethod
-#     def resolve_evaluated_instructors(parent, info, short=True):
-#         ids = []
-#         for i in Instructor.objects.all():
-#             if i.evaluation_set.exists():
-#                 ids.append(str(i.pk))
-#         return ids
-
 
 def resolve_department_list(root, info: Info, short: bool = True) -> List[str]:
     dep_short: List[str] = []
@@ -190,8 +171,10 @@ class Query:
     instructors: List[InstructorType] = gql.django.field()
 
     department_list = strawberry.field(resolve_department_list)
-    has_evaluated = strawberry.field(resolve_has_evaluated)
     evaluated_instructors = strawberry.field(resolve_evaluated_instructors)
+    has_evaluated = strawberry.field(
+        resolve_has_evaluated, directives=[IsAuthenticated()]
+    )
 
 
 @strawberry.type
