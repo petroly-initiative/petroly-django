@@ -146,6 +146,7 @@ class Mutation:
     Main entry for all Mutation types
     """
 
+    # FIXME add permissions
     evaluation_create: EvaluationType = gql.django.create_mutation(EvaluationInput)
     evaluation_update: EvaluationType = gql.django.update_mutation(EvaluationPartialInput)
     evaluation_delete: EvaluationType = gql.django.delete_mutation(
