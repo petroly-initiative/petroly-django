@@ -151,8 +151,8 @@ from data import departments
 
 
 def resolve_department_list(root, info: Info, short: bool = True) -> List[str]:
-    dep_short = []
-    dep_long = []
+    dep_short: List[str] = []
+    dep_long: List[str] = []
     for short_, long_ in departments:
         dep_short.append(short_)
         dep_long.append(long_)
@@ -164,13 +164,25 @@ def resolve_department_list(root, info: Info, short: bool = True) -> List[str]:
 
 
 def resolve_has_evaluated(root, info: Info, pk: ID) -> bool:
-    return Evaluation.objects.filter(user=info.context.request.user, instructor__pk=pk).exists()
+    return Evaluation.objects.filter(
+        user=info.context.request.user, instructor__pk=pk
+    ).exists()
 
 
-# Main entry for all the query types
-# Now only provides all Instructor & Evaluation objects
+def resolve_evaluated_instructors(root, info: Info) -> List[str]:
+    ids: List[str] = []
+    for i in Instructor.objects.all():
+        if i.evaluation_set.exists():
+            ids.append(str(i.pk))
+    return ids
+
+
 @strawberry.type
 class Query:
+    """
+    Main entry for all the query types
+    """
+
     evaluation: EvaluationType = gql.django.field()
     evaluations: List[EvaluationType] = gql.django.field()
 
@@ -179,15 +191,15 @@ class Query:
 
     department_list = strawberry.field(resolve_department_list)
     has_evaluated = strawberry.field(resolve_has_evaluated)
+    evaluated_instructors = strawberry.field(resolve_evaluated_instructors)
 
 
-#     evaluated_instructors = graphene.List(graphene.String)
-
-
-# Main entry for all Mutation types
 @strawberry.type
 class Mutation:
-    ...
+    """
+    Main entry for all Mutation types
+    """
+
     # gql.django.mutation()
     # evaluation_create = EvaluationType.CreateField()
     # evaluation_update = EvaluationType.UpdateField()
