@@ -1,6 +1,7 @@
 import dataclasses
 from typing import Callable, ClassVar, Optional, List, Any
 
+import strawberry
 from strawberry import ID, auto, UNSET, Private
 from strawberry.types import Info
 from strawberry.file_uploads import Upload
@@ -32,6 +33,27 @@ class InstructorType:
 
     evaluation_set: List["EvaluationType"]
 
+    # custom fields
+
+    @gql.django.field
+    def grading_avg(self, info) -> float:
+        return self.avg()["grading__avg"]
+
+    @gql.django.field
+    def teaching_avg(self, info) -> float:
+        return self.avg()["teaching__avg"]
+
+    @gql.django.field
+    def personality_avg(self, info) -> float:
+        return self.avg()["personality__avg"]
+
+    @gql.django.field
+    def overall(self, info) -> int:
+        return self.avg()["overall"]
+
+    @gql.django.field
+    def overall_float(self, info) -> float:
+        return self.avg()["overall_float"]
 
 
 # TODO add the custom fields: avg()
