@@ -26,95 +26,73 @@ from django.contrib.auth.models import User, Group
 from .models import Evaluation, Instructor
 from data import departments
 
+'''
+class InstructorType(DjangoGrapheneCRUD):
+    """
+    A type for the `evaluation.Instructor` model.
+    """
 
-# class InstructorType(DjangoGrapheneCRUD):
-#     '''
-#     A type for the `evaluation.Instructor` model.
-#     '''
+    class Meta:
+        model = Instructor
 
-#     class Meta:
-#         model = Instructor
+    grading_avg = graphene.Int()
+    teaching_avg = graphene.Int()
+    personality_avg = graphene.Int()
+    overall_float = graphene.Float()
+    overall = graphene.Int()
 
-#     grading_avg = graphene.Int()
-#     teaching_avg = graphene.Int()
-#     personality_avg = graphene.Int()
-#     overall_float = graphene.Float()
-#     overall = graphene.Int()
+    @staticmethod
+    def resolve_grading_avg(parent, info):
+        return parent.avg()["grading__avg"]
 
-#     @staticmethod
-#     def resolve_grading_avg(parent, info):
-#         return parent.avg()['grading__avg']
+    @staticmethod
+    def resolve_teaching_avg(parent, info):
+        return parent.avg()["teaching__avg"]
 
-#     @staticmethod
-#     def resolve_teaching_avg(parent, info):
-#         return parent.avg()['teaching__avg']
+    @staticmethod
+    def resolve_personality_avg(parent, info):
+        return parent.avg()["personality__avg"]
 
-#     @staticmethod
-#     def resolve_personality_avg(parent, info):
-#         return parent.avg()['personality__avg']
+    @staticmethod
+    def resolve_overall(parent, info):
+        return parent.avg()["overall"]
 
-#     @staticmethod
-#     def resolve_overall(parent, info):
-#         return parent.avg()['overall']
-
-#     @staticmethod
-#     def resolve_overall_float(parent, info):
-#         return parent.avg()['overall_float']
-
-#     @classmethod
-#     def before_create(cls, parent, info, instance, data):
-#         user: User = info.context.user
-#         if user.has_perm("evaluation.add_instructor"):
-#             raise GraphQLError("You don't have permission")
-#         return
-
-#     @classmethod
-#     def before_update(cls, parent, info, instance, data):
-#         user: User = info.context.user
-#         if not user.has_perm("evaluation.update_instructor"):
-#             raise GraphQLError("You don't have permission")
-#         return
-
-#     @classmethod
-#     def before_delete(cls, parent, info, instance, data):
-#         user: User = info.context.user
-#         if user.has_perm("evaluation.delete_instructor"):
-#             raise GraphQLError("You don't have permission")
-#         return
+    @staticmethod
+    def resolve_overall_float(parent, info):
+        return parent.avg()["overall_float"]
 
 
-# class EvaluationType(DjangoGrapheneCRUD):
-#     """
-#     A type for the `evaluation.Evaluation` model.
-#     """
+class EvaluationType(DjangoGrapheneCRUD):
+    """
+    A type for the `evaluation.Evaluation` model.
+    """
 
-#     class Meta:
-#         model = Evaluation
-#         exclude_fields = ('user', )
+    class Meta:
+        model = Evaluation
+        exclude_fields = ("user",)
 
-#     @classmethod
-#     @login_required
-#     def before_create(cls, parent, info, instance, data) -> None:
-#         instructor_pk = data['instructor']['connect']['id']['exact']
+    @classmethod
+    @login_required
+    def before_create(cls, parent, info, instance, data) -> None:
+        instructor_pk = data["instructor"]["connect"]["id"]["exact"]
 
-#         # the logged use is the evaluator
-#         instance.user = info.context.user
+        # the logged use is the evaluator
+        instance.user = info.context.user
 
-#         if Evaluation.objects.filter(user=info.context.user, instructor__pk=instructor_pk):
-#             raise GraphQLError("You have evaluated this instructor before, you can edit it in My Evaluations.")
-#         return
+        if Evaluation.objects.filter(
+            user=info.context.user, instructor__pk=instructor_pk
+        ):
+            raise GraphQLError(
+                "You have evaluated this instructor before, you can edit it in My Evaluations."
+            )
+        return
 
-#     # Forbid user to change other users' evaluation
-#     @classmethod
-#     @is_owner
-#     def before_update(cls, parent, info, instance, data) -> None:
-#         return
-
-#     @classmethod
-#     @is_owner
-#     def before_delete(cls, parent, info, instance, data) -> None:
-#         return
-
+    # Forbid user to change other users' evaluation
+    @classmethod
+    @is_owner
+    def before_update(cls, parent, info, instance, data) -> None:
+        return
+'''
 
 def resolve_department_list(root, info: Info, short: bool = True) -> List[str]:
     dep_short: List[str] = []
@@ -168,7 +146,6 @@ class Mutation:
     Main entry for all Mutation types
     """
 
-    # gql.django.mutation()
     # evaluation_create = EvaluationType.CreateField()
     # evaluation_update = EvaluationType.UpdateField()
     evaluation_delete: EvaluationType = gql.django.delete_mutation(
