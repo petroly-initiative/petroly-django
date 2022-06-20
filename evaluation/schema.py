@@ -20,7 +20,7 @@ from strawberry.types.info import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 
-from .types import InstructorType, EvaluationType, OwnsObjPerm, EvaluationInput
+from .types import InstructorType, EvaluationType, OwnsObjPerm, EvaluationInput, EvaluationPartialInput
 
 from django.contrib.auth.models import User, Group
 from .models import Evaluation, Instructor
@@ -146,8 +146,8 @@ class Mutation:
     Main entry for all Mutation types
     """
 
-    # evaluation_create = EvaluationType.CreateField()
-    # evaluation_update = EvaluationType.UpdateField()
+    evaluation_create: EvaluationType = gql.django.create_mutation(EvaluationInput)
+    evaluation_update: EvaluationType = gql.django.update_mutation(EvaluationPartialInput)
     evaluation_delete: EvaluationType = gql.django.delete_mutation(
         EvaluationInput, directives=[IsAuthenticated(), OwnsObjPerm()]
     )
