@@ -12,6 +12,7 @@ from graphql.type.definition import GraphQLResolveInfo
 from django.db.models import Count
 from django.db.models.query import QuerySet
 from django.utils.translation import gettext_lazy as _
+from cloudinary.models import CloudinaryField, CloudinaryResource
 
 from . import models
 from account.types import UserType
@@ -49,6 +50,13 @@ class CommunityPartialInput:
     icon: Optional[Upload]
 
 
+@gql.type
+class CloudinaryType:
+    
+    @gql.field
+    def url(self: CloudinaryResource) -> str:
+        return self.url
+
 @gql.django.type(models.Community, filters=CommunityFilter)
 class CommunityType:
     pk: ID
@@ -61,9 +69,12 @@ class CommunityType:
     section: auto
     verified: auto
     archived: auto
-    icon: Optional[str]
-    likes: Optional[List[UserType]]
-    # owner: Optional[UserType]
+    icon: Optional[CloudinaryType]
+    # likes: Optional[List[UserType]] # replace with likes_count field
+
+    @gql.field
+    def likes_count(self: models.Community, info: Info) -> int:
+        return self.likes.count()
 
     def get_queryset(
         self, queryset: QuerySet, info: Info, filters=None, **kw
