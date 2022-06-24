@@ -261,7 +261,6 @@ class AccountGraphQLTestCase(TestCase):
         res = self.client.post(
             self.endpoint, data={"query": register}, content_type="application/json"
         )
-        print(json.loads(res.content))
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["register"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
@@ -568,7 +567,6 @@ class AccountGraphQLTestCase(TestCase):
             profileUpdate,
             {"id": self.user2.profile.pk, "theme": "dark", "language": "ar-SA"},
         )
-
         self.assertIsNone(res.errors)
         self.assertIsNotNone(res.data)
         data = res.data["profileUpdate"]
