@@ -94,8 +94,8 @@ class MatchIdentity(ConditionDirective):
 
     message: Private[str] = "Your identity aren't matching the provided `pk`."
 
-    def check_condition(self, root: Any, info: GraphQLResolveInfo, user: UserType):
-        pk = info.variable_values["owner"]
+    def check_condition(self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs):
+        pk = kwargs["input"]["owner"]
         if pk:
             try:
                 if int(pk) == user.pk:
