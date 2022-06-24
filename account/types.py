@@ -84,12 +84,14 @@ class OwnsObjPerm(ConditionDirective):
 
     message: Private[str] = "You don't own this object."
 
-    def check_condition(self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs):
+    def check_condition(
+        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
+    ):
         pk = kwargs["input"]["id"]
         if pk:
             try:
                 pk = int(pk)
             except:
                 raise ValueError("The field `id` is not valid.")
-            return  user.profile.pk == pk
-        raise ValueError('The field `id` must be provided.')
+            return user.profile.pk == pk
+        raise ValueError("The field `id` must be provided.")
