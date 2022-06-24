@@ -6,6 +6,7 @@ from strawberry import ID, auto, UNSET, Private
 from strawberry.types import Info
 from strawberry.file_uploads import Upload
 from strawberry_django_plus import gql
+from strawberry_django_plus.utils.typing import UserType
 from strawberry_django_plus.permissions import ConditionDirective
 from graphql.type.definition import GraphQLResolveInfo
 
@@ -14,7 +15,6 @@ from django.db.models.query import QuerySet
 from django.utils.translation import gettext_lazy as _
 
 from . import models
-from account.types import UserType
 
 
 @gql.django.filter(models.Instructor, lookups=True)
@@ -56,7 +56,6 @@ class InstructorType:
         return self.avg()["overall_float"]
 
 
-# TODO add the custom fields: avg()
 @gql.django.type(models.Evaluation)
 class EvaluationType:
     pk: ID
@@ -98,19 +97,83 @@ class EvaluationPartialInput:
 
 @gql.django.input(models.Evaluation)
 class EvaluationInput:
+    comment: auto
+    course: auto
+    term: auto
+
+    grading: auto
+    teaching: auto
+    personality: auto
+
+    grading_comment: auto
+    teaching_comment: auto
+    personality_comment: auto
+
+    user: ID
+    instructor: ID
+
+
+@strawberry.input
+class PkInput:
+    """General purpose pk input type"""
+
     pk: ID
 
 
 @dataclasses.dataclass
 class OwnsObjPerm(ConditionDirective):
+    """
+    This is to check users can only modify theirs.
+    """
 
     message: Private[str] = "You don't have such evaluation."
 
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
-    ):
-        pk = info.variable_values["pk"]  # get evaluation's `pk`
+    ) -> bool:
+        pk = kwargs["input"]["pk"]  # get evaluation's `pk`
         if models.Evaluation.objects.filter(pk=pk, user=user).exists():
             return True
 
         return False
+
+
+# This is not used,
+# we created a constraint on `Evaluation` model
+# to do the same thing
+class NotEvaluated(ConditionDirective):
+
+    message: Private[str] = "You can only evalute an instructor once."
+
+    def check_condition(
+        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
+    ) -> bool:
+
+        kwargs["input"]["user"] = user.pk  # set the user field to the logged user
+        pk = kwargs["input"]["instructor"]  # get instructor `pk`
+
+        return models.Evaluation.objects.filter(
+            user=info.context.request.user, instructor__pk=pk
+        ).exists()
+
+
+@dataclasses.dataclass
+class MatchIdentity(ConditionDirective):
+    """
+    This to check wether the provided `user` match ther logged-in user.
+    """
+
+    message: Private[str] = "Your identity isn't matching the provided `user`."
+
+    def check_condition(
+        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
+    ):
+        pk = kwargs["input"]["user"]
+        if pk:
+            try:
+                if int(pk) == user.pk:
+                    return True
+                return False
+            except:
+                raise ValueError("The field `user` is not valid.")
+        raise ValueError("The field `user` must be provided.")
