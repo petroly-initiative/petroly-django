@@ -20,39 +20,6 @@ from django.contrib.auth.models import User, Group
 from .models import Evaluation, Instructor
 from data import departments
 
-'''
-class EvaluationType(DjangoGrapheneCRUD):
-    """
-    A type for the `evaluation.Evaluation` model.
-    """
-
-    class Meta:
-        model = Evaluation
-        exclude_fields = ("user",)
-
-    @classmethod
-    @login_required
-    def before_create(cls, parent, info, instance, data) -> None:
-        instructor_pk = data["instructor"]["connect"]["id"]["exact"]
-
-        # the logged use is the evaluator
-        instance.user = info.context.user
-
-        if Evaluation.objects.filter(
-            user=info.context.user, instructor__pk=instructor_pk
-        ):
-            raise GraphQLError(
-                "You have evaluated this instructor before, you can edit it in My Evaluations."
-            )
-        return
-
-    # Forbid user to change other users' evaluation
-    @classmethod
-    @is_owner
-    def before_update(cls, parent, info, instance, data) -> None:
-        return
-'''
-
 
 def resolve_department_list(root, info: Info, short: bool = True) -> List[str]:
     dep_short: List[str] = []
