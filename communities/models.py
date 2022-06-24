@@ -33,13 +33,13 @@ class Community(models.Model):
 
     class CategoryEnum(models.TextChoices):
         EDU = "edu", _("Educational")
-        SEC = "section", _("Section")
-        ENT = "entertaining", _("Entertaining")
+        SECTION = "section", _("Section")
+        ENTERTAINING = "entertaining", _("Entertaining")
 
     class PlatformEnum(models.TextChoices):
-        WHAT = "whatsapp", _("Whatsapp")
-        DISC = "discord", _("Discord")
-        TELE = "telegram", _("Telegram")
+        WHATSAPP = "whatsapp", _("Whatsapp")
+        DISCORD = "discord", _("Discord")
+        TELEGRAM = "telegram", _("Telegram")
 
     name = models.CharField(_("Name"), max_length=100)
     description = models.TextField(
