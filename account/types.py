@@ -52,13 +52,13 @@ class ProfileType:
         return None
 
 
-@gql.django.input(models.Profile)
+@gql.django.input(models.Profile, partial=True)
 class ProfileInput:
     pk: ID
-    major: str
-    year: str
-    language: str
-    theme: str
+    major: auto
+    year: auto
+    language: auto
+    theme: auto
 
 
 @strawberry.input
