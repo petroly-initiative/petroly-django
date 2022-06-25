@@ -52,7 +52,7 @@ class Community(models.Model):
     section = models.CharField(_("Section"), max_length=10, default="", blank=True)
     verified = models.BooleanField(_("Verified"), default=True)
     archived = models.BooleanField(_("Archived"), default=False)
-    icon = CloudinaryField(
+    icon = CloudinaryFieldCostom(
         _("icon"),
         default=None,
         null=True,
