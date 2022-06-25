@@ -31,6 +31,14 @@ class UserType:
     owned_communities: list[CommunityType]
     evaluation_set: list[EvaluationType]
 
+    @gql.field
+    def owned_communities_count(self) -> int:
+        return self.owned_communities.count()
+
+    @gql.field
+    def evaluation_set_count(self) -> int:
+        return self.evaluation_set.count()
+
 
 @gql.django.type(models.Profile)
 class ProfileType:
