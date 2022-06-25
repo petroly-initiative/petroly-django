@@ -20,8 +20,7 @@ class CloudinaryFieldCostom(CloudinaryField):
 
     def to_python(self, value):
         if isinstance(value, dict):
-            # ignore it
-            pass
+            return super().to_python(value['upload'])
         else:
             return super().to_python(value)
 
