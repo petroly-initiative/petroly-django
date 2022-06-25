@@ -12,6 +12,7 @@ from typing import Any
 from django.contrib.auth import get_user_model
 
 from . import models
+from communities.types import CommunityType
 
 
 @strawberry.django.type(model=get_user_model())
@@ -20,15 +21,13 @@ class UserType:
     pk: ID
     username: auto
     email: auto
-    first_name: auto
-    last_name: auto
-    logentry_set: auto
     is_superuser: auto
-    last_login: auto
     is_staff: auto
     is_active: auto
     date_joined: auto
     profile: "ProfileType"
+
+    owned_communities: list[CommunityType]
 
 
 @gql.django.type(models.Profile)
