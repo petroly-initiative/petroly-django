@@ -35,11 +35,14 @@ class UserType:
 class ProfileType:
     pk: ID
     user: UserType
-    profile_pic: str
     major: str
     year: str
     language: str
     theme: str
+
+    @gql.field
+    def profile_pic(self: models.Profile) -> str:
+        return self.profile_pic.url
 
     def get_queryset(self, queryset, info: Info):
         user = info.context.request.user
