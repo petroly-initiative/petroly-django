@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 
 from . import models
 from communities.types import CommunityType
+from evaluation.types import EvaluationType
 
 
 @strawberry.django.type(model=get_user_model())
@@ -28,6 +29,7 @@ class UserType:
     profile: "ProfileType"
 
     owned_communities: list[CommunityType]
+    evaluation_set: list[EvaluationType]
 
 
 @gql.django.type(models.Profile)
