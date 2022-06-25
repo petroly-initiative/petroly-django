@@ -15,12 +15,13 @@ PATH = "dev" if settings.DEBUG else "prod"
 
 class CloudinaryFieldCostom(CloudinaryField):
     """
-    This is needed to modify to_python, to deal with the FileInput from `graphene`.
+    This is needed to modify to_python, to deal with the FileInput from `strawberry`.
     """
 
     def to_python(self, value):
         if isinstance(value, dict):
-            return super().to_python(value['upload'])
+            # ignore it
+            pass
         else:
             return super().to_python(value)
 
