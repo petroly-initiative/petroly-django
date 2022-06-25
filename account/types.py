@@ -17,6 +17,7 @@ from . import models
 @strawberry.django.type(model=get_user_model())
 # @inject_field({user_pk_field: auto})
 class UserType:
+    pk: ID
     username: auto
     email: auto
     first_name: auto
@@ -30,9 +31,9 @@ class UserType:
     profile: "ProfileType"
 
 
-@strawberry_django.type(models.Profile)
+@gql.django.type(models.Profile)
 class ProfileType:
-    id: ID
+    pk: ID
     user: UserType
     profile_pic: str
     major: str
@@ -48,9 +49,9 @@ class ProfileType:
         return None
 
 
-@strawberry_django.input(models.Profile)
+@gql.django.input(models.Profile)
 class ProfileInput:
-    id: auto
+    pk: ID
     major: str
     year: str
     language: str
@@ -87,11 +88,11 @@ class OwnsObjPerm(ConditionDirective):
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
     ):
-        pk = kwargs["input"]["id"]
+        pk = kwargs["input"]["pk"]
         if pk:
             try:
                 pk = int(pk)
             except:
-                raise ValueError("The field `id` is not valid.")
+                raise ValueError("The field `pk` is not valid.")
             return user.profile.pk == pk
-        raise ValueError("The field `id` must be provided.")
+        raise ValueError("The field `p` must be provided.")
