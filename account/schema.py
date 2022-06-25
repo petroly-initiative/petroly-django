@@ -16,8 +16,19 @@ from .types import (
 
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
-
 from cloudinary.uploader import upload_image
+
+from .types import UserType
+
+
+class ObtainJSONWebTokenCustom(arg_mutations.ObtainJSONWebToken):
+    """
+    An extended class from `ObtainJSONWebToken`
+    to provide the `user` field.
+    """
+
+    class _meta(arg_mutations.ObtainJSONWebTokenMixin._meta):
+        _required_outputs = {"user": UserType}
 
 
 @strawberry.type
@@ -28,18 +39,8 @@ class UserMutations:
     revoke_token = arg_mutations.RevokeToken.Field
     register = arg_mutations.Register.Field
     verify_account = arg_mutations.VerifyAccount.Field
-    # update_account = arg_mutations.UpdateAccount.Field
-    # resend_activation_email = arg_mutations.ResendActivationEmail.Field
-    # archive_account = arg_mutations.ArchiveAccount.Field
-    # delete_account = arg_mutations.DeleteAccount.Field
-    # password_change = arg_mutations.PasswordChange.Field
     send_password_reset_email = arg_mutations.SendPasswordResetEmail.Field
     password_reset = arg_mutations.PasswordReset.Field
-    # password_set = arg_mutations.PasswordSet.Field
-    # verify_secondary_email = arg_mutations.VerifySecondaryEmail.Field
-    # swap_emails = arg_mutations.SwapEmails.Field
-    # remove_secondary_email = arg_mutations.RemoveSecondaryEmail.Field
-    # send_secondary_email_activation = arg_mutations.SendSecondaryEmailActivation.Field
 
 
 @strawberry.type
@@ -75,9 +76,7 @@ class Mutation(UserMutations):
     # maybe create custom login_required decorator
     @strawberry.mutation(directives=[IsAuthenticated()])
     # @login_required
-    def profile_pic_update(
-        self, info, file: Upload
-    ) -> Optional[ProfilePicUpdateType]:
+    def profile_pic_update(self, info, file: Upload) -> Optional[ProfilePicUpdateType]:
         """
         Mutation to help upload only a profile pic to Cloudinary
         then save it to Profile model.
