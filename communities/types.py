@@ -1,12 +1,13 @@
 import dataclasses
 import functools
-from typing import Callable, ClassVar, Optional, List, Any
+from typing import Callable, ClassVar, Optional, Any
 
 from strawberry import ID, auto, UNSET, Private
 from strawberry.types import Info
 from strawberry.file_uploads import Upload
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import ConditionDirective
+from strawberry_django_plus.utils.typing import UserType
 from graphql.type.definition import GraphQLResolveInfo
 
 from django.db.models import Count
@@ -15,7 +16,13 @@ from django.utils.translation import gettext_lazy as _
 from cloudinary.models import CloudinaryField, CloudinaryResource
 
 from . import models
-from account.types import UserType
+
+
+@gql.django.input(models.Report, partial=True)
+class ReportInput:
+    pk: ID
+    reason: auto
+    other_reason: auto
 
 
 @gql.django.filter(models.Community, lookups=True)
@@ -52,10 +59,10 @@ class CommunityPartialInput:
 
 @gql.type
 class CloudinaryType:
-    
     @gql.field
     def url(self: CloudinaryResource) -> str:
         return self.url
+
 
 @gql.django.type(models.Community, filters=CommunityFilter)
 class CommunityType:
@@ -105,7 +112,9 @@ class MatchIdentity(ConditionDirective):
 
     message: Private[str] = "Your identity aren't matching the provided `pk`."
 
-    def check_condition(self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs):
+    def check_condition(
+        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
+    ):
         pk = kwargs["input"]["owner"]
         if pk:
             try:
@@ -122,8 +131,10 @@ class OwnsObjPerm(ConditionDirective):
 
     message: Private[str] = "You don't own this community."
 
-    def check_condition(self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs):
-        pk = kwargs["input"]['pk'] # get community `pk`
+    def check_condition(
+        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
+    ):
+        pk = kwargs["input"]["pk"]  # get community `pk`
         if models.Community.objects.filter(pk=pk, owner=user).exists():
             return True
 
@@ -131,7 +142,11 @@ class OwnsObjPerm(ConditionDirective):
 
 
 # Example of implementing custom directive; is not courged
-from strawberry_django_plus.directives import SchemaDirectiveWithResolver, SchemaDirectiveHelper
+from strawberry_django_plus.directives import (
+    SchemaDirectiveWithResolver,
+    SchemaDirectiveHelper,
+)
+
 
 @dataclasses.dataclass
 class CustomDirective(SchemaDirectiveWithResolver):
@@ -150,7 +165,6 @@ class CustomDirective(SchemaDirectiveWithResolver):
     ):
         print(kwargs)
         resolver = functools.partial(_next, root, info, *args, **kwargs)
-
 
         if callable(resolver):
             resolver = resolver()

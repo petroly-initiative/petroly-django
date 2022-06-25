@@ -20,13 +20,8 @@ from .types import (
     CommunityPartialInput,
     MatchIdentity,
     OwnsObjPerm,
+    ReportInput,
 )
-
-#     @classmethod
-#     def before_update(cls, parent, info, instance, data):
-#         if "icon" in data.keys() and data["icon"].upload is None:
-#             # remove the None value of icon to keep the old one
-#             del data["icon"]
 
 
 def resolve_community_interactions(
@@ -58,20 +53,18 @@ def rsolve_toggle_like_community(root, info: Info, pk: ID) -> bool:
     return True
 
 
-def resolve_report(
-    root, info: Info, pk: ID, reason: str, other_reason: Optional[str] = ""
-) -> bool:
+def resolve_report(root, info: Info, input: ReportInput) -> bool:
 
     user: User = info.context.request.user
-    community = Community.objects.get(pk=pk)
+    community = Community.objects.get(pk=input.pk)
 
     if Report.objects.filter(reporter=user, community=community).exists():
         raise Exception("You have reported this community Already")
 
     obj = Report.objects.get_or_create(
         reporter=user,  # reporter is the logged user
-        reason=reason,
-        other_reason=other_reason,
+        reason=input.reason,
+        other_reason=input.other_reason,
         community=community,
     )
 
