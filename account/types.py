@@ -55,7 +55,6 @@ class ProfileType:
 
     def get_queryset(self, queryset, info: Info):
         user = info.context.request.user
-        print(queryset)
         if user.is_authenticated:
             return queryset.filter(user=user)
         return None

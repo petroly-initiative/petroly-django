@@ -6,6 +6,8 @@ from strawberry.types.info import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 
+from data import departments
+from .models import Evaluation, Instructor
 from .types import (
     InstructorType,
     EvaluationType,
@@ -15,10 +17,6 @@ from .types import (
     PkInput,
     MatchIdentity,
 )
-
-from django.contrib.auth.models import User, Group
-from .models import Evaluation, Instructor
-from data import departments
 
 
 def resolve_department_list(root, info: Info, short: bool = True) -> List[str]:
