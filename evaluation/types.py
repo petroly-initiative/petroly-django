@@ -12,6 +12,7 @@ from strawberry.types import Info
 from graphql.type.definition import GraphQLResolveInfo
 
 from strawberry_django_plus import gql
+from strawberry_django_plus.gql import relay
 from strawberry_django_plus.utils.typing import UserType
 from strawberry_django_plus.permissions import ConditionDirective
 
@@ -24,14 +25,14 @@ class InstructorFilter:
     department: auto
 
 
-@gql.django.type(Instructor, filters=InstructorFilter, pagination=True)
-class InstructorType:
+@gql.django.type(Instructor, filters=InstructorFilter)
+class InstructorNode(relay.Node):
     pk: ID
 
-    name: auto
-    department: auto
+    name: str
+    department: str
 
-    evaluation_set: List["EvaluationType"]
+    evaluation_set: List["EvaluationNode"]
 
     # custom fields
 
@@ -49,15 +50,15 @@ class InstructorType:
 
     @gql.django.field
     def grading_avg(self: Instructor, info) -> float:
-        return self.avg()["grading__avg"]
+        return self.avg()["grading__avg"] or 0
 
     @gql.django.field
     def teaching_avg(self: Instructor, info) -> float:
-        return self.avg()["teaching__avg"]
+        return self.avg()["teaching__avg"] or 0
 
     @gql.django.field
     def personality_avg(self: Instructor, info) -> float:
-        return self.avg()["personality__avg"]
+        return self.avg()["personality__avg"] or 0
 
     @gql.django.field
     def overall(self: Instructor, info) -> int:
@@ -66,6 +67,26 @@ class InstructorType:
     @gql.django.field
     def overall_float(self: Instructor, info) -> float:
         return self.avg()["overall_float"]
+
+
+@gql.django.type(Evaluation)
+class EvaluationNode(relay.Node):
+    pk: ID
+
+    date: auto
+    comment: auto
+    course: auto
+    term: auto
+
+    grading: auto
+    teaching: auto
+    personality: auto
+
+    grading_comment: auto
+    teaching_comment: auto
+    personality_comment: auto
+
+    instructor: InstructorNode
 
 
 @gql.django.type(Evaluation)
@@ -85,7 +106,7 @@ class EvaluationType:
     teaching_comment: auto
     personality_comment: auto
 
-    instructor: InstructorType
+    instructor: InstructorNode
 
 
 @gql.django.input(Evaluation, partial=True)
