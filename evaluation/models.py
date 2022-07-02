@@ -3,10 +3,9 @@ from django.db import models
 from django.db.models import Avg, UniqueConstraint
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
-from data import departments
+from data import DepartmentEnum
 from cloudinary.models import CloudinaryField
-from cloudinary.uploader import upload, upload_image
-
+from django_choices_field import TextChoicesField
 
 class Instructor(models.Model):
     """
@@ -15,7 +14,8 @@ class Instructor(models.Model):
     """
 
     name = models.CharField(max_length=250, unique=True)
-    department = models.CharField(max_length=200, choices=departments)
+    # department = models.CharField(max_length=200, choices=departments)
+    department = TextChoicesField(max_length=200, choices_enum=DepartmentEnum)
     # Additional fields
     profile_pic = CloudinaryField(
         default="https://res.cloudinary.com/petroly-initiative/image/upload/v1622359053/profile_pics/blank_profile.png",

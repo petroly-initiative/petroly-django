@@ -13,7 +13,7 @@ from django.views.generic import *
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import *
-from data import departments
+from data import DepartmentEnum
 from cloudinary.uploader import upload_image
 
 # for uploading image with resizing
@@ -48,7 +48,7 @@ class InstructorListView(ListView):
         filter_qs = InstructorFilter(self.request.GET, Instructor.objects.all().order_by('name'))
         context = super().get_context_data(**kwargs, object_list = filter_qs.qs)
         # departments list for the selector inout
-        context['departments'] = departments 
+        context['departments'] = DepartmentEnum.choices
         # these are to keep track of which page the paginator should be applied
         context['selected_department'] = department
         context['selected_name'] = name
