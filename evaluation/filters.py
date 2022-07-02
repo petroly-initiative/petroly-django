@@ -2,7 +2,7 @@ import django_filters
 from .models import Instructor
 from django_filters import DateFilter, CharFilter
 from django import forms
-from data import departments
+from data import DepartmentEnum
 
 
 class InstructorFilter(django_filters.FilterSet):
@@ -15,7 +15,7 @@ class InstructorFilter(django_filters.FilterSet):
     #                                                                                  'placeholder':'Search Here !',
     #  'style':"padding: 16px;margin: 0px;color: var(--dark);margin-left: 2px;text-align: center;font-size: 1.0rem;border-radius: 0px;height: 41px;"}))
 
-    department = django_filters.ChoiceFilter(label="department", choices=departments)
+    department = django_filters.ChoiceFilter(label="department", choices=DepartmentEnum.choices)
 
     class Meta:
         model = Instructor
