@@ -125,7 +125,7 @@ class EvaluationPartialInput:
     teaching_comment: auto
     personality_comment: auto
 
-    instructor: ID
+    # instructor: ID
 
 
 @gql.django.input(Evaluation)
