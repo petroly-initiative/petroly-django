@@ -11,7 +11,7 @@ import django.contrib.auth.views as auth_views
 
 from .models import Profile
 from . import views
-from data import departments, years
+from data import DepartmentEnum, years
 
 
 class UserTestCase(TransactionTestCase):
@@ -90,7 +90,7 @@ class ProfileTestCase(UserTestCase):
         )
 
         self.user.profile.profile_pic = res
-        self.user.profile.major = departments[7][0]
+        self.user.profile.major = DepartmentEnum.choices[7][0]
         self.user.profile.year = years[2][0]
         self.user.profile.language = "ar-SA"
         self.user.profile.theme = "dark"
@@ -105,7 +105,7 @@ class ProfileTestCase(UserTestCase):
         )
         self.assertEqual(self.user.profile.profile_pic.metadata["width"], 200)
         self.assertEqual(self.user.profile.profile_pic.metadata["format"], "jpg")
-        self.assertEqual(self.user.profile.major, departments[7][0])
+        self.assertEqual(self.user.profile.major, DepartmentEnum.choices[7][0])
         self.assertEqual(self.user.profile.year, years[2][0])
         self.assertEqual(self.user.profile.language, "ar-SA")
         self.assertEqual(self.user.profile.theme, "dark")
