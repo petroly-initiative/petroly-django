@@ -381,7 +381,7 @@ class AccountGraphQLTestCase(TestCase):
             me{
                 username
                 profile{
-                    id
+                    pk
                     user{
                         username
                     }
@@ -444,7 +444,7 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertIsNotNone(data)
         self.assertEqual(data["username"], self.user.username)
-        self.assertEqual(int(data["profile"]["id"]), self.user.profile.pk)
+        self.assertEqual(int(data["profile"]["pk"]), self.user.profile.pk)
 
         # revoke that token
         res = self.client.post(
@@ -522,17 +522,17 @@ class AccountGraphQLTestCase(TestCase):
 
     def test_profile_update(self):
         profileUpdate = """
-        mutation Update($id: ID, $language: String, $theme: String) {
+        mutation Update($pk: ID!, $language: String, $theme: String) {
             profileUpdate(
                 input: { 
-                    id: $id 
+                    pk: $pk
                     language: $language 
                     theme: $theme
                 }
             ) {
                 __typename,
                 ... on ProfileType {
-                    id
+                    pk
                     language
                     theme
                 }
@@ -551,7 +551,7 @@ class AccountGraphQLTestCase(TestCase):
         from strawberry_django_plus.test.client import TestClient
 
         self.client = TestClient(self.endpoint)
-        res = self.client.query(profileUpdate, {"id": self.user.profile.pk})
+        res = self.client.query(profileUpdate, {"pk": self.user.profile.pk}, asserts_errors=False)
         self.assertIsNone(res.errors)
         self.assertIsNotNone(res.data)
         data = res.data["profileUpdate"]
@@ -565,7 +565,7 @@ class AccountGraphQLTestCase(TestCase):
         # update other user's profile
         res = self.client.query(
             profileUpdate,
-            {"id": self.user2.profile.pk, "theme": "dark", "language": "ar-SA"},
+            {"pk": self.user2.profile.pk, "theme": "dark", "language": "ar-SA"},
         )
         self.assertIsNone(res.errors)
         self.assertIsNotNone(res.data)
@@ -575,7 +575,7 @@ class AccountGraphQLTestCase(TestCase):
         # update the user profile
         res = self.client.query(
             profileUpdate,
-            {"id": self.user.profile.pk, "theme": "dark", "language": "ar-SA"},
+            {"pk": self.user.profile.pk, "theme": "dark", "language": "ar-SA"},
         )
 
         self.assertIsNone(res.errors)
