@@ -89,7 +89,7 @@ class AllowOnlyStaffMiddleware(MiddlewareMixin):
             '/account/logout/',
             '/endpoint/',
         ]
-        print(response.content[:50])
+
         if request.user.is_staff:
             return response
 
