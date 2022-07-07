@@ -1,171 +1,98 @@
-from inspect import indentsize
-from typing import Dict, Any
-from django.db.models.base import Model
-import json
+from typing import List, Optional, Iterable, Type
+from base64 import b64encode
 
-import graphene
-from graphene import *
-from graphene.types.scalars import String
-from graphene_django import DjangoObjectType
-from graphene_django.filter import DjangoFilterConnectionField
-from graphene_django.forms.mutation import DjangoModelFormMutation
-from graphene_file_upload.scalars import Upload
-from graphql import GraphQLError
-from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
-from graphene_django_crud.utils import is_required
+import strawberry
+from strawberry import ID
+from strawberry.types.info import Info
+from strawberry_django_plus import gql
+from strawberry_django_plus.gql import relay
+from strawberry_django_plus.relay import Connection, Node
+from strawberry_django_plus.permissions import IsAuthenticated
 
-from graphql_jwt.decorators import login_required
-from django.contrib.auth.models import User, Group
-from graphql_auth.constants import Messages
+from data import DepartmentEnum
 from .models import Evaluation, Instructor
-from .utils import is_owner
-from data import departments
+from .types import (
+    EvaluationType,
+    OwnsObjPerm,
+    EvaluationInput,
+    EvaluationPartialInput,
+    PkInput,
+    MatchIdentity,
+    InstructorNode,
+    InstructorFilter,
+)
 
 
+def resolve_department_list(root, info: Info, short: bool = True) -> List[str]:
+    dep_short: List[str] = []
+    dep_long: List[str] = []
+    for short_, long_ in DepartmentEnum.choices:
+        dep_short.append(short_)
+        dep_long.append(long_)
+
+    if short:
+        return dep_short
+
+    return dep_long
 
 
-class InstructorType(DjangoGrapheneCRUD):
-    '''
-    A type for the `evaluation.Instructor` model. 
-    '''
-
-    class Meta:
-        model = Instructor
-
-    grading_avg = graphene.Int()
-    teaching_avg = graphene.Int()
-    personality_avg = graphene.Int()
-    overall_float = graphene.Float()
-    overall = graphene.Int()
-
-    @staticmethod
-    def resolve_grading_avg(parent, info):
-        return parent.avg()['grading__avg']
-    
-    @staticmethod
-    def resolve_teaching_avg(parent, info):
-        return parent.avg()['teaching__avg']
-    
-    @staticmethod
-    def resolve_personality_avg(parent, info):
-        return parent.avg()['personality__avg']
-    
-    @staticmethod
-    def resolve_overall(parent, info):
-        return parent.avg()['overall']
-    
-    @staticmethod
-    def resolve_overall_float(parent, info):
-        return parent.avg()['overall_float']
-
-    @classmethod
-    def before_create(cls, parent, info, instance, data):
-        user: User = info.context.user
-        if user.has_perm("evaluation.add_instructor"):
-            raise GraphQLError("You don't have permission")
-        return
-    
-    @classmethod
-    def before_update(cls, parent, info, instance, data):
-        user: User = info.context.user
-        if not user.has_perm("evaluation.update_instructor"):
-            raise GraphQLError("You don't have permission")
-        return
-    
-    @classmethod
-    def before_delete(cls, parent, info, instance, data):
-        user: User = info.context.user
-        if user.has_perm("evaluation.delete_instructor"):
-            raise GraphQLError("You don't have permission")
-        return
+def resolve_has_evaluated(root, info: Info, pk: ID) -> bool:
+    return Evaluation.objects.filter(
+        user=info.context.request.user, instructor__pk=pk
+    ).exists()
 
 
-class EvaluationType(DjangoGrapheneCRUD):
+def crete_global_id(cls: Type[Node], id: int | str) -> str:
+    return b64encode(bytes(f"{cls.__name__}:{id}", "utf-8")).decode()
+
+
+def resolve_evaluated_instructors(root, info: Info) -> List[str]:
+    ids: List[str] = []
+    for i in Instructor.objects.all():
+        if i.evaluation_set.exists():
+            ids.append(crete_global_id(InstructorNode, i.pk))
+    return ids
+
+
+@strawberry.type
+class Query:
     """
-    A type for the `evaluation.Evaluation` model. 
+    Main entry for all the query types
     """
 
-    class Meta:
-        model = Evaluation
-        exclude_fields = ('user', )
+    evaluation: EvaluationType = gql.django.field()
+    evaluations: List[EvaluationType] = gql.django.field()
 
-    @classmethod
-    @login_required
-    def before_create(cls, parent, info, instance, data) -> None:
-        instructor_pk = data['instructor']['connect']['id']['exact']
+    instructor: Optional[InstructorNode] = relay.node()
+    instructors_connection: Connection[InstructorNode] = relay.connection()
 
-        # the logged use is the evaluator 
-        instance.user = info.context.user
-        
-        if Evaluation.objects.filter(user=info.context.user, instructor__pk=instructor_pk):
-            raise GraphQLError("You have evaluated this instructor before, you can edit it in My Evaluations.")
-        return
+    @relay.connection
+    def instructors(self, input: InstructorFilter) -> Iterable[InstructorNode]:
+        filters = {
+            "name__icontains": input.name.i_contains,
+        } | ({"department": input.department} if input.department else {})
 
-    # Forbid user to change other users' evaluation
-    @classmethod
-    @is_owner
-    def before_update(cls, parent, info, instance, data) -> None:
-        return
-            
-    @classmethod
-    @is_owner
-    def before_delete(cls, parent, info, instance, data) -> None:
-        return
+        return Instructor.objects.filter(**filters)
+
+    department_list = strawberry.field(resolve_department_list)
+    evaluated_instructors = strawberry.field(resolve_evaluated_instructors)
+    has_evaluated = strawberry.field(
+        resolve_has_evaluated, directives=[IsAuthenticated()]
+    )
 
 
-class Data(ObjectType):
-    '''
-    This class is to provide general pourpose data.
-    '''
+@strawberry.type
+class Mutation:
+    """
+    Main entry for all Mutation types
+    """
 
-    department_list = graphene.List(String, short=Boolean())
-    has_evaluated = graphene.Boolean(id=graphene.Int())
-    evaluated_instructors = graphene.List(graphene.String)
-
-    @staticmethod
-    @login_required
-    def resolve_has_evaluated(parent, info, id):
-        return Evaluation.objects.filter(user=info.context.user, instructor__pk=id).exists()
-
-    @staticmethod
-    def resolve_department_list(parent, info, short=True):
-        dep_short = []
-        dep_long = []
-        for short_, long_ in departments:
-            dep_short.append(short_)
-            dep_long.append(long_)
-            
-        if short:
-            return dep_short
-        return dep_long
-    
-    @staticmethod
-    def resolve_evaluated_instructors(parent, info, short=True):
-        ids = []
-        for i in Instructor.objects.all():
-            if i.evaluation_set.exists():
-                ids.append(str(i.pk))
-        return ids
-
-
-# Main entry for all the query types
-# Now only provides all Instructor & Evaluation objects
-class Query(Data, ObjectType):
-
-    evaluation = EvaluationType.ReadField()
-    evaluations = EvaluationType.BatchReadField()
-
-    instructor = InstructorType.ReadField()
-    instructors = InstructorType.BatchReadField()
-
-
-# Main entry for all Mutation types
-class Mutation(ObjectType):
-
-    evaluation_create = EvaluationType.CreateField()
-    evaluation_update = EvaluationType.UpdateField()
-    evaluation_delete = EvaluationType.DeleteField()
-
-    instructor_create = InstructorType.CreateField()
-    instructor_update = InstructorType.UpdateField()
-    instructor_delete = InstructorType.DeleteField()
+    evaluation_create: EvaluationType = gql.django.create_mutation(
+        EvaluationInput, directives=[IsAuthenticated(), MatchIdentity()]
+    )
+    evaluation_update: EvaluationType = gql.django.update_mutation(
+        EvaluationPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
+    )
+    evaluation_delete: EvaluationType = gql.django.delete_mutation(
+        PkInput, directives=[IsAuthenticated(), OwnsObjPerm()]
+    )

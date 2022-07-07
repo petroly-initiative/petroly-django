@@ -1,15 +1,13 @@
-from tabnanny import verbose
-from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-from PIL import Image
-from cloudinary.models import CloudinaryField
-from cloudinary import CloudinaryImage
-from data import departments, years
+from data import DepartmentEnum, years
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.utils.translation import gettext as _
+
+from cloudinary.models import CloudinaryField
+from django_choices_field import TextChoicesField
 
 # Create your models here.
 
@@ -32,7 +30,7 @@ class Profile(models.Model):
         blank=True,
         max_length=350,
     )
-    major = models.CharField(blank=True, null=True, max_length=25, choices=departments)
+    major = TextChoicesField(blank=True, null=True, max_length=25, choices_enum=DepartmentEnum)
     year = models.CharField(blank=True, null=True, max_length=25, choices=years)
     language = models.CharField(_("language"), max_length=10, default='en-US')
     theme = models.CharField(_("theme"), max_length=10, default='light')

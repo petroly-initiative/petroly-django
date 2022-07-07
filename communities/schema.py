@@ -1,162 +1,109 @@
-from django.core.exceptions import ObjectDoesNotExist
+from typing import List, Optional
+
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-import graphene
-from graphene import Field, String, Boolean, List, ID
-from graphql import GraphQLError
-from django.contrib.auth.models import User 
-from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
-from graphene_django_crud.converter import convert_django_field
-from graphene_django_crud.input_types import FileInput
-from graphene_django_crud.base_types import File
-from graphene_django_crud.utils import is_required
-from .models import Community, Report
-from graphql_jwt.decorators import login_required
-from cloudinary.models import CloudinaryField
-from cloudinary.uploader import upload_image
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.shortcuts import get_current_site
-from django.db.models import Count
+
+from strawberry import ID
+from strawberry.types import Info
+from strawberry_django_plus import gql
+from strawberry_django_plus.permissions import IsAuthenticated
+
+from cloudinary.uploader import upload_image
+
+from .models import Community, Report
+from .types import (
+    CommunityType,
+    CommunityInteractionsType,
+    CommunityInput,
+    CommunityPartialInput,
+    MatchIdentity,
+    OwnsObjPerm,
+    ReportInput,
+)
 
 
-@convert_django_field.register(CloudinaryField)
-def convert_CloudinaryField_to_file(field, registry=None, input_flag=None):
-    """
-    Register the icon filed of type `CloudinaryField`.
-    """
-    if input_flag:
-        if input_flag == "create" or input_flag == "update":
-            return FileInput(
-                description=field.help_text or field.verbose_name,
-                required=is_required(field) and input_flag == "create",
-            )
-        else:
-            return None
-    return Field(
-        File,
-        description=field.help_text or field.verbose_name,
+def resolve_community_interactions(
+    root, info: Info, pk: ID
+) -> CommunityInteractionsType:
+
+    user: User = info.context.request.user
+
+    return CommunityInteractionsType(
+        liked=Community.objects.filter(pk=pk, likes=user).exists(),
+        reported=Community.objects.filter(pk=pk, reports__reporter=user).exists(),
     )
 
 
-class CommunityType(DjangoGrapheneCRUD):
-    class Meta:
-        model = Community
-        input_exclude_fields = ("verified", "owner")
+def rsolve_toggle_like_community(root, info: Info, pk: ID) -> bool:
+    try:
+        likes = Community.objects.get(pk=pk).likes
+    except ObjectDoesNotExist:
+        return False
 
-    @classmethod
-    def get_queryset(cls, parent, info, **kwargs):
-        # descending order for number of likes
-        return (
-            Community.objects.filter(archived=False)
-            .annotate(num_likes=Count("likes"))
-            .order_by("-num_likes")
-        )
+    user: User = info.context.request.user
+    has_liked = Community.objects.filter(pk=pk, likes__pk=user.pk).exists()
 
-    @classmethod
-    @login_required
-    def after_mutate(cls, parent, info, instance: Community, data):
-        if "icon" in data.keys() and data["icon"].upload:
-            try:
-                # to prvent colliding with dev & prod
-                ext = get_current_site(info.context).domain
-                instance.icon = upload_image(
-                    data["icon"].upload,
-                    folder=f"communities/{ext}/icons",
-                    public_id=instance.pk,
-                    overwrite=True,
-                    invalidate=True,
-                    transformation=[{"width": 200, "height": 200, "crop": "fill"}],
-                    format="jpg",
-                )
-                instance.save()
-            except Exception as e:
-                raise GraphQLError(_("Error while uploading the icon"))
+    if has_liked:
+        likes.remove(user)  # Unlike
+    else:
+        likes.add(user)  # Like
 
-    @classmethod
-    def before_create(cls, parent, info, instance, data):
-        instance.owner = info.context.user  # owener is the logged user
-
-    @classmethod
-    def before_update(cls, parent, info, instance, data):
-        if "icon" in data.keys() and data["icon"].upload is None:
-            # remove the None value of icon to keep the old one
-            del data["icon"]
+    return True
 
 
-class ReportType(DjangoGrapheneCRUD):
-    class Meta:
-        model = Report
-        input_exclude_fields = ("reporter", "created_on")
+def resolve_report(root, info: Info, input: ReportInput) -> bool:
 
-    @classmethod
-    @login_required
-    def before_create(cls, parent, info, instance, data):
-        instance.reporter = info.context.user  # reporter is the logged user
-        community = Community.objects.get(
-            pk=data["community"]["connect"]["id"]["exact"]
-        )
-        if Report.objects.filter(
-            reporter=instance.reporter, community=community
-        ).exists():
-            raise GraphQLError("You have reported this community Already")
+    user: User = info.context.request.user
+    community = Community.objects.get(pk=input.pk)
 
+    if Report.objects.filter(reporter=user, community=community).exists():
+        raise Exception("You have reported this community Already")
 
-class InteractedCommunityMutation(graphene.Mutation):
-    class Arguments:
-        ID = graphene.ID(required=True)
+    obj = Report.objects.get_or_create(
+        reporter=user,  # reporter is the logged user
+        reason=input.reason,
+        other_reason=input.other_reason,
+        community=community,
+    )
 
-    liked = Field(Boolean)
-    reported = Field(Boolean)
-
-    @staticmethod
-    @login_required
-    def mutate(root, info, ID):
-        user = info.context.user
-        interactions = {}
-        interactions["liked"] = Community.objects.filter(pk=ID, likes=user).exists()
-        interactions["reported"] = Community.objects.filter(
-            pk=ID, reports__reporter=user
-        ).exists()
-        return InteractedCommunityMutation(**interactions)
+    return obj[1]  # created ?
 
 
-class Query(graphene.ObjectType):
-    community = CommunityType.ReadField()
-    communities = CommunityType.BatchReadField()
-    report = ReportType.ReadField()
-    reports = ReportType.BatchReadField()
+def resolve_community_create(
+    root: CommunityInput, info: Info, input: CommunityInput
+) -> CommunityType:
+    ...
 
 
-class ToggleLikeCommunity(graphene.Mutation):
-    class Arguments:
-        ID = graphene.ID()
+@gql.type
+class Query:
 
-    ok = graphene.Boolean()
-
-    @staticmethod
-    @login_required
-    def mutate(root, info, ID):
-        try:
-            likes = Community.objects.get(pk=ID).likes
-        except ObjectDoesNotExist:
-            return ToggleLikeCommunity(ok=False)
-        user = info.context.user
-        has_liked = Community.objects.filter(pk=ID, likes__pk=user.pk).exists()
-
-        if has_liked:
-            likes.remove(user)  # Unlike
-        else:
-            likes.add(user)  # Like
-
-        return ToggleLikeCommunity(ok=True)
+    community_interactions: CommunityInteractionsType = gql.field(
+        resolve_community_interactions, directives=[IsAuthenticated()]
+    )
+    community: CommunityType = gql.django.field()
+    communities: List[CommunityType] = gql.django.field()
 
 
-class Mutation(graphene.ObjectType):
-    community_create = CommunityType.CreateField()
-    community_update = CommunityType.UpdateField()
-    community_delete = CommunityType.DeleteField()
+@gql.type
+class Mutation:
 
-    report_create = ReportType.CreateField()
+    community_create: CommunityType = gql.django.create_mutation(
+        CommunityInput, directives=[IsAuthenticated(), MatchIdentity()]
+    )
+    community_update: CommunityType = gql.django.update_mutation(
+        CommunityPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
+    )
+    community_delete: CommunityType = gql.django.delete_mutation(
+        CommunityPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
+    )
 
-    has_interacted_community = InteractedCommunityMutation.Field()
-    toggle_like_community = ToggleLikeCommunity.Field(
-        description="This will toggle the community like for the logged user"
+    report_create = gql.mutation(resolve_report, directives=[IsAuthenticated()])
+
+    toggle_like_community = gql.mutation(
+        rsolve_toggle_like_community,
+        directives=[IsAuthenticated()],
+        description="This will toggle the community like for the logged user",
     )

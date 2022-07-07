@@ -1,40 +1,43 @@
+from django.db.models import TextChoices
+
 years = [
-	("OR", "Orientation"),
-	("FR", "Freshman"),
-	("SP", "Sophomore"),
-	("JN", "Junior"),
-	("SN", "Senior"),
+    ("OR", "Orientation"),
+    ("FR", "Freshman"),
+    ("SP", "Sophomore"),
+    ("JN", "Junior"),
+    ("SN", "Senior"),
 ]
 
-departments = [
-	("AF", "Accounting & Finance"),
-	("AE", "Aerospace Engineering"),
-	("ARE", "Architectural Engineering"),
-	("ARC", "Architecture"),
-	("CE", "Civil & Environmental Engg"),
-	("CEM", "Construction Engg & Management"),
-	("CHE", "Chemical Engineering"),
-	("CHEM", "Chemistry"),
-	("COE", "Computer Engineering"),
-	("CPG", "CPG"),
-	("CRP", "City & Regional Planning"),
-	("ERTH", "Earth Sciences"),
-	("EE", "Electrical Engineering"),
-	("ELI", "English Language Inst. (Prep)"),
-	("ELD", "English Language Department"),
-	("FIN", "Finance"),
-	("ISOM", "Info. Systems & Operations Mgt"),
-	("GS", "Global & Social Studies"),
-	("IAS", "Islamic & Arabic Studies"),
-	("ICS", "Information & Computer Science"),
-	("LS", "Life Sciences"),
-	("MATH", "Mathematics & Statistics"),
-	("MBA", "Business Administration"),
-	("ME", "Mechanical Engineering"),
-	("MGT", "Management & Marketing"),
-	("PE", "Physical Education"),
-	("PETE", "Petroleum Engineering"),
-	("PHYS", "Physics"),
-	("PSE", "Prep Science & Engineering"),
-	("SE", "Systems Engineering"),
-]
+
+class DepartmentEnum(TextChoices):
+
+    AF = ("AF", "Accounting & Finance")
+    AE = ("AE", "Aerospace Engineering")
+    ARE = ("ARE", "Architectural Engineering")
+    ARC = ("ARC", "Architecture")
+    CE = ("CE", "Civil & Environmental Engg")
+    CEM = ("CEM", "Construction Engg & Management")
+    CHE = ("CHE", "Chemical Engineering")
+    CHEM = ("CHEM", "Chemistry")
+    COE = ("COE", "Computer Engineering")
+    CPG = ("CPG", "CPG")
+    CRP = ("CRP", "City & Regional Planning")
+    ERTH = ("ERTH", "Earth Sciences")
+    EE = ("EE", "Electrical Engineering")
+    ELI = ("ELI", "English Language Inst. (Prep)")
+    ELD = ("ELD", "English Language Department")
+    FIN = ("FIN", "Finance")
+    ISOM = ("ISOM", "Info. Systems & Operations Mgt")
+    GS = ("GS", "Global & Social Studies")
+    IAS = ("IAS", "Islamic & Arabic Studies")
+    ICS = ("ICS", "Information & Computer Science")
+    LS = ("LS", "Life Sciences")
+    MATH = ("MATH", "Mathematics & Statistics")
+    MBA = ("MBA", "Business Administration")
+    ME = ("ME", "Mechanical Engineering")
+    MGT = ("MGT", "Management & Marketing")
+    PE = ("PE", "Physical Education")
+    PETE = ("PETE", "Petroleum Engineering")
+    PHYS = ("PHYS", "Physics")
+    PSE = ("PSE", "Prep Science & Engineering")
+    SE = ("SE", "Systems Engineering")

@@ -1,143 +1,86 @@
-from io import FileIO
-from cloudinary.models import CloudinaryField
+"""
+This defines the `Query` and `Muatation` for all GraphQL operations
+for `account` app.
+"""
+from typing import Optional
 
-import graphene
-import graphene_django
-from graphql import GraphQLError
-from graphene import relay, ObjectType, String, Scalar
-from graphene_django import DjangoObjectType
-from graphene_django.filter import DjangoFilterConnectionField
-from graphql_auth import mutations
-from graphql_jwt.decorators import *
-from graphene_file_upload.scalars import Upload
-from graphene_django_crud.types import DjangoGrapheneCRUD, resolver_hints
+import strawberry
+from strawberry.file_uploads import Upload
+from strawberry_django_plus import gql
+from strawberry_django_plus.permissions import IsAuthenticated
+from gqlauth.user import arg_mutations
 
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
-from .models import Profile
-from .utils import is_owner
-from graphql_auth.models import UserStatus
 from cloudinary.uploader import upload_image
 
-
-class StatusType(DjangoGrapheneCRUD):
-    """
-    A type for `UserStatus` from graphql_auth lib.
-    It is defined to enable accessing to verified value for a user.
-    """
-
-    class Meta:
-        model = UserStatus
+from .types import (
+    UserType,
+    ProfileType,
+    ProfilePicUpdateType,
+    ProfileInput,
+    OwnsObjPerm,
+)
 
 
-class UserType(DjangoGrapheneCRUD):
-    """
-    A type for `auth.User`. It is used to be found in other types.
-    """
-
-    class Meta:
-        model = User
-        exclude_fields = ("password",)
-        input_exclude_fields = ("last_login", "date_joined")
-
-    @classmethod
-    def get_queryset(cls, parent, info, **kwargs):
-        return super().get_queryset(parent, info, **kwargs)
+@strawberry.type
+class UserMutations:
+    token_auth = arg_mutations.ObtainJSONWebToken.Field  # login mutation
+    verify_token = arg_mutations.VerifyToken.Field
+    refresh_token = arg_mutations.RefreshToken.Field
+    revoke_token = arg_mutations.RevokeToken.Field
+    register = arg_mutations.Register.Field
+    verify_account = arg_mutations.VerifyAccount.Field
+    send_password_reset_email = arg_mutations.SendPasswordResetEmail.Field
+    password_reset = arg_mutations.PasswordReset.Field
 
 
-class ProfileType(DjangoGrapheneCRUD):
-    """
-    A type for `account.Profile` model.
-    """
-
-    file = Upload()
-
-    class Meta:
-        model = Profile
-        input_exclude_fields = ("user",)
-        exclude_fields = ("user",)
-
-    @classmethod
-    @login_required
-    def get_queryset(cls, parent, info, **kwargs):
-        return super().get_queryset(parent, info, **kwargs)
-
-    @classmethod
-    @is_owner
-    def before_mutate(cls, parent, info, instance, data):
-        return
-
-
-class ProfileNode(DjangoObjectType):
-    """
-    A type for `account.Profile` model.
-    This class is for graphql_auth methods.
-    """
-
-    class Meta:
-        model = Profile
-        exclude = ("user",)
-
-
-class AuthMutation(graphene.ObjectType):
-    """
-    All authintication mutations.
-    It inherits from `django_graphql_auth` and `django_graphql_jwt`.
-    """
-
-    register = mutations.Register.Field()
-    verify_account = mutations.VerifyAccount.Field()
-    resend_activation_email = mutations.ResendActivationEmail.Field()
-    send_password_reset_email = mutations.SendPasswordResetEmail.Field()
-    password_reset = mutations.PasswordReset.Field()
-    password_set = mutations.PasswordSet.Field()  # For passwordless registration
-    password_change = mutations.PasswordChange.Field()
-    update_account = mutations.UpdateAccount.Field()
-    delete_account = mutations.DeleteAccount.Field()
-    archive_account = mutations.ArchiveAccount.Field()
-
-    # django-graphql-jwt inheritances
-    token_auth = mutations.ObtainJSONWebToken.Field()
-    verify_token = mutations.VerifyToken.Field()
-    refresh_token = mutations.RefreshToken.Field()
-    revoke_token = mutations.RevokeToken.Field()
-
-
-class Query(graphene.ObjectType):
+@strawberry.type
+class Query:
     """
     Main entry for all query type for `account` app.
     """
 
-    # profile = ProfileType.ReadField()
-    # profiles = ProfileType.BatchReadField()
-
-    # user = UserType.ReadField()
-    # users = UserType.BatchReadField()
-
-    me = graphene.Field(UserType)
-
-    @login_required
-    def resolve_me(parent, info):
-        return info.context.user
+    @strawberry.field
+    def me(self, info) -> Optional[UserType]:
+        user = info.context.request.user
+        if user.is_anonymous:
+            return None
+        return user
 
 
-from graphene_file_upload.scalars import Upload
+@strawberry.type
+class Mutation(UserMutations):
+    """
+    Main entry for all `Mutation` types for `account` app.
+    It inherits from `AuthMutation`.
+    """
 
+    profile_update: ProfileType = gql.django.update_mutation(
+        ProfileInput,
+        directives=[
+            IsAuthenticated(),
+            OwnsObjPerm("You don't own this Profile."),
+        ],
+    )
 
-class UploadMutation(graphene.Mutation):
-    class Arguments:
-        file = Upload(required=True)
+    # TODO better handling for the Permission Exception
+    # maybe create custom login_required decorator
+    @strawberry.mutation(directives=[IsAuthenticated()])
+    # @login_required
+    def profile_pic_update(
+        self, info, file: Upload
+    ) -> Optional[ProfilePicUpdateType]:
+        """
+        Mutation to help upload only a profile pic to Cloudinary
+        then save it to Profile model.
+        The pic will be save in the current logged in user's profile.
+        """
 
-    success = graphene.Boolean()
-
-    @staticmethod
-    @login_required
-    def mutate(self, info, file, **kwargs):
-        user: User = info.context.user
-
+        user: User = info.context.request.user
         try:
             # to prvent colliding with dev & prod
-            ext =  get_current_site(info.context).domain
+            ext = get_current_site(info.context.request).domain
             res = upload_image(
                 file,
                 folder=f"profile_pics/{ext}",
@@ -149,17 +92,9 @@ class UploadMutation(graphene.Mutation):
             )
             user.profile.profile_pic = res
             user.profile.save()
-        except:
-            return UploadMutation(success=False)
+        except Exception:
+            return ProfilePicUpdateType(success=False, profile_pic="")
 
-        return UploadMutation(success=True)
-
-
-class Mutation(AuthMutation, graphene.ObjectType):
-    """
-    Main entry for all `Mutation` types for `account` app.
-    It inherits from `AuthMutation`.
-    """
-
-    profile_pic_update = UploadMutation.Field()
-    profile_update = ProfileType.UpdateField()
+        return ProfilePicUpdateType(
+            success=True, profile_pic=str(user.profile.profile_pic)
+        )
