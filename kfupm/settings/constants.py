@@ -1,6 +1,5 @@
 #  here to set a costom logging
 # we create this file, currently to add filter for 503 error
-from corsheaders import django
 
 
 COSTOM_LOGGING = {
