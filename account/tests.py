@@ -1,3 +1,15 @@
+"""
+This module is to test all possible use cases of `account` app.
+
+# Run test
+    to run this file only:
+    `python manage.py test account/tests.py`
+
+# Coverage:
+    - Tests all `account` model operations.
+    - Tests all relavent GraphQL API operations.
+"""
+
 import json
 from django.conf import settings
 from django.core import mail
@@ -9,9 +21,9 @@ from cloudinary.uploader import upload_image
 import django.contrib.auth.views as auth_views
 
 
-from .models import Profile
-from . import views
 from data import DepartmentEnum, years
+from . import views
+from .models import Profile
 
 
 class UserTestCase(TransactionTestCase):
@@ -44,7 +56,8 @@ class ProfileTestCase(UserTestCase):
             Profile._meta.get_field("profile_pic").get_default(),
         )
         self.assertEqual(
-            profile.language, Profile._meta.get_field("language").get_default()
+            profile.language,
+            Profile._meta.get_field("language").get_default(),
         )
         self.assertEqual(profile.theme, Profile._meta.get_field("theme").get_default())
         self.assertEqual(profile.major, None)
@@ -101,7 +114,8 @@ class ProfileTestCase(UserTestCase):
             f"profile_pics/test/{self.user.username}",
         )
         self.assertEqual(
-            self.user.profile.profile_pic.metadata["original_filename"], "blank_profile"
+            self.user.profile.profile_pic.metadata["original_filename"],
+            "blank_profile",
         )
         self.assertEqual(self.user.profile.profile_pic.metadata["width"], 200)
         self.assertEqual(self.user.profile.profile_pic.metadata["format"], "jpg")
@@ -138,7 +152,8 @@ class AccountViewTestCase(TestCase):
         self.assertEqual(res.wsgi_request.path, "/account/login/")
         self.assertTemplateUsed(res, "registration/login.html")
         self.assertEqual(
-            res.resolver_match.func.__name__, auth_views.LoginView.as_view().__name__
+            res.resolver_match.func.__name__,
+            auth_views.LoginView.as_view().__name__,
         )
 
         # login with wrong credientials user
@@ -159,7 +174,8 @@ class AccountViewTestCase(TestCase):
         self.assertEqual(res.status_code, 403)  # not allowed
         self.assertEqual(res.wsgi_request.path, "/account/")
         self.assertEqual(
-            res.resolver_match.func.__name__, views.IndexView.as_view().__name__
+            res.resolver_match.func.__name__,
+            views.IndexView.as_view().__name__,
         )
 
         # logout this user
@@ -168,7 +184,8 @@ class AccountViewTestCase(TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.wsgi_request.path, "/account/logout/")
         self.assertEqual(
-            res.resolver_match.func.__name__, auth_views.LogoutView.as_view().__name__
+            res.resolver_match.func.__name__,
+            auth_views.LogoutView.as_view().__name__,
         )
 
     def test_staff_user(self):
@@ -182,7 +199,8 @@ class AccountViewTestCase(TestCase):
         self.assertEqual(res.status_code, 200)  # allowed
         self.assertEqual(res.wsgi_request.path, "/account/")
         self.assertEqual(
-            res.resolver_match.func.__name__, views.IndexView.as_view().__name__
+            res.resolver_match.func.__name__,
+            views.IndexView.as_view().__name__,
         )
 
         # logout this user
@@ -191,7 +209,8 @@ class AccountViewTestCase(TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.wsgi_request.path, "/account/logout/")
         self.assertEqual(
-            res.resolver_match.func.__name__, auth_views.LogoutView.as_view().__name__
+            res.resolver_match.func.__name__,
+            auth_views.LogoutView.as_view().__name__,
         )
 
 
@@ -259,7 +278,9 @@ class AccountGraphQLTestCase(TestCase):
         """
 
         res = self.client.post(
-            self.endpoint, data={"query": register}, content_type="application/json"
+            self.endpoint,
+            data={"query": register},
+            content_type="application/json",
         )
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["register"]
@@ -402,9 +423,7 @@ class AccountGraphQLTestCase(TestCase):
         r_token = data["obtainPayload"]["refreshToken"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
-        self.assertTrue(
-            data["obtainPayload"]["payload"]["username"], self.user.username
-        )
+        self.assertTrue(data["obtainPayload"]["payload"]["username"], self.user.username)
 
         # verify that token
         res = self.client.post(
@@ -416,9 +435,7 @@ class AccountGraphQLTestCase(TestCase):
         data = json.loads(res.content)["data"]["verifyToken"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
-        self.assertEqual(
-            data["verifyPayload"]["payload"]["username"], self.user.username
-        )
+        self.assertEqual(data["verifyPayload"]["payload"]["username"], self.user.username)
 
         # refresh that token
         res = self.client.post(
@@ -565,7 +582,11 @@ class AccountGraphQLTestCase(TestCase):
         # update other user's profile
         res = self.client.query(
             profileUpdate,
-            {"pk": self.user2.profile.pk, "theme": "dark", "language": "ar-SA"},
+            {
+                "pk": self.user2.profile.pk,
+                "theme": "dark",
+                "language": "ar-SA",
+            },
         )
         self.assertIsNone(res.errors)
         self.assertIsNotNone(res.data)
@@ -575,7 +596,11 @@ class AccountGraphQLTestCase(TestCase):
         # update the user profile
         res = self.client.query(
             profileUpdate,
-            {"pk": self.user.profile.pk, "theme": "dark", "language": "ar-SA"},
+            {
+                "pk": self.user.profile.pk,
+                "theme": "dark",
+                "language": "ar-SA",
+            },
         )
 
         self.assertIsNone(res.errors)
