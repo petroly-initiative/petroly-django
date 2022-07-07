@@ -1,4 +1,4 @@
-psycopg2
+psycopg2-binary
 django-heroku==0.0.0
 asgiref==3.5.2
 backports.cached-property==1.0.2
