@@ -1,5 +1,5 @@
 psycopg2
-django-heroku
+django-heroku==0.0.0
 asgiref==3.5.2
 backports.cached-property==1.0.2
 certifi==2022.6.15
