@@ -1,11 +1,19 @@
+"""
+This defines the `Query` and `Muatation` for all GraphQL operations
+for `account` app.
+"""
+from typing import Optional
+
 import strawberry
-from typing import List, Optional, Union
 from strawberry.file_uploads import Upload
 from strawberry_django_plus import gql
-from strawberry_django_plus.types import OperationInfo
 from strawberry_django_plus.permissions import IsAuthenticated
-from strawberry_django_jwt.decorators import login_required
 from gqlauth.user import arg_mutations
+
+from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
+from cloudinary.uploader import upload_image
+
 from .types import (
     UserType,
     ProfileType,
@@ -13,22 +21,6 @@ from .types import (
     ProfileInput,
     OwnsObjPerm,
 )
-
-from django.contrib.auth.models import User
-from django.contrib.sites.shortcuts import get_current_site
-from cloudinary.uploader import upload_image
-
-from .types import UserType
-
-
-class ObtainJSONWebTokenCustom(arg_mutations.ObtainJSONWebToken):
-    """
-    An extended class from `ObtainJSONWebToken`
-    to provide the `user` field.
-    """
-
-    class _meta(arg_mutations.ObtainJSONWebTokenMixin._meta):
-        _required_outputs = {"user": UserType}
 
 
 @strawberry.type
@@ -76,7 +68,9 @@ class Mutation(UserMutations):
     # maybe create custom login_required decorator
     @strawberry.mutation(directives=[IsAuthenticated()])
     # @login_required
-    def profile_pic_update(self, info, file: Upload) -> Optional[ProfilePicUpdateType]:
+    def profile_pic_update(
+        self, info, file: Upload
+    ) -> Optional[ProfilePicUpdateType]:
         """
         Mutation to help upload only a profile pic to Cloudinary
         then save it to Profile model.
@@ -98,7 +92,7 @@ class Mutation(UserMutations):
             )
             user.profile.profile_pic = res
             user.profile.save()
-        except Exception as e:
+        except Exception:
             return ProfilePicUpdateType(success=False, profile_pic="")
 
         return ProfilePicUpdateType(
