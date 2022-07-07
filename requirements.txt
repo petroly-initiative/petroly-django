@@ -1,4 +1,4 @@
-psycopg2-binary
+psycopg2-binary==2.9.3 # this is needed for herku db, locally we use sqlite
 django-heroku==0.0.0
 asgiref==3.5.2
 backports.cached-property==1.0.2
