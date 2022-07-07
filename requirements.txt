@@ -14,6 +14,7 @@ django-email-verification==0.2.2
 django-filter==22.1
 Faker==13.14.0
 graphql-core==3.2.1
+heroku==0.1.4
 idna==3.3
 packaging==21.3
 pathspec==0.9.0
@@ -35,3 +36,4 @@ strawberry-graphql-django==0.3.1
 tomli==2.0.1
 typing_extensions==4.3.0
 urllib3==1.26.9
+whitenoise==6.2.0
