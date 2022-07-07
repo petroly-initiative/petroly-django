@@ -1,9 +1,11 @@
 import re
+import sys
 from urllib.parse import urlparse
 import requests
 
 from django.conf import settings
 from django.core.mail import mail_managers
+from django.http import HttpResponseForbidden
 from django.utils.deprecation import MiddlewareMixin
 
 
@@ -61,3 +63,37 @@ class DiscordNotificationMiddleware(MiddlewareMixin):
             return True
 
         return any(pattern.search(uri) for pattern in settings.IGNORABLE_404_URLS)
+
+
+class AllowOnlyStaffMiddleware(MiddlewareMixin):
+    '''
+    This middleware used after authenticating middlewares, 
+    to block non-staff users from some urls.
+    '''
+
+    def is_testing(self):
+        '''To ignore testing.'''
+        
+        if (len(sys.argv) > 0 and 'runtests' in sys.argv[0]) \
+                or (len(sys.argv) > 1 and sys.argv[1] == 'test'):
+            # python runtests.py | python manage.py test | python
+            # setup.py test | django-admin.py test
+            return True
+        
+        else:
+            return False
+
+    def process_response(self, request, response):
+        ALLOWED_PATHS = [
+            '/account/login/',
+            '/account/logout/',
+            '/endpoint/',
+        ]
+
+        if request.user.is_staff:
+            return response
+
+        else:
+            if request.path in ALLOWED_PATHS:
+                return response
+            return HttpResponseForbidden('Forbidden 403')
