@@ -155,11 +155,11 @@ msgstr "تعليق التدريس"
 msgid "Personality Comment"
 msgstr "تعليق الشخصية"
 
-#: kfupm/settings/base.py:108
+#: petroly/settings/base.py:108
 msgid "Arabic"
 msgstr "العربية"
 
-#: kfupm/settings/base.py:109
+#: petroly/settings/base.py:109
 msgid "English"
 msgstr "الإنجليزية"
 

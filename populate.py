@@ -1,7 +1,5 @@
 import csv
 import os
-from os import error, name, read
-import kfupm.settings.dev
 from django.conf import settings
 import django
 from cloudinary.uploader import upload_image
@@ -13,7 +11,7 @@ settings_type = sys.argv[1]
 departments = [] + sys.argv[2:]
 
 # settings.configure()
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kfupm.settings.'+settings_type)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'petroly.settings.'+settings_type)
 
 print(os.environ.get('DJANGO_SETTINGS_MODULE'))
 django.setup()
