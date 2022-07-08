@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Report',
             fields=[
-                ('reporter', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='auth.user')),
+                ('reporter', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=False, serialize=False, to='auth.user')),
                 ('reason', models.CharField(choices=[('content', 'Content'), ('link', 'invalidLink'), ('other', 'other')], max_length=8, verbose_name='Reason')),
                 ('other_reason', models.CharField(blank=True, default='', max_length=10, verbose_name='Other_reason')),
                 ('community', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reports', to='communities.community', verbose_name='community')),
