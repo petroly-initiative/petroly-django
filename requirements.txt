@@ -30,7 +30,7 @@ python-multipart==0.0.5
 requests==2.28.1
 six==1.16.0
 sqlparse==0.4.2
-strawberry-django-auth==0.3.2.1
+strawberry-django-auth==0.3.2.2
 strawberry-django-jwt==0.2.0
 strawberry-django-plus==1.17.0
 strawberry-graphql==0.117.0
