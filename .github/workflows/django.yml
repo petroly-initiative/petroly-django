@@ -31,4 +31,4 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python manage.py test --settings=kfupm.settings.dev --no-input  account
+        python manage.py test --settings=petroly.settings.dev --no-input  account

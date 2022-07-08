@@ -1,5 +1,5 @@
 """
-ASGI config for kfupm project.
+ASGI config for petroly project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kfupm.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'petroly.settings')
 
 application = get_asgi_application()

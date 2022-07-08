@@ -45,7 +45,7 @@ MIDDLEWARE = [
     'account.middleware.AllowOnlyStaffMiddleware',
 ]
 
-ROOT_URLCONF = 'kfupm.urls'
+ROOT_URLCONF = 'petroly.urls'
 
 TEMPLATES = [
     {
@@ -65,7 +65,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'kfupm.wsgi.application'
+WSGI_APPLICATION = 'petroly.wsgi.application'
 
 
 # Password validation

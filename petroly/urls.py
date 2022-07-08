@@ -1,4 +1,4 @@
-"""kfupm URL Configuration
+"""petroly URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include 
 from django.contrib.staticfiles.urls import static
-from kfupm.settings import dev
+from petroly.settings import dev
 import debug_toolbar
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import PermissionRequiredMixin
