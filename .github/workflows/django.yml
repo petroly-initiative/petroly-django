@@ -34,5 +34,4 @@ jobs:
     
     - name: Run Tests
       run: |
-        pipenv shell
-        python manage.py test --settings=petroly.settings.dev --no-input  account
+        pipenv run python manage.py test --settings=petroly.settings.dev --no-input  account
