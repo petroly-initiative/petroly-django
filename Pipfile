@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+dj-database-url = "*"
+django-choices-field = "*"
+django-cors-headers = "*"
+django-debug-toolbar = "*"
+django-email-verification = "*"
+django-filter = "*"
+django-heroku = "*"
+gunicorn = "*"
+pillow = "*"
+psycopg2 = "*"
+requests = "*"
+strawberry-django-auth = "*"
+strawberry-django-jwt = "*"
+strawberry-django-plus = "*"
+strawberry-graphql = "*"
+strawberry-graphql-django = "*"
+whitenoise = "*"
+django = "*"
+cloudinary = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
