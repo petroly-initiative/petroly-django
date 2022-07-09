@@ -1,41 +1,40 @@
-asgiref==3.5.2
-backports.cached-property==1.0.2
-certifi==2022.6.15
-charset-normalizer==2.1.0
-click==8.1.3
+-i https://pypi.org/simple
+asgiref==3.5.2; python_version >= '3.7'
+backports.cached-property==1.0.2; python_version >= '3.6'
+certifi==2022.6.15; python_version >= '3.6'
+charset-normalizer==2.1.0; python_version >= '3.6'
+click==8.1.3; python_version >= '3.7'
 cloudinary==1.29.0
 dj-database-url==0.5.0
-Django==4.0.6
-django-admin-display==1.3.0
+django==4.0.6
+django-admin-display==1.3.0; python_version < '4' and python_full_version >= '3.6.1'
 django-choices-field==2.0
 django-cors-headers==3.13.0
 django-debug-toolbar==3.5.0
 django-email-verification==0.2.2
 django-filter==22.1
 django-heroku==0.3.1
-Faker==13.15.0
-graphql-core==3.2.1
+gqlauth-jwt==0.2.1; python_version >= '3.8' and python_version < '4'
+graphql-core==3.2.1; python_version >= '3.6' and python_version < '4'
 gunicorn==20.1.0
-idna==3.3
-packaging==21.3
-pathspec==0.9.0
-Pillow==9.2.0
-platformdirs==2.5.2
+idna==3.3; python_version >= '3.5'
+packaging==21.3; python_version >= '3.6'
+pillow==9.2.0
 psycopg2==2.9.3
-Pygments==2.12.0
-PyJWT==2.4.0
-pyparsing==3.0.9
-python-dateutil==2.8.2
+pygments==2.12.0; python_version >= '3.6'
+pyjwt==2.4.0; python_version >= '3.6'
+pyparsing==3.0.9; python_full_version >= '3.6.8'
+python-dateutil==2.8.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 python-multipart==0.0.5
 requests==2.28.1
-six==1.16.0
-sqlparse==0.4.2
-strawberry-django-auth==0.3.2.1
+setuptools==63.1.0; python_version >= '3.7'
+six==1.16.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+sqlparse==0.4.2; python_version >= '3.5'
+strawberry-django-auth==0.3.2.2
 strawberry-django-jwt==0.2.0
-strawberry-django-plus==1.17.0
-strawberry-graphql==0.117.0
-strawberry-graphql-django==0.3.1
-tomli==2.0.1
-typing_extensions==4.3.0
-urllib3==1.26.9
+strawberry-django-plus==1.18.0
+strawberry-graphql==0.117.1
+strawberry-graphql-django==0.4.0
+typing-extensions==4.3.0; python_version >= '3.7'
+urllib3==1.26.10; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5' and python_version < '4'
 whitenoise==6.2.0
