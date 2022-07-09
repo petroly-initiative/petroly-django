@@ -33,5 +33,6 @@ jobs:
         command: install
     
     - name: Run Tests
-      run: |
-        pipenv run python manage.py test --settings=petroly.settings.dev --no-input  account
+      uses: VaultVulp/action-pipenv@v2.0.1
+      with: 
+        command: run python manage.py test --settings=petroly.settings.dev --no-input  account
