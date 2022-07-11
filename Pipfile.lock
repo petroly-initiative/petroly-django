@@ -140,7 +140,7 @@
                 "sha256:8c6b970f54fa4591b90b5f5bb8172f1aea0ceb5c2774b1923a296bfb86957081",
                 "sha256:903a4864a9a0d0495fc546c3aa0bcdba3d62e91c123f67204648c126e5584a95"
             ],
-            "markers": "python_version >= '3.8' and python_version < '4'",
+            "markers": "python_version >= '3.8' and python_version < '4.0'",
             "version": "==0.2.1"
         },
         "graphql-core": {
@@ -336,11 +336,11 @@
         },
         "strawberry-django-jwt": {
             "hashes": [
-                "sha256:2916dc1d071b28030a21c65b1b99171bccc991bcb95b3b266a2958a4dbeabc32",
-                "sha256:b52ed7737d85d96d98a0d8e7ef4fb68f3b25533a696f1e02428f5baa18e8d568"
+                "sha256:692a2ccb2868e8402b863daaa02c92b65aa863c2147c0aea3db0afab77ba5a1a",
+                "sha256:970deb5a565186ff366ebc8ffdb9d2368bace517e81822c1566ac146e9a45028"
             ],
             "index": "pypi",
-            "version": "==0.2.0"
+            "version": "==0.2.1"
         },
         "strawberry-django-plus": {
             "hashes": [
