@@ -1,11 +1,11 @@
 """
 This module is to test all possible use cases of `account` app.
 
-# Run test
+## Run test
     to run this file only:
     `python manage.py test account/tests.py`
 
-# Coverage:
+## Coverage:
     - Tests all `account` model operations.
     - Tests all relavent GraphQL API operations.
 """
