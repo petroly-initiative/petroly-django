@@ -23,6 +23,7 @@ strawberry-graphql-django = "*"
 whitenoise = "*"
 django = "*"
 cloudinary = "*"
+faas-cache-dict = "*"
 
 [dev-packages]
 black = "*"

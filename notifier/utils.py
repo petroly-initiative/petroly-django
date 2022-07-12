@@ -4,10 +4,14 @@ from the KFUPM API
 """
 import json
 from requests import get
+from faas_cache_dict import FaaSCacheDict
 
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
 
-def fetch_data(term: int, department: str) -> dict:
+# create in-memory cache
+cache = FaaSCacheDict(default_ttl=60, max_size_bytes='10M')
+
+def fetch_data(term: int, department: str, check_cache=True) -> dict:
     """This method performs a GET request to the KFUPM API
     for the specific args.
 
@@ -18,9 +22,20 @@ def fetch_data(term: int, department: str) -> dict:
     Returns:
         dict: the response JSON after converting into dict object,
     """
-    res = get(API, params={'term_code': term, 'department_code': department})
 
-    assert res.ok
-    data = json.loads(res.content)
+    if check_cache:
+        try:
+            return cache[(term, department)]
+        except KeyError:
+            print('cache miss')
+            # handle cache miss
+            res = get(API, params={'term_code': term, 'department_code': department})
+
+            assert res.ok
+            data = json.loads(res.content)
+
+            cache[(term, department)] = data # store data into cache
+
+            return data
 
     return data
