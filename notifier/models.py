@@ -53,7 +53,7 @@ class NotificationEvent(models.Model):
     It tracks the number, channel , and date of the notifications.
     """
 
-    class ChannelEnum(Enum):
+    class ChannelEnum(models.TextChoices):
         """Choices of `channel` as Enum"""
 
         SMS = "sms", _("sms")
