@@ -1,5 +1,5 @@
 """
-Here are the related mdoels definition for the `notifier` app.
+Here are the related models definition for the `notifier` app.
 
 ## Models:
     - `Course` model, to abstract and store related info of each corse
