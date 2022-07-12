@@ -3,7 +3,7 @@ This module is to define the fetching, filtering, and processing the data
 from the KFUPM API
 """
 import json
-from requests import get
+import requests as rq
 from faas_cache_dict import FaaSCacheDict
 
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
@@ -27,9 +27,8 @@ def fetch_data(term: int, department: str, check_cache=True) -> dict:
         try:
             return cache[(term, department)]
         except KeyError:
-            print('cache miss')
             # handle cache miss
-            res = get(API, params={'term_code': term, 'department_code': department})
+            res = rq.get(API, params={'term_code': term, 'department_code': department})
 
             assert res.ok
             data = json.loads(res.content)
