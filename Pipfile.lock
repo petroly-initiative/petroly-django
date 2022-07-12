@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f300304d67741030873b7039b2e111adacd4710699565e35275d988fee3c02e7"
+            "sha256": "cd25b617f33aa325d43be29a862ab297de1fd7faf10ad749257ca4763af076a0"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -135,6 +135,21 @@
             "index": "pypi",
             "version": "==0.3.1"
         },
+        "faas-cache-dict": {
+            "hashes": [
+                "sha256:5d53596875ae2c3bcfd3d4e3ee898508e62db26ef09179e96b5fe5f4d93cd4ba"
+            ],
+            "index": "pypi",
+            "version": "==0.2.7"
+        },
+        "filelock": {
+            "hashes": [
+                "sha256:9cd540a9352e432c7246a48fe4e8712b10acb1df2ad1f30e8c070b82ae1fed85",
+                "sha256:f8314284bfffbdcfa0ff3d7992b023d4c628ced6feb957351d4c48d059f56bc0"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==3.6.0"
+        },
         "gqlauth-jwt": {
             "hashes": [
                 "sha256:8c6b970f54fa4591b90b5f5bb8172f1aea0ceb5c2774b1923a296bfb86957081",
@@ -166,6 +181,12 @@
             ],
             "markers": "python_version >= '3.5'",
             "version": "==3.3"
+        },
+        "objsize": {
+            "hashes": [
+                "sha256:6b950e0d78e7d93918fbd711126d740291a61ff4e53fc47cce799dce7554b1ad"
+            ],
+            "version": "==0.3.3"
         },
         "packaging": {
             "hashes": [
