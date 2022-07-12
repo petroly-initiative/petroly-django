@@ -3,7 +3,6 @@ This module is to define the GraphQL queries and mutations
 of the `notifier` app.
 """
 
-import json
 from strawberry.scalars import JSON
 from strawberry_django_plus import gql
 
