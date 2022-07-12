@@ -2,10 +2,10 @@
 This module is to define the fetching, filtering, and processing the data
 from the KFUPM API
 """
-
+import json
 from requests import get
 
-API = "https://registrar.kfupm.edu.sa/api/course-offering?term_code=202210&department_code=PE"
+API = "https://registrar.kfupm.edu.sa/api/course-offering"
 
 def fetch_data(term: int, department: str) -> dict:
     """This method performs a GET request to the KFUPM API
@@ -18,7 +18,9 @@ def fetch_data(term: int, department: str) -> dict:
     Returns:
         dict: the response JSON after converting into dict object,
     """
-    res = get(API, params={'term': term, 'department': department})
+    res = get(API, params={'term_code': term, 'department_code': department})
 
-    print(res.status_code)
-    print(res.content)
+    assert res.ok
+    data = json.loads(res.content)
+
+    return data
