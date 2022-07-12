@@ -47,7 +47,9 @@ class TrackingList(models.Model):
     user = models.OneToOneField(
         User, verbose_name=_("user"), on_delete=models.CASCADE
     )
-    courses = models.ManyToManyField(Course, verbose_name=_("courses"))
+    courses = models.ManyToManyField(Course, verbose_name=_("courses"),
+        related_name="tracked_courses",
+)
 
 
 class NotificationEvent(models.Model):
