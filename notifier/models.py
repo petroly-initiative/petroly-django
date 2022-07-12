@@ -62,12 +62,13 @@ class NotificationEvent(models.Model):
         WHATSAPP = "whatsapp", _("whatsapp")
         TELEGRAM = "telegram", _("telegram")
 
-    user = models.ForeignKey(
-        User, verbose_name=_("user"), on_delete=models.CASCADE
-    )
+    success = models.BooleanField(_("success"), default=True, blank=True)
     channel = TextChoicesField(
         verbose_name=_("channel"), max_length=15, choices_enum=ChannelEnum
     )
     sent_on = models.DateTimeField(
         _("sent on"), auto_now=False, auto_now_add=True
+    )
+    user = models.ForeignKey(
+        User, verbose_name=_("user"), on_delete=models.CASCADE
     )
