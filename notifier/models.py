@@ -18,7 +18,6 @@ Here are the related models definition for the `notifier` app.
             - `sent_on`
 """
 
-from enum import Enum
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -34,6 +33,9 @@ class Course(models.Model):
     """
 
     crn = models.CharField(_("CRN"), max_length=5, primary_key=True)
+
+    def __str__(self) -> str:
+        return f'CRN: {self.crn}'
 
 
 class TrackingList(models.Model):
