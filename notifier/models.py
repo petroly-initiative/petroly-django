@@ -19,6 +19,7 @@ Here are the related models definition for the `notifier` app.
 """
 
 from enum import Enum
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
@@ -32,7 +33,7 @@ class Course(models.Model):
     pk: `crn`
     """
 
-    crn = models.CharField(_("CRN"), max_length=5)
+    crn = models.CharField(_("CRN"), max_length=5, primary_key=True)
 
 
 class TrackingList(models.Model):
