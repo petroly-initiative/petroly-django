@@ -35,7 +35,7 @@ class Course(models.Model):
     crn = models.CharField(_("CRN"), max_length=5, primary_key=True)
 
     def __str__(self) -> str:
-        return f'CRN: {self.crn}'
+        return f"CRN: {self.crn}"
 
 
 class TrackingList(models.Model):
@@ -45,11 +45,16 @@ class TrackingList(models.Model):
     """
 
     user = models.OneToOneField(
-        User, verbose_name=_("user"), on_delete=models.CASCADE
+        User,
+        verbose_name=_("user"),
+        on_delete=models.CASCADE,
+        related_name="tracking_list",
     )
-    courses = models.ManyToManyField(Course, verbose_name=_("courses"),
+    courses = models.ManyToManyField(
+        Course,
+        verbose_name=_("courses"),
         related_name="tracked_courses",
-)
+    )
 
 
 class NotificationEvent(models.Model):
