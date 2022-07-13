@@ -26,6 +26,34 @@ from django.utils.translation import gettext as _
 from django_choices_field import TextChoicesField
 
 
+class NotificationChannel(models.Model):
+    """
+    This model to help choosing multiple channels for a tracking list.
+
+    pk: django default `id`.
+    """
+
+    class ChannelEnum(models.TextChoices):
+        """Choices of `channel` as Enum"""
+
+        SMS = "sms", _("sms")
+        PUSH = "push", _("push")
+        EMAIL = "email", _("email")
+        WHATSAPP = "whatsapp", _("whatsapp")
+        TELEGRAM = "telegram", _("telegram")
+
+    channel = TextChoicesField(
+        verbose_name=_("channel"), max_length=15, choices_enum=ChannelEnum
+    )
+
+    class Meta:
+        verbose_name = _("notification channel")
+        verbose_name_plural = _("notification channels")
+
+    def __str__(self):
+        return str(self.channel)
+
+
 class Course(models.Model):
     """
     It abstracts and store related info of each corse from KFUPM API identify by its `crn`.
@@ -55,29 +83,28 @@ class TrackingList(models.Model):
         verbose_name=_("courses"),
         related_name="tracked_courses",
     )
+    channels = models.ManyToManyField(
+        NotificationChannel, verbose_name=_("channels")
+    )
 
 
 class NotificationEvent(models.Model):
     """
-    It tracks the number, channel , and date of the notifications.
+    It tracks the number, channels, and date of the sent notifications.
     """
 
-    class ChannelEnum(models.TextChoices):
-        """Choices of `channel` as Enum"""
-
-        SMS = "sms", _("sms")
-        PUSH = "push", _("push")
-        EMAIL = "email", _("email")
-        WHATSAPP = "whatsapp", _("whatsapp")
-        TELEGRAM = "telegram", _("telegram")
-
     success = models.BooleanField(_("success"), default=True, blank=True)
-    channel = TextChoicesField(
-        verbose_name=_("channel"), max_length=15, choices_enum=ChannelEnum
-    )
     sent_on = models.DateTimeField(
         _("sent on"), auto_now=False, auto_now_add=True
     )
-    user = models.ForeignKey(
+    course = models.ForeignKey(
+        Course, verbose_name=_("course"), on_delete=models.CASCADE
+    )
+    to = models.ForeignKey(
         User, verbose_name=_("user"), on_delete=models.CASCADE
+    )
+    channel = models.ForeignKey(
+        NotificationChannel,
+        verbose_name=_("channel"),
+        on_delete=models.CASCADE,
     )
