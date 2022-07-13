@@ -31,7 +31,7 @@ def fetch_data(term: int, department: str, check_cache=True) -> dict:
             res = rq.get(API, params={'term_code': term, 'department_code': department})
 
             assert res.ok
-            data = json.loads(res.content)
+            data = json.loads(res.content)['data']
 
             cache[(term, department)] = data # store data into cache
 
