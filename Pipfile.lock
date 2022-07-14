@@ -135,14 +135,6 @@
             "index": "pypi",
             "version": "==0.3.1"
         },
-        "gqlauth-jwt": {
-            "hashes": [
-                "sha256:8c6b970f54fa4591b90b5f5bb8172f1aea0ceb5c2774b1923a296bfb86957081",
-                "sha256:903a4864a9a0d0495fc546c3aa0bcdba3d62e91c123f67204648c126e5584a95"
-            ],
-            "markers": "python_version >= '3.8' and python_version < '4.0'",
-            "version": "==0.2.1"
-        },
         "graphql-core": {
             "hashes": [
                 "sha256:9d1bf141427b7d54be944587c8349df791ce60ade2e3cccaf9c56368c133c201",
@@ -328,11 +320,11 @@
         },
         "strawberry-django-auth": {
             "hashes": [
-                "sha256:a0f55c342be7431c850c715b0b164a3661c16bfd012bb905720227ec930cc65b",
-                "sha256:efa14768ec281693301bc0805be2476cf7ed3c42012997cf9a2cc6f4730dac79"
+                "sha256:6d4845de840e13379244b0830842e99e1f88981fe42ede5b649cac0b0e39e63a",
+                "sha256:7b4b3bfad6d123677bb989b140c4dbc17b48b61628dab125cf9c8470af6a69b2"
             ],
             "index": "pypi",
-            "version": "==0.3.2.2"
+            "version": "==0.3.3.0"
         },
         "strawberry-django-jwt": {
             "hashes": [
