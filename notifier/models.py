@@ -27,6 +27,7 @@ from django_choices_field import TextChoicesField
 
 from data import DepartmentEnum
 
+
 class NotificationChannel(models.Model):
     """
     This model to help choosing multiple channels for a tracking list.
@@ -61,9 +62,11 @@ class Course(models.Model):
     pk: `crn`
     """
 
-    crn = models.CharField(_("CRN"), max_length=5, primary_key=True)
+    crn = models.CharField(_("CRN"), max_length=5, unique=True)
     term = models.CharField(_("term"), max_length=6)
-    department = TextChoicesField(verbose_name=_("department"), choices_enum=DepartmentEnum)
+    department = TextChoicesField(
+        verbose_name=_("department"), choices_enum=DepartmentEnum
+    )
 
     class Meta:
         ordering = ["term", "department"]
@@ -75,7 +78,7 @@ class Course(models.Model):
 class TrackingList(models.Model):
     """
     It assigns each users to what `Course` they are willing to track.
-    pk: django default `id`.
+    pk: OneToOneField `user`.
     """
 
     user = models.OneToOneField(
@@ -88,6 +91,7 @@ class TrackingList(models.Model):
         Course,
         verbose_name=_("courses"),
         related_name="tracked_courses",
+        blank=True,
     )
     channels = models.ManyToManyField(
         NotificationChannel, verbose_name=_("channels")
