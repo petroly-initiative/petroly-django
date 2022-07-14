@@ -11,7 +11,7 @@ API = "https://registrar.kfupm.edu.sa/api/course-offering"
 # create in-memory cache
 cache = FaaSCacheDict(default_ttl=60, max_size_bytes='10M')
 
-def fetch_data(term: int, department: str, check_cache=True) -> dict:
+def fetch_data(term: int, department: str, check_cache=True) -> List[Dict]:
     """This method performs a GET request to the KFUPM API
     for the specific args.
 
