@@ -25,6 +25,7 @@ from django.utils.translation import gettext as _
 
 from django_choices_field import TextChoicesField
 
+from data import DepartmentEnum
 
 class NotificationChannel(models.Model):
     """
@@ -61,6 +62,11 @@ class Course(models.Model):
     """
 
     crn = models.CharField(_("CRN"), max_length=5, primary_key=True)
+    term = models.CharField(_("term"), max_length=6)
+    department = TextChoicesField(verbose_name=_("department"), choices_enum=DepartmentEnum)
+
+    class Meta:
+        ordering = ["term", "department"]
 
     def __str__(self) -> str:
         return f"CRN: {self.crn}"
