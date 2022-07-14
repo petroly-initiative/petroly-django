@@ -2,7 +2,11 @@
 This module is to define the fetching, filtering, and processing the data
 from the KFUPM API
 """
+
+
 import json
+from typing import List, Dict
+
 import requests as rq
 from faas_cache_dict import FaaSCacheDict
 
