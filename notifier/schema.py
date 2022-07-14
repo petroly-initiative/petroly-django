@@ -3,12 +3,22 @@ This module is to define the GraphQL queries and mutations
 of the `notifier` app.
 """
 
+from typing import List, Dict
+
 from strawberry.scalars import JSON
 from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 
 from .utils import fetch_data
+from .models import TrackingList, Course
+from .types import (
+    TrackingListInput,
+    CourseInput,
+    CourseType,
+    TrackingListType,
+    MatchIdentity,
+)
 
 
 @gql.type
@@ -73,3 +83,32 @@ class Query:
 @gql.type
 class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
+
+    update_tracking_list2: TrackingListType = gql.django.update_mutation(
+        TrackingListInput,
+        directives=[IsAuthenticated(), MatchIdentity()],
+    )
+
+    @gql.mutation
+    def update_tracking_list(
+        self, info: Info, courses: List[CourseInput]
+    ) -> bool:
+        user = info.context.request.user
+        tracking_list = TrackingList.objects.get_or_create(user=user)[0]
+
+        try:
+            new_list = []
+            for course in courses:
+                obj, _ = Course.objects.get_or_create(
+                    crn=course.crn, term=course.term, department=course.department
+                )
+                new_list.append(obj)
+
+            # clear the old list and set the new one
+            tracking_list.courses.set(new_list, clear=True)
+
+        except Exception as exc:
+            print(exc)
+            return False
+
+        return True
