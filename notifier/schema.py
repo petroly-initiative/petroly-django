@@ -10,7 +10,7 @@ from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 
-from .utils import fetch_data, get_course_info
+from .utils import fetch_data, get_course_info, check_all_and_notify
 from .models import TrackingList, Course
 from .types import CourseInput
 
@@ -78,6 +78,10 @@ class Query:
 class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
 
+    @gql.mutation
+    def check(self) -> None:
+        check_all_and_notify()
+
     @gql.mutation(directives=[IsAuthenticated()])
     def update_tracking_list(
         self, info: Info, courses: List[CourseInput]
@@ -107,24 +111,12 @@ class Mutation:
                 new_list.append(obj)
 
                 # always update the status from our cache
-                course_info = get_course_info(course.crn)
+                # This will guarantee that the course status is to date
+                # before it's being tracked
+                course_info = get_course_info(course)
                 obj.available_seats = course_info["available_seats"]
                 obj.waiting_list_count = course_info["waiting_list_count"]
                 obj.save()
-
-                # if created:
-                #     # if the course is just added to db
-                #     # or wasn't tracked
-                #     # store its numbers status, for later comparisons
-                #     course_info = get_course_info(course.crn)
-                #     obj.available_seats = course_info["available_seats"]
-                #     obj.waiting_list_count = course_info["waiting_list_count"]
-                #     obj.save()
-
-                # elif course.last_updated > 10_00:
-                #     # if the course is already exist
-                #     # check wether its status is older than the cache age.
-                #     pass
 
             # clear the old list and set the new one
             tracking_list.courses.set(new_list, clear=True)
