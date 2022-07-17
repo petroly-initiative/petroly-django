@@ -6,20 +6,16 @@ from the KFUPM API
 
 import json
 from typing import List, Dict, Tuple
+from pprint import pprint
 
 import requests as rq
 from django.contrib.auth import get_user_model
-from faas_cache_dict import FaaSCacheDict
+from django.core.cache import cache
+
 from .models import TrackingList, Course
 
 User = get_user_model()
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
-
-# Constants
-CACHE_AGE = 60 * 60  # seconds
-
-# create in-memory cache
-cache = FaaSCacheDict(default_ttl=CACHE_AGE, max_size_bytes="10M")
 
 
 def fetch_data(term: int, department: str) -> List[Dict]:
@@ -34,19 +30,21 @@ def fetch_data(term: int, department: str) -> List[Dict]:
         dict: the response JSON after converting into dict object,
     """
 
-    try:
-        return cache[(term, department)]
-    except KeyError:
-        # handle cache miss
-        res = rq.get(
-            API, params={"term_code": term, "department_code": department}
-        )
+    data = cache.get((term, department))
 
-        assert res.ok
-        data = json.loads(res.content)["data"]
-
-        cache[(term, department)] = data  # store data into cache
+    if data:
         return data
+    print("cache miss")
+    res = rq.get(
+        API, params={"term_code": term, "department_code": department}
+    )
+
+    assert res.ok
+    data = json.loads(res.content)["data"]
+
+    cache.set((term, department), data)  # store data into cache
+
+    return data
 
 
 def get_course_info(course: Course) -> dict:
@@ -135,6 +133,7 @@ def check_all_and_notify() -> None:
     and grouped the notification by user
     then send a notification details
     """
+    # TODO this task must run in background repeatedly
     collection = collect_tracked_courses()
     changed_courses = []
 
@@ -145,5 +144,5 @@ def check_all_and_notify() -> None:
             value["status"] = status
             changed_courses.append(value)
 
-    print(changed_courses)
+    pprint(changed_courses)
     # TODO group `changed_courses` by tracker
