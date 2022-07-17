@@ -86,7 +86,7 @@ class Mutation:
     def update_tracking_list(
         self, info: Info, courses: List[CourseInput]
     ) -> bool:
-        """Add all `courses` to the user's trackin list
+        """Add all `courses` to the user's tracking list
         then update each course status from the cache.
 
         Args:
