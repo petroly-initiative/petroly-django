@@ -10,7 +10,7 @@ from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 
-from .utils import fetch_data
+from .utils import fetch_data, get_course_info
 from .models import TrackingList, Course
 from .types import CourseInput
 
@@ -82,6 +82,16 @@ class Mutation:
     def update_tracking_list(
         self, info: Info, courses: List[CourseInput]
     ) -> bool:
+        """Add all `courses` to the user's trackin list
+        then update each course status from the cache.
+
+        Args:
+            info (Info): given by GraphQL
+            courses (List[CourseInput]): A list of CourseInput
+
+        Returns:
+            bool: A success flag
+        """
         user = info.context.request.user
         tracking_list = TrackingList.objects.get_or_create(user=user)[0]
 
@@ -95,6 +105,26 @@ class Mutation:
                     department=course.department,
                 )
                 new_list.append(obj)
+
+                # always update the status from our cache
+                course_info = get_course_info(course.crn)
+                obj.available_seats = course_info["available_seats"]
+                obj.waiting_list_count = course_info["waiting_list_count"]
+                obj.save()
+
+                # if created:
+                #     # if the course is just added to db
+                #     # or wasn't tracked
+                #     # store its numbers status, for later comparisons
+                #     course_info = get_course_info(course.crn)
+                #     obj.available_seats = course_info["available_seats"]
+                #     obj.waiting_list_count = course_info["waiting_list_count"]
+                #     obj.save()
+
+                # elif course.last_updated > 10_00:
+                #     # if the course is already exist
+                #     # check wether its status is older than the cache age.
+                #     pass
 
             # clear the old list and set the new one
             tracking_list.courses.set(new_list, clear=True)
