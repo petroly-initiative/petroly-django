@@ -82,17 +82,28 @@ def check_changes(course: Course) -> Tuple:
         Tuple: first element is true if there is a change,
         the second element is a dict of the fields latest info.
     """
-    # TODO this should be compared against old status
-    # TODO add fields indicate by how many the increase is
 
     course_info = get_course_info(course)
     keys = ["available_seats", "waiting_list_count"]
     info = {key: course_info[key] for key in keys}
+    changed = (
+        info["available_seats"] > course.available_seats
+        or info["waiting_list_count"] > course.waiting_list_count
+    )
 
-    if info["available_seats"] > 0 or info["waiting_list_count"] > 0:
-        return (True, info)
+    if changed:
+        # add the old numbers to returned info
+        info["available_seats_old"] = course.available_seats
+        info["waiting_list_count_old"] = course.available_seats
+        # update the course obj with new numbers
+        course.available_seats = info["available_seats"]
+        course.waiting_list_count = info["waiting_list_count"]
 
-    return (False, info)
+    # this is important even if there is no change,
+    # to auto update the `last_updated` field to now.
+    course.save()
+
+    return (changed, info)
 
 
 def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
