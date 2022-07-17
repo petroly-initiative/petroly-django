@@ -24,6 +24,7 @@ whitenoise = "*"
 django = "*"
 cloudinary = "*"
 faas-cache-dict = "*"
+tzdata = "*"
 
 [dev-packages]
 black = "*"
