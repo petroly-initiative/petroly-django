@@ -20,12 +20,13 @@ Here are the related models definition for the `notifier` app.
 
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
-
 from django_choices_field import TextChoicesField
 
 from data import DepartmentEnum
+
+User = get_user_model()
 
 
 class NotificationChannel(models.Model):
@@ -64,6 +65,12 @@ class Course(models.Model):
 
     crn = models.CharField(_("CRN"), max_length=5, unique=True)
     term = models.CharField(_("term"), max_length=6)
+    created_on = models.DateTimeField(_("created on"), auto_now_add=True)
+    last_updated = models.DateTimeField(_("last updated"), auto_now=True)
+    available_seats = models.IntegerField(_("available seats"), default=0)
+    waiting_list_count = models.IntegerField(
+        _("waiting list count"), default=0
+    )
     department = TextChoicesField(
         verbose_name=_("department"), choices_enum=DepartmentEnum
     )
@@ -72,7 +79,7 @@ class Course(models.Model):
         ordering = ["term", "department"]
 
     def __str__(self) -> str:
-        return f"CRN: {self.crn}"
+        return str(self.crn)
 
 
 class TrackingList(models.Model):
