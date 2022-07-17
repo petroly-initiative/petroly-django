@@ -136,6 +136,3 @@ def check_all_and_notify() -> None:
 
     print(changed_courses)
     # TODO group `changed_courses` by tracker
-
-
-check_all_and_notify()
