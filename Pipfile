@@ -28,6 +28,7 @@ faas-cache-dict = "*"
 [dev-packages]
 black = "*"
 mypy = "*"
+pylint-django = "*"
 
 [requires]
 python_version = "3.10"
