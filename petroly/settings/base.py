@@ -190,7 +190,6 @@ Q_CLUSTER = {
     'name': 'petroly',
     'workers': 1,
     'timeout': None,
-    'retry': 10,
     'queue_limit': 50,
     'bulk': 10,
     'orm': 'default'
