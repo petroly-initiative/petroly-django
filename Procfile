@@ -1,3 +1,2 @@
 release: python manage.py migrate --noinput
-web: gunicorn petroly.wsgi --log-file -
-worker: python manage.py qcluster
+web: trap '' SIGTERM; gunicorn petroly.wsgi --log-file - & python manage.py qcluster & wait -n; kill -SIGTERM -$$; wait
