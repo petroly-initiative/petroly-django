@@ -12,6 +12,7 @@ from time import sleep
 import requests as rq
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django.core.mail import send_mail
 from django_q.tasks import async_task, schedule
 from django_q.models import Schedule
 
@@ -134,6 +135,15 @@ def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
 
     return courses_dict
 
+def send_notification(user_pk: int, info: str) -> None:
+    user = User.objects.get(pk=user_pk)
+    send_mail(
+        subject='Changes detected',
+        message=str(info),
+        recipient_list=[user.email],
+        fail_silently=False,
+        from_email=None,
+    )
 
 def check_all_and_notify() -> None:
     """Check all tracked courses
@@ -156,10 +166,35 @@ def check_all_and_notify() -> None:
                 value["status"] = status
                 changed_courses.append(value)
 
+        # collect unique trackers
+        courses_by_tracker = {}
+        for c in changed_courses:
+            for tracker in c["trackers"]:
+                try:
+                    courses_by_tracker[tracker.pk].append(c)
+                except KeyError:
+                    courses_by_tracker[tracker.pk] = [c]
+
+        for pk, info in courses_by_tracker.items():
+            # TODO create a formatter method
+            msg = "A change detected in each of the following "
+            for c in info:
+                msg += f"\n\nCRN {c['course'].crn}:"
+                for key, value in c['status'].items():
+                    msg += f'\n \t {key}: {value}'
+
+            schedule(
+                'notifier.utils.send_notification',
+                pk,
+                msg,
+                schedule_type=Schedule.ONCE,
+            )
+
         pprint(changed_courses)
-        # TODO group `changed_courses` by tracker
+        pprint(courses_by_tracker)
 
         sleep(5)
+
 
 def run_task() -> None:
     """This is to start the Django Q
@@ -168,6 +203,6 @@ def run_task() -> None:
 
     # schedule the task to run once
     schedule(
-        func='notifier.utils.check_all_and_notify',
+        func="notifier.utils.check_all_and_notify",
         schedule_type=Schedule.ONCE,
     )
