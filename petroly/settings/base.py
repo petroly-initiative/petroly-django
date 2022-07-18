@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'strawberry.django',
     'gqlauth',
     'strawberry_django_jwt.refresh_token',
-    'notifier'
+    'notifier',
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -183,3 +184,14 @@ GQL_AUTH = GqlAuthSettings(
         'frontend_domain': 'petroly.co'
     },
 )
+
+
+Q_CLUSTER = {
+    'name': 'petroly',
+    'workers': 1,
+    'timeout': None,
+    'retry': 10,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
+}

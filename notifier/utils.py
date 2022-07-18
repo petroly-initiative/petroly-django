@@ -7,10 +7,13 @@ from the KFUPM API
 import json
 from typing import List, Dict, Tuple
 from pprint import pprint
+from time import sleep
 
 import requests as rq
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django_q.tasks import async_task, schedule
+from django_q.models import Schedule
 
 from .models import TrackingList, Course
 
@@ -138,15 +141,30 @@ def check_all_and_notify() -> None:
     then send a notification details
     """
     # TODO this task must run in background repeatedly
-    collection = collect_tracked_courses()
-    changed_courses = []
 
-    for _, value in collection.items():
-        changed, status = check_changes(value["course"])
+    while True:
+        collection = collect_tracked_courses()
+        changed_courses = []
 
-        if changed:
-            value["status"] = status
-            changed_courses.append(value)
+        for _, value in collection.items():
+            changed, status = check_changes(value["course"])
 
-    pprint(changed_courses)
-    # TODO group `changed_courses` by tracker
+            if changed:
+                value["status"] = status
+                changed_courses.append(value)
+
+        pprint(changed_courses)
+        # TODO group `changed_courses` by tracker
+
+        sleep(5)
+
+def run_task() -> None:
+    """This is to start the Django Q
+    task in background. It shouldn't stop.
+    """
+
+    # schedule the task to run once
+    schedule(
+        func='notifier.utils.check_all_and_notify',
+        schedule_type=Schedule.ONCE,
+    )

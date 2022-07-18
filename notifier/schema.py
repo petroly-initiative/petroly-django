@@ -10,7 +10,7 @@ from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 
-from .utils import fetch_data, get_course_info, check_all_and_notify
+from .utils import fetch_data, get_course_info, check_all_and_notify, run_task
 from .models import TrackingList, Course
 from .types import CourseInput
 
@@ -79,8 +79,8 @@ class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
 
     @gql.mutation
-    def check(self) -> None:
-        check_all_and_notify()
+    def start_task(self) -> None:
+        run_task()
 
     @gql.mutation(directives=[IsAuthenticated()])
     def update_tracking_list(
