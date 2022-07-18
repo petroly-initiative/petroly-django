@@ -23,6 +23,7 @@ strawberry-graphql-django = "*"
 whitenoise = "*"
 django = "*"
 cloudinary = "*"
+django-q = "*"
 
 [dev-packages]
 black = "*"
