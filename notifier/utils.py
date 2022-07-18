@@ -135,15 +135,17 @@ def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
 
     return courses_dict
 
+
 def send_notification(user_pk: int, info: str) -> None:
     user = User.objects.get(pk=user_pk)
     send_mail(
-        subject='Changes detected',
+        subject="Changes detected",
         message=str(info),
         recipient_list=[user.email],
         fail_silently=False,
         from_email=None,
     )
+
 
 def check_all_and_notify() -> None:
     """Check all tracked courses
@@ -180,11 +182,11 @@ def check_all_and_notify() -> None:
             msg = "A change detected in each of the following "
             for c in info:
                 msg += f"\n\nCRN {c['course'].crn}:"
-                for key, value in c['status'].items():
-                    msg += f'\n \t {key}: {value}'
+                msg += f"\n \t available seats from {c['status']['available_seats_old']} to {c['status']['available_seats']}"
+                msg += f"\n \t waiting list count from {c['status']['waiting_list_count_old']} to {c['status']['waiting_list_count']}"
 
             schedule(
-                'notifier.utils.send_notification',
+                "notifier.utils.send_notification",
                 pk,
                 msg,
                 schedule_type=Schedule.ONCE,
