@@ -139,6 +139,9 @@ def check_all_and_notify() -> None:
     """Check all tracked courses
     and grouped the notification by user
     then send a notification details
+
+    This method is infinite loop,
+    it should be called from a async context.
     """
     # TODO this task must run in background repeatedly
 
