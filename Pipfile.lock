@@ -336,11 +336,11 @@
         },
         "strawberry-django-plus": {
             "hashes": [
-                "sha256:276aeddd4916bceefd4cc59d7c1ec201d1e5fc96c7801734300672f8dca3d324",
-                "sha256:d87e0c22eccc0f599a9bc8c63f1856d53cc3163e27a637f5271bf70f5eb8ba5c"
+                "sha256:d5f92f958db209d61ec9339260bedc0177f73e1d1cf0cc1c8b93aa23aba635e7",
+                "sha256:dda266b4b8670c9f7aee0721e7375ba5e010b333561f2d1f4896f2fcc40413b5"
             ],
             "index": "pypi",
-            "version": "==1.19.1"
+            "version": "==1.20.0"
         },
         "strawberry-graphql": {
             "hashes": [
@@ -477,7 +477,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_full_version < '3.11.0a7'",
+            "markers": "python_version < '3.11'",
             "version": "==2.0.1"
         },
         "typing-extensions": {
