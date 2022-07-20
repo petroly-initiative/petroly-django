@@ -1,16 +1,16 @@
+import logging
+import os;
 from telegram.ext import ( Application, CommandHandler, filters, MessageHandler
 )
-import logging
 from .handlers.commandHandlers import (start, help, list, track, untrack);
 from .handlers.errorHandlers import nonExistent;
 
-import os;
-from dotenv import load_dotenv;
 
 
-load_dotenv();
+
         # setting up the logger for the bot status
-logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO);
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+ level=logging.INFO)
 logger = logging.getLogger(__name__)
         # spawning the bot process
 
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class BotController:
 
         def __init__(self) -> None:
-                self.app: Application = Application.builder().token(str(os.getenv("TELEGRAM_BOT_TOKEN"))).build();
+                self.app: Application = Application.builder().token(str(os.environ.get("TELEGRAM_BOT_TOKEN"))).build();
                 self.init_handlers();
                 self.app.run_polling();  # type: ignore
                 

@@ -2,7 +2,6 @@ from telegram.ext import ( Application, CommandHandler
 )
 
 
-from notifier.bot.botController import BotController
 
 from django.apps import AppConfig
 

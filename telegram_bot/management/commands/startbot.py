@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand;
-from ...bot.botController import BotController;
+from telegram_bot.utils.botController import BotController;
 
 class Command(BaseCommand):
+    """a command that fires the bot polling"""
     help = "Runs the telegram bot process"
 
     def handle(self, *args, **options):
