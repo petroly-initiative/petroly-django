@@ -1,9 +1,8 @@
-from bdb import effective
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, MenuButtonCommands, Update;
-from telegram.constants import ParseMode;
-from telegram.ext import ContextTypes;
-from .utils import populateTracking;
-from ..sampleData import courses;
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, MenuButtonCommands, Update
+from telegram.constants import ParseMode
+from telegram.ext import ContextTypes
+from telegram_bot.utils.handlers.utils import populateTracking
+from telegram_bot.utils.sampleData import courses
 
 # ! I haven't handled errors like firing non-existent command
 
@@ -13,7 +12,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # ! the users need to provide their telegram usernames, so that we can match their names when contacting the bot
     if(update.effective_user.username in ["MuhabAbubaker", "DrAmmar"]): #type: ignore
         # welcoming message for the signed-in user
-        await update.message.reply_text(text=f"Hi {update.effective_user.name}, I am the petroly notifier bot\. Here is a list of your tracked sections: \n\n {populateTracking(courses)}", parse_mode= ParseMode.MARKDOWN_V2);
+        await update.message.reply_text(
+            text=f"Hi {update.effective_user.name}, I am the petroly notifier bot\. Here is a list of your tracked sections: \n\n {populateTracking(courses)}", parse_mode= ParseMode.MARKDOWN_V2);
         # instantiating the menu button
         await context.bot.set_chat_menu_button(update.effective_chat.id, MenuButtonCommands()) #type: ignore
         await context.bot.set_my_commands(commands=[
@@ -24,7 +24,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             ("/untrack", "deletes the section from your tracking list (/untrack CRN)")
         ])
     else:
-        await update.message.reply_text(text="Sorry, You are not signed in the Petroly Notifier Service for Telegram bots, to do so, visit our website", reply_markup= InlineKeyboardMarkup([[InlineKeyboardButton(text ="Visit petroly.co", url="https://petroly.co")]]))
+        await update.message.reply_text(
+            text="Sorry, You are not signed in the Petroly Notifier Service for Telegram bots, to do so, visit our website",
+             reply_markup= InlineKeyboardMarkup([
+                [InlineKeyboardButton(text ="Visit petroly.co", url="https://petroly.co")]
+                ]))
     
     
 # displaying all possible commands by the user
@@ -43,20 +47,6 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 async def list(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """a handler to display all currently tracked courses by the user"""
     await update.message.reply_text(text= f"Here is the list of your currently tracked sections: \n\n {populateTracking(courses)}", parse_mode=ParseMode.MARKDOWN_V2)
-
-async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    # ! we should give the course details for a more comfortable UX
-    print(len(context.args))
-    if (context.args) != None and len(context.args) != 0:   # type: ignore
-        await update.message.reply_text(text= f"Section with CRN **{context.args[0]}** is successfully tracked\!", parse_mode=ParseMode.MARKDOWN_V2); 
-    else:
-        await update.message.reply_text(text="Cannot untrack a course without specifying the CRN. Please try again and add the correct CRN")
-
-async def untrack(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if context.args != None: 
-        #! we need to handle non-existent CRNs as well
-        await update.message.reply_text(text= f"Section with CRN **{context.args[0]}** is successfully untracked\!", parse_mode=ParseMode.MARKDOWN_V2); 
-    else:
-        await update.message.reply_text(text="Cannot untrack a course without specifying the CRN. Please try again and add the correct CRN")
 
