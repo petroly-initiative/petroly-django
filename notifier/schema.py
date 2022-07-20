@@ -80,7 +80,22 @@ class Mutation:
 
     @gql.mutation
     def start_task(self) -> None:
+        """To start checking and sending notification.
+        this will enqueue a task in Queued tasks table.
+        it there is one with func value `notifier.utils.check_all_and_notify`
+        no need to call this mutation.
+        """
+
         run_task()
+
+    @gql.mutation
+    def start_telegram_bot(self) -> None:
+        """Thi enqueue a task for running the Telegram Bot.
+        If there is a task for this method,
+        no need to call this mutation.
+        """
+
+        # TODO call the start of Telegram Bot
 
     @gql.mutation(directives=[IsAuthenticated()])
     def update_tracking_list(
