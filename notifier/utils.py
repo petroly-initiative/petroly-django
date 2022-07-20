@@ -16,7 +16,7 @@ from django.core.mail import send_mail
 from django_q.tasks import async_task, schedule
 from django_q.models import Schedule
 
-from .models import TrackingList, Course
+from .models import TrackingList, Course, NotificationEvent
 
 User = get_user_model()
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
@@ -147,6 +147,24 @@ def send_notification(user_pk: int, info: str) -> None:
     )
 
 
+def formatter(info: dict) -> str:
+    """Format the info of
+    changed courses, in a nice readable shape.
+
+    Args:
+        info (str): The info obj to be formatted
+    """
+    # TODO add detected time stamp
+
+    msg = "A change detected in each of the following "
+    for c in info:
+        msg += f"\n\nCRN {c['course'].crn}:"
+        msg += f"\n \t available seats from {c['status']['available_seats_old']} to {c['status']['available_seats']}"
+        msg += f"\n \t waiting list count from {c['status']['waiting_list_count_old']} to {c['status']['waiting_list_count']}"
+
+    return msg
+
+
 def check_all_and_notify() -> None:
     """Check all tracked courses
     and grouped the notification by user
@@ -155,7 +173,6 @@ def check_all_and_notify() -> None:
     This method is infinite loop,
     it should be called from a async context.
     """
-    # TODO this task must run in background repeatedly
 
     while True:
         collection = collect_tracked_courses()
@@ -168,7 +185,7 @@ def check_all_and_notify() -> None:
                 value["status"] = status
                 changed_courses.append(value)
 
-        # collect unique trackers
+        # group `changed_courses` by unique trackers
         courses_by_tracker = {}
         for c in changed_courses:
             for tracker in c["trackers"]:
@@ -178,21 +195,15 @@ def check_all_and_notify() -> None:
                     courses_by_tracker[tracker.pk] = [c]
 
         for pk, info in courses_by_tracker.items():
-            # TODO create a formatter method
-            msg = "A change detected in each of the following "
-            for c in info:
-                msg += f"\n\nCRN {c['course'].crn}:"
-                msg += f"\n \t available seats from {c['status']['available_seats_old']} to {c['status']['available_seats']}"
-                msg += f"\n \t waiting list count from {c['status']['waiting_list_count_old']} to {c['status']['waiting_list_count']}"
+            # TODO create a `NotificationEvent` obj
+            # TODO send the notification for each TrackingList's channel
 
-            schedule(
+            async_task(
                 "notifier.utils.send_notification",
                 pk,
-                msg,
-                schedule_type=Schedule.ONCE,
+                formatter(info),
             )
 
-        pprint(changed_courses)
         pprint(courses_by_tracker)
 
         sleep(5)
@@ -204,7 +215,4 @@ def run_task() -> None:
     """
 
     # schedule the task to run once
-    schedule(
-        func="notifier.utils.check_all_and_notify",
-        schedule_type=Schedule.ONCE,
-    )
+    async_task("notifier.utils.check_all_and_notify")
