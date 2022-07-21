@@ -11,7 +11,7 @@ from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 from django_q.tasks import async_task
 
-from .utils import fetch_data, get_course_info, run_task
+from .utils import fetch_data, get_course_info
 from .models import TrackingList, Course
 from .types import CourseInput, TermType
 
