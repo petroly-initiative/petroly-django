@@ -9,8 +9,9 @@ def populateTracking(courses: List) -> str:
     for course in courses:
         result += f"""**{course["course_number"]}\-{course["section_number"]}**  \- *{course["crn"]}*
         Available Seats: {course["available_seats"]}
-        Waitlist: {conditionalColoring(course["waiting_list_count"])}\n\n""";
-    return result;
+        Waitlist: {conditionalColoring(course["waiting_list_count"])}\n\n"""
+    return result
+
 
 def conditionalColoring(waitlist_count) -> str:
     """helper method to append the correct coloring according to the waitlist count"""
@@ -18,4 +19,3 @@ def conditionalColoring(waitlist_count) -> str:
         return "🔴 Closed"
     else:
         return "🟢 Open"
-    
