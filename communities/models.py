@@ -47,8 +47,8 @@ class Community(models.Model):
     )
     link = models.URLField(_("Link"), unique=True)
     date = models.DateField(_("Date"), auto_now_add=True)
-    category = TextChoicesField(choices_enum=CategoryEnum, default="")  # type: ignore
-    platform = TextChoicesField(choices_enum=PlatformEnum, default="")  # type: ignore
+    category = TextChoicesField(choices_enum=CategoryEnum, default="")
+    platform = TextChoicesField(choices_enum=PlatformEnum, default="")
     section = models.CharField(_("Section"), max_length=10, default="", blank=True)
     verified = models.BooleanField(_("Verified"), default=True)
     archived = models.BooleanField(_("Archived"), default=False)
