@@ -50,7 +50,7 @@ class Query:
         return result
 
     @gql.field
-    def search(self, term: int, department: str, title: str) -> JSON:
+    def search(self, term: str, department: str, title: str) -> JSON:
         """to call `fetch_data`
         and perform case-insensitive searching
         in the `course_number` and `course_title` fields from API data.
