@@ -13,21 +13,20 @@ import requests as rq
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import send_mail
-from django_q.tasks import async_task, schedule
-from django_q.models import Schedule
+from django_q.tasks import async_task
 
-from .models import TrackingList, Course, NotificationEvent
+from .models import TrackingList, Course
 
 User = get_user_model()
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
 
 
-def fetch_data(term: int, department: str) -> List[Dict]:
+def fetch_data(term: str, department: str) -> List[Dict]:
     """This method performs a GET request to the KFUPM API
     for the specific args.
 
     Args:
-        term (int): e.g., 202210
+        term (str): e.g., 202210
         department (str): e.g., 'ICS'
 
     Returns:
