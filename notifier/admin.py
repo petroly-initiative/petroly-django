@@ -10,6 +10,7 @@ admin.site.register(
         models.Course,
         models.NotificationEvent,
         models.NotificationChannel,
+        models.Term
     ]
 )
 

@@ -10,14 +10,16 @@ from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 
-from .utils import fetch_data, get_course_info, check_all_and_notify, run_task
+from .utils import fetch_data, get_course_info, run_task
 from .models import TrackingList, Course
-from .types import CourseInput
+from .types import CourseInput, TermType
 
 
 @gql.type
 class Query:
     """Main entry of all Query types of `notifier` app."""
+
+    terms: List[TermType] = gql.django.field()
 
     @gql.field
     def raw_data(self, term: int, department: str) -> JSON:
