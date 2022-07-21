@@ -24,11 +24,17 @@ whitenoise = "*"
 django = "*"
 cloudinary = "*"
 django-q = "*"
+tzdata = "*"
+python-telegram-bot = "*"
 
 [dev-packages]
 black = "*"
 mypy = "*"
 pylint-django = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.10"
+
+[pipenv]
+allow_prereleases = true

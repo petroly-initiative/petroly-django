@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'strawberry_django_jwt.refresh_token',
     'notifier',
     'django_q',
+    'telegram_bot',
 ]
 
 MIDDLEWARE = [
