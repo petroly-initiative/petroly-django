@@ -1,9 +1,10 @@
 # ! needs to converted it into a conversational handler instead
 from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
-from telegram import Update;
+from telegram import Update
 
 async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """a conversational handler starting point to track a section given the CRN"""
     # ! we should give the course details for a more comfortable UX
     print(len(context.args)) # type:ignore
     if (context.args) != None and len(context.args) != 0:   # type: ignore
