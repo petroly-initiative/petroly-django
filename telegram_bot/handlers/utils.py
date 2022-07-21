@@ -4,8 +4,10 @@ This module contains some utilities for handling telegram commands
 
 from typing import List
 
+from notifier.models import Course
 
-def populate_tracking(courses: List) -> str:
+
+def populate_tracking(courses: List[Course]) -> str:
     """helper method to create a formatted message for each course in the tracking list"""
     # for each course we will create a message format
     result = ""

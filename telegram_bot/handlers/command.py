@@ -1,16 +1,32 @@
+"""
+This module handles main entry commands for our Telegram Bot.
+
+methods:
+    - `start`
+    - `help`
+    - `list`
+"""
+import re
+
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     MenuButtonCommands,
     Update,
 )
+
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
-from telegram_bot.utils.handlers.utils import populateTracking
-from telegram_bot.utils.sampleData import courses
+from telegram_bot.handlers.utils import populate_tracking
 
-# ! I haven't handled errors like firing non-existent command
+from .messages import help_msg_text
 
+courses = []
+
+def escape_md(txt) -> str:
+    match_md = r'((([_*]).+?\3[^_*]*)*)([_*])'
+
+    return re.sub(match_md, "\g<1>\\\\\g<4>", txt)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """the command to start the bot session"""
@@ -19,10 +35,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # ! the users need to provide their telegram usernames, so that we can
     # match their names when contacting the bot
 
-    if update.effective_user.username in ["MuhabAbubaker", "DrAmmar"]:  # type: ignore
+    if update.effective_user.username in ["MuhabAbubaker", "ammar_faifi"]:  # type: ignore
         # welcoming message for the signed-in user
+
         await update.message.reply_text(
-            text=f"Hi {update.effective_user.name}, I am the petroly notifier bot\. Here is a list of your tracked sections: \n\n {populateTracking(courses)}",
+            text=f"Hi {escape_md(update.effective_user.username)}, I am *Petroly* Bot",
             parse_mode=ParseMode.MARKDOWN_V2,
         )
         # instantiating the menu button
@@ -61,24 +78,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 # displaying all possible commands by the user
-async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def help_msg(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """command for helping users with extra instructions on each command"""
     await update.message.reply_text(
-        text="""Use **/start** to run this bot.
-
-        use /list to view all tracked sections
-
-        use **/untrack** CRN to untrack the section with the specified CRN number
-        For example, /delete 101235 : deletes the section with CRN 101235 from your tracking list
-
-        use **/add** CRN to track a new course using the section CRN""",
+        text=help_msg_text,
         parse_mode=ParseMode.MARKDOWN_V2,
     )
 
 
-async def list(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def tracked_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """a handler to display all currently tracked courses by the user"""
     await update.message.reply_text(
-        text=f"Here is the list of your currently tracked sections: \n\n {populateTracking(courses)}",
+        text=f"Here is the list of your currently tracked sections: \n\n {populate_tracking(courses)}",
         parse_mode=ParseMode.MARKDOWN_V2,
     )

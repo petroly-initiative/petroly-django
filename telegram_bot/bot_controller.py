@@ -1,8 +1,15 @@
-import logging
+"""
+Main class definition for the Telegram Bot interface.
+"""
+
 import os
+import logging
+
 from telegram.ext import Application, CommandHandler, filters, MessageHandler
-from .handlers.command import start, help, list, track, untrack
-from .handlers.error import nonExistent
+
+from .handlers.command import start, help_msg, tracked_courses
+from .handlers.conversation import track, untrack
+from .handlers.error import non_existent
 
 
 # setting up the logger for the bot status
@@ -27,8 +34,8 @@ class BotController:
 
     def init_handlers(self) -> None:
         self.app.add_handler(CommandHandler("start", start))
-        self.app.add_handler(CommandHandler("help", help))
-        self.app.add_handler(CommandHandler("list", list))
+        self.app.add_handler(CommandHandler("help", help_msg))
+        self.app.add_handler(CommandHandler("list", tracked_courses))
         self.app.add_handler(CommandHandler("track", track))
         self.app.add_handler(CommandHandler("untrack", untrack))
-        self.app.add_handler(MessageHandler(filters.COMMAND, nonExistent))
+        self.app.add_handler(MessageHandler(filters.COMMAND, non_existent))
