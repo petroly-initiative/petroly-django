@@ -26,7 +26,6 @@ cloudinary = "*"
 faas-cache-dict = "*"
 tzdata = "*"
 python-telegram-bot = "*"
-python-dotenv = "*"
 
 [dev-packages]
 black = "*"
