@@ -17,7 +17,7 @@ class TelegramProfile(models.Model):
     A class to represent the link between a django user and the telegram account
     """
 
-    telegram_user_id = models.CharField(_("telegram user ID"), max_length=256, unique=True)
-    telegram_username = models.CharField(_("telegram username"), max_length=256, unique=True)
+    id = models.CharField(_("telegram user ID"), max_length=256, primary_key=True)
+    username = models.CharField(_("telegram username"), max_length=256, unique=True)
 
     user = models.OneToOneField(User, verbose_name=_("user"), on_delete=models.CASCADE)
