@@ -7,14 +7,27 @@ import dataclasses
 from typing import List, Any
 
 from strawberry import auto, ID, Private
+from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import ConditionDirective
 from strawberry_django_plus.utils.typing import UserType
 from graphql.type.definition import GraphQLResolveInfo
 
 
-from .models import Course, TrackingList, NotificationChannel
+from .models import Course, TrackingList, NotificationChannel, Term
 
+
+@gql.django.type(Term)
+class TermType:
+    """A type for `Term` model."""
+
+    long: auto
+    short: auto
+
+    def get_queryset(self, queryset, info: Info):
+        return queryset.filter(
+            allowed=True
+        )
 
 @gql.django.type(NotificationChannel)
 class NotificationChannelType:

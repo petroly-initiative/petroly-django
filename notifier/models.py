@@ -56,6 +56,23 @@ class NotificationChannel(models.Model):
     def __str__(self):
         return str(self.channel)
 
+class Term(models.Model):
+    """
+    A small model to store the allowed terms
+    to be used in the notifier methods.
+    """
+
+    long = models.CharField(_("long"), max_length=10)
+    short = models.CharField(_("short"), max_length=5)
+    allowed = models.BooleanField(_("allowed"))
+
+    class Meta:
+        verbose_name = _("term")
+        verbose_name_plural = _("terms")
+
+    def __str__(self):
+        return self.long
+
 
 class Course(models.Model):
     """
