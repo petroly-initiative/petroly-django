@@ -9,6 +9,7 @@ from strawberry.scalars import JSON
 from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
+from django_q.tasks import async_task
 
 from .utils import fetch_data, get_course_info, run_task
 from .models import TrackingList, Course
@@ -88,7 +89,7 @@ class Mutation:
         no need to call this mutation.
         """
 
-        run_task()
+        async_task("notifier.utils.check_all_and_notify")
 
     @gql.mutation
     def start_telegram_bot(self) -> None:
@@ -97,7 +98,7 @@ class Mutation:
         no need to call this mutation.
         """
 
-        # TODO call the start of Telegram Bot
+        async_task("telegram_bot.bot_controller.BotController")
 
     @gql.mutation(directives=[IsAuthenticated()])
     def update_tracking_list(

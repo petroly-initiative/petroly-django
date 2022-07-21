@@ -206,12 +206,3 @@ def check_all_and_notify() -> None:
         pprint(courses_by_tracker)
 
         sleep(5)
-
-
-def run_task() -> None:
-    """This is to start the Django Q
-    task in background. It shouldn't stop.
-    """
-
-    # schedule the task to run once
-    async_task("notifier.utils.check_all_and_notify")
