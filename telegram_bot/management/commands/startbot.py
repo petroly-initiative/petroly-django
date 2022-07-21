@@ -1,5 +1,9 @@
+"""
+A django custom command to start the Telegram Bot.
+"""
+
 from django.core.management.base import BaseCommand
-from telegram_bot.utils.bot_controller import BotController
+from telegram_bot.bot_controller import BotController
 
 
 class Command(BaseCommand):
