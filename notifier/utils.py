@@ -17,6 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django_q.tasks import async_task
 from telegram.ext import Application
+from telegram.constants import ParseMode
 
 from .models import TrackingList, Course, ChannelEnum
 
@@ -146,7 +147,11 @@ app = Application.builder().token(settings.TELEGRAM_TOKEN).build()
 async def send_telegram(chat_id: int, msg: str):
     """To make this method as sync"""
 
-    await app.bot.send_message(chat_id=chat_id, text=msg)
+    await app.bot.send_message(
+        chat_id=chat_id,
+        text=msg,
+        parse_mode=ParseMode.MARKDOWN_V2,
+    )
 
 
 def send_notification(user_pk: int, msg: str) -> None:
@@ -188,8 +193,8 @@ def formatter_change_md(info: List[Dict[str, Course | User | Dict]]) -> str:
     print(info)
     result = ""
     for course in info:
-        status = course['status']
-        course = get_course_info(course['course'])
+        status = course["status"]
+        course = get_course_info(course["course"])
 
         result += f"""**{course["course_number"]}\\-{course["section_number"]}**  \\- *{course["crn"]}*
         Available Seats: {status["available_seats_old"]} ➡️  {status["available_seats"]}
@@ -251,9 +256,13 @@ def check_all_and_notify() -> None:
         for c in changed_courses:
             for tracker in c["trackers"]:
                 try:
-                    courses_by_tracker[tracker.pk].append({key: c[key] for key in keys})
+                    courses_by_tracker[tracker.pk].append(
+                        {key: c[key] for key in keys}
+                    )
                 except KeyError:
-                    courses_by_tracker[tracker.pk] = [{key: c[key] for key in keys}]
+                    courses_by_tracker[tracker.pk] = [
+                        {key: c[key] for key in keys}
+                    ]
 
         for tracker_pk, info in courses_by_tracker.items():
             # TODO create a `NotificationEvent` obj
