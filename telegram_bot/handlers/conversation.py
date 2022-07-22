@@ -6,8 +6,8 @@ from telegram import Update
 
 async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # ! we should give the course details for a more comfortable UX
-    print(len(context.args))  # type:ignore
-    if (context.args) != None and len(context.args) != 0:  # type: ignore
+
+    if context.args:  # type: ignore
         await update.message.reply_text(
             text=f"Section with CRN **{context.args[0]}** is successfully tracked\!",
             parse_mode=ParseMode.MARKDOWN_V2,
@@ -21,7 +21,7 @@ async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 # ! needs to converted it into a conversational handler instead
 async def untrack(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """a method to remove a certain course from tracking list via its CRN"""
-    if context.args != None:
+    if context.args:
         #! we need to handle non-existent CRNs as well
         await update.message.reply_text(
             text=f"Section with CRN **{context.args[0]}** is successfully untracked\!",
