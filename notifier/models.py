@@ -23,38 +23,12 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 from django_choices_field import TextChoicesField
+from multiselectfield import MultiSelectField
 
 from data import DepartmentEnum
 
 User = get_user_model()
 
-
-class NotificationChannel(models.Model):
-    """
-    This model to help choosing multiple channels for a tracking list.
-
-    pk: django default `id`.
-    """
-
-    class ChannelEnum(models.TextChoices):
-        """Choices of `channel` as Enum"""
-
-        SMS = "sms", _("sms")
-        PUSH = "push", _("push")
-        EMAIL = "email", _("email")
-        WHATSAPP = "whatsapp", _("whatsapp")
-        TELEGRAM = "telegram", _("telegram")
-
-    channel = TextChoicesField(
-        verbose_name=_("channel"), max_length=15, choices_enum=ChannelEnum
-    )
-
-    class Meta:
-        verbose_name = _("notification channel")
-        verbose_name_plural = _("notification channels")
-
-    def __str__(self):
-        return str(self.channel)
 
 class Term(models.Model):
     """
@@ -99,6 +73,16 @@ class Course(models.Model):
         return str(self.crn)
 
 
+class ChannelEnum(models.TextChoices):
+    """Choices of `channel` as Enum"""
+
+    SMS = "sms", _("sms")
+    PUSH = "push", _("push")
+    EMAIL = "email", _("email")
+    WHATSAPP = "whatsapp", _("whatsapp")
+    TELEGRAM = "telegram", _("telegram")
+
+
 class TrackingList(models.Model):
     """
     It assigns each users to what `Course` they are willing to track.
@@ -117,8 +101,8 @@ class TrackingList(models.Model):
         related_name="tracked_courses",
         blank=True,
     )
-    channels = models.ManyToManyField(
-        NotificationChannel, verbose_name=_("channels")
+    channels = MultiSelectField(
+        choices=ChannelEnum.choices, default=ChannelEnum.EMAIL
     )
 
 
@@ -137,8 +121,6 @@ class NotificationEvent(models.Model):
     to = models.ForeignKey(
         User, verbose_name=_("user"), on_delete=models.CASCADE
     )
-    channel = models.ForeignKey(
-        NotificationChannel,
-        verbose_name=_("channel"),
-        on_delete=models.CASCADE,
+    channel = models.CharField(
+        _("channel"), max_length=50, choices=ChannelEnum.choices
     )

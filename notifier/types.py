@@ -14,7 +14,7 @@ from strawberry_django_plus.utils.typing import UserType
 from graphql.type.definition import GraphQLResolveInfo
 
 
-from .models import Course, TrackingList, NotificationChannel, Term
+from .models import Course, TrackingList, Term
 
 
 @gql.django.type(Term)
@@ -25,22 +25,7 @@ class TermType:
     short: auto
 
     def get_queryset(self, queryset, info: Info):
-        return queryset.filter(
-            allowed=True
-        )
-
-@gql.django.type(NotificationChannel)
-class NotificationChannelType:
-    """A type for `NotificationChannel` model."""
-
-    channel: auto
-
-
-@gql.django.input(NotificationChannel)
-class NotificationChannelInput:
-    """Am input type for `NotificationChannel` model."""
-
-    channel: auto
+        return queryset.filter(allowed=True)
 
 
 @gql.django.type(Course)
@@ -66,7 +51,6 @@ class TrackingListType:
     """A type for `TrackingList` model."""
 
     courses: List[CourseType]
-    channels: List[NotificationChannelType]
 
 
 @gql.django.input(TrackingList, partial=True)
@@ -75,7 +59,6 @@ class TrackingListInput:
 
     pk: ID
     courses: List[CourseInput]
-    # channels: List[NotificationChannelInput]
 
 
 @dataclasses.dataclass
@@ -85,7 +68,9 @@ class MatchIdentity(ConditionDirective):
     which is also user's pk match the logged in user.
     """
 
-    message: Private[str] = "Your identity aren't matching the provided `pk` field."
+    message: Private[
+        str
+    ] = "Your identity aren't matching the provided `pk` field."
 
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
@@ -97,5 +82,5 @@ class MatchIdentity(ConditionDirective):
                     return True
                 return False
             except Exception as exc:
-                raise ValueError("The field `pk` is not valid.") from  exc
+                raise ValueError("The field `pk` is not valid.") from exc
         raise ValueError("The field `pk` must be provided.")

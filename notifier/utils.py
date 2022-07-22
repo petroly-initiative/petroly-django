@@ -8,14 +8,17 @@ import json
 from typing import List, Dict, Tuple
 from pprint import pprint
 from time import sleep
+from asgiref.sync import async_to_sync
 
 import requests as rq
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import send_mail
+from django.conf import settings
 from django_q.tasks import async_task
+from telegram.ext import Application
 
-from .models import TrackingList, Course
+from .models import TrackingList, Course, ChannelEnum
 
 User = get_user_model()
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
@@ -135,20 +138,40 @@ def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
     return courses_dict
 
 
-def send_notification(user_pk: int, info: str) -> None:
-    user = User.objects.get(pk=user_pk)
-    send_mail(
-        subject="Changes detected",
-        message=str(info),
-        recipient_list=[user.email],
-        fail_silently=False,
-        from_email=None,
-    )
+# Telegram app, this shouldn't result conflict
+app = Application.builder().token(settings.TELEGRAM_TOKEN).build()
+
+
+@async_to_sync
+async def send_telegram(chat_id: int, msg: str):
+    """To make this method as sync"""
+
+    await app.bot.send_message(chat_id=chat_id, text=msg)
+
+
+def send_notification(user_pk: int, msg: str) -> None:
+    """Send a notification for every channel in `TrackingList.channels`"""
+
+    user: User = User.objects.get(pk=user_pk)
+    channels = user.tracking_list.channels
+
+    if ChannelEnum.EMAIL in channels:
+        send_mail(
+            subject="Changes detected",
+            message=msg,
+            recipient_list=[user.email],
+            fail_silently=False,
+            from_email=None,
+        )
+
+    if ChannelEnum.TELEGRAM in channels:
+        send_telegram(chat_id=user.telegram_profile.id, msg=msg)
 
 
 def formatter_md(courses: List[Course]) -> str:
     """helper method to create a formatted message for each course in the tracking list"""
     # for each course we will create a message format
+    print(courses)
     result = ""
     for course in courses:
         course = get_course_info(course)
@@ -156,6 +179,21 @@ def formatter_md(courses: List[Course]) -> str:
         result += f"""**{course["course_number"]}\\-{course["section_number"]}**  \\- *{course["crn"]}*
         Available Seats: {course["available_seats"]}
         Waiting list: {conditional_coloring(course["waiting_list_count"])}\n\n"""
+    return result
+
+
+def formatter_change_md(info: List[Dict[str, Course | User | Dict]]) -> str:
+    """helper method to create a formatted message for each course in the tracking list"""
+    # for each course we will create a message format
+    print(info)
+    result = ""
+    for course in info:
+        status = course['status']
+        course = get_course_info(course['course'])
+
+        result += f"""**{course["course_number"]}\\-{course["section_number"]}**  \\- *{course["crn"]}*
+        Available Seats: {status["available_seats_old"]} ➡️  {status["available_seats"]}
+        Waiting list: {conditional_coloring(status["waiting_list_count"])}\n\n"""
     return result
 
 
@@ -209,21 +247,22 @@ def check_all_and_notify() -> None:
 
         # group `changed_courses` by unique trackers
         courses_by_tracker = {}
+        keys = ["course", "status"]
         for c in changed_courses:
             for tracker in c["trackers"]:
                 try:
-                    courses_by_tracker[tracker.pk].append(c)
+                    courses_by_tracker[tracker.pk].append({key: c[key] for key in keys})
                 except KeyError:
-                    courses_by_tracker[tracker.pk] = [c]
+                    courses_by_tracker[tracker.pk] = [{key: c[key] for key in keys}]
 
-        for pk, info in courses_by_tracker.items():
+        for tracker_pk, info in courses_by_tracker.items():
             # TODO create a `NotificationEvent` obj
             # TODO send the notification for each TrackingList's channel
 
             async_task(
                 "notifier.utils.send_notification",
-                pk,
-                formatter(info),
+                tracker_pk,
+                formatter_change_md(info),
             )
 
         pprint(courses_by_tracker)

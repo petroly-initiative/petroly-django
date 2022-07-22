@@ -26,6 +26,7 @@ cloudinary = "*"
 django-q = "*"
 tzdata = "*"
 python-telegram-bot = "*"
+django-multiselectfield = "*"
 
 [dev-packages]
 black = "*"
