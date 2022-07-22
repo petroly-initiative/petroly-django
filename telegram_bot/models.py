@@ -26,7 +26,10 @@ class TelegramProfile(models.Model):
     )
 
     user = models.OneToOneField(
-        User, verbose_name=_("user"), on_delete=models.CASCADE
+        User,
+        verbose_name=_("user"),
+        on_delete=models.CASCADE,
+        related_name="telegram_profile",
     )
 
 
@@ -59,7 +62,7 @@ class Token(models.Model):
     class Meta:
         verbose_name = _("token")
         verbose_name_plural = _("tokens")
-        ordering = ['-created_on', 'user']
+        ordering = ["-created_on", "user"]
 
     def __str__(self):
         return str(self.token)
