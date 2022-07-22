@@ -20,7 +20,11 @@ from telegram.ext import ContextTypes
 from django.contrib.auth import get_user_model
 
 from ..models import TelegramProfile
-from ..utils import user_from_telegram, verify_user_from_token, tracked_courses_
+from ..utils import (
+    user_from_telegram,
+    verify_user_from_token,
+    tracked_courses_,
+)
 from . import messages
 
 courses = []
@@ -116,13 +120,12 @@ async def connect(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Match the telegram account info
     with our `TelegramProfile` model, by verifying the given token"""
 
-    chat_id = update.effective_chat.id
     user_id = update.effective_user.id
     username = update.effective_user.username
-    token = update.effective_message.text.split(' ')[1]
+    token = update.effective_message.text.split(" ")[1]
 
     user = await verify_user_from_token(
-        token=token, user_id=user_id, username=username, chat_id=chat_id
+        token=token, user_id=user_id, username=username
     )
 
     if user:

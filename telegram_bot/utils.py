@@ -19,6 +19,7 @@ def get_user(user_id: int):
 
     return TelegramProfile.objects.get(id=user_id).user
 
+
 async def user_from_telegram(user_id: int, update: Update) -> User:
 
     try:
@@ -29,13 +30,15 @@ async def user_from_telegram(user_id: int, update: Update) -> User:
             text="You don't have a TelegramProfile. Connect your Telegram"
         )
 
-def formatt_courses(couerses: List[Course]):
+
+def formatt_courses(courses: List[Course]):
 
     msg = "*CRN* \- *Department*\n\n"
-    for course in couerses:
-        msg += f'{course.crn} \- {course.department}\n'
+    for course in courses:
+        msg += f"{course.crn} \- {course.department}\n"
 
     return msg
+
 
 @sync_to_async
 def tracked_courses_(user: User):
@@ -46,7 +49,7 @@ def tracked_courses_(user: User):
 
 @sync_to_async
 def verify_user_from_token(
-    token: str, user_id: int, chat_id: int, username: str
+    token: str, user_id: int, username: str
 ) -> User | None:
     """To make connection between user's Petroly account
     and Telegram's one"""
