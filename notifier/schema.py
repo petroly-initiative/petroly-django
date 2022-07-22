@@ -89,16 +89,10 @@ class Mutation:
         no need to call this mutation.
         """
 
-        async_task("notifier.utils.check_all_and_notify")
-
-    @gql.mutation
-    def start_telegram_bot(self) -> None:
-        """Thi enqueue a task for running the Telegram Bot.
-        If there is a task for this method,
-        no need to call this mutation.
-        """
-
-        async_task("telegram_bot.bot_controller.BotController")
+        async_task(
+            "notifier.utils.check_all_and_notify",
+            task_name="notifier-checking",
+        )
 
     @gql.mutation(directives=[IsAuthenticated()])
     def update_tracking_list(
