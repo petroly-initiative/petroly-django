@@ -44,6 +44,7 @@ class Token(models.Model):
     and connect them to our `User` model.
     """
 
+    created_on = models.DateTimeField(_("created on"), auto_now_add=True)
     token = models.CharField(
         _("token"),
         max_length=5,
@@ -57,6 +58,7 @@ class Token(models.Model):
     class Meta:
         verbose_name = _("token")
         verbose_name_plural = _("tokens")
+        ordering = ['-created_on', 'user']
 
     def __str__(self):
         return str(self.token)
