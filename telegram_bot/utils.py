@@ -32,6 +32,7 @@ async def user_from_telegram(user_id: int, update: Update) -> User:
 
 
 def formatt_courses(courses: List[Course]):
+    """Format the courses list"""
 
     msg = "*CRN* \- *Department*\n\n"
     for course in courses:
@@ -42,6 +43,7 @@ def formatt_courses(courses: List[Course]):
 
 @sync_to_async
 def tracked_courses_(user: User):
+    """To make ORM async"""
 
     return formatt_courses(user.tracking_list.courses.all())
     return user.tracking_list.courses.all()
