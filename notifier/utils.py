@@ -146,12 +146,13 @@ app = Application.builder().token(settings.TELEGRAM_TOKEN).build()
 @async_to_sync
 async def send_telegram(chat_id: int, msg: str):
     """To make this method as sync"""
-
-    await app.bot.send_message(
+    print('>>>>>>>> send_telegram')
+    val = await app.bot.send_message(
         chat_id=chat_id,
         text=msg,
         parse_mode=ParseMode.MARKDOWN_V2,
     )
+    print('>>>>>>>> ', val)
 
 
 def send_notification(user_pk: int, msg: str) -> None:
