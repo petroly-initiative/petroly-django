@@ -17,13 +17,14 @@ from telegram import (
 
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
+from django.contrib.auth import get_user_model
 
-from ..handlers.utils import populate_tracking
 from ..models import TelegramProfile
-from ..utils import user_from_telegram, verify_user_from_token
+from ..utils import user_from_telegram, verify_user_from_token, tracked_courses_
 from . import messages
 
 courses = []
+User = get_user_model()
 
 
 def escape_md(txt) -> str:
@@ -40,12 +41,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # match their names when contacting the bot
 
     user_id = update.effective_user.id
-    print(user_id, update.effective_chat.id, update.effective_user.username)
 
     if user_id:
         try:
             # try to identify the user form its telegram id
-            await user_from_telegram(user_id)
+            await user_from_telegram(user_id=user_id, update=update)
 
             await update.message.reply_text(
                 text=f"Hi {escape_md(update.effective_user.username)}, I am *Petroly* Bot",
@@ -103,27 +103,17 @@ async def tracked_courses(
     """a handler to display all currently tracked courses by the user"""
 
     user_id = update.effective_user.id
-
-    if user_id:
-        try:
-            user = await user_from_telegram(user_id)
-        except TelegramProfile.DoesNotExist:
-            await update.message.reply_text(
-                text="You don't have a TelegramProfile."
-            )
-            return
-
-    else:
-        await update.message.reply_text(text="We could not find your ID.")
+    user: User = await user_from_telegram(user_id=user_id, update=update)
+    courses = await tracked_courses_(user)
 
     await update.message.reply_text(
-        text=f"Here is the list of your currently tracked sections: \n\n {str(user.tracking_list.courses.all())}",
+        text=f"Here is the list of your currently tracked sections: \n\n{courses}",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
 
 
-async def verify(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Verify to match the telegram account info
+async def connect(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Match the telegram account info
     with our `TelegramProfile` model, by verifying the given token"""
 
     chat_id = update.effective_chat.id
