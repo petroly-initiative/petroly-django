@@ -123,15 +123,20 @@ async def connect(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     username = update.effective_user.username
     token = update.effective_message.text.split(" ")[1]
 
-    user = await verify_user_from_token(
-        token=token, user_id=user_id, username=username
-    )
-
-    if user:
-        await update.message.reply_text(
-            text=messages.welcome_after_verifying % escape_md(user.username),
-            parse_mode=ParseMode.MARKDOWN_V2,
+    if context.args: 
+        user = await verify_user_from_token(
+            token=context.args[0], user_id=user_id, username=username
         )
 
+        if user:
+            await update.message.reply_text(
+                text=messages.welcome_after_verifying % escape_md(user.username),
+                parse_mode=ParseMode.MARKDOWN_V2,
+            )
+
+        else:
+            await update.message.reply_text("Token isn't valid.")
     else:
-        await update.message.reply_text("Token isn't valid.")
+        await update.message.reply_text(
+            text="Please specify a token."
+        )
