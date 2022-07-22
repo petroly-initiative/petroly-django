@@ -146,13 +146,12 @@ app = Application.builder().token(settings.TELEGRAM_TOKEN).build()
 @async_to_sync
 async def send_telegram(chat_id: int, msg: str):
     """To make this method as sync"""
-    print('>>>>>>>> send_telegram')
+
     val = await app.bot.send_message(
         chat_id=chat_id,
         text=msg,
         parse_mode=ParseMode.MARKDOWN_V2,
     )
-    print('>>>>>>>> ', val)
 
 
 def send_notification(user_pk: int, msg: str) -> None:
@@ -177,7 +176,7 @@ def send_notification(user_pk: int, msg: str) -> None:
 def formatter_md(courses: List[Course]) -> str:
     """helper method to create a formatted message for each course in the tracking list"""
     # for each course we will create a message format
-    print(courses)
+
     result = ""
     for course in courses:
         course = get_course_info(course)
@@ -191,7 +190,7 @@ def formatter_md(courses: List[Course]) -> str:
 def formatter_change_md(info: List[Dict[str, Course | User | Dict]]) -> str:
     """helper method to create a formatted message for each course in the tracking list"""
     # for each course we will create a message format
-    print(info)
+
     result = ""
     for course in info:
         status = course["status"]
