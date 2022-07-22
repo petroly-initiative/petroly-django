@@ -1,3 +1,14 @@
 from django.contrib import admin
+from .models import TelegramProfile, Token
 
-# Register your models here.
+admin.site.register(
+    [
+        TelegramProfile,
+    ]
+)
+
+
+@admin.register(Token)
+class TokenAdmin(admin.ModelAdmin):
+
+    list_display = ["token", "user"]
