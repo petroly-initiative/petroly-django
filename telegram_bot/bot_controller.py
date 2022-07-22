@@ -25,7 +25,7 @@ class BotController:
     def __init__(self) -> None:
         self.app: Application = (
             Application.builder()
-            .token(str(os.environ.get("TELEGRAM_BOT_TOKEN")))
+            .token(os.environ.get("TELEGRAM_BOT_TOKEN"))
             .build()
         )
         self.init_handlers()
