@@ -7,7 +7,7 @@ import logging
 
 from telegram.ext import Application, CommandHandler, filters, MessageHandler
 
-from .handlers.command import start, help_msg, tracked_courses, verify
+from .handlers.command import start, help_msg, tracked_courses, connect
 from .handlers.conversation import track, untrack
 from .handlers.error import non_existent
 
@@ -39,5 +39,5 @@ class BotController:
         self.app.add_handler(CommandHandler("list", tracked_courses))
         self.app.add_handler(CommandHandler("track", track))
         self.app.add_handler(CommandHandler("untrack", untrack))
-        self.app.add_handler(CommandHandler("verify", verify))
+        self.app.add_handler(CommandHandler("connect", connect))
         self.app.add_handler(MessageHandler(filters.COMMAND, non_existent))
