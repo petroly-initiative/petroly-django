@@ -20,8 +20,8 @@ from telegram.ext import ContextTypes
 
 from ..handlers.utils import populate_tracking
 from ..models import TelegramProfile
-from ..utils import user_from_telegram
-from .messages import help_msg_text
+from ..utils import user_from_telegram, verify_user_from_token
+from . import messages
 
 courses = []
 
@@ -40,6 +40,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # match their names when contacting the bot
 
     user_id = update.effective_user.id
+    print(user_id, update.effective_chat.id, update.effective_user.username)
 
     if user_id:
         try:
@@ -91,7 +92,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def help_msg(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """command for helping users with extra instructions on each command"""
     await update.message.reply_text(
-        text=help_msg_text,
+        text=messages.help_msg_text,
         parse_mode=ParseMode.MARKDOWN_V2,
     )
 
@@ -119,3 +120,26 @@ async def tracked_courses(
         text=f"Here is the list of your currently tracked sections: \n\n {str(user.tracking_list.courses.all())}",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
+
+
+async def verify(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Verify to match the telegram account info
+    with our `TelegramProfile` model, by verifying the given token"""
+
+    chat_id = update.effective_chat.id
+    user_id = update.effective_user.id
+    username = update.effective_user.username
+    token = update.effective_message.text.split(' ')[1]
+
+    user = await verify_user_from_token(
+        token=token, user_id=user_id, username=username, chat_id=chat_id
+    )
+
+    if user:
+        await update.message.reply_text(
+            text=messages.welcome_after_verifying % escape_md(user.username),
+            parse_mode=ParseMode.MARKDOWN_V2,
+        )
+
+    else:
+        await update.message.reply_text("Token isn't valid.")
