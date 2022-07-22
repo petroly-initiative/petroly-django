@@ -48,13 +48,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     if user_id:
         try:
-            # try to identify the user form its telegram id
-            await user_from_telegram(user_id=user_id, update=update)
-
             await update.message.reply_text(
                 text=f"Hi {escape_md(update.effective_user.username)}, I am *Petroly* Bot",
                 parse_mode=ParseMode.MARKDOWN_V2,
             )
+
             # instantiating the menu button
             await context.bot.set_chat_menu_button(update.effective_chat.id, MenuButtonCommands())  # type: ignore
             await context.bot.set_my_commands(
@@ -76,9 +74,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 ]
             )
 
+            # try to identify the user form its telegram id
+            await user_from_telegram(user_id=user_id, update=update)
+
         except TelegramProfile.DoesNotExist:
             await update.message.reply_text(
-                text="Sorry, You are not signed in the Petroly Notifier Service for Telegram bots, to do so, visit our website",
+                text=messages.account_not_know,
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
