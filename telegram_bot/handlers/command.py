@@ -121,9 +121,8 @@ async def connect(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     user_id = update.effective_user.id
     username = update.effective_user.username
-    token = update.effective_message.text.split(" ")[1]
 
-    if context.args: 
+    if context.args:
         user = await verify_user_from_token(
             token=context.args[0], user_id=user_id, username=username
         )
