@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from notifier.models import Course
 
 from .models import TelegramProfile, Token
+from notifier.utils import formatter_md
 
 User = get_user_model()
 
@@ -47,8 +48,7 @@ def format_courses(courses: List[Course]):
 def tracked_courses_(user: User):
     """To make ORM async"""
 
-    return format_courses(user.tracking_list.courses.all())
-    return user.tracking_list.courses.all()
+    return formatter_md(user.tracking_list.courses.all())
 
 
 @sync_to_async
