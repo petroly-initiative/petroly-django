@@ -30,8 +30,6 @@ class BotController:
         )
         self.init_handlers()
         self.app.run_polling()
-        self.app.bot.send_message()
-        # type: ignore
 
     def init_handlers(self) -> None:
         self.app.add_handler(CommandHandler("start", start))

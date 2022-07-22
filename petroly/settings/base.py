@@ -145,6 +145,8 @@ EMAIL_USE_SSL = True
 # Models
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
+# Telegram
+TELEGRAM_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 
 AUTHENTICATION_BACKENDS = [
     "gqlauth.backends.GraphQLAuthBackend",

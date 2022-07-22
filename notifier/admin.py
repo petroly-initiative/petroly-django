@@ -9,7 +9,6 @@ admin.site.register(
     [
         models.Course,
         models.NotificationEvent,
-        models.NotificationChannel,
         models.Term
     ]
 )
@@ -21,4 +20,4 @@ class TrackingListAdmin(admin.ModelAdmin):
     Custom settings for `TrackingList` app in admin site.
     """
 
-    filter_horizontal = ["courses", "channels"]
+    filter_horizontal = ["courses", ]
