@@ -13,6 +13,7 @@ import account.schema
 import communities.schema
 import evaluation.schema
 import notifier.schema
+import telegram_bot.schema
 
 Query = merge_types(
     "RootQuery",
@@ -21,6 +22,7 @@ Query = merge_types(
         communities.schema.Query,
         evaluation.schema.Query,
         notifier.schema.Query,
+        telegram_bot.schema.Query,
     ),
 )
 
@@ -31,6 +33,7 @@ Mutation = merge_types(
         communities.schema.Mutation,
         evaluation.schema.Mutation,
         notifier.schema.Mutation,
+        telegram_bot.schema.Mutation,
     ),
 )
 
