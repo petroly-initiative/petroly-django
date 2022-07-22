@@ -20,9 +20,9 @@ class TelegramProfile(models.Model):
     """
 
     id = models.IntegerField(_("telegram user ID"), primary_key=True)
-    chat_id = models.IntegerField(_("chat ID"), unique=True)
+    created_on = models.DateTimeField(_("created on"), auto_now_add=True)
     username = models.CharField(
-        _("telegram username"), max_length=256, unique=True
+        _("telegram username"), max_length=256, unique=True, blank=True
     )
 
     user = models.OneToOneField(
@@ -45,6 +45,7 @@ class Token(models.Model):
     """
 
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
+    revoked = models.BooleanField(_("revoked"), default=False)
     token = models.CharField(
         _("token"),
         max_length=5,
