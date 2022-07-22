@@ -25,10 +25,12 @@ async def user_from_telegram(user_id: int, update: Update) -> User:
     try:
         return await get_user(user_id)
 
-    except TelegramProfile.DoesNotExist:
+    except TelegramProfile.DoesNotExist as exc:
         await update.message.reply_text(
             text="You don't have a TelegramProfile. Connect your Telegram"
         )
+
+        raise TelegramProfile.DoesNotExist from exc
 
 
 def format_courses(courses: List[Course]):
