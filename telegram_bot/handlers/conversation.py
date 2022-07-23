@@ -9,7 +9,7 @@ async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     if context.args:  # type: ignore
         await update.message.reply_text(
-            text=f"Section with CRN **{context.args[0]}** is successfully tracked\!",
+            text=rf"Section with CRN **{context.args[0]}** is successfully tracked\!",
             parse_mode=ParseMode.MARKDOWN_V2,
         )
     else:
@@ -24,7 +24,7 @@ async def untrack(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if context.args:
         #! we need to handle non-existent CRNs as well
         await update.message.reply_text(
-            text=f"Section with CRN **{context.args[0]}** is successfully untracked\!",
+            text=rf"Section with CRN **{context.args[0]}** is successfully untracked\!",
             parse_mode=ParseMode.MARKDOWN_V2,
         )
     else:
