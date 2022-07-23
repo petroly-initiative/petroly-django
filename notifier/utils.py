@@ -21,6 +21,8 @@ from telegram.constants import ParseMode
 
 from .models import TrackingList, Course, ChannelEnum
 
+# Telegram app, this shouldn't result conflict
+app = Application.builder().token(settings.TELEGRAM_TOKEN).build()
 User = get_user_model()
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
 
@@ -139,15 +141,11 @@ def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
     return courses_dict
 
 
-# Telegram app, this shouldn't result conflict
-app = Application.builder().token(settings.TELEGRAM_TOKEN).build()
-
-
 @async_to_sync
 async def send_telegram(chat_id: int, msg: str):
     """To make this method as sync"""
 
-    val = await app.bot.send_message(
+    await app.bot.send_message(
         chat_id=chat_id,
         text=msg,
         parse_mode=ParseMode.MARKDOWN_V2,
@@ -206,7 +204,7 @@ def conditional_coloring(wait_list_count) -> str:
     """helper method to append the correct coloring according to
     the waiting list count"""
 
-    if wait_list_count == 5:
+    if wait_list_count > 0:
         return "🔴 Closed"
 
     return "🟢 Open"
@@ -219,7 +217,6 @@ def formatter_text(info: dict) -> str:
     Args:
         info (str): The info obj to be formatted
     """
-    # TODO add detected time stamp
 
     msg = "A change detected in each of the following "
     for c in info:
@@ -265,9 +262,6 @@ def check_all_and_notify() -> None:
                     ]
 
         for tracker_pk, info in courses_by_tracker.items():
-            # TODO create a `NotificationEvent` obj
-            # TODO send the notification for each TrackingList's channel
-
             async_task(
                 "notifier.utils.send_notification",
                 tracker_pk,
