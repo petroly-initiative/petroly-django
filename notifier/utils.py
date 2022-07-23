@@ -197,7 +197,7 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
     """helper method to create a formatted message for each course in the tracking list"""
     # for each course we will create a message format
 
-    result = "Changes detected 🥳\n"
+    result = "Changes detected 🥳\n\n"
     for course in info:
         status = course["status"]
         course = get_course_info(course["course"])
@@ -240,6 +240,22 @@ def check_all_and_notify() -> None:
 
     This method is infinite loop,
     it should be called from a async context.
+
+    return: the structure is
+    {
+        'user1_pk': [
+            {
+                'course1': <Course1>, 
+                'status': {
+                    'available_seats': 0
+                    'waiting_list_count': 0
+                    'available_seats_old': 0
+                    'waiting_list_count_old': 0
+                }
+            },
+            ], ...
+        'user2_pk': ...,
+    }
     """
 
     while True:
