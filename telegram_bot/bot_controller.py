@@ -36,7 +36,7 @@ class BotController:
     def init_handlers(self) -> None:
         self.app.add_handler(CommandHandler("start", start))
         self.app.add_handler(CommandHandler("help", help_msg))
-        self.app.add_handler(CommandHandler("list", tracked_courses))
+        self.app.add_handler(CommandHandler("tracked", tracked_courses))
         self.app.add_handler(CommandHandler("track", track))
         self.app.add_handler(CommandHandler("untrack", untrack))
         self.app.add_handler(CommandHandler("connect", connect))
