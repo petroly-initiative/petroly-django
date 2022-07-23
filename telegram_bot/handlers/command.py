@@ -25,7 +25,7 @@ from ..utils import (
     verify_user_from_token,
     tracked_courses_,
 )
-from . import messages
+from .. import messages
 
 courses = []
 User = get_user_model()
