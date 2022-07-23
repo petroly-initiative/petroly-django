@@ -32,6 +32,8 @@ User = get_user_model()
 
 
 def escape_md(txt) -> str:
+    """To escape special characters:
+        `_`,  and `*`"""
     match_md = r"((([_*]).+?\3[^_*]*)*)([_*])"
 
     return re.sub(match_md, "\g<1>\\\\\g<4>", txt)
@@ -78,6 +80,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await user_from_telegram(user_id=user_id, update=update)
 
         except TelegramProfile.DoesNotExist:
+            # TODO provide some kind of sign in with Telegram widget
             await update.message.reply_text(
                 text=messages.account_not_know,
                 reply_markup=InlineKeyboardMarkup(
