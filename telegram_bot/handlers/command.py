@@ -27,7 +27,6 @@ from ..utils import (
 )
 from .. import messages
 
-courses = []
 User = get_user_model()
 
 
@@ -62,7 +61,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                     ("/start", "Starts/restarts the bot process"),
                     ("/help", "extensive assistance on all commands"),
                     (
-                        "/list",
+                        "/tracked",
                         "lists all currently tracked courses on the petroly notifier service",
                     ),
                     (
