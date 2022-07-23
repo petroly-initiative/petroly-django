@@ -31,6 +31,8 @@ class BotController:
         self.init_handlers()
         self.app.run_polling()
 
+        logger.info('Telegram Bot started')
+
     def init_handlers(self) -> None:
         self.app.add_handler(CommandHandler("start", start))
         self.app.add_handler(CommandHandler("help", help_msg))
@@ -39,3 +41,6 @@ class BotController:
         self.app.add_handler(CommandHandler("untrack", untrack))
         self.app.add_handler(CommandHandler("connect", connect))
         self.app.add_handler(MessageHandler(filters.COMMAND, non_existent))
+
+        logger.info('Handlers initialized')
+

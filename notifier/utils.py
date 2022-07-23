@@ -18,6 +18,7 @@ from django.conf import settings
 from django_q.tasks import async_task
 from telegram.ext import Application
 from telegram.constants import ParseMode
+from  telegram_bot import messages
 
 from .models import TrackingList, Course, ChannelEnum
 
@@ -179,35 +180,40 @@ def formatter_md(courses: List[Course]) -> str:
     for course in courses:
         course = get_course_info(course)
 
-        result += f"""**{course["course_number"]}\\-{course["section_number"]}**  \\- *{course["crn"]}*
-        Available Seats: {course["available_seats"]}
-        Waiting list: {conditional_coloring(course["waiting_list_count"])}\n\n"""
+        result += messages.tracked_courses.format(
+            crn=course["crn"],
+            course_number=course["course_number"],
+            section_number=course["section_number"],
+            available_seats=course["available_seats"],
+            waiting_list_count="🔴 Closed"
+            if course["waiting_list_count"] > 0
+            else "🟢 Open",
+        )
+
     return result
 
 
-def formatter_change_md(info: List[Dict[str, Course | User | Dict]]) -> str:
+def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
     """helper method to create a formatted message for each course in the tracking list"""
     # for each course we will create a message format
 
-    result = ""
+    result = "Changes detected 🥳\n"
     for course in info:
         status = course["status"]
         course = get_course_info(course["course"])
 
-        result += f"""**{course["course_number"]}\\-{course["section_number"]}**  \\- *{course["crn"]}*
-        Available Seats: {status["available_seats_old"]} ➡️  {status["available_seats"]}
-        Waiting list: {conditional_coloring(status["waiting_list_count"])}\n\n"""
+        result += messages.changes_detected.format(
+            crn=course["crn"],
+            course_number=course["course_number"],
+            section_number=course["section_number"],
+            available_seats=status["available_seats"],
+            available_seats_old=status["available_seats_old"],
+            waiting_list_count="🔴 Closed"
+            if status["waiting_list_count"] > 0
+            else "🟢 Open",
+        )
+
     return result
-
-
-def conditional_coloring(wait_list_count) -> str:
-    """helper method to append the correct coloring according to
-    the waiting list count"""
-
-    if wait_list_count > 0:
-        return "🔴 Closed"
-
-    return "🟢 Open"
 
 
 def formatter_text(info: dict) -> str:
