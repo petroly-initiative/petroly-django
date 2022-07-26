@@ -40,10 +40,13 @@ class Query:
         """
 
         user = info.context.request.user
-        courses = user.tracking_list.courses.all()
+        tracking_list, created = TrackingList.objects.get_or_create(user=user)
+        
+        if created:
+            return []
 
         result = []
-        for course in courses:
+        for course in tracking_list.courses.all():
             for raw_course in fetch_data(course.term, course.department):
                 if course.crn == raw_course["crn"]:
                     result.append(raw_course)
