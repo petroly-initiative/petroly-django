@@ -6,14 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
-
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET}}
-      EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD}}
 
     strategy:
       max-parallel: 4
@@ -35,5 +31,7 @@ jobs:
     
     - name: Run Tests
       uses: VaultVulp/action-pipenv@v2.0.1
-      with: 
+      with:
+        commnad: export CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET}}
+        command: export EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD}}
         command: run python manage.py test --settings=petroly.settings.dev --no-input  account
