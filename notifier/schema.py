@@ -10,7 +10,6 @@ from strawberry.scalars import JSON
 from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
-from django_q.tasks import async_task
 
 from .utils import fetch_data, get_course_info
 from .models import TrackingList, Course, ChannelEnum
@@ -50,13 +49,15 @@ class Query:
 
         Returns:
             List[CourseType]: List of courses CRNs
+            return False if no `TrackingList` found
+            for the user.
         """
 
         user = info.context.request.user
-        tracking_list, created = TrackingList.objects.get_or_create(user=user)
-        
-        if created:
-            return []
+        try:
+            tracking_list = TrackingList.objects.get(user=user)
+        except TrackingList.DoesNotExist:
+            return False
 
         result = []
         for course in tracking_list.courses.all():
@@ -101,20 +102,22 @@ class Mutation:
     def update_tracking_list_channels(
         self, info: Info, input: PreferencesInput
     ) -> bool:
-        """To update user's tracking list preferences"""
+        """To update user's tracking list preferences.
+        This also is responsible for creating TrackingList for 
+        first time user."""
 
         user = info.context.request.user
+        tracking_list, _ = TrackingList.objects.get_or_create(user=user)
         channels = dataclasses.asdict(input.channels)
-        print(input)
 
-        user.tracking_list.channels.clear()
+        tracking_list.channels = set()
         for channel, checked in channels.items():
             if checked:
-                user.tracking_list.channels.append(ChannelEnum[channel])
+                tracking_list.channels.add(ChannelEnum[channel])
             else:
                 try:
-                    user.tracking_list.channels.remove(ChannelEnum[channel])
-                except ValueError:
+                    tracking_list.channels.remove(ChannelEnum[channel])
+                except KeyError:
                     pass
 
         user.tracking_list.save()
