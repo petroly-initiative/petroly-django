@@ -3,6 +3,7 @@ This module is to define the GraphQL queries and mutations
 of the `notifier` app.
 """
 
+import dataclasses
 from typing import List
 
 from strawberry.scalars import JSON
@@ -12,8 +13,8 @@ from strawberry_django_plus.permissions import IsAuthenticated
 from django_q.tasks import async_task
 
 from .utils import fetch_data, get_course_info
-from .models import TrackingList, Course
-from .types import CourseInput, TermType
+from .models import TrackingList, Course, ChannelEnum
+from .types import CourseInput, TermType, ChannelsType, PreferencesInput
 
 
 @gql.type
@@ -29,6 +30,18 @@ class Query:
         """
 
         return fetch_data(term, department)
+
+    @gql.field(directives=[IsAuthenticated()])
+    def tracking_list_channels(self, info: Info) -> ChannelsType:
+        """Get the user's tracking list tracking_list_channels."""
+
+        user = info.context.request.user
+
+        res = {}
+        for name in ChannelEnum.names:
+            res |= {name: ChannelEnum[name] in user.tracking_list.channels}
+
+        return ChannelsType(**res)
 
     @gql.field(directives=[IsAuthenticated()])
     def tracked_courses(self, info: Info) -> JSON:
@@ -84,18 +97,25 @@ class Query:
 class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
 
-    @gql.mutation
-    def start_task(self) -> None:
-        """To start checking and sending notification.
-        this will enqueue a task in Queued tasks table.
-        it there is one with func value `notifier.utils.check_all_and_notify`
-        no need to call this mutation.
-        """
+    @gql.mutation(directives=[IsAuthenticated()])
+    def update_tracking_list_preferences(
+        self, info: Info, input: PreferencesInput
+    ) -> bool:
+        """To update user's tracking list preferences"""
 
-        async_task(
-            "notifier.utils.check_all_and_notify",
-            task_name="notifier-checking",
-        )
+        user = info.context.request.user
+        channels = dataclasses.asdict(input.channels)
+
+        user.tracking_list.channels.clear()
+        for channel, checked in channels.items():
+            if checked:
+                user.tracking_list.channels.append(ChannelEnum[channel])
+            else:
+                user.tracking_list.channels.remove(ChannelEnum[channel])
+
+        user.tracking_list.save()
+
+        return True
 
     @gql.mutation(directives=[IsAuthenticated()])
     def update_tracking_list(
