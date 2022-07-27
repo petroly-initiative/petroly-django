@@ -126,7 +126,9 @@ class Mutation:
 
         # ! check for the hashing and return false to the caller if the hashing was incorrect
         # ! if the telegram channel was already check, we do not require hashing, to prevent errors
-        if input.channels.TELEGRAM:
+        if input.channels.TELEGRAM and not TelegramProfile.objects.filter(
+            user=user
+        ):
             message = (
                 input.dataCheckString.encode("utf-8")
                 .decode("unicode-escape")
