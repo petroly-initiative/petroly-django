@@ -98,7 +98,7 @@ class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
 
     @gql.mutation(directives=[IsAuthenticated()])
-    def update_tracking_list_preferences(
+    def update_tracking_list_channels(
         self, info: Info, input: PreferencesInput
     ) -> bool:
         """To update user's tracking list preferences"""
