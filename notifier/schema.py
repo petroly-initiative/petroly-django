@@ -3,22 +3,20 @@ This module is to define the GraphQL queries and mutations
 of the `notifier` app.
 """
 
-import dataclasses
-from typing import List
-import hmac;
-import hashlib;
 import os
+import dataclasses
+import hmac, hashlib
+from typing import List
 from strawberry.scalars import JSON
 from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
+from django.conf import settings
+from telegram_bot.models import TelegramProfile
 
 from .utils import fetch_data, get_course_info
 from .models import TrackingList, Course, ChannelEnum
 from .types import CourseInput, TermType, ChannelsType, PreferencesInput
-
-
-
 
 
 @gql.type
@@ -101,14 +99,15 @@ class Query:
 @gql.type
 class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
+
     ## ! to perform authorization we need to pas both the data-check-string, and the hash as well
     @gql.mutation(directives=[IsAuthenticated()])
     def update_tracking_list_channels(
         self, info: Info, input: PreferencesInput
     ) -> bool:
         """To update user's tracking list preferences.
-        This also is responsible for creating TrackingList for 
-        first time user."""
+        This also is responsible for creating TrackingList for
+        first time user and `TelegramProfile`"""
 
         user = info.context.request.user
         tracking_list, _ = TrackingList.objects.get_or_create(user=user)
@@ -123,17 +122,37 @@ class Mutation:
                     tracking_list.channels.remove(ChannelEnum[channel])
                 except KeyError:
                     pass
-        
         user.tracking_list.save()
+
         # ! check for the hashing and return false to the caller if the hashing was incorrect
         # ! if the telegram channel was already check, we do not require hashing, to prevent errors
-        secret_key = hashlib.sha256( os.environ.get("TELEGRAM_BOT_TOKEN").encode("utf-8")).digest()
-        print(input.dataCheckString)
-        message = input.dataCheckString.encode('utf-8').decode('unicode-escape').encode('ISO-8859-1')
-        var = hmac.new(key = (secret_key), msg = message, digestmod= hashlib.sha256).hexdigest();  # type: ignore
-        print(var == input.hash)  # type: ignore
-        print(var)
-        print(input.hash)
+        if input.channels.TELEGRAM:
+            message = (
+                input.dataCheckString.encode("utf-8")
+                .decode("unicode-escape")
+                .encode("ISO-8859-1")
+            )
+            check_hash = hmac.new(
+                key=hashlib.sha256(
+                    bytes(settings.TELEGRAM_TOKEN, "utf-8")
+                ).digest(),
+                msg=message,
+                digestmod=hashlib.sha256,
+            ).hexdigest()
+
+            if check_hash == input.hash:
+                try:
+                    TelegramProfile.objects.get(user=user)
+
+                except TelegramProfile.DoesNotExist:
+                    TelegramProfile.objects.create(
+                        id=input.telegram_id,
+                        user=user,
+                        username="",
+                    )
+
+            else:
+                return False
 
         return True
 
