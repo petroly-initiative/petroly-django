@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET}}
-  EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD}}
-
 jobs:
   build:
 
@@ -34,5 +30,10 @@ jobs:
     
     - name: Run Tests
       uses: VaultVulp/action-pipenv@v2.0.1
-      with: 
+      with:
         command: run python manage.py test --settings=petroly.settings.dev --no-input  account
+
+      env:
+        CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET}}
+        EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD}}
+
