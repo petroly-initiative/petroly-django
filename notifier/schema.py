@@ -105,13 +105,17 @@ class Mutation:
 
         user = info.context.request.user
         channels = dataclasses.asdict(input.channels)
+        print(input)
 
         user.tracking_list.channels.clear()
         for channel, checked in channels.items():
             if checked:
                 user.tracking_list.channels.append(ChannelEnum[channel])
             else:
-                user.tracking_list.channels.remove(ChannelEnum[channel])
+                try:
+                    user.tracking_list.channels.remove(ChannelEnum[channel])
+                except ValueError:
+                    pass
 
         user.tracking_list.save()
 
