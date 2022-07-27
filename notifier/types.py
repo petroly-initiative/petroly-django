@@ -3,15 +3,12 @@ This module defines the types pf this `notifier` app
 to be used from `schema` module.
 """
 
-import dataclasses
-from typing import List, Any
+from typing import List, Optional
 
-from strawberry import auto, ID, Private
+from strawberry import auto, ID
+from strawberry.scalars import JSON
 from strawberry.types import Info
 from strawberry_django_plus import gql
-from strawberry_django_plus.permissions import ConditionDirective
-from strawberry_django_plus.utils.typing import UserType
-from graphql.type.definition import GraphQLResolveInfo
 
 
 from .models import Course, TrackingList, Term
@@ -26,6 +23,36 @@ class TermType:
 
     def get_queryset(self, queryset, info: Info):
         return queryset.filter(allowed=True)
+
+
+@gql.input
+class ChannelsInput:
+    EMAIL: bool
+    TELEGRAM: bool
+
+
+@gql.type
+class ChannelsType:
+    SMS: bool
+    PUSH: bool
+    EMAIL: bool
+    WHATSAPP: bool
+    TELEGRAM: bool
+
+
+@gql.input
+class PreferencesInput:
+    """An input type for `TrackingList`"""
+
+    channels: ChannelsInput
+    telegram_id: Optional[int]
+
+
+@gql.type
+class PreferencesType:
+    """A type for `TrackingList` preferences"""
+
+    channels: ChannelsType
 
 
 @gql.django.type(Course)
@@ -46,41 +73,9 @@ class CourseInput:
     department: auto
 
 
-@gql.django.type(TrackingList)
-class TrackingListType:
-    """A type for `TrackingList` model."""
-
-    courses: List[CourseType]
-
-
 @gql.django.input(TrackingList, partial=True)
 class TrackingListInput:
     """An input type for `TrackingList` model."""
 
     pk: ID
     courses: List[CourseInput]
-
-
-@dataclasses.dataclass
-class MatchIdentity(ConditionDirective):
-    """
-    This checks wether the provided `pk` field
-    which is also user's pk match the logged in user.
-    """
-
-    message: Private[
-        str
-    ] = "Your identity aren't matching the provided `pk` field."
-
-    def check_condition(
-        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
-    ):
-        pk = kwargs["input"]["pk"]
-        if pk:
-            try:
-                if int(pk) == user.pk:
-                    return True
-                return False
-            except Exception as exc:
-                raise ValueError("The field `pk` is not valid.") from exc
-        raise ValueError("The field `pk` must be provided.")
