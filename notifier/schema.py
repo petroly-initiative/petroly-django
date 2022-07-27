@@ -5,7 +5,9 @@ of the `notifier` app.
 
 import dataclasses
 from typing import List
-
+import hmac;
+import hashlib;
+import os
 from strawberry.scalars import JSON
 from strawberry.types import Info
 from strawberry_django_plus import gql
@@ -15,6 +17,9 @@ from django_q.tasks import async_task
 from .utils import fetch_data, get_course_info
 from .models import TrackingList, Course, ChannelEnum
 from .types import CourseInput, TermType, ChannelsType, PreferencesInput
+
+
+
 
 
 @gql.type
@@ -89,14 +94,13 @@ class Query:
                 or title.lower() in course["course_title"].lower()
             ):
                 result.append(course)
-
         return result
 
 
 @gql.type
 class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
-
+    ## ! to perform authorization we need to pas both the data-check-string, and the hash as well
     @gql.mutation(directives=[IsAuthenticated()])
     def update_tracking_list_channels(
         self, info: Info, input: PreferencesInput
@@ -116,8 +120,17 @@ class Mutation:
                     user.tracking_list.channels.remove(ChannelEnum[channel])
                 except ValueError:
                     pass
-
+        
         user.tracking_list.save()
+        # ! check for the hashing and return false to the caller if the hashing was incorrect
+        # ! if the telegram channel was already check, we do not require hashing, to prevent errors
+        secret_key = hashlib.sha256( os.environ.get("TELEGRAM_BOT_TOKEN").encode("utf-8")).digest()
+        print(input.dataCheckString)
+        message = input.dataCheckString.encode('utf-8').decode('unicode-escape').encode('ISO-8859-1')
+        var = hmac.new(key = (secret_key), msg = message, digestmod= hashlib.sha256).hexdigest();  # type: ignore
+        print(var == input.hash)  # type: ignore
+        print(var)
+        print(input.hash)
 
         return True
 

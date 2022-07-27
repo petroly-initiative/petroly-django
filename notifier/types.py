@@ -46,7 +46,9 @@ class PreferencesInput:
 
     channels: ChannelsInput
     telegram_id: Optional[int]
-
+    ## added the hash and data check strings as optional params
+    hash: Optional[str]
+    dataCheckString: Optional[str]
 
 @gql.type
 class PreferencesType:
