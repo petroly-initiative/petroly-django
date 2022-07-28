@@ -6,20 +6,13 @@ from typing import List
 from asgiref.sync import sync_to_async
 
 from telegram import Update
-from telegram.ext import Application
 from django.contrib.auth import get_user_model
-from django.conf import settings
 
 from notifier.utils import formatter_md
 from notifier.models import Course
 
 from .models import TelegramProfile, Token
 
-
-# Telegram app, this shouldn't result conflict
-# This can be imputed from anywhere within Django
-# To send quick message to a user
-telegram_app = Application.builder().token(settings.TELEGRAM_TOKEN).build()
 
 User = get_user_model()
 
