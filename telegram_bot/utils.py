@@ -27,7 +27,7 @@ def escape_md(txt) -> str:
     `_`,  and `*`"""
     match_md = r"((([_*\.]).+?\3[^_*\.]*)*)([_*\.])"
 
-    return re.sub(match_md, r"\g<1>\\\\\g<4>", txt)
+    return re.sub(match_md, r"\g<1>\\\g<4>", txt)
 
 
 @sync_to_async
