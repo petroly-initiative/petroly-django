@@ -115,18 +115,14 @@ class Mutation:
         # loop through provided channels, add them to the user's tracking list
         tracking_list.channels = set()
         for channel, checked in channels.items():
-            if checked:
+            if checked and channel != ChannelEnum.TELEGRAM.name:
                 tracking_list.channels.add(ChannelEnum[channel])
-            else:
-                try:
-                    tracking_list.channels.remove(ChannelEnum[channel])
-                except KeyError:
-                    pass
-        user.tracking_list.save()
 
         # ! check for the hashing and return false to the caller if the hashing was incorrect
-        if input.channels.TELEGRAM and not TelegramProfile.objects.filter(
-            user=user
+        if (
+            input.channels.TELEGRAM
+            and input.telegram_id
+            and input.dataCheckString
         ):
             # calculate the hash from check string
             message = (
@@ -155,8 +151,9 @@ class Mutation:
                         username="",
                     )
 
-            else:
-                return False
+                tracking_list.channels.add(ChannelEnum.TELEGRAM)
+
+        tracking_list.save()
 
         return True
 
