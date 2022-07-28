@@ -5,10 +5,13 @@ It also helps converting some ORM methods into async.
 
 import re
 from typing import List
-from asgiref.sync import sync_to_async
+from asgiref.sync import sync_to_async, async_to_sync
 
 from telegram import Update
+from telegram.ext import Application
+from telegram.constants import ParseMode
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from notifier.utils import formatter_md
 from notifier.models import Course
@@ -24,17 +27,17 @@ def escape_md(txt) -> str:
     `_`,  and `*`"""
     match_md = r"((([_*\.]).+?\3[^_*\.]*)*)([_*\.])"
 
-    return re.sub(match_md, "\g<1>\\\\\g<4>", txt)
+    return re.sub(match_md, r"\g<1>\\\\\g<4>", txt)
 
 
 @sync_to_async
 def get_user(user_id: int):
-  
+
     return TelegramProfile.objects.get(id=user_id).user
 
 
 async def user_from_telegram(user_id: int, update: Update) -> User:
-   
+
     try:
         return await get_user(user_id)
 
@@ -54,6 +57,24 @@ def format_courses(courses: List[Course]):
         msg += f"{course.crn} \- {course.department}\n"
 
     return msg
+
+
+@async_to_sync
+async def send_telegram_message(chat_id: int, msg: str):
+    """To make this method as sync
+
+    Args:
+        chat_id (int): like user's id
+        msg (str): a MD text message
+    """
+    async with Application.builder().token(
+        settings.TELEGRAM_TOKEN
+    ).build() as app:
+        await app.bot.send_message(
+            chat_id=chat_id,
+            text=msg,
+            parse_mode=ParseMode.MARKDOWN_V2,
+        )
 
 
 @sync_to_async
