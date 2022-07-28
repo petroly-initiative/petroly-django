@@ -33,7 +33,7 @@ User = get_user_model()
 def escape_md(txt) -> str:
     """To escape special characters:
         `_`,  and `*`"""
-    match_md = r"((([_*]).+?\3[^_*]*)*)([_*])"
+    match_md = r"((([_*\.]).+?\3[^_*\.]*)*)([_*\.])"
 
     return re.sub(match_md, "\g<1>\\\\\g<4>", txt)
 

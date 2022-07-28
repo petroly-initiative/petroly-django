@@ -146,7 +146,7 @@ async def send_telegram_message(chat_id: int, msg: str):
 
     Args:
         chat_id (int): like user's id
-        msg (str): a plain text message
+        msg (str): a MD text message
     """
 
     await telegram_app.bot.send_message(
