@@ -143,7 +143,7 @@ class Mutation:
                 # if the hash match
                 # try to get or create a `TelegramProfile` obj
                 try:
-                    TelegramProfile.objects.get(user=user)
+                    print(TelegramProfile.objects.get(user=user))
 
                 except TelegramProfile.DoesNotExist:
                     TelegramProfile.objects.create(

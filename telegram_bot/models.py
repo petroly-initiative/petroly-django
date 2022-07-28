@@ -32,12 +32,17 @@ class TelegramProfile(models.Model):
         related_name="telegram_profile",
     )
 
+    def __str__(self):
+        return f"{self.id}";
+    
+
 
 def generate_token_str() -> str:
     """generate random letters of length 5"""
 
     token = "".join(random.choices(string.ascii_letters, k=5))
     return token
+
 
 
 class Token(models.Model):

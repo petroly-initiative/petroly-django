@@ -7,8 +7,8 @@ from telegram import Update
 
 
 async def non_existent(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
+    update: Update, _: ContextTypes.DEFAULT_TYPE
 ) -> None:
     await update.message.reply_text(
-        text="This command does not exist, please refer to the menu for available commands that you can use for the notifier bot"
+        text="Oops! This command does not exist, check the menu for available commands"
     )
