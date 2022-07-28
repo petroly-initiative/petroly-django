@@ -14,16 +14,14 @@ import requests as rq
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import send_mail
-from django.conf import settings
 from django_q.tasks import async_task
-from telegram.ext import Application
 from telegram.constants import ParseMode
+
 from  telegram_bot import messages
+from telegram_bot.utils import telegram_app
 
 from .models import TrackingList, Course, ChannelEnum
 
-# Telegram app, this shouldn't result conflict
-app = Application.builder().token(settings.TELEGRAM_TOKEN).build()
 User = get_user_model()
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
 
@@ -143,10 +141,15 @@ def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
 
 
 @async_to_sync
-async def send_telegram(chat_id: int, msg: str):
-    """To make this method as sync"""
+async def send_telegram_message(chat_id: int, msg: str):
+    """To make this method as sync
 
-    await app.bot.send_message(
+    Args:
+        chat_id (int): like user's id
+        msg (str): a plain text message
+    """
+
+    await telegram_app.bot.send_message(
         chat_id=chat_id,
         text=msg,
         parse_mode=ParseMode.MARKDOWN_V2,
@@ -169,7 +172,7 @@ def send_notification(user_pk: int, msg: str) -> None:
         )
 
     if ChannelEnum.TELEGRAM in channels:
-        send_telegram(chat_id=user.telegram_profile.id, msg=msg)
+        send_telegram_message(chat_id=user.telegram_profile.id, msg=msg)
 
 
 def formatter_md(courses: List[Course]) -> str:

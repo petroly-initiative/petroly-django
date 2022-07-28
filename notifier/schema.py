@@ -3,9 +3,9 @@ This module is to define the GraphQL queries and mutations
 of the `notifier` app.
 """
 
-import os
+import hmac
+import hashlib
 import dataclasses
-import hmac, hashlib
 from typing import List
 from strawberry.scalars import JSON
 from strawberry.types import Info
@@ -14,7 +14,7 @@ from strawberry_django_plus.permissions import IsAuthenticated
 from django.conf import settings
 from telegram_bot.models import TelegramProfile
 
-from .utils import fetch_data, get_course_info
+from .utils import fetch_data, get_course_info, send_telegram_message
 from .models import TrackingList, Course, ChannelEnum
 from .types import CourseInput, TermType, ChannelsType, PreferencesInput
 
@@ -152,6 +152,11 @@ class Mutation:
                     )
 
                 tracking_list.channels.add(ChannelEnum.TELEGRAM)
+
+                send_telegram_message(
+                    chat_id=input.telegram_id,
+                    msg=f"Hey {user.username}, we connected your telegram with Petroly !",
+                )
 
         tracking_list.save()
 
