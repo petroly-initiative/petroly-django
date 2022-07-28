@@ -30,6 +30,7 @@ class Mutation:
         async_task(
             "telegram_bot.bot_controller.BotController",
             task_name="telegram-bot",
+            hook="hooks.print_obj"
         )
 
     @gql.mutation(directives=[IsAuthenticated()])
@@ -43,3 +44,6 @@ class Mutation:
         obj = Token.objects.create(user=user)
 
         return obj.token
+        
+def print_obj(task):
+    print(task.result)

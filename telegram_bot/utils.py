@@ -29,18 +29,18 @@ def escape_md(txt) -> str:
 
 @sync_to_async
 def get_user(user_id: int):
-
+  
     return TelegramProfile.objects.get(id=user_id).user
 
 
 async def user_from_telegram(user_id: int, update: Update) -> User:
-
+   
     try:
         return await get_user(user_id)
 
     except TelegramProfile.DoesNotExist as exc:
         await update.message.reply_text(
-            text="You don't have a TelegramProfile. Connect your Telegram"
+            text=f"You don't have a TelegramProfile. Connect your Telegram {user_id}"
         )
 
         raise TelegramProfile.DoesNotExist from exc
