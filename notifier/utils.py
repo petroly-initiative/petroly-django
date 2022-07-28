@@ -17,8 +17,8 @@ from django.core.mail import send_mail
 from django_q.tasks import async_task
 from telegram.constants import ParseMode
 
-from  telegram_bot import messages
-from telegram_bot.utils import telegram_app
+from telegram_bot import telegram_app
+from telegram_bot import messages
 
 from .models import TrackingList, Course, ChannelEnum
 
@@ -248,7 +248,7 @@ def check_all_and_notify() -> None:
     {
         'user1_pk': [
             {
-                'course1': <Course1>, 
+                'course1': <Course1>,
                 'status': {
                     'available_seats': 0
                     'waiting_list_count': 0
