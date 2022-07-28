@@ -100,7 +100,6 @@ class Query:
 class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
 
-    ## ! to perform authorization we need to pas both the data-check-string, and the hash as well
     @gql.mutation(directives=[IsAuthenticated()])
     def update_tracking_list_channels(
         self, info: Info, input: PreferencesInput
@@ -113,6 +112,7 @@ class Mutation:
         tracking_list, _ = TrackingList.objects.get_or_create(user=user)
         channels = dataclasses.asdict(input.channels)
 
+        # loop through provided channels, add them to the user's tracking list
         tracking_list.channels = set()
         for channel, checked in channels.items():
             if checked:
@@ -125,10 +125,10 @@ class Mutation:
         user.tracking_list.save()
 
         # ! check for the hashing and return false to the caller if the hashing was incorrect
-        # ! if the telegram channel was already check, we do not require hashing, to prevent errors
         if input.channels.TELEGRAM and not TelegramProfile.objects.filter(
             user=user
         ):
+            # calculate the hash from check string
             message = (
                 input.dataCheckString.encode("utf-8")
                 .decode("unicode-escape")
@@ -143,6 +143,8 @@ class Mutation:
             ).hexdigest()
 
             if check_hash == input.hash:
+                # if the hash match
+                # try to get or create a `TelegramProfile` obj
                 try:
                     TelegramProfile.objects.get(user=user)
 
