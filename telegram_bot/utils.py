@@ -13,7 +13,7 @@ from telegram.constants import ParseMode
 from django.contrib.auth import get_user_model
 from django.conf import settings
 
-from notifier.utils import formatter_md
+from notifier import utils as notifier_utils
 from notifier.models import Course
 
 from .models import TelegramProfile, Token
@@ -81,7 +81,7 @@ async def send_telegram_message(chat_id: int, msg: str):
 def tracked_courses_(user: User):
     """To make ORM async"""
 
-    return formatter_md(user.tracking_list.courses.all())
+    return notifier_utils.formatter_md(user.tracking_list.courses.all())
 
 
 @sync_to_async
