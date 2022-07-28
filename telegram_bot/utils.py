@@ -2,6 +2,8 @@
 This module provides some utilities for `telegram_bot` app.
 It also helps converting some ORM methods into async.
 """
+
+import re
 from typing import List
 from asgiref.sync import sync_to_async
 
@@ -15,6 +17,14 @@ from .models import TelegramProfile, Token
 
 
 User = get_user_model()
+
+
+def escape_md(txt) -> str:
+    """To escape special characters:
+    `_`,  and `*`"""
+    match_md = r"((([_*\.]).+?\3[^_*\.]*)*)([_*\.])"
+
+    return re.sub(match_md, "\g<1>\\\\\g<4>", txt)
 
 
 @sync_to_async

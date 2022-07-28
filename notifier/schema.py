@@ -13,6 +13,7 @@ from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 from django.conf import settings
 from telegram_bot.models import TelegramProfile
+from telegram_bot.utils import escape_md
 
 from .utils import fetch_data, get_course_info, send_telegram_message
 from .models import TrackingList, Course, ChannelEnum
@@ -155,7 +156,7 @@ class Mutation:
 
                 send_telegram_message(
                     chat_id=input.telegram_id,
-                    msg=f"Hey {user.username}, we connected your telegram with Petroly !",
+                    msg=f"Hey {escape_md(user.username)}, we connected your telegram with Petroly \!",
                 )
 
         tracking_list.save()
