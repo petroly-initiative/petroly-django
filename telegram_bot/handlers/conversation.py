@@ -16,8 +16,8 @@ async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.bot.callback_data_cache.clear_callback_data()
     context.bot.callback_data_cache.clear_callback_queries()
     terms = await get_terms()
-    term_rows = construct_reply_callback_grid(terms, len(terms))
-    print(term_rows)
+    term_rows = construct_reply_callback_grid(terms, len(terms), is_callback_different=True)
+    # print(term_rows)
     await update.message.reply_text(
             text="Please provide the term for the tracked course. Enter /cancel to exit",
             reply_markup= InlineKeyboardMarkup(term_rows)
@@ -38,8 +38,9 @@ async def track_dept(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     departments,3, prev_callback_data= {"term": selected_term});
 
     await query.edit_message_text(
-        text=f"Term {selected_term} was selected!\n\nPlease Enter the department of the course. ",
-        reply_markup=InlineKeyboardMarkup(department_rows)
+        text=f"Term {selected_term} was selected\!\n\nPlease Enter the department of the course\. ",
+        reply_markup=InlineKeyboardMarkup(department_rows),
+          parse_mode= ParseMode.MARKDOWN_V2,
     )
 
     return COURSE;
@@ -52,14 +53,16 @@ async def track_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     previous_selections["department"] = selected_dept;
     
     courses = get_courses(term=previous_selections["term"], dept=selected_dept);
-    course_rows = construct_reply_callback_grid(courses,3, prev_callback_data=previous_selections);
+    row_length = len(courses) if len(courses) < 3 else 3;
+    course_rows = construct_reply_callback_grid(courses,row_length=row_length, prev_callback_data=previous_selections);
    
     await query.edit_message_text(
         text= f"""
-        {selected_dept} department was selected for term {previous_selections["term"]}!
+        **{selected_dept}** department was selected for term **{previous_selections["term"]}**\!
 
         Select a course
         """,
+        parse_mode= ParseMode.MARKDOWN_V2,
         reply_markup= InlineKeyboardMarkup(course_rows)
     )
 
@@ -82,8 +85,9 @@ async def track_sections(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     section_rows = construct_reply_callback_grid(sections, 1, prev_callback_data=previous_selections);
 
     await query.edit_message_text(
-        text=f"Select a section for {selected_course} - Term {previous_selections['term']}",
-        reply_markup=InlineKeyboardMarkup(section_rows))
+        text=f"Select a section for {selected_course} \- Term {previous_selections['term']}",
+        reply_markup=InlineKeyboardMarkup(section_rows),
+        parse_mode= ParseMode.MARKDOWN_V2)
     
 
     return CONFIRM;
@@ -95,9 +99,9 @@ async def track_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     # ask for another CRN in same settings and restart last step if the user wants
 
     # else: 
-    await update.message.reply_text(
-        text="DONE!"
-    )
+    # await update.message.reply_text(
+    #     text="DONE!"
+    # )
 
     return ConversationHandler.END;
 
