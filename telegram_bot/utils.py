@@ -4,15 +4,16 @@ It also helps converting some ORM methods into async.
 """
 
 import re
-from typing import Dict, List, cast
+from typing import Dict, List, Tuple, cast
 from asgiref.sync import sync_to_async
 
 from telegram import InlineKeyboardButton, Update
 from django.contrib.auth import get_user_model
 from data import DepartmentEnum
+import notifier
 
 from notifier.utils import fetch_data, formatter_md
-from notifier.models import Course, Term
+from notifier.models import Course, Term, TrackingList
 from typing import List
 from asgiref.sync import sync_to_async, async_to_sync
 
@@ -130,8 +131,8 @@ async def get_terms() -> List[str]:
     return await fetch_terms();
 
 @sync_to_async
-def fetch_terms() -> List[str]:
-    return[term.short for term in Term.objects.filter(allowed= True)];
+def fetch_terms() -> List[Tuple[str, str]]:
+    return[(term.short, term.long) for term in Term.objects.filter(allowed= True)];
 
 @sync_to_async
 def get_departments() -> List[str]:
@@ -139,18 +140,20 @@ def get_departments() -> List[str]:
     result.pop(0)
     return result;
 
+
 def get_courses(term: str, dept: str) -> List[str]:
 
     raw_courses  = fetch_data(term, dept)
-    print(raw_courses)
     raw_courses = {x["course_number"] for x in raw_courses}
-    print(raw_courses)
-    return cast( List[str] , raw_courses);
+    # print(raw_courses)
+    return list(raw_courses);
 
 @sync_to_async
 def get_tracked_crns(user_id: int) -> List[str]:
-    courses = TelegramProfile.objects.get(id=user_id).user.tracking_list.courses;
-    return [course.crn for course in courses];
+    list = TelegramProfile.objects.get(id=user_id).user.tracking_list;
+    tracked_courses = list(list.courses.all())
+    
+    return [course.crn for course in tracked_courses if len(tracked_courses) != 0]
 
 # ! we need to filter hybrid sections, and eliminate already tracked courses
 async def get_sections(term: str, dept: str, course: str, user_id: int) -> List[str]:
@@ -160,25 +163,47 @@ async def get_sections(term: str, dept: str, course: str, user_id: int) -> List[
     # filtering already tracked sections, and course-specific sections
     course_sections = [section for section in dept_courses 
     if section["course_number"] == course and section["crn"] not in tracked_sections]
-    course_sections = [
-        f"""
-    {section["course_number"]}\-{section["section_number"]} {"**🔴 full**" if section["available_seats"] <= 0 else f'🟢 **{section["available_seats"]}** seats left'}
-    {section["class_days"]}\| {section["start_time"][0:2]}:{section["start_time"][2:]}-{section["end_time"][0:2]}:{section["end_time"][2:]}
-    """ for section in course_sections]
+    course_sections = [ 
+        format_section(
+            course=section["course_number"],
+             section=section["section_number"],
+              seats= section["available_seats"],
+              class_days=section["class_days"],
+              start_time=section["start_time"],
+              end_time=section["end_time"])
+        for section in course_sections]
 
     return course_sections
 
+####### formatting utilities ####
 
-def construct_reply_callback_grid(list: List, row_length: int = 3, prev_callback_data: Dict[str, str] = {}) -> List[List[InlineKeyboardButton]]:
+def format_section(course: str, section: str, seats: int, class_days: str, start_time: str, end_time: str) -> str:
+    return  f"""
+    {course}-{section} {"🔴 full" if seats <= 0 else f'🟢 {seats} seats left'}
+    {class_days} | {start_time[0:2]}:{start_time[2:]}-{start_time[0:2]}:{end_time[2:]}
+    """
+
+
+def construct_reply_callback_grid(list: List, row_length: int, prev_callback_data: Dict[str, str] = {}, is_callback_different: bool = False) -> List[List[InlineKeyboardButton]]:
     result = [];
-    for i in range(int(len(list) / row_length)):
-      
-        result.append([
-            InlineKeyboardButton(text=el, callback_data=(el, prev_callback_data)) for el in list[i * row_length: i*row_length + row_length]
-        ])
-
-    if(len(list) % row_length != len(list) / row_length):
-        result.append([
-            InlineKeyboardButton(text=el, callback_data=(el, prev_callback_data)) for el in list[int(len(list) / row_length * row_length):]
-        ])
+    # print(list)
+    if is_callback_different:
+        for i in range(int(len(list) / row_length)):
+            result.append([
+                InlineKeyboardButton(text=el[0], callback_data=(el[1], prev_callback_data)) for el in list[i * row_length: i*row_length + row_length]
+            ])
+        if(len(list) % row_length != len(list) / row_length):
+            result.append([
+                InlineKeyboardButton(text=el[0], callback_data=(el[1], prev_callback_data)) for el in list[int(len(list) / row_length * row_length):]
+            ])
+    else:
+        for i in range(int(len(list) / row_length)):
+        
+            result.append([
+                InlineKeyboardButton(text=el, callback_data=(el, prev_callback_data)) for el in list[i * row_length: i*row_length + row_length]
+            ])
+        if(len(list) % row_length != len(list) / row_length):
+            result.append([
+                InlineKeyboardButton(text=el, callback_data=(el, prev_callback_data)) for el in list[int(len(list) / row_length * row_length):]
+            ])
     return result;
