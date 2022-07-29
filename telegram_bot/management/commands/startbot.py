@@ -13,5 +13,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write("Telegram Bot running...")
-        BotController()
-        self.stdout.write("Bot Process terminated")
+        controller = BotController()
+        self.stdout.write("Bot Process terminated token")

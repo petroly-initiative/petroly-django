@@ -118,27 +118,28 @@ async def tracked_courses(
     )
 
 
-async def connect(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Match the telegram account info
-    with our `TelegramProfile` model, by verifying the given token"""
 
-    user_id = update.effective_user.id
-    username = update.effective_user.username
+# async def connect(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+#     """Match the telegram account info
+#     with our `TelegramProfile` model, by verifying the given token"""
 
-    if context.args:
-        user = await verify_user_from_token(
-            token=context.args[0], user_id=user_id, username=username
-        )
+#     user_id = update.effective_user.id
+#     username = update.effective_user.username
 
-        if user:
-            await update.message.reply_text(
-                text=messages.welcome_after_verifying % escape_md(user.username),
-                parse_mode=ParseMode.MARKDOWN_V2,
-            )
+#     if context.args:
+#         user = await verify_user_from_token(
+#             token=context.args[0], user_id=user_id, username=username
+#         )
 
-        else:
-            await update.message.reply_text("Token isn't valid.")
-    else:
-        await update.message.reply_text(
-            text="Please specify a token."
-        )
+#         if user:
+#             await update.message.reply_text(
+#                 text=messages.welcome_after_verifying % escape_md(user.username),
+#                 parse_mode=ParseMode.MARKDOWN_V2,
+#             )
+
+#         else:
+#             await update.message.reply_text("Token isn't valid.")
+#     else:
+#         await update.message.reply_text(
+#             text="Please specify a token."
+#         )

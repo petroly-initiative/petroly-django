@@ -5,11 +5,12 @@ Main class definition for the Telegram Bot interface.
 import os
 import logging
 
-from telegram.ext import Application, CommandHandler, filters, MessageHandler
 
-from .handlers.command import start, help_msg, tracked_courses, connect
-from .handlers.conversation import track, untrack
-from .handlers.error import non_existent
+from telegram.ext import Application, CommandHandler, filters, CallbackQueryHandler, ConversationHandler, InvalidCallbackData, MessageHandler
+
+from .handlers.command import start, help_msg, tracked_courses
+from .handlers.conversation import  COURSE, SECTION,DEPT, CONFIRM, cancel, track, track_confirm, track_courses, track_dept, track_sections, untrack
+from .handlers.error import call_back_error, non_existent
 
 
 # setting up the logger for the bot status
@@ -23,24 +24,44 @@ logger = logging.getLogger(__name__)
 
 class BotController:
     def __init__(self) -> None:
+
         self.app: Application = (
             Application.builder()
             .token(os.environ.get("TELEGRAM_BOT_TOKEN"))
+            .arbitrary_callback_data(True)  # type: ignore
             .build()
         )
-        self.init_handlers()
+        self.token = os.environ.get("TELEGRAM_BOT_TOKEN")
+        self.init_comm_handlers()
+        self.init_conv_handlers()
+        self.app.add_handler(MessageHandler(filters.COMMAND, non_existent))
         self.app.run_polling()
+        print(self.app.handlers)
 
         logger.info('Telegram Bot started')
 
-    def init_handlers(self) -> None:
+    def init_comm_handlers(self) -> None:
         self.app.add_handler(CommandHandler("start", start))
         self.app.add_handler(CommandHandler("help", help_msg))
         self.app.add_handler(CommandHandler("tracked", tracked_courses))
-        self.app.add_handler(CommandHandler("track", track))
-        self.app.add_handler(CommandHandler("untrack", untrack))
-        self.app.add_handler(CommandHandler("connect", connect))
-        self.app.add_handler(MessageHandler(filters.COMMAND, non_existent))
+        self.app.add_handler(CallbackQueryHandler(call_back_error, pattern=InvalidCallbackData))
+        # self.app.add_handler(CommandHandler("track", track))
+        # self.app.add_handler(CommandHandler("untrack", untrack))
+        
 
         logger.info('Handlers initialized')
 
+    def init_conv_handlers(self) -> None:
+        """to handle all assigned conversation handlers"""
+        track_handler = ConversationHandler(
+            entry_points=[CommandHandler("track", track)],  # type: ignore
+            states= {
+                DEPT: [CallbackQueryHandler(track_dept)],
+                COURSE: [CallbackQueryHandler(track_courses)],
+                SECTION: [CallbackQueryHandler(track_sections)],
+                CONFIRM: [CallbackQueryHandler(track_confirm)],
+
+            },  # type: ignore
+            fallbacks= [CommandHandler("cancel", cancel)]  # type: ignore
+        )
+        self.app.add_handler(track_handler);
