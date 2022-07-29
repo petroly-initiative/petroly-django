@@ -35,7 +35,7 @@ def escape_md(txt) -> str:
         `_`,  and `*`"""
     match_md = r"((([_*\.]).+?\3[^_*\.]*)*)([_*\.])"
 
-    return re.sub(match_md, "\g<1>\\\\\g<4>", txt)
+    return re.sub(match_md, r"\g<1>\\\g<4>", txt)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
