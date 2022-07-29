@@ -184,14 +184,14 @@ GQL_AUTH = GqlAuthSettings(
     REGISTER_REQUIRE_CAPTCHA=False,
     ACTIVATION_PATH_ON_EMAIL="confirm",
     EMAIL_TEMPLATE_VARIABLES={
-        'frontend_domain': 'petroly.co'
+        'frontend_domain': 'react.petroly.co'
     },
 )
 
 
 Q_CLUSTER = {
     'name': 'petroly',
-    'workers': 4,
+    'workers': 1,
     'timeout': 30,
     'queue_limit': 50,
     'bulk': 10,

@@ -8,17 +8,15 @@ import json
 from typing import List, Dict, Tuple
 from pprint import pprint
 from time import sleep
-from asgiref.sync import async_to_sync
 
 import requests as rq
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django_q.tasks import async_task
-from telegram.constants import ParseMode
 
-from telegram_bot import telegram_app
 from telegram_bot import messages
+from telegram_bot import utils as bot_utils
 
 from .models import TrackingList, Course, ChannelEnum
 
@@ -142,22 +140,6 @@ def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
     return courses_dict
 
 
-@async_to_sync
-async def send_telegram_message(chat_id: int, msg: str):
-    """To make this method as sync
-
-    Args:
-        chat_id (int): like user's id
-        msg (str): a MD text message
-    """
-
-    await telegram_app.bot.send_message(
-        chat_id=chat_id,
-        text=msg,
-        parse_mode=ParseMode.MARKDOWN_V2,
-    )
-
-
 def send_notification(user_pk: int, msg: str) -> None:
     """Send a notification for every channel in `TrackingList.channels`"""
 
@@ -174,7 +156,9 @@ def send_notification(user_pk: int, msg: str) -> None:
         )
 
     if ChannelEnum.TELEGRAM in channels:
-        send_telegram_message(chat_id=user.telegram_profile.id, msg=msg)
+        bot_utils.send_telegram_message(
+            chat_id=user.telegram_profile.id, msg=msg
+        )
 
 
 def formatter_md(courses: List[Course]) -> str:
