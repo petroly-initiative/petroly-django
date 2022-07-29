@@ -47,6 +47,8 @@ def fetch_data(term: str, department: str) -> List[Dict]:
         API, params={"term_code": term, "department_code": department}
     )
 
+    print(res.content)
+
     assert res.ok
     data = json.loads(res.content)["data"]
 
