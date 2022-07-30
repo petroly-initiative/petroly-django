@@ -14,7 +14,6 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from notifier import utils as notifier_utils
-from notifier.utils import fetch_data
 from notifier.models import Course, Term
 from data import DepartmentEnum
 
@@ -135,7 +134,7 @@ def get_departments() -> List[str]:
 
 def get_courses(term: str, dept: str) -> List[str]:
 
-    raw_courses = fetch_data(term, dept)
+    raw_courses = notifier_utils.fetch_data(term, dept)
     raw_courses = {x["course_number"] for x in raw_courses}
     # print(raw_courses)
     return list(raw_courses)
@@ -156,7 +155,7 @@ async def get_sections(
     term: str, dept: str, course: str, user_id: int
 ) -> List[str]:
 
-    dept_courses = fetch_data(term, department=dept)
+    dept_courses = notifier_utils.fetch_data(term, department=dept)
     tracked_sections = await get_tracked_crns(user_id)
     # filtering already tracked sections, and course-specific sections
     course_sections = [
