@@ -191,7 +191,7 @@ def format_section(
     start_time: str,
     end_time: str,
 ) -> str:
-    if start_time > 2 and len(end_time) > 2:
+    if len(start_time) > 2 and len(end_time) > 2:
         return f"""
         {course}-{section} {"🔴 full" if seats <= 0 else f'🟢 {seats} seats left'}
         {class_days} | {start_time[:2]}:{start_time[2:]}-{start_time[:2]}:{end_time[2:]}
