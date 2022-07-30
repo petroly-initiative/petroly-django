@@ -133,13 +133,14 @@ async def track_confirm(
 ) -> int:
 
     # register in the tracking list for the user
-
+    query = update.callback_query
+    await query.answer()
     # ask for another CRN in same settings and restart last step if the user wants
 
     # else:
-    # await update.message.reply_text(
-    #     text="DONE!"
-    # )
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id, text="DONE!"
+    )
 
     return ConversationHandler.END
 
