@@ -150,8 +150,8 @@ def get_courses(term: str, dept: str) -> List[str]:
 
 @sync_to_async
 def get_tracked_crns(user_id: int) -> List[str]:
-    list = TelegramProfile.objects.get(id=user_id).user.tracking_list;
-    tracked_courses = list(list.courses.all())
+    tracked_list = TelegramProfile.objects.get(id=user_id).user.tracking_list;
+    tracked_courses = list(tracked_list.courses.all())
     
     return [course.crn for course in tracked_courses if len(tracked_courses) != 0]
 
@@ -194,7 +194,7 @@ def construct_reply_callback_grid(list: List, row_length: int, prev_callback_dat
             ])
         if(len(list) % row_length != len(list) / row_length):
             result.append([
-                InlineKeyboardButton(text=el[0], callback_data=(el[1], prev_callback_data)) for el in list[int(len(list) / row_length * row_length):]
+                InlineKeyboardButton(text=el[0], callback_data=(el[1], prev_callback_data)) for el in list[int(len(list) / row_length) * row_length:]
             ])
     else:
         for i in range(int(len(list) / row_length)):
@@ -202,8 +202,10 @@ def construct_reply_callback_grid(list: List, row_length: int, prev_callback_dat
             result.append([
                 InlineKeyboardButton(text=el, callback_data=(el, prev_callback_data)) for el in list[i * row_length: i*row_length + row_length]
             ])
+            print(len(result))
         if(len(list) % row_length != len(list) / row_length):
             result.append([
-                InlineKeyboardButton(text=el, callback_data=(el, prev_callback_data)) for el in list[int(len(list) / row_length * row_length):]
+                InlineKeyboardButton(text=el, callback_data=(el, prev_callback_data)) for el in list[int(len(list) / row_length) * row_length:]
             ])
+            print(len(result))
     return result;
