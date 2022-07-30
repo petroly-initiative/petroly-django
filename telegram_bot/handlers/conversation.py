@@ -1,5 +1,5 @@
 """
-This module handles the conversation sequence to track ot untrack 
+This module handles the conversation sequence to track ot untrack
 a course.
 """
 
@@ -68,7 +68,7 @@ async def track_dept(
     )
 
     await query.edit_message_text(
-        text=rf"Term {selected_term} was selected\!\n\nPlease Enter the department of the course\. ",
+        text=rf"Term {selected_term} was selected\!\n\nPlease Enter the department of the course\.",
         reply_markup=InlineKeyboardMarkup(department_rows),
         parse_mode=ParseMode.MARKDOWN_V2,
     )
@@ -94,7 +94,7 @@ async def track_courses(
     )
 
     await query.edit_message_text(
-        text=f"""
+        text=rf"""
         **{selected_dept}** department was selected for term **{previous_selections["term"]}**\!
 
         Select a course
@@ -117,7 +117,7 @@ async def track_sections(
         Tuple[str, Dict[str, str]], query.data
     )
     previous_selections["course"] = selected_course
-    ## passing the user id to prevent adding alerady tracked sections twice
+    ## passing the user id to prevent adding already tracked sections twice
     sections = await get_sections(
         course=selected_course,
         dept=previous_selections["department"],
@@ -129,7 +129,7 @@ async def track_sections(
     )
 
     await query.edit_message_text(
-        text=f"Select a section for {selected_course} \- Term {previous_selections['term']}",
+        text=rf"Select a section for {selected_course} \- Term {previous_selections['term']}",
         reply_markup=InlineKeyboardMarkup(section_rows),
         parse_mode=ParseMode.MARKDOWN_V2,
     )
