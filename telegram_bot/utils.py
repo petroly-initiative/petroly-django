@@ -45,7 +45,7 @@ async def user_from_telegram(user_id: int, update: Update) -> User:
 
     except TelegramProfile.DoesNotExist as exc:
         # await update.message.reply_text(
-        #     text=f"You don't have a TelegramProfile. Connect your Telegrammmm"
+        #     text=f"You don't have a TelegramProfile. Connect your Telegram"
         # )
 
         raise TelegramProfile.DoesNotExist from exc
@@ -198,7 +198,7 @@ def format_section(
 
 
 def construct_reply_callback_grid(
-    list: List,
+    list_: List,
     row_length: int,
     prev_callback_data: Dict[str, str] = None,
     is_callback_different: bool = False,
@@ -210,47 +210,47 @@ def construct_reply_callback_grid(
     result = []
 
     if is_callback_different:
-        for i in range(int(len(list) / row_length)):
+        for i in range(int(len(list_) / row_length)):
             result.append(
                 [
                     InlineKeyboardButton(
                         text=el[0], callback_data=(el[1], prev_callback_data)
                     )
-                    for el in list[
+                    for el in list_[
                         i * row_length : i * row_length + row_length
                     ]
                 ]
             )
-        if len(list) % row_length != len(list) / row_length:
+        if len(list_) % row_length != len(list_) / row_length:
             result.append(
                 [
                     InlineKeyboardButton(
                         text=el[0], callback_data=(el[1], prev_callback_data)
                     )
-                    for el in list[int(len(list) / row_length) * row_length :]
+                    for el in list_[int(len(list_) / row_length) * row_length :]
                 ]
             )
     else:
-        for i in range(int(len(list) / row_length)):
+        for i in range(int(len(list_) / row_length)):
 
             result.append(
                 [
                     InlineKeyboardButton(
                         text=el, callback_data=(el, prev_callback_data)
                     )
-                    for el in list[
+                    for el in list_[
                         i * row_length : i * row_length + row_length
                     ]
                 ]
             )
             print(len(result))
-        if len(list) % row_length != len(list) / row_length:
+        if len(list_) % row_length != len(list_) / row_length:
             result.append(
                 [
                     InlineKeyboardButton(
                         text=el, callback_data=(el, prev_callback_data)
                     )
-                    for el in list[int(len(list) / row_length) * row_length :]
+                    for el in list_[int(len(list_) / row_length) * row_length :]
                 ]
             )
             print(len(result))
