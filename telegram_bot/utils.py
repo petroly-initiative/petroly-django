@@ -13,9 +13,9 @@ from telegram.constants import ParseMode
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+from notifier import utils as notifier_utils
 from notifier.utils import fetch_data
 from notifier.models import Course, Term
-from notifier import utils as notifier_utils
 from data import DepartmentEnum
 
 from .models import TelegramProfile, Token
