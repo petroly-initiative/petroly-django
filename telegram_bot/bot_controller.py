@@ -6,10 +6,26 @@ import os
 import logging
 
 
-from telegram.ext import Application, CommandHandler, filters, CallbackQueryHandler, ConversationHandler, InvalidCallbackData, MessageHandler
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    filters,
+    CallbackQueryHandler,
+    ConversationHandler,
+    InvalidCallbackData,
+    MessageHandler,
+)
 
 from .handlers.command import start, help_msg, tracked_courses
-from .handlers.conversation import  COURSE, SECTION,DEPT, CONFIRM, cancel, track, track_confirm, track_courses, track_dept, track_sections, untrack
+from .handlers.conversation import (
+    CommandEnum,
+    cancel,
+    track,
+    track_confirm,
+    track_courses,
+    track_dept,
+    track_sections,
+)
 from .handlers.error import call_back_error, non_existent
 
 
@@ -38,30 +54,30 @@ class BotController:
         self.app.run_polling()
         print(self.app.handlers)
 
-        logger.info('Telegram Bot started')
+        logger.info("Telegram Bot started")
 
     def init_comm_handlers(self) -> None:
         self.app.add_handler(CommandHandler("start", start))
         self.app.add_handler(CommandHandler("help", help_msg))
         self.app.add_handler(CommandHandler("tracked", tracked_courses))
-        self.app.add_handler(CallbackQueryHandler(call_back_error, pattern=InvalidCallbackData))
+        self.app.add_handler(
+            CallbackQueryHandler(call_back_error, pattern=InvalidCallbackData)
+        )
         # self.app.add_handler(CommandHandler("track", track))
         # self.app.add_handler(CommandHandler("untrack", untrack))
-        
 
-        logger.info('Handlers initialized')
+        logger.info("Handlers initialized")
 
     def init_conv_handlers(self) -> None:
         """to handle all assigned conversation handlers"""
         track_handler = ConversationHandler(
             entry_points=[CommandHandler("track", track)],  # type: ignore
-            states= {
-                DEPT: [CallbackQueryHandler(track_dept)],
-                COURSE: [CallbackQueryHandler(track_courses)],
-                SECTION: [CallbackQueryHandler(track_sections)],
-                CONFIRM: [CallbackQueryHandler(track_confirm)],
-
+            states={
+                CommandEnum.DEPT: [CallbackQueryHandler(track_dept)],
+                CommandEnum.COURSE: [CallbackQueryHandler(track_courses)],
+                CommandEnum.SECTION: [CallbackQueryHandler(track_sections)],
+                CommandEnum.CONFIRM: [CallbackQueryHandler(track_confirm)],
             },  # type: ignore
-            fallbacks= [CommandHandler("cancel", cancel)]  # type: ignore
+            fallbacks=[CommandHandler("cancel", cancel)],  # type: ignore
         )
-        self.app.add_handler(track_handler);
+        self.app.add_handler(track_handler)
