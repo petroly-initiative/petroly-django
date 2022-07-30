@@ -200,11 +200,15 @@ def format_section(
 def construct_reply_callback_grid(
     list: List,
     row_length: int,
-    prev_callback_data: Dict[str, str] = {},
+    prev_callback_data: Dict[str, str] = None,
     is_callback_different: bool = False,
 ) -> List[List[InlineKeyboardButton]]:
+
+    if prev_callback_data is None:
+        prev_callback_data = {}
+
     result = []
-    # print(list)
+
     if is_callback_different:
         for i in range(int(len(list) / row_length)):
             result.append(
