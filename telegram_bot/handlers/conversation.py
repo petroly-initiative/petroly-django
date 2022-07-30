@@ -7,6 +7,8 @@ a course.
 # pyright: reportIncompatibleMethodOverride=false
 
 from typing import Tuple, Dict, cast
+from enum import Enum
+
 from telegram.ext import ContextTypes, ConversationHandler
 from telegram.constants import ParseMode
 from telegram import (
@@ -23,7 +25,15 @@ from telegram_bot.utils import (
 )
 
 
-DEPT, COURSE, SECTION, CONFIRM, CHECK = range(5)
+class CommandEnum(Enum):
+    """This helps to understand what the message
+    wants to do from"""
+
+    DEPT = 0
+    COURSE = 1
+    SECTION = 2
+    CONFIRM = 3
+    CHECK = 4
 
 
 async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -40,7 +50,7 @@ async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         reply_markup=InlineKeyboardMarkup(term_rows),
     )
 
-    return DEPT
+    return CommandEnum.DEPT
 
 
 async def track_dept(
@@ -59,12 +69,12 @@ async def track_dept(
     )
 
     await query.edit_message_text(
-        text=f"Term {selected_term} was selected\!\n\nPlease Enter the department of the course\. ",
+        text=rf"Term {selected_term} was selected\!\n\nPlease Enter the department of the course\. ",
         reply_markup=InlineKeyboardMarkup(department_rows),
         parse_mode=ParseMode.MARKDOWN_V2,
     )
 
-    return COURSE
+    return CommandEnum.COURSE
 
 
 async def track_courses(
@@ -94,7 +104,7 @@ async def track_courses(
         reply_markup=InlineKeyboardMarkup(course_rows),
     )
 
-    return SECTION
+    return CommandEnum.SECTION
 
 
 async def track_sections(
@@ -125,7 +135,7 @@ async def track_sections(
         parse_mode=ParseMode.MARKDOWN_V2,
     )
 
-    return CONFIRM
+    return CommandEnum.CONFIRM
 
 
 async def track_confirm(
