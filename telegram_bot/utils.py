@@ -56,7 +56,7 @@ def format_courses(courses: List[Course]):
 
     msg = r"*CRN* \- *Department*\n\n"
     for course in courses:
-        msg += rf"{course.crn} \- {course.department}\n"
+        msg += f"{course.crn} \\- {course.department}\n"
 
     return msg
 

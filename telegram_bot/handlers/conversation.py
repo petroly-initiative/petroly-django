@@ -68,7 +68,7 @@ async def track_dept(
     )
 
     await query.edit_message_text(
-        text=rf"Term {selected_term} was selected\!\n\nPlease Enter the department of the course\.",
+        text=f"Term {selected_term} was selected\\!\n\nPlease Enter the department of the course\\.",
         reply_markup=InlineKeyboardMarkup(department_rows),
         parse_mode=ParseMode.MARKDOWN_V2,
     )
@@ -94,8 +94,8 @@ async def track_courses(
     )
 
     await query.edit_message_text(
-        text=rf"""
-        **{selected_dept}** department was selected for term **{previous_selections["term"]}**\!
+        text=f"""
+        **{selected_dept}** department was selected for term **{previous_selections["term"]}**\\!
 
         Select a course
         """,
@@ -129,7 +129,7 @@ async def track_sections(
     )
 
     await query.edit_message_text(
-        text=rf"Select a section for {selected_course} \- Term {previous_selections['term']}",
+        text=f"Select a section for {selected_course} \\- Term {previous_selections['term']}",
         reply_markup=InlineKeyboardMarkup(section_rows),
         parse_mode=ParseMode.MARKDOWN_V2,
     )
@@ -160,7 +160,7 @@ async def untrack(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if context.args:
         #! we need to handle non-existent CRNs as well
         await update.message.reply_text(
-            text=rf"Section with CRN **{context.args[0]}** is successfully untracked\!",
+            text=f"Section with CRN **{context.args[0]}** is successfully untracked\\!",
             parse_mode=ParseMode.MARKDOWN_V2,
         )
     else:
