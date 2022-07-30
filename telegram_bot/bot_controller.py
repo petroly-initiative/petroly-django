@@ -2,6 +2,7 @@
 Main class definition for the Telegram Bot interface.
 """
 
+from ast import pattern
 import os
 import logging
 
@@ -9,7 +10,8 @@ import logging
 from telegram.ext import Application, CommandHandler, filters, CallbackQueryHandler, ConversationHandler, InvalidCallbackData, MessageHandler
 
 from .handlers.command import start, help_msg, tracked_courses
-from .handlers.conversation import  COURSE, SECTION,DEPT, CONFIRM, cancel, track, track_confirm, track_courses, track_dept, track_sections, untrack
+from .handlers.conversation import  (
+    COURSE, CRN, SECTION,DEPT, CONFIRM, CLOSE, track,cancel, track_close, track_confirm, track_courses, track_crn, track_dept, track_sections, untrack)
 from .handlers.error import call_back_error, non_existent
 
 
@@ -59,7 +61,9 @@ class BotController:
                 DEPT: [CallbackQueryHandler(track_dept)],
                 COURSE: [CallbackQueryHandler(track_courses)],
                 SECTION: [CallbackQueryHandler(track_sections)],
+                CRN: [MessageHandler(filters.TEXT, track_crn )],
                 CONFIRM: [CallbackQueryHandler(track_confirm)],
+                CLOSE: [CallbackQueryHandler(track_close)]
 
             },  # type: ignore
             fallbacks= [CommandHandler("cancel", cancel)]  # type: ignore
