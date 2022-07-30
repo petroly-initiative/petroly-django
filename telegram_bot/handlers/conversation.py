@@ -21,7 +21,7 @@ from telegram_bot.utils import (
     get_courses,
     get_departments,
     get_sections,
-    get_terms,
+    fetch_terms
 )
 
 
@@ -40,7 +40,7 @@ async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     # cleaning data from previous sessions
     context.bot.callback_data_cache.clear_callback_data()
     context.bot.callback_data_cache.clear_callback_queries()
-    terms = await get_terms()
+    terms = await fetch_terms()
     term_rows = construct_reply_callback_grid(
         terms, len(terms), is_callback_different=True
     )
@@ -62,7 +62,6 @@ async def track_dept(
     # getting the data from previous step
     selected_term, _ = cast(Tuple[str, Dict[str, str]], query.data)
 
-    terms = await get_terms()
     departments = await get_departments()
     department_rows = construct_reply_callback_grid(
         departments, 3, prev_callback_data={"term": selected_term}

@@ -4,27 +4,19 @@ It also helps converting some ORM methods into async.
 """
 
 import re
-from typing import Dict, List, Tuple, cast
-from asgiref.sync import sync_to_async
-
-from telegram import InlineKeyboardButton, Update
-from django.contrib.auth import get_user_model
-from data import DepartmentEnum
-import notifier
-
-from notifier.utils import fetch_data, formatter_md
-from notifier.models import Course, Term, TrackingList
-from typing import List
+from typing import Dict, List, Tuple
 from asgiref.sync import sync_to_async, async_to_sync
 
-from telegram import Update
+from telegram import InlineKeyboardButton, Update
 from telegram.ext import Application
 from telegram.constants import ParseMode
-from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
+from notifier.utils import fetch_data
+from notifier.models import Course, Term
 from notifier import utils as notifier_utils
-from notifier.models import Course
+from data import DepartmentEnum
 
 from .models import TelegramProfile, Token
 
@@ -125,10 +117,6 @@ def verify_user_from_token(
         return user
 
     return None
-
-
-async def get_terms() -> List[str]:
-    return await fetch_terms()
 
 
 @sync_to_async
