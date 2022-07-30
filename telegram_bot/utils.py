@@ -62,9 +62,9 @@ async def user_from_telegram(user_id: int, update: Update) -> User:
 def format_courses(courses: List[Course]):
     """Format the courses list"""
 
-    msg = "*CRN* \- *Department*\n\n"
+    msg = r"*CRN* \- *Department*\n\n"
     for course in courses:
-        msg += f"{course.crn} \- {course.department}\n"
+        msg += rf"{course.crn} \- {course.department}\n"
 
     return msg
 

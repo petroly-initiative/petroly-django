@@ -1,3 +1,8 @@
+"""
+This module handles the conversation sequence to track ot untrack 
+a course.
+"""
+
 # ! needs to converted it into a conversational handler instead
 # pyright: reportIncompatibleMethodOverride=false
 
@@ -6,8 +11,6 @@ from telegram.ext import ContextTypes, ConversationHandler
 from telegram.constants import ParseMode
 from telegram import (
     InlineKeyboardMarkup,
-    ReplyKeyboardMarkup,
-    ReplyKeyboardRemove,
     Update,
 )
 
@@ -152,12 +155,15 @@ async def untrack(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         )
     else:
         await update.message.reply_text(
-            text="Cannot untrack a course without specifying the CRN. Please try again and add the correct CRN",
+            text="Cannot untrack a course without specifying the CRN. "
+            "Please try again and add the correct CRN",
         )
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
-    await update.message.reply_text(text="Process Cancelled.")
+    await update.message.reply_text(
+        text="All right, we won't change anything."
+    )
 
     return ConversationHandler.END
