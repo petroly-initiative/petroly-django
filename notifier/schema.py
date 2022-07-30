@@ -160,7 +160,7 @@ class Mutation:
                     "telegram_bot.utils.send_telegram_message",
                     task_name=f"sending-success-connection-{user.pk}",
                     chat_id=input.telegram_id,
-                    msg=rf"Hey {escape_md(user.username)}, we connected your telegram with Petroly \!",
+                    msg=f"Hey {escape_md(user.username)}, we connected your telegram with Petroly \\!",
                 )
 
         tracking_list.save()
