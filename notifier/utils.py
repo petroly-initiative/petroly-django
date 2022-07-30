@@ -40,14 +40,13 @@ def fetch_data(term: str, department: str) -> List[Dict]:
 
     if data:
         return data
-    print("cache miss")
+    print(f"cache miss for {term}-{department}")
     res = rq.get(
         API, params={"term_code": term, "department_code": department}
     )
 
     assert res.ok
     data = json.loads(res.content)["data"]
-    # print(res.content)
     cache.set((term, department), data)  # store data into cache
 
     return data

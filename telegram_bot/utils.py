@@ -4,27 +4,18 @@ It also helps converting some ORM methods into async.
 """
 
 import re
-from typing import Dict, List, Tuple, cast
-from asgiref.sync import sync_to_async
-
-from telegram import InlineKeyboardButton, Update
-from django.contrib.auth import get_user_model
-from data import DepartmentEnum
-import notifier
-
-from notifier.utils import fetch_data, formatter_md
-from notifier.models import Course, Term, TrackingList
-from typing import List
+from typing import Dict, List, Tuple
 from asgiref.sync import sync_to_async, async_to_sync
 
-from telegram import Update
+from telegram import InlineKeyboardButton, Update
 from telegram.ext import Application
 from telegram.constants import ParseMode
-from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from notifier import utils as notifier_utils
-from notifier.models import Course
+from notifier.models import Course, Term
+from data import DepartmentEnum
 
 from .models import TelegramProfile, Token
 
@@ -34,7 +25,7 @@ User = get_user_model()
 
 def escape_md(txt) -> str:
     """To escape special characters:
-    `_`,  and `*`"""
+    `_`,  and `*` and `.`"""
     match_md = r"((([_*\.]).+?\3[^_*\.]*)*)([_*\.])"
 
     return re.sub(match_md, r"\g<1>\\\g<4>", txt)
@@ -53,7 +44,7 @@ async def user_from_telegram(user_id: int, update: Update) -> User:
 
     except TelegramProfile.DoesNotExist as exc:
         # await update.message.reply_text(
-        #     text=f"You don't have a TelegramProfile. Connect your Telegrammmm"
+        #     text=f"You don't have a TelegramProfile. Connect your Telegram"
         # )
 
         raise TelegramProfile.DoesNotExist from exc
@@ -62,9 +53,9 @@ async def user_from_telegram(user_id: int, update: Update) -> User:
 def format_courses(courses: List[Course]):
     """Format the courses list"""
 
-    msg = "*CRN* \- *Department*\n\n"
+    msg = r"*CRN* \- *Department*\n\n"
     for course in courses:
-        msg += f"{course.crn} \- {course.department}\n"
+        msg += f"{course.crn} \\- {course.department}\n"
 
     return msg
 
@@ -141,54 +132,69 @@ def fetch_terms() -> List[Tuple[str, str]]:
 
 @sync_to_async
 def get_departments() -> List[str]:
-    result = DepartmentEnum.values;
+    result = DepartmentEnum.values
     result.pop(0)
-    return result;
+    return result
 
 
 def get_courses(term: str, dept: str) -> List[str]:
 
-    raw_courses  = fetch_data(term, dept)
+    raw_courses = notifier_utils.fetch_data(term, dept)
     raw_courses = {x["course_number"] for x in raw_courses}
     # print(raw_courses)
-    return list(raw_courses);
+    return list(raw_courses)
+
 
 @sync_to_async
 def get_tracked_crns(user_id: int) -> List[str]:
-    tracked_list = TelegramProfile.objects.get(id=user_id).user.tracking_list;
+    tracked_list = TelegramProfile.objects.get(id=user_id).user.tracking_list
     tracked_courses = list(tracked_list.courses.all())
-    
-    return [course.crn for course in tracked_courses if len(tracked_courses) != 0]
+
+    return [
+        course.crn for course in tracked_courses if len(tracked_courses) != 0
+    ]
+
 
 # ! we need to filter hybrid sections, and eliminate already tracked courses
-async def get_sections(term: str, dept: str, course: str, user_id: int) -> List[Tuple[str, Dict[str, str | int]]]:
+async def get_sections(
+    term: str,
+    dept: str,
+    course: str,
+    user_id: int
+       ) -> List[Tuple[str, Dict[str, str | int]]]:
 
-    dept_courses = fetch_data(term, department=dept)
-    tracked_sections = await get_tracked_crns(user_id);
+    dept_courses = notifier_utils.fetch_data(term, department=dept)
+    tracked_sections = await get_tracked_crns(user_id)
     # filtering already tracked sections, and course-specific sections
     course_sections = [section for section in dept_courses 
     if section["course_number"] == course and section["crn"] not in tracked_sections]
     course_sections = [ 
         (format_section(
             course=section["course_number"],
-             section=section["section_number"],
-              seats= section["available_seats"],
-              class_days=section["class_days"],
-              class_type=section["class_type"],
-              start_time=section["start_time"],
-              end_time=section["end_time"], 
-              waitlist_count=section["waiting_list_count"]),
-              {
+            section=section["section_number"],
+            seats= section["available_seats"],
+            class_days=section["class_days"],
+            class_type=section["class_type"],
+            start_time=section["start_time"],
+            end_time=section["end_time"], 
+            waitlist_count=section["waiting_list_count"]),
+            {
                 "crn": section["crn"],
                 "seats": section["available_seats"],
                 "waitlist": section["waiting_list_count"]
-              })
+            })
         for section in course_sections]
 
     return course_sections
 
 @sync_to_async
-def submit_section(crn: int, seats: int, waitlist_count: int, user_id: int, term: int, dept: str) -> None:
+def submit_section(
+    crn: int,
+     seats: int,
+      waitlist_count: int,
+       user_id: int,
+        term: int,
+         dept: str) -> None:
 
     # get all currently tracked courses
     tracking_list = TelegramProfile.objects.get(id=user_id).user.tracking_list
@@ -202,14 +208,27 @@ def submit_section(crn: int, seats: int, waitlist_count: int, user_id: int, term
 
 ####### formatting utilities ####
 
-def format_section(course: str, class_type: str, section: str, seats: int, waitlist_count, class_days: str, start_time: str, end_time: str) -> str:
+def format_section(
+    course: str,
+ class_type: str,
+  section: str,
+   seats: int,
+    waitlist_count: int,
+     class_days: str,
+      start_time: str,
+       end_time: str
+       ) -> str:
     return  f"""
     {course}-{section}{"📘" if class_type == "LEC" else "🧪" if class_type == "LAB" else ""} {"🔴 full" if seats <= 0 else f'🟢 🪑{seats} - ⏳{waitlist_count} '}
     {class_days} | {start_time[0:2]}:{start_time[2:]}-{start_time[0:2]}:{end_time[2:]}
     """
 
 
-def construct_reply_callback_grid(input_list: List, row_length: int, is_callback_different: bool = False) -> List[List[InlineKeyboardButton]]:
+def construct_reply_callback_grid(
+    input_list: List,
+    row_length: int,
+    is_callback_different: bool = False
+    ) -> List[List[InlineKeyboardButton]]:
     result = [];
     # print(list)
     if is_callback_different:
@@ -227,7 +246,7 @@ def construct_reply_callback_grid(input_list: List, row_length: int, is_callback
             result.append([
                 InlineKeyboardButton(text=el, callback_data=el) for el in input_list[i * row_length: i*row_length + row_length]
             ])
-          
+
         if(len(input_list) % row_length != len(input_list) / row_length):
             result.append([
                 InlineKeyboardButton(text=el, callback_data=el) for el in input_list[int(len(input_list) / row_length) * row_length:]

@@ -1,3 +1,8 @@
+"""
+This module handles the conversation sequence to track ot untrack
+a course.
+"""
+
 # ! needs to converted it into a conversational handler instead
 # pyright: reportIncompatibleMethodOverride=false
 
@@ -13,6 +18,37 @@ from telegram_bot.utils import (
 
 ## stepwise state for the tracking conversation handling
 DEPT, COURSE, SECTION, CONFIRM, CRN, CLOSE = range(6)
+from typing import Tuple, Dict, cast
+from enum import Enum
+
+from telegram.ext import ContextTypes, ConversationHandler
+from telegram.constants import ParseMode
+from telegram import (
+    InlineKeyboardMarkup,
+    Update,
+)
+
+from telegram_bot.utils import (
+    construct_reply_callback_grid,
+    get_courses,
+    get_departments,
+    get_sections,
+    fetch_terms
+)
+
+
+class CommandEnum(Enum):
+    """This helps to understand what the message
+    wants to do from"""
+
+    DEPT = 0
+    COURSE = 1
+    SECTION = 2
+    CONFIRM = 3
+    CRN = 4,
+    CLOSE = 5
+
+
 
 async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     # cleaning data from previous sessions
@@ -21,18 +57,25 @@ async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data.clear()
     terms = await get_terms(update.effective_chat.id);
     term_rows = construct_reply_callback_grid(terms, len(terms), is_callback_different=True)
+    terms = await fetch_terms()
+    term_rows = construct_reply_callback_grid(
+        terms, len(terms), is_callback_different=True
+    )
     # print(term_rows)
     await update.message.reply_text(
-            text="Please provide the term for the tracked course. Enter /cancel to exit",
-            reply_markup= InlineKeyboardMarkup(term_rows)
-        )
+        text="Please provide the term for the tracked course. Enter /cancel to exit",
+        reply_markup=InlineKeyboardMarkup(term_rows),
+    )
 
-    return DEPT
+    return CommandEnum.DEPT  # type: ignore
 
-async def track_dept(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
-    query = update.callback_query;
-    await query.answer();
+async def track_dept(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> int:
+
+    query = update.callback_query
+    await query.answer()
     # getting the data from previous step
     selected_term = cast(str, query.data)
     context.user_data["term"] = selected_term
@@ -62,16 +105,16 @@ async def track_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
         Select a course
         """,
-        parse_mode= ParseMode.MARKDOWN_V2,
-        reply_markup= InlineKeyboardMarkup(course_rows)
+        parse_mode=ParseMode.MARKDOWN_V2,
+        reply_markup=InlineKeyboardMarkup(course_rows),
     )
 
-    return SECTION
+    return CommandEnum.SECTION
 
-async def track_sections(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
-    query = update.callback_query;
-    await query.answer();
+async def track_sections(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> int:
 
     selected_course = cast(str, query.data);
     context.user_data["course"] = selected_course;
@@ -185,19 +228,20 @@ async def untrack(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if context.args:
         #! we need to handle non-existent CRNs as well
         await update.message.reply_text(
-            text=rf"Section with CRN **{context.args[0]}** is successfully untracked\!",
+            text=f"Section with CRN **{context.args[0]}** is successfully untracked\\!",
             parse_mode=ParseMode.MARKDOWN_V2,
         )
     else:
         await update.message.reply_text(
-            text="Cannot untrack a course without specifying the CRN. Please try again and add the correct CRN",
-            
+            text="Cannot untrack a course without specifying the CRN. "
+            "Please try again and add the correct CRN",
         )
+
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     await update.message.reply_text(
-        text = "Process Cancelled."
+        text="All right, we won't change anything."
     )
 
-    return ConversationHandler.END;
+    return ConversationHandler.END
