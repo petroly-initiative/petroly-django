@@ -16,8 +16,7 @@ from telegram_bot.utils import (
     )
 
 
-## stepwise state for the tracking conversation handling
-DEPT, COURSE, SECTION, CONFIRM, CRN, CLOSE = range(6)
+
 from typing import Tuple, Dict, cast
 from enum import Enum
 
@@ -50,7 +49,7 @@ class CommandEnum(Enum):
 
 
 
-async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     # cleaning data from previous sessions
     context.bot.callback_data_cache.clear_callback_data()
     context.bot.callback_data_cache.clear_callback_queries()
@@ -88,9 +87,9 @@ async def track_dept(
           parse_mode= ParseMode.MARKDOWN_V2,
     )
 
-    return COURSE;
+    return CommandEnum.COURSE;
 
-async def track_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def track_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     query = update.callback_query;
     await query.answer();
     selected_dept = cast(str, query.data);
@@ -115,7 +114,8 @@ async def track_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 async def track_sections(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
-
+    query = update.callback_query;
+    await query.answer();
     selected_course = cast(str, query.data);
     context.user_data["course"] = selected_course;
     ## passing the user id to prevent adding alerady tracked sections twice
@@ -137,7 +137,7 @@ async def track_sections(
         text="Too many sections to display, please type the course CRN",
         reply_markup= None,
         )
-        return CRN
+        return CommandEnum.CRN
 
     await query.edit_message_text(
         text=f"Select a section for {selected_course} \- Term {context.user_data.get('term', 'TERM_NOT_FOUND')}",
@@ -145,9 +145,9 @@ async def track_sections(
         parse_mode= ParseMode.MARKDOWN_V2)
     
 
-    return CONFIRM;
+    return CommandEnum.CONFIRM;
 
-async def track_crn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def track_crn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
 
     crn = update.message.text.strip();
     ## check if the CRN exists
@@ -158,7 +158,7 @@ async def track_crn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             chat_id=update.effective_chat.id,
             text="CRN does not exist or is already tracked, please enter a valid CRN that you haven't tracked before"
         )
-        return CRN;
+        return CommandEnum.CRN;
     else:
         target_section = [section for section in context.user_data.get("sections","NULL") if section[0] == crn][0]
 
@@ -178,7 +178,7 @@ async def track_crn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         )
         
         context.user_data["from_crn"] = True
-        return CLOSE
+        return CommandEnum.CLOSE
 
 
 async def track_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -205,14 +205,14 @@ async def track_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
         reply_markup= InlineKeyboardMarkup(options)
     )
 
-    return CLOSE;
+    return CommandEnum.CLOSE;
 
-async def track_close(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def track_close(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum | int:
     query = update.callback_query;
     await query.answer();
 
     if(eval(query.data)):
-        return CRN if context.user_data.get("from_crn", False) else SECTION
+        return CommandEnum.CRN if context.user_data.get("from_crn", False) else CommandEnum.SECTION
     else:
         await query.edit_message_text(
             text="Wait for the notifications, and thank for using the Petroly bot!",

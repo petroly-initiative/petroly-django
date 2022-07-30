@@ -26,6 +26,8 @@ from .handlers.conversation import (
     track_courses,
     track_dept,
     track_sections,
+    track_crn,
+    track_close,
     untrack
 )
 from .handlers.error import call_back_error, non_existent
