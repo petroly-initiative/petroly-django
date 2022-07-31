@@ -7,7 +7,7 @@ This module is to test all possible use cases of `account` app.
 
 ## Coverage:
     - Tests all `account` model operations.
-    - Tests all relavent GraphQL API operations.
+    - Tests all relevant GraphQL API operations.
 """
 
 import json
@@ -94,10 +94,8 @@ class ProfileTestCase(UserTestCase):
         origin_img_url = "https://res.cloudinary.com/petroly-initiative/image/upload/v1622359053/profile_pics/blank_profile.png"
         res = upload_image(
             origin_img_url,
-            folder="profile_pics/test/",
             public_id=self.user.username,
-            overwrite=True,
-            invalidate=True,
+            upload_preset="pzgetp4b",
             transformation=[{"width": 200, "height": 200, "crop": "fill"}],
             format="jpg",
         )
