@@ -5,9 +5,8 @@ from the KFUPM API
 
 
 import json
-from typing import List, Dict, Tuple
-from pprint import pprint
 from time import sleep
+from typing import List, Dict, Tuple
 
 import requests as rq
 from django.contrib.auth import get_user_model
@@ -276,6 +275,5 @@ def check_all_and_notify() -> None:
                 formatter_change_md(info),
             )
 
-        pprint(courses_by_tracker)
 
         sleep(5)
