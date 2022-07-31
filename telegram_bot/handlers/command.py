@@ -110,6 +110,7 @@ async def tracked_courses(
 
     user_id = update.effective_user.id
     user: User = await user_from_telegram(user_id=user_id, update=update)
+    print(await tracked_courses_(user))
 
     await update.message.reply_text(
         text="Here is the list of your currently tracked sections: \n\n"
