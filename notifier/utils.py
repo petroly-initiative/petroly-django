@@ -165,7 +165,6 @@ def formatter_md(courses: List[Course]) -> str:
     result = ""
     for course in courses:
         course = get_course_info(course)
-
         result += messages.tracked_courses.format(
             crn=course["crn"],
             course_number=course["course_number"],
@@ -176,7 +175,7 @@ def formatter_md(courses: List[Course]) -> str:
             else "🟢 Open",
         )
 
-    return result
+    return result.replace("-", "\-")
 
 
 def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:

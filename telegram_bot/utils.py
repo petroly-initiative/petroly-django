@@ -14,7 +14,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from notifier import utils as notifier_utils
-from notifier.models import Course, Term
+from notifier.models import Course, Term, TrackingList
 from data import DepartmentEnum
 
 from .models import TelegramProfile, Token
@@ -118,7 +118,7 @@ def verify_user_from_token(
     return None
 
 
-async def get_terms(user_id: int) -> List[str]:
+async def get_terms(user_id: int) -> List[Tuple[str, str]]:
     try:
         await get_user(user_id);
         return await fetch_terms();
@@ -203,7 +203,22 @@ def submit_section(
     ## ? can a user reach this point without having a tracking list instance?
     ## ? if so we need to explicitly save the object for first time in ORM 
 
+@sync_to_async
+def untrack_section(crn: str, user_id: int):
+    tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list;
+    tracking_list.courses.remove(tracking_list.courses.get(crn=crn))
+    tracking_list.save()
 
+@sync_to_async
+def clear_tracking(term: str, user_id: int):
+    tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list;
+    if(term == "ALL"):
+        tracking_list.courses.clear()
+        tracking_list.save()
+    else:
+        print(tracking_list.courses.filter(term=term))
+        tracking_list.courses.remove()
+        tracking_list.save()
 
 
 ####### formatting utilities ####
@@ -230,7 +245,6 @@ def construct_reply_callback_grid(
     is_callback_different: bool = False
     ) -> List[List[InlineKeyboardButton]]:
     result = [];
-    # print(list)
     if is_callback_different:
         for i in range(int(len(input_list) / row_length)):
             result.append([

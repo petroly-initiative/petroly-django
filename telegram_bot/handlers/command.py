@@ -66,12 +66,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                     ),
                     (
                         "/track",
-                        "adds new section to your tracking list (/track CRN)",
+                        "adds a new section to your tracking list ",
                     ),
                     (
                         "/untrack",
-                        "deletes the section from your tracking list (/untrack CRN)",
+                        "deletes a section from your tracking list ",
                     ),
+                    ("/clear",
+                    "deletes all tracked courses from your tracking list")
                 ]
             )
 
@@ -113,7 +115,7 @@ async def tracked_courses(
     user: User = await user_from_telegram(user_id=user_id, update=update)
 
     await update.message.reply_text(
-        text=f"Here is the list of your currently tracked sections: \n\n{await tracked_courses_(user)}",
+        text=f"Here is the list of your currently tracked sections\: \n\n{await tracked_courses_(user)}",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
 

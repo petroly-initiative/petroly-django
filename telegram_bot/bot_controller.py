@@ -5,6 +5,7 @@ Main class definition for the Telegram Bot interface.
 from ast import pattern
 import os
 import logging
+from re import M
 
 
 from telegram.ext import (
@@ -21,14 +22,17 @@ from .handlers.command import start, help_msg, tracked_courses
 from .handlers.conversation import (
     CommandEnum,
     cancel,
+    clear,
+    clear_confirm,
     track,
     track_confirm,
     track_courses,
     track_dept,
     track_sections,
     track_crn,
-    track_close,
-    untrack
+    untrack,
+    untrack_crn,
+    untrack_select
 )
 from .handlers.error import call_back_error, non_existent
 
@@ -82,9 +86,25 @@ class BotController:
                 CommandEnum.SECTION: [CallbackQueryHandler(track_sections)],
                 CommandEnum.CRN: [MessageHandler(filters.TEXT, track_crn )],
                 CommandEnum.CONFIRM: [CallbackQueryHandler(track_confirm)],
-                CommandEnum.CLOSE: [CallbackQueryHandler(track_close)]
-
             },  # type: ignore
             fallbacks=[CommandHandler("cancel", cancel)],  # type: ignore
         )
         self.app.add_handler(track_handler)
+
+        untrack_handler = ConversationHandler(
+            entry_points=[CommandHandler("untrack", untrack)],  # type: ignore
+            states= {
+                CommandEnum.CRN: [MessageHandler( filters.TEXT, untrack_crn)],
+                CommandEnum.SELECT: [CallbackQueryHandler(untrack_select)],  # type: ignore
+            },
+            fallbacks=[CommandHandler("cancel", cancel)]  # type: ignore
+        )
+        self.app.add_handler(untrack_handler)
+
+        clear_handler = ConversationHandler(
+            entry_points=[CommandHandler("clear", clear)],  # type: ignore
+            states= {
+                CommandEnum.CONFIRM: [CallbackQueryHandler(clear_confirm)]  # type: ignore
+            },
+            fallbacks=[CommandHandler("cancel", cancel)]) 
+        self.app.add_handler(clear_handler)
