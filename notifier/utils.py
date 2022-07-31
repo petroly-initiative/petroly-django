@@ -165,7 +165,7 @@ def formatter_md(courses: List[Course]) -> str:
     for course in courses:
         course = get_course_info(course)
 
-        result += messages.tracked_courses.format(
+        result += messages.TRACKED_COURSES.format(
             crn=course["crn"],
             course_number=course["course_number"],
             section_number=course["section_number"],
@@ -187,7 +187,7 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
         status = course["status"]
         course = get_course_info(course["course"])
 
-        result += messages.changes_detected.format(
+        result += messages.CHANGES_DETECTED.format(
             crn=course["crn"],
             course_number=course["course_number"],
             section_number=course["section_number"],
