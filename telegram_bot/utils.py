@@ -183,8 +183,6 @@ async def get_sections(
                 class_type=section["class_type"],
                 start_time=section["start_time"],
                 end_time=section["end_time"],
-                end_time=section["end_time"],
-                end_time=section["end_time"],
                 waitlist_count=section["waiting_list_count"],
             ),
             {
