@@ -11,19 +11,21 @@ This module is to test all possible use cases of `account` app.
 """
 
 import json
+import django.contrib.auth.views as auth_views
 from django.conf import settings
 from django.core import mail
-from django.test import TestCase, TransactionTestCase, Client
+from django.test import TestCase, TransactionTestCase, Client, tag
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
-from cloudinary.uploader import upload_image
-import django.contrib.auth.views as auth_views
+from cloudinary.uploader import unsigned_upload
+from cloudinary import CloudinaryImage
 
 
 from data import DepartmentEnum, years
 from . import views
 from .models import Profile
+from .test_utils import file_graphql_query
 
 
 class UserTestCase(TransactionTestCase):
@@ -48,7 +50,9 @@ class ProfileTestCase(UserTestCase):
     def test_auto_create_profile(self):
         # try to get the user's profile
         self.assertTrue(hasattr(self.user, "profile"))
-        profile = Profile.objects.get(user__username=self.user_info["username"])
+        profile = Profile.objects.get(
+            user__username=self.user_info["username"]
+        )
         self.assertEqual(self.user.profile, profile)
 
         self.assertEqual(
@@ -59,11 +63,13 @@ class ProfileTestCase(UserTestCase):
             profile.language,
             Profile._meta.get_field("language").get_default(),
         )
-        self.assertEqual(profile.theme, Profile._meta.get_field("theme").get_default())
+        self.assertEqual(
+            profile.theme, Profile._meta.get_field("theme").get_default()
+        )
         self.assertEqual(profile.major, None)
         self.assertEqual(profile.year, None)
 
-    def test_crud_prfile(self):
+    def test_crud_profile(self):
         # Note User:Profile is 1:1 relationship
         # user cannot create profile without a User object
 
@@ -79,7 +85,9 @@ class ProfileTestCase(UserTestCase):
             Profile.objects.create(user=new_user)
 
         Profile.objects.filter(user__username="sad-orea").exists()
-        self.assertTrue(Profile.objects.filter(user__username="sad-orea").exists())
+        self.assertTrue(
+            Profile.objects.filter(user__username="sad-orea").exists()
+        )
         profile = Profile.objects.get(user__username="sad-orea")
 
         # delete the user object; will also delete its profile object
@@ -92,15 +100,16 @@ class ProfileTestCase(UserTestCase):
 
         # update profile
         origin_img_url = "https://res.cloudinary.com/petroly-initiative/image/upload/v1622359053/profile_pics/blank_profile.png"
-        res = upload_image(
+        res = unsigned_upload(
             origin_img_url,
-            public_id=self.user.username,
             upload_preset="pzgetp4b",
-            transformation=[{"width": 200, "height": 200, "crop": "fill"}],
-            format="jpg",
+            public_id=self.user.username,
         )
 
-        self.user.profile.profile_pic = res
+        self.assertEqual(res["public_id"], "profile_pics/test/user-test1")
+        self.user.profile.profile_pic = CloudinaryImage(
+            public_id=res["public_id"]
+        )
         self.user.profile.major = DepartmentEnum.choices[7][0]
         self.user.profile.year = years[2][0]
         self.user.profile.language = "ar-SA"
@@ -111,12 +120,6 @@ class ProfileTestCase(UserTestCase):
             self.user.profile.profile_pic.public_id,
             f"profile_pics/test/{self.user.username}",
         )
-        self.assertEqual(
-            self.user.profile.profile_pic.metadata["original_filename"],
-            "blank_profile",
-        )
-        self.assertEqual(self.user.profile.profile_pic.metadata["width"], 200)
-        self.assertEqual(self.user.profile.profile_pic.metadata["format"], "jpg")
         self.assertEqual(self.user.profile.major, DepartmentEnum.choices[7][0])
         self.assertEqual(self.user.profile.year, years[2][0])
         self.assertEqual(self.user.profile.language, "ar-SA")
@@ -285,7 +288,9 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
         self.assertEqual(len(mail.outbox), 1)  # there is an email sent
-        self.assertEqual(mail.outbox[0].subject, "Activate your account on petroly.co")
+        self.assertEqual(
+            mail.outbox[0].subject, "Activate your account on petroly.co"
+        )
         self.assertIn("i-saw-u@somewhere.com", mail.outbox[0].to)
 
         # the user is not verified yet. check that
@@ -314,7 +319,9 @@ class AccountGraphQLTestCase(TestCase):
         data = json.loads(res.content)["data"]["tokenAuth"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertFalse(data["success"])
-        self.assertEqual(data["errors"]["nonFieldErrors"][0]["code"], "not_verified")
+        self.assertEqual(
+            data["errors"]["nonFieldErrors"][0]["code"], "not_verified"
+        )
         # told ya, he's not verified
 
         # extract the token from the activation email
@@ -421,7 +428,9 @@ class AccountGraphQLTestCase(TestCase):
         r_token = data["obtainPayload"]["refreshToken"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
-        self.assertTrue(data["obtainPayload"]["payload"]["username"], self.user.username)
+        self.assertTrue(
+            data["obtainPayload"]["payload"]["username"], self.user.username
+        )
 
         # verify that token
         res = self.client.post(
@@ -433,7 +442,9 @@ class AccountGraphQLTestCase(TestCase):
         data = json.loads(res.content)["data"]["verifyToken"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
-        self.assertEqual(data["verifyPayload"]["payload"]["username"], self.user.username)
+        self.assertEqual(
+            data["verifyPayload"]["payload"]["username"], self.user.username
+        )
 
         # refresh that token
         res = self.client.post(
@@ -514,7 +525,9 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["sendPasswordResetEmail"]["success"])
         self.assertEqual(len(mail.outbox), 1)  # there is an email sent
-        self.assertEqual(mail.outbox[0].subject, "Reset your password on petroly.co")
+        self.assertEqual(
+            mail.outbox[0].subject, "Reset your password on petroly.co"
+        )
         self.assertIn(self.user2.email, mail.outbox[0].to)
 
         # extract the token from the resset-password email
@@ -566,12 +579,16 @@ class AccountGraphQLTestCase(TestCase):
         from strawberry_django_plus.test.client import TestClient
 
         self.client = TestClient(self.endpoint)
-        res = self.client.query(profileUpdate, {"pk": self.user.profile.pk}, asserts_errors=False)
+        res = self.client.query(
+            profileUpdate, {"pk": self.user.profile.pk}, asserts_errors=False
+        )
         self.assertIsNone(res.errors)
         self.assertIsNotNone(res.data)
         data = res.data["profileUpdate"]
         self.assertEqual(data["__typename"], "OperationInfo")
-        self.assertEqual(data["messages"][0]["message"], "User is not authenticated.")
+        self.assertEqual(
+            data["messages"][0]["message"], "User is not authenticated."
+        )
 
         # login the user and pass its token in the HTTP header
         client = Client()
@@ -589,7 +606,9 @@ class AccountGraphQLTestCase(TestCase):
         self.assertIsNone(res.errors)
         self.assertIsNotNone(res.data)
         data = res.data["profileUpdate"]
-        self.assertEqual(data["messages"][0]["message"], "You don't own this Profile.")
+        self.assertEqual(
+            data["messages"][0]["message"], "You don't own this Profile."
+        )
 
         # update the user profile
         res = self.client.query(
@@ -607,10 +626,9 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(data["language"], "ar-SA")
         self.assertEqual(data["theme"], "dark")
 
+    @tag("require_secretes")
     def test_profile_pic(self):
-        from .test_utils import file_graphql_query
-
-        profilePicUpdate = """      
+        profilePicUpdate = """
         mutation File($file: Upload!){
             profilePicUpdate(file: $file){
                 success
@@ -619,7 +637,7 @@ class AccountGraphQLTestCase(TestCase):
         }
         """
 
-        # without loging in
+        # without login in
         with open("static/img/blank_profile.png", "rb") as file:
             res = file_graphql_query(
                 query=profilePicUpdate,
@@ -632,7 +650,7 @@ class AccountGraphQLTestCase(TestCase):
         self.assertIsNone(data)
         self.assertEqual(res.wsgi_request.content_type, "multipart/form-data")
 
-        # loging in the user
+        # login in the user
         self.client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[1])
         with open("static/img/blank_profile.png", "rb") as file:
             res = file_graphql_query(
