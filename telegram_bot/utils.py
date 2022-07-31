@@ -244,7 +244,7 @@ def format_section(
     return (
         f"{section}{'📘' if class_type == 'LEC' else '🧪' if class_type == 'LAB' else ''}"
         + f" {'🔴 full' if seats <= 0 else f'🟢 {seats}🪑 - {waitlist_count}⏳'}"
-        + f" {class_days} | {start_time[0:2]}:{start_time[2:]}-{start_time[0:2]}:{end_time[2:]}"
+        + f" {class_days} | No time info"
     )
 
 
