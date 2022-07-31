@@ -144,9 +144,10 @@ def get_departments() -> List[str]:
 def get_courses(term: str, dept: str) -> List[str]:
 
     raw_courses = notifier_utils.fetch_data(term, dept)
-    raw_courses = {x["course_number"] for x in raw_courses}
-    # print(raw_courses)
-    return list(raw_courses)
+    raw_courses = list({x["course_number"] for x in raw_courses})
+    raw_courses.sort()
+
+    return raw_courses
 
 
 @sync_to_async
@@ -237,7 +238,7 @@ def format_section(
     start_time: str,
     end_time: str,
 ) -> str:
-    if len(start_time) > 2 and len(end_time) > 2:
+    if start_time and end_time:
         return (
             f"{section}{'📘' if class_type == 'LEC' else '🧪' if class_type == 'LAB' else ''}"
             + f" {'🔴 FULL' if seats <= 0 else f'🟢 {seats}🪑 - {waitlist_count}⏳'}"
