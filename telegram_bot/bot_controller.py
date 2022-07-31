@@ -2,7 +2,6 @@
 Main class definition for the Telegram Bot interface.
 """
 
-from ast import pattern
 import os
 import logging
 from re import M

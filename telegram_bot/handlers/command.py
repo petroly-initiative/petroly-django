@@ -22,7 +22,6 @@ from django.contrib.auth import get_user_model
 from ..models import TelegramProfile
 from ..utils import (
     user_from_telegram,
-    verify_user_from_token,
     tracked_courses_,
 )
 from .. import messages
@@ -32,7 +31,7 @@ User = get_user_model()
 
 def escape_md(txt) -> str:
     """To escape special characters:
-        `_`,  and `*`"""
+    `_`,  and `*`"""
     match_md = r"((([_*\.]).+?\3[^_*\.]*)*)([_*\.])"
 
     return re.sub(match_md, r"\g<1>\\\g<4>", txt)
@@ -83,7 +82,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         except TelegramProfile.DoesNotExist:
             # TODO provide some kind of sign in with Telegram widget
             await update.message.reply_text(
-                text=messages.account_not_know,
+                text=messages.ACCOUNT_NOT_KNOWN,
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
@@ -101,7 +100,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def help_msg(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """command for helping users with extra instructions on each command"""
     await update.message.reply_text(
-        text=messages.help_msg_text,
+        text=messages.HELP_MSG,
         parse_mode=ParseMode.MARKDOWN_V2,
     )
 
@@ -115,33 +114,7 @@ async def tracked_courses(
     user: User = await user_from_telegram(user_id=user_id, update=update)
 
     await update.message.reply_text(
-        text=f"Here is the list of your currently tracked sections\: \n\n{await tracked_courses_(user)}",
+        text="Here is the list of your currently tracked sections: \n\n"
+        + f"{await tracked_courses_(user)}",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
-
-
-
-# async def connect(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-#     """Match the telegram account info
-#     with our `TelegramProfile` model, by verifying the given token"""
-
-#     user_id = update.effective_user.id
-#     username = update.effective_user.username
-
-#     if context.args:
-#         user = await verify_user_from_token(
-#             token=context.args[0], user_id=user_id, username=username
-#         )
-
-#         if user:
-#             await update.message.reply_text(
-#                 text=messages.welcome_after_verifying % escape_md(user.username),
-#                 parse_mode=ParseMode.MARKDOWN_V2,
-#             )
-
-#         else:
-#             await update.message.reply_text("Token isn't valid.")
-#     else:
-#         await update.message.reply_text(
-#             text="Please specify a token."
-#         )
