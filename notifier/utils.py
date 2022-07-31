@@ -5,9 +5,8 @@ from the KFUPM API
 
 
 import json
-from typing import List, Dict, Tuple
-from pprint import pprint
 from time import sleep
+from typing import List, Dict, Tuple
 
 import requests as rq
 from django.contrib.auth import get_user_model
@@ -165,7 +164,8 @@ def formatter_md(courses: List[Course]) -> str:
     result = ""
     for course in courses:
         course = get_course_info(course)
-        result += messages.tracked_courses.format(
+
+        result += messages.TRACKED_COURSES.format(
             crn=course["crn"],
             course_number=course["course_number"],
             section_number=course["section_number"],
@@ -187,7 +187,7 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
         status = course["status"]
         course = get_course_info(course["course"])
 
-        result += messages.changes_detected.format(
+        result += messages.CHANGES_DETECTED.format(
             crn=course["crn"],
             course_number=course["course_number"],
             section_number=course["section_number"],
@@ -275,6 +275,5 @@ def check_all_and_notify() -> None:
                 formatter_change_md(info),
             )
 
-        pprint(courses_by_tracker)
 
         sleep(5)

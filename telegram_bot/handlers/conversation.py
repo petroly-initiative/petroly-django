@@ -21,19 +21,21 @@ from telegram_bot.utils import (
 from typing import Tuple, Dict, cast
 from enum import Enum
 
-from telegram.ext import ContextTypes, ConversationHandler
-from telegram.constants import ParseMode
 from telegram import (
     InlineKeyboardMarkup,
     Update,
 )
+from telegram.ext import ContextTypes, ConversationHandler
+from telegram.constants import ParseMode
 
 from telegram_bot.utils import (
     construct_reply_callback_grid,
     get_courses,
     get_departments,
     get_sections,
-    fetch_terms
+    get_terms,
+    submit_section,
+    fetch_terms,
 )
 
 
@@ -50,8 +52,9 @@ class CommandEnum(Enum):
     SELECT = 6
 
 
-
-async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
+async def track(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum:
     # cleaning data from previous sessions
     context.bot.callback_data_cache.clear_callback_data()
     context.bot.callback_data_cache.clear_callback_queries()
@@ -77,15 +80,31 @@ async def track_dept(
     selected_term = cast(str, query.data)
     context.user_data["term"] = selected_term
     departments = await get_departments()
-    department_rows = construct_reply_callback_grid(departments,3);
+    department_rows = construct_reply_callback_grid(departments, 3)
 
     await query.edit_message_text(
-        text=f"Term {selected_term} was selected\!\n\nPlease Enter the department of the course\. ",
+        text=f"Term {selected_term} was selected\\!\n\n"
+        + "Please Enter the department of the course\\. ",
         reply_markup=InlineKeyboardMarkup(department_rows),
-          parse_mode= ParseMode.MARKDOWN_V2,
+        parse_mode=ParseMode.MARKDOWN_V2,
     )
 
-    return CommandEnum.COURSE;
+    return CommandEnum.COURSE
+
+
+async def track_courses(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum:
+    query = update.callback_query
+    await query.answer()
+    selected_dept = cast(str, query.data)
+    context.user_data["department"] = selected_dept
+    courses = get_courses(
+        term=context.user_data.get("term", "TERM_NOT_FOUND"),
+        dept=selected_dept,
+    )
+    row_length = len(courses) if len(courses) < 3 else 3
+    course_rows = construct_reply_callback_grid(courses, row_length=row_length)
 
 async def track_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     query = update.callback_query;
@@ -98,8 +117,8 @@ async def track_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> C
     course_rows = construct_reply_callback_grid(courses,row_length=row_length);
    
     await query.edit_message_text(
-        text= f"""
-        **{selected_dept}** department was selected for term **{context.user_data.get("term", "TERM_NOT_FOUND")}**\!
+        text=f"""
+        **{selected_dept}** department was selected for term **{context.user_data.get("term", "TERM_NOT_FOUND")}**\\!
 
         Select a course
         """,
@@ -121,17 +140,20 @@ async def track_sections(
     sections = await get_sections(
         course=selected_course,
         dept=context.user_data.get("department", "DEPT_NOT_FOUND"),
-        term= context.user_data.get("term", "TERM_NOT_FOUND"),
-        user_id= update.effective_user.id
-        )
-    section_rows = construct_reply_callback_grid(sections, 1, is_callback_different=True);
-
-    
+        term=context.user_data.get("term", "TERM_NOT_FOUND"),
+        user_id=update.effective_user.id,
+    )
+    section_rows = construct_reply_callback_grid(
+        sections, 1, is_callback_different=True
+    )
 
     ## ! handle by requesting the CRN explicitly
-    if(len(sections) > 100):
+    if len(sections) > 100:
         ## cache all crns in the current course instead of fetching again
-        context.user_data["sections"] = [(section[1]["crn"], section[1]["seats"], section[1]["waitlist"]) for section in sections]
+        context.user_data["sections"] = [
+            (section[1]["crn"], section[1]["seats"], section[1]["waitlist"])
+            for section in sections
+        ]
         await query.edit_message_text(
         text=f"Too many sections to display, please type the course CRN",
         reply_markup= None,
@@ -139,14 +161,16 @@ async def track_sections(
         return CommandEnum.CRN
 
     await query.edit_message_text(
-        text=f"Select a section for {selected_course} \- Term {context.user_data.get('term', 'TERM_NOT_FOUND')}",
+        text=f"Select a section for {selected_course} \\- "
+        + f"Term {context.user_data.get('term', 'TERM_NOT_FOUND')}",
         reply_markup=InlineKeyboardMarkup(section_rows),
         parse_mode= ParseMode.MARKDOWN_V2)
     
 
     return CommandEnum.CONFIRM;
 
-async def track_crn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum | int:
+async def track_crn(update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum | int:
 
     crn = update.message.text.strip();
     ## check if the CRN exists
@@ -181,7 +205,9 @@ async def track_crn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Comma
         return ConversationHandler.END;
 
 
-async def track_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum | int:
+async def track_confirm(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+    ) -> CommandEnum | int:
 
     # register in the tracking list for the user
     query = update.callback_query;
@@ -206,6 +232,7 @@ async def track_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> C
     )
 
     return ConversationHandler.END;
+
 
 
 
