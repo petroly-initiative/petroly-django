@@ -28,11 +28,11 @@ account_not_know = """Sorry, we didn't recognize your Telegram account.
 To do so, follow the steps in our website to connect your Petroly account with your Telegram's one."""
 
 # MD
-changes_detected = """**{course_number}\\-{section_number}**  \\- *{crn}*
+changes_detected = """**{course_number}\\-{section_number}**  \\- `{crn}`
 Available Seats: {available_seats_old} ➡️  {available_seats}
 Waiting list: {waiting_list_count}\n\n"""
 
 # MD
-tracked_courses = """**{course_number}\\-{section_number}**  \\- *{crn}*
+tracked_courses = """**{course_number} - {section_number}**  - `{crn}`
 Available Seats: {available_seats}
 Waiting list: {waiting_list_count}\n\n"""
