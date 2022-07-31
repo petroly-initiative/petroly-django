@@ -24,8 +24,9 @@ We connected your Telegram to your Petroly account\\.
 """
 
 # Text
-ACCOUNT_NOT_KNOWN = """Sorry, we didn't recognize your Telegram account. 
-To do so, follow the steps in our website to connect your Petroly account with your Telegram's one."""
+ACCOUNT_NOT_KNOWN = """Sorry, we didn't recognize your Telegram account.
+To do so, follow the steps in our website to connect 
+your Petroly account with your Telegram's one."""
 
 # MD
 CHANGES_DETECTED = """**{course_number}\\-{section_number}**  \\- *{crn}*

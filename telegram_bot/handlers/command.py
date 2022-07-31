@@ -22,7 +22,6 @@ from django.contrib.auth import get_user_model
 from ..models import TelegramProfile
 from ..utils import (
     user_from_telegram,
-    verify_user_from_token,
     tracked_courses_,
 )
 from .. import messages
@@ -32,7 +31,7 @@ User = get_user_model()
 
 def escape_md(txt) -> str:
     """To escape special characters:
-        `_`,  and `*`"""
+    `_`,  and `*`"""
     match_md = r"((([_*\.]).+?\3[^_*\.]*)*)([_*\.])"
 
     return re.sub(match_md, r"\g<1>\\\g<4>", txt)
@@ -113,8 +112,7 @@ async def tracked_courses(
     user: User = await user_from_telegram(user_id=user_id, update=update)
 
     await update.message.reply_text(
-        text=f"Here is the list of your currently tracked sections: \n\n{await tracked_courses_(user)}",
+        text="Here is the list of your currently tracked sections: \n\n"
+        + f"{await tracked_courses_(user)}",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
-
-
