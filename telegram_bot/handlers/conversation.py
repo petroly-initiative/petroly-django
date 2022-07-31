@@ -227,7 +227,7 @@ async def track_confirm(
     # else:
     await query.edit_message_text(
         text=f"Section with CRN `{selected_section['crn']}` "
-        + "Tracked successfully!. Would you like to track another course?",
+        + "Tracked successfully\\!. Would you like to track another course?",
         parse_mode=ParseMode.MARKDOWN_V2,
         reply_markup=InlineKeyboardMarkup(options),
     )
