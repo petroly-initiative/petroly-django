@@ -2,7 +2,6 @@
 Main class definition for the Telegram Bot interface.
 """
 
-from ast import pattern
 import os
 import logging
 
@@ -28,7 +27,6 @@ from .handlers.conversation import (
     track_sections,
     track_crn,
     track_close,
-    untrack
 )
 from .handlers.error import call_back_error, non_existent
 
