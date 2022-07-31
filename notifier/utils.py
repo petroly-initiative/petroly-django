@@ -198,7 +198,7 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
             else "🟢 Open",
         )
 
-    return result
+    return result.replace("-", "\-")
 
 
 def formatter_text(info: dict) -> str:
