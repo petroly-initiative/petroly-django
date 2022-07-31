@@ -166,7 +166,8 @@ async def get_sections(
 
     dept_courses = notifier_utils.fetch_data(term, department=dept)
     # sort sections according to the `section_number`
-    dept_courses = dept_courses.sort(key=lambda el: el["section_number"])
+    dept_courses.sort(key=lambda el: el["section_number"])
+
     tracked_sections = await get_tracked_crns(user_id)
     # filtering already tracked sections, and course-specific sections
     course_sections = [
