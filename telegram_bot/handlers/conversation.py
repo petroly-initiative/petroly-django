@@ -6,33 +6,24 @@ a course.
 # ! needs to converted it into a conversational handler instead
 # pyright: reportIncompatibleMethodOverride=false
 
-from typing import  Dict, cast
-from telegram.ext import ContextTypes, ConversationHandler
-from telegram.constants import ParseMode
-from telegram import InlineKeyboardMarkup, Update
-
-from telegram_bot.utils import (
-    construct_reply_callback_grid, get_courses, get_departments, get_sections, get_terms, submit_section
-    )
-
-
-
-from typing import Tuple, Dict, cast
+from typing import Dict, cast
 from enum import Enum
 
-from telegram.ext import ContextTypes, ConversationHandler
-from telegram.constants import ParseMode
 from telegram import (
     InlineKeyboardMarkup,
     Update,
 )
+from telegram.ext import ContextTypes, ConversationHandler
+from telegram.constants import ParseMode
 
 from telegram_bot.utils import (
     construct_reply_callback_grid,
     get_courses,
     get_departments,
     get_sections,
-    fetch_terms
+    get_terms,
+    submit_section,
+    fetch_terms,
 )
 
 
@@ -44,18 +35,21 @@ class CommandEnum(Enum):
     COURSE = 1
     SECTION = 2
     CONFIRM = 3
-    CRN = 4,
+    CRN = 4
     CLOSE = 5
 
 
-
-async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
+async def track(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum:
     # cleaning data from previous sessions
     context.bot.callback_data_cache.clear_callback_data()
     context.bot.callback_data_cache.clear_callback_queries()
     context.user_data.clear()
-    terms = await get_terms(update.effective_chat.id);
-    term_rows = construct_reply_callback_grid(terms, len(terms), is_callback_different=True)
+    terms = await get_terms(update.effective_chat.id)
+    term_rows = construct_reply_callback_grid(
+        terms, len(terms), is_callback_different=True
+    )
     terms = await fetch_terms()
     term_rows = construct_reply_callback_grid(
         terms, len(terms), is_callback_different=True
@@ -79,28 +73,35 @@ async def track_dept(
     selected_term = cast(str, query.data)
     context.user_data["term"] = selected_term
     departments = await get_departments()
-    department_rows = construct_reply_callback_grid(departments,3);
+    department_rows = construct_reply_callback_grid(departments, 3)
 
     await query.edit_message_text(
-        text=f"Term {selected_term} was selected\!\n\nPlease Enter the department of the course\. ",
+        text=f"Term {selected_term} was selected\\!\n\n"
+        + "Please Enter the department of the course\\. ",
         reply_markup=InlineKeyboardMarkup(department_rows),
-          parse_mode= ParseMode.MARKDOWN_V2,
+        parse_mode=ParseMode.MARKDOWN_V2,
     )
 
-    return CommandEnum.COURSE;
+    return CommandEnum.COURSE
 
-async def track_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
-    query = update.callback_query;
-    await query.answer();
-    selected_dept = cast(str, query.data);
-    context.user_data["department"] = selected_dept;
-    courses = get_courses(term=context.user_data.get("term", "TERM_NOT_FOUND"), dept=selected_dept);
-    row_length = len(courses) if len(courses) < 3 else 3;
-    course_rows = construct_reply_callback_grid(courses,row_length=row_length);
-   
+
+async def track_courses(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum:
+    query = update.callback_query
+    await query.answer()
+    selected_dept = cast(str, query.data)
+    context.user_data["department"] = selected_dept
+    courses = get_courses(
+        term=context.user_data.get("term", "TERM_NOT_FOUND"),
+        dept=selected_dept,
+    )
+    row_length = len(courses) if len(courses) < 3 else 3
+    course_rows = construct_reply_callback_grid(courses, row_length=row_length)
+
     await query.edit_message_text(
-        text= f"""
-        **{selected_dept}** department was selected for term **{context.user_data.get("term", "TERM_NOT_FOUND")}**\!
+        text=f"""
+        **{selected_dept}** department was selected for term **{context.user_data.get("term", "TERM_NOT_FOUND")}**\\!
 
         Select a course
         """,
@@ -114,113 +115,145 @@ async def track_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> C
 async def track_sections(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
-    query = update.callback_query;
-    await query.answer();
-    selected_course = cast(str, query.data);
-    context.user_data["course"] = selected_course;
-    ## passing the user id to prevent adding alerady tracked sections twice
+    query = update.callback_query
+    await query.answer()
+    selected_course = cast(str, query.data)
+    context.user_data["course"] = selected_course
+    ## passing the user id to prevent adding already tracked sections twice
     sections = await get_sections(
         course=selected_course,
         dept=context.user_data.get("department", "DEPT_NOT_FOUND"),
-        term= context.user_data.get("term", "TERM_NOT_FOUND"),
-        user_id= update.effective_user.id
-        )
-    section_rows = construct_reply_callback_grid(sections, 1, is_callback_different=True);
-
-    
+        term=context.user_data.get("term", "TERM_NOT_FOUND"),
+        user_id=update.effective_user.id,
+    )
+    section_rows = construct_reply_callback_grid(
+        sections, 1, is_callback_different=True
+    )
 
     ## ! handle by requesting the CRN explicitly
-    if(len(sections) > 100):
+    if len(sections) > 100:
         ## cache all crns in the current course instead of fetching again
-        context.user_data["sections"] = [(section[1]["crn"], section[1]["seats"], section[1]["waitlist"]) for section in sections]
+        context.user_data["sections"] = [
+            (section[1]["crn"], section[1]["seats"], section[1]["waitlist"])
+            for section in sections
+        ]
         await query.edit_message_text(
-        text="Too many sections to display, please type the course CRN",
-        reply_markup= None,
+            text="Too many sections to display, please type the course CRN",
+            reply_markup=None,
         )
         return CommandEnum.CRN
 
     await query.edit_message_text(
-        text=f"Select a section for {selected_course} \- Term {context.user_data.get('term', 'TERM_NOT_FOUND')}",
+        text=f"Select a section for {selected_course} \\- "
+        + f"Term {context.user_data.get('term', 'TERM_NOT_FOUND')}",
         reply_markup=InlineKeyboardMarkup(section_rows),
-        parse_mode= ParseMode.MARKDOWN_V2)
-    
-
-    return CommandEnum.CONFIRM;
-
-async def track_crn(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
-
-    crn = update.message.text.strip();
-    ## check if the CRN exists
-    current_crns = list({section[0] for section in context.user_data.get("sections","NULL")})
-    print(crn, current_crns)
-    if( not crn in current_crns):
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text="CRN does not exist or is already tracked, please enter a valid CRN that you haven't tracked before"
-        )
-        return CommandEnum.CRN;
-    else:
-        target_section = [section for section in context.user_data.get("sections","NULL") if section[0] == crn][0]
-
-        await submit_section(
-        crn = target_section[0],
-        seats = target_section[1],
-        waitlist_count = target_section[2],
-        user_id = update.effective_chat.id,
-        term = context.user_data.get("term", "TERM_NOT_FOUND"),
-        dept= context.user_data.get("department", "DEPT_NOT_FOUND")
-        )
-        options = construct_reply_callback_grid([("Yes", "True"), ("No", "False")],row_length = 2, is_callback_different=True);
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text= f"Section with CRN **`{target_section[0]}`** Tracked successfully!. Would you like to track another course?",
-            reply_markup = InlineKeyboardMarkup(options)
-        )
-        
-        context.user_data["from_crn"] = True
-        return CommandEnum.CLOSE
-
-
-async def track_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-
-    # register in the tracking list for the user
-    query = update.callback_query;
-    await query.answer();
-
-    selected_section = cast(Dict[str, str | int], query.data);
-    # ask for another CRN in same settings and restart last step if the user wants
-    await submit_section(
-        crn = selected_section["crn"],
-        seats = selected_section["seats"],
-        waitlist_count = selected_section["waitlist"],
-        user_id = update.effective_chat.id,
-        term = context.user_data.get("term", "TERM_NOT_FOUND"),
-        dept= context.user_data.get("department", "DEPT_NOT_FOUND")
-        )
-    options = construct_reply_callback_grid([("Yes", "True"), ("No", "False")],row_length = 2, is_callback_different=True);
-    # else: 
-    await query.edit_message_text(
-        text= f"Section with CRN `{selected_section['crn']}` Tracked successfully!. Would you like to track another course?",
         parse_mode=ParseMode.MARKDOWN_V2,
-        reply_markup= InlineKeyboardMarkup(options)
     )
 
-    return CommandEnum.CLOSE;
+    return CommandEnum.CONFIRM
 
-async def track_close(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum | int:
-    query = update.callback_query;
-    await query.answer();
 
-    if(eval(query.data)):
-        return CommandEnum.CRN if context.user_data.get("from_crn", False) else CommandEnum.SECTION
-    else:
-        await query.edit_message_text(
-            text="Wait for the notifications, and thank for using the Petroly bot!",
-            reply_markup=None
+async def track_crn(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum:
+
+    crn = update.message.text.strip()
+    ## check if the CRN exists
+    current_crns = list(
+        {section[0] for section in context.user_data.get("sections", "NULL")}
+    )
+    print(crn, current_crns)
+    if not crn in current_crns:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="CRN does not exist or is already tracked, "
+            + "please enter a valid CRN that you haven't tracked before",
         )
-        return ConversationHandler.END
+        return CommandEnum.CRN
 
+    target_section = [
+        section
+        for section in context.user_data.get("sections", "NULL")
+        if section[0] == crn
+    ][0]
+
+    await submit_section(
+        crn=target_section[0],
+        seats=target_section[1],
+        waitlist_count=target_section[2],
+        user_id=update.effective_chat.id,
+        term=context.user_data.get("term", "TERM_NOT_FOUND"),
+        dept=context.user_data.get("department", "DEPT_NOT_FOUND"),
+    )
+    options = construct_reply_callback_grid(
+        [("Yes", "True"), ("No", "False")],
+        row_length=2,
+        is_callback_different=True,
+    )
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"Section with CRN **`{target_section[0]}`** "
+        + "Tracked successfully!. Would you like to track another course?",
+        reply_markup=InlineKeyboardMarkup(options),
+    )
+
+    context.user_data["from_crn"] = True
+    return CommandEnum.CLOSE
+
+
+async def track_confirm(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> int:
+
+    # register in the tracking list for the user
+    query = update.callback_query
+    await query.answer()
+
+    selected_section = cast(Dict[str, str | int], query.data)
+    # ask for another CRN in same settings and restart last step if the user wants
+    await submit_section(
+        crn=selected_section["crn"],
+        seats=selected_section["seats"],
+        waitlist_count=selected_section["waitlist"],
+        user_id=update.effective_chat.id,
+        term=context.user_data.get("term", "TERM_NOT_FOUND"),
+        dept=context.user_data.get("department", "DEPT_NOT_FOUND"),
+    )
+    options = construct_reply_callback_grid(
+        [("Yes", "True"), ("No", "False")],
+        row_length=2,
+        is_callback_different=True,
+    )
+    # else:
+    await query.edit_message_text(
+        text=f"Section with CRN `{selected_section['crn']}` "
+        + "Tracked successfully!. Would you like to track another course?",
+        parse_mode=ParseMode.MARKDOWN_V2,
+        reply_markup=InlineKeyboardMarkup(options),
+    )
+
+    return CommandEnum.CLOSE
+
+
+async def track_close(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum | int:
+    query = update.callback_query
+    await query.answer()
+
+    if query.data:
+        return (
+            CommandEnum.CRN
+            if context.user_data.get("from_crn", False)
+            else CommandEnum.SECTION
+        )
+
+    await query.edit_message_text(
+        text="Wait for the notifications, thank you for using the Petroly bot!",
+        reply_markup=None,
+    )
     return ConversationHandler.END
+
 
 # display a list of all tracked courses
 async def untrack(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
