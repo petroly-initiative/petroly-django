@@ -66,6 +66,7 @@ class BotController:
         """to handle all assigned conversation handlers"""
 
         track_handler = ConversationHandler(
+            per_message=True,
             entry_points=[CommandHandler("track", con.track)],  # type: ignore
             states={
                 CommandEnum.DEPT: [CallbackQueryHandler(con.track_dept)],
@@ -81,6 +82,7 @@ class BotController:
         self.app.add_handler(track_handler)
 
         untrack_handler = ConversationHandler(
+            per_message=True,
             entry_points=[CommandHandler("untrack", con.untrack)],  # type: ignore
             states={
                 CommandEnum.CRN: [
