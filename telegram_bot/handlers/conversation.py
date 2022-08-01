@@ -34,8 +34,8 @@ class CommandEnum(Enum):
     COURSE = 1
     SECTION = 2
     CONFIRM = 3
-    CRN = (4,)
-    CLOSE = (5,)
+    CRN = 4
+    CLOSE = 5
     SELECT = 6
 
 
