@@ -16,7 +16,7 @@ from telegram.ext import (
 )
 
 from .handlers.command import start, help_msg, tracked_courses
-from .handlers import conversation as con
+from .handlers import conversation as CONVERSATION_STEPS
 from .handlers.conversation import CommandEnum
 from .handlers.error import call_back_error, non_existent
 
@@ -67,38 +67,38 @@ class BotController:
 
         track_handler = ConversationHandler(
             per_message=True,
-            entry_points=[CommandHandler("track", con.track)],  # type: ignore
+            entry_points=[CommandHandler("track", CONVERSATION_STEPS.track)],  # type: ignore
             states={
-                CommandEnum.DEPT: [CallbackQueryHandler(con.track_dept)],
-                CommandEnum.COURSE: [CallbackQueryHandler(con.track_courses)],
+                CommandEnum.DEPT: [CallbackQueryHandler(CONVERSATION_STEPS.track_dept)],
+                CommandEnum.COURSE: [CallbackQueryHandler(CONVERSATION_STEPS.track_courses)],
                 CommandEnum.SECTION: [
-                    CallbackQueryHandler(con.track_sections)
+                    CallbackQueryHandler(CONVERSATION_STEPS.track_sections)
                 ],
-                CommandEnum.CRN: [MessageHandler(filters.TEXT, con.track_crn)],
-                CommandEnum.CONFIRM: [CallbackQueryHandler(con.track_confirm)],
+                CommandEnum.CRN: [MessageHandler(filters.TEXT, CONVERSATION_STEPS.track_crn)],
+                CommandEnum.CONFIRM: [CallbackQueryHandler(CONVERSATION_STEPS.track_confirm)],
             },  # type: ignore
-            fallbacks=[CommandHandler("cancel", con.cancel)],  # type: ignore
+            fallbacks=[CommandHandler("cancel", CONVERSATION_STEPS.cancel)],  # type: ignore
         )
         self.app.add_handler(track_handler)
 
         untrack_handler = ConversationHandler(
             per_message=True,
-            entry_points=[CommandHandler("untrack", con.untrack)],  # type: ignore
+            entry_points=[CommandHandler("untrack", CONVERSATION_STEPS.untrack)],  # type: ignore
             states={
                 CommandEnum.CRN: [
-                    MessageHandler(filters.TEXT, con.untrack_crn)
+                    MessageHandler(filters.TEXT, CONVERSATION_STEPS.untrack_crn)
                 ],
-                CommandEnum.SELECT: [CallbackQueryHandler(con.untrack_select)],  # type: ignore
+                CommandEnum.SELECT: [CallbackQueryHandler(CONVERSATION_STEPS.untrack_select)],  # type: ignore
             },
-            fallbacks=[CommandHandler("cancel", con.cancel)],  # type: ignore
+            fallbacks=[CommandHandler("cancel", CONVERSATION_STEPS.cancel)],  # type: ignore
         )
         self.app.add_handler(untrack_handler)
 
         clear_handler = ConversationHandler(
-            entry_points=[CommandHandler("clear", con.clear)],  # type: ignore
+            entry_points=[CommandHandler("clear", CONVERSATION_STEPS.clear)],  # type: ignore
             states={
-                CommandEnum.CONFIRM: [CallbackQueryHandler(con.clear_confirm)]  # type: ignore
+                CommandEnum.CONFIRM: [CallbackQueryHandler(CONVERSATION_STEPS.clear_confirm)]  # type: ignore
             },
-            fallbacks=[CommandHandler("cancel", con.cancel)],
+            fallbacks=[CommandHandler("cancel", CONVERSATION_STEPS.cancel)],
         )
         self.app.add_handler(clear_handler)
