@@ -50,7 +50,7 @@ async def track(
     term_rows = construct_reply_callback_grid(
         terms, len(terms), is_callback_different=True
     )
-    # print(term_rows)
+
     await update.message.reply_text(
         text="Please provide the term for the tracked course. Enter /cancel to exit",
         reply_markup=InlineKeyboardMarkup(term_rows),
@@ -87,7 +87,7 @@ async def track_courses(
     query = update.callback_query
     await query.answer()
     selected_dept = cast(str, query.data)
-    print(selected_dept)
+
     context.user_data["department"] = selected_dept
     courses = get_courses(
         term=context.user_data.get("term", "TERM_NOT_FOUND"),
