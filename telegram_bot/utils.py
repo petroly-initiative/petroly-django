@@ -212,14 +212,29 @@ def submit_section(
 
     # get all currently tracked courses
     tracking_list = TelegramProfile.objects.get(id=user_id).user.tracking_list
-    # append the course to the list
-    tracking_list.courses.create(
-        crn=crn,
-        term=term,
-        available_seats=seats,
-        waiting_list_count=waitlist_count,
-        department=dept,
-    )
+    # get the `Course` obj, create of not exist
+    # and update the status info, to be compared later
+    try:
+        obj = Course.objects.get(
+            crn=crn,
+            term=term,
+            department=dept,
+        )
+
+        obj.available_seats = seats
+        obj.waiting_list_count = waitlist_count
+        obj.save()
+
+    except Course.DoesNotExist:
+        # append the course to the list
+        tracking_list.courses.create(
+            crn=crn,
+            term=term,
+            available_seats=seats,
+            waiting_list_count=waitlist_count,
+            department=dept,
+        )
+
     ## ? can a user reach this point without having a tracking list instance?
     ## ? if so we need to explicitly save the object for first time in ORM
 
