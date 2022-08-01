@@ -225,8 +225,11 @@ def submit_section(
         obj.waiting_list_count = waitlist_count
         obj.save()
 
-    except Course.DoesNotExist:
         # append the course to the list
+        tracking_list.courses.add(obj)
+
+    except Course.DoesNotExist:
+        # Create & append the course to the list
         tracking_list.courses.create(
             crn=crn,
             term=term,
