@@ -7,7 +7,7 @@ import re
 from typing import Dict, List, Tuple
 from asgiref.sync import sync_to_async, async_to_sync
 
-from telegram import InlineKeyboardButton, Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Application
 from telegram.constants import ParseMode
 from django.conf import settings
@@ -75,6 +75,11 @@ async def send_telegram_message(chat_id: int, msg: str):
             chat_id=chat_id,
             text=msg,
             parse_mode=ParseMode.MARKDOWN_V2,
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton(
+                text= "Go to Registrar", 
+                url= "https://banner9-registration.kfupm.edu.sa/StudentRegistrationSsb/ssb/term/termSelection?mode=registration")
+            ]])
         )
 
 
