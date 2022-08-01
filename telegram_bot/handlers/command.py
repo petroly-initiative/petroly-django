@@ -54,6 +54,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 parse_mode=ParseMode.MARKDOWN_V2,
             )
 
+            # try to identify the user form its telegram id
+            await user_from_telegram(user_id=user_id, update=update)
+
             # instantiating the menu button
             await context.bot.set_chat_menu_button(update.effective_chat.id, MenuButtonCommands())  # type: ignore
             await context.bot.set_my_commands(
@@ -72,13 +75,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                         "/untrack",
                         "deletes a section from your tracking list ",
                     ),
-                    ("/clear",
-                    "deletes all tracked courses from your tracking list")
+                    (
+                        "/clear",
+                        "deletes all tracked courses from your tracking list",
+                    ),
                 ]
             )
-
-            # try to identify the user form its telegram id
-            await user_from_telegram(user_id=user_id, update=update)
 
         except TelegramProfile.DoesNotExist:
             # TODO provide some kind of sign in with Telegram widget

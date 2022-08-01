@@ -43,9 +43,9 @@ async def user_from_telegram(user_id: int, update: Update) -> User:
         return await get_user(user_id)
 
     except TelegramProfile.DoesNotExist as exc:
-        # await update.message.reply_text(
-        #     text=f"You don't have a TelegramProfile. Connect your Telegram"
-        # )
+        await update.message.reply_text(
+            text=f"You don't have a TelegramProfile. Connect your Telegram"
+        )
         raise TelegramProfile.DoesNotExist from exc
 
 
