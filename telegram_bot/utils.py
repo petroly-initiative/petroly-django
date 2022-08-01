@@ -14,7 +14,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from notifier import utils as notifier_utils
-from notifier.models import Course, Term, TrackingList
+from notifier.models import Course, Term
 from data import DepartmentEnum
 
 from .models import TelegramProfile, Token
@@ -46,7 +46,6 @@ async def user_from_telegram(user_id: int, update: Update) -> User:
         # await update.message.reply_text(
         #     text=f"You don't have a TelegramProfile. Connect your Telegram"
         # )
-
         raise TelegramProfile.DoesNotExist from exc
 
 
@@ -222,22 +221,23 @@ def submit_section(
         department=dept,
     )
     ## ? can a user reach this point without having a tracking list instance?
-    ## ? if so we need to explicitly save the object for first time in ORM 
+    ## ? if so we need to explicitly save the object for first time in ORM
+
 
 @sync_to_async
 def untrack_section(crn: str, user_id: int):
-    tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list;
+    tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list
     tracking_list.courses.remove(tracking_list.courses.get(crn=crn))
     tracking_list.save()
 
+
 @sync_to_async
 def clear_tracking(term: str, user_id: int):
-    tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list;
-    if(term == "ALL"):
+    tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list
+    if term == "ALL":
         tracking_list.courses.clear()
         tracking_list.save()
     else:
-        print(tracking_list.courses.filter(term=term))
         tracking_list.courses.remove()
         tracking_list.save()
 
@@ -270,11 +270,9 @@ def format_section(
 
 
 def construct_reply_callback_grid(
-    input_list: List,
-    row_length: int,
-    is_callback_different: bool = False
-    ) -> List[List[InlineKeyboardButton]]:
-    result = [];
+    input_list: List, row_length: int, is_callback_different: bool = False
+) -> List[List[InlineKeyboardButton]]:
+    result = []
     if is_callback_different:
         for i in range(int(len(input_list) / row_length)):
             result.append(
@@ -315,5 +313,4 @@ def construct_reply_callback_grid(
                     ]
                 ]
             )
-    print(len(result))
     return result
