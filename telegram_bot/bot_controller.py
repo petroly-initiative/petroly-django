@@ -47,7 +47,6 @@ class BotController:
         self.init_conv_handlers()
         self.app.add_handler(MessageHandler(filters.COMMAND, non_existent))
         self.app.run_polling()
-        print(self.app.handlers)
 
         logger.info("Telegram Bot started")
 
