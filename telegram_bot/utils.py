@@ -14,7 +14,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from notifier import utils as notifier_utils
-from notifier.models import Course, Term, TrackingList
+from notifier.models import Course, Term
 from data import DepartmentEnum
 
 from .models import TelegramProfile, Token
@@ -43,10 +43,6 @@ async def user_from_telegram(user_id: int, update: Update) -> User:
         return await get_user(user_id)
 
     except TelegramProfile.DoesNotExist as exc:
-        # await update.message.reply_text(
-        #     text=f"You don't have a TelegramProfile. Connect your Telegram"
-        # )
-
         raise TelegramProfile.DoesNotExist from exc
 
 
@@ -218,31 +214,50 @@ def submit_section(
 
     # get all currently tracked courses
     tracking_list = TelegramProfile.objects.get(id=user_id).user.tracking_list
-    # append the course to the list
-    tracking_list.courses.create(
-        crn=crn,
-        term=term,
-        available_seats=seats,
-        waiting_list_count=waitlist_count,
-        department=dept,
-    )
+    # get the `Course` obj, create of not exist
+    # and update the status info, to be compared later
+    try:
+        obj = Course.objects.get(
+            crn=crn,
+            term=term,
+            department=dept,
+        )
+
+        obj.available_seats = seats
+        obj.waiting_list_count = waitlist_count
+        obj.save()
+
+        # append the course to the list
+        tracking_list.courses.add(obj)
+
+    except Course.DoesNotExist:
+        # Create & append the course to the list
+        tracking_list.courses.create(
+            crn=crn,
+            term=term,
+            available_seats=seats,
+            waiting_list_count=waitlist_count,
+            department=dept,
+        )
+
     ## ? can a user reach this point without having a tracking list instance?
-    ## ? if so we need to explicitly save the object for first time in ORM 
+    ## ? if so we need to explicitly save the object for first time in ORM
+
 
 @sync_to_async
 def untrack_section(crn: str, user_id: int):
-    tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list;
+    tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list
     tracking_list.courses.remove(tracking_list.courses.get(crn=crn))
     tracking_list.save()
 
+
 @sync_to_async
 def clear_tracking(term: str, user_id: int):
-    tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list;
-    if(term == "ALL"):
+    tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list
+    if term == "ALL":
         tracking_list.courses.clear()
         tracking_list.save()
     else:
-        print(tracking_list.courses.filter(term=term))
         tracking_list.courses.remove()
         tracking_list.save()
 
@@ -275,11 +290,9 @@ def format_section(
 
 
 def construct_reply_callback_grid(
-    input_list: List,
-    row_length: int,
-    is_callback_different: bool = False
-    ) -> List[List[InlineKeyboardButton]]:
-    result = [];
+    input_list: List, row_length: int, is_callback_different: bool = False
+) -> List[List[InlineKeyboardButton]]:
+    result = []
     if is_callback_different:
         for i in range(int(len(input_list) / row_length)):
             result.append(
@@ -320,5 +333,4 @@ def construct_reply_callback_grid(
                     ]
                 ]
             )
-    print(len(result))
     return result
