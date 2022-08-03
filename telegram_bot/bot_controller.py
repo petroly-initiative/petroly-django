@@ -51,7 +51,7 @@ class BotController:
         logger.info("Telegram Bot started")
 
     def init_comm_handlers(self) -> None:
-        """Simple handlers"""
+        """initialziing single-command handlers"""
 
         self.app.add_handler(CommandHandler("start", start))
         self.app.add_handler(CommandHandler("help", help_msg))
@@ -63,7 +63,7 @@ class BotController:
         logger.info("Handlers initialized")
 
     def init_conv_handlers(self) -> None:
-        """to handle all assigned conversation handlers"""
+        """to handle all assigned multi-step conversation handlers"""
 
         track_handler = ConversationHandler(
             per_message=True,

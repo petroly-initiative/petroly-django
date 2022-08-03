@@ -42,15 +42,17 @@ class CommandEnum(Enum):
 async def track(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> CommandEnum:
+    """starting point for the /track command"""
     # cleaning data from previous sessions
     context.bot.callback_data_cache.clear_callback_data()
     context.bot.callback_data_cache.clear_callback_queries()
     context.user_data.clear()
+    # getting avaialble terms and create reply buttons
     terms = await get_terms(update.effective_chat.id)
     term_rows = construct_reply_callback_grid(
         terms, len(terms), is_callback_different=True
     )
-
+    # display reply with constructed buttons for dept selection step
     await update.message.reply_text(
         text="Please provide the term for the tracked course. Enter /cancel to exit",
         reply_markup=InlineKeyboardMarkup(term_rows),
@@ -62,15 +64,20 @@ async def track(
 async def track_dept(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> CommandEnum:
+    """a handler for department selection step in /track command"""
 
+    # waiting for the user response
     query = update.callback_query
     await query.answer()
     # getting the data from previous step
     selected_term = cast(str, query.data)
+    # storing persistent data for next steps
     context.user_data["term"] = selected_term
+    # getting all deprtments' data
     departments = await get_departments()
     department_rows = construct_reply_callback_grid(departments, 3)
 
+    # displaying the reply and buttons for next step
     await query.edit_message_text(
         text=f"Term {selected_term} was selected\\!\n\n"
         + "Please Enter the department of the course\\. ",
@@ -84,18 +91,22 @@ async def track_dept(
 async def track_courses(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> CommandEnum:
+    """a handler for course selection step in /track command"""
+
+     # waiting for the user response
     query = update.callback_query
     await query.answer()
     selected_dept = cast(str, query.data)
-
+    # storing persistent data for next steps
     context.user_data["department"] = selected_dept
+    # getting courses under the selected department and term
     courses = get_courses(
         term=context.user_data.get("term", "TERM_NOT_FOUND"),
         dept=selected_dept,
     )
     row_length = len(courses) if len(courses) < 3 else 3
     course_rows = construct_reply_callback_grid(courses, row_length=row_length)
-
+    # displaying the reply and buttons for next step
     await query.edit_message_text(
         text=f"""
         **{selected_dept}** department was selected for term **{context.user_data.get("term", "TERM_NOT_FOUND")}**\\!
@@ -112,9 +123,12 @@ async def track_courses(
 async def track_sections(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> CommandEnum:
+   """a handler for section selection step in /track command"""
+     # waiting for the user response
     query = update.callback_query
     await query.answer()
     selected_course = cast(str, query.data)
+    # storing persistent data for next steps
     context.user_data["course"] = selected_course
     ## passing the user id to prevent adding already tracked sections twice
     sections = await get_sections(
@@ -127,9 +141,10 @@ async def track_sections(
         sections, 1, is_callback_different=True
     )
 
-    ## ! handle by requesting the CRN explicitly
+    ## ! handle overflow by requesting the CRN explicitly
     if len(sections) > 100:
         ## cache all crns in the current course instead of fetching again
+        ## storing all DB-specific param temporarily to store the data correctly
         context.user_data["sections"] = [
             (section[1]["crn"], section[1]["seats"], section[1]["waitlist"])
             for section in sections
@@ -153,7 +168,9 @@ async def track_sections(
 async def track_crn(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> CommandEnum | int:
+    """a handler for CRN-based section input step in /track command"""
 
+    ## processing user input
     crn = update.message.text.strip()
     ## check if the CRN exists
     current_crns = list(
@@ -167,7 +184,7 @@ async def track_crn(
             "please enter a valid CRN that you haven't tracked before",
         )
         return CommandEnum.CRN
-
+    ## getting the required data to store a section in our DB
     target_section = [
         section
         for section in context.user_data.get("sections", "NULL")
@@ -196,7 +213,7 @@ async def track_crn(
 async def track_confirm(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> CommandEnum | int:
-
+    """a handler for button-based section input step in /track command"""
     # register in the tracking list for the user
     query = update.callback_query
     await query.answer()
@@ -227,22 +244,24 @@ async def track_confirm(
 async def untrack(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int | CommandEnum:
-    """a method to remove a certain course from tracking list via its CRN"""
+    """a method to remove a certain section from tracking list via its CRN"""
 
     crns = await get_tracked_crns(user_id=update.effective_chat.id)
     context.user_data.clear()
+    ## if CRNs exceed 100, enter the CRN in text
     if len(crns) > 100:
         context.user_data["crns"] = crns
         await update.message.reply_text(
             text="Your CRNs have exceeded display limits, "
-            "please enter the CRN you would like to untrack",
+            "please enter the CRN you would like to untrack. Use /cancel to stop the command",
             parse_mode=ParseMode.MARKDOWN_V2,
         )
         return CommandEnum.CRN
 
+    ## if CRNs do not overflow create the button grid
     crn_rows = construct_reply_callback_grid(crns, row_length=2)
     await update.message.reply_text(
-        text="Please select the CRN to untrack from your CRN list",
+        text="Please select the CRN to untrack from your CRN list. Use /cancel to stop the command",
         parse_mode=ParseMode.MARKDOWN_V2,
         reply_markup=InlineKeyboardMarkup(crn_rows),
     )
@@ -252,7 +271,9 @@ async def untrack(
 async def untrack_crn(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int | CommandEnum:
+    """a handler for CRN-based input in /untrack command"""
 
+    ## checkign if the CRN exits in the user CRN list
     crn = update.message.text.strip()
     if crn not in context.user_data.get("crns", []):
         await update.message.reply_text(
@@ -271,11 +292,13 @@ async def untrack_crn(
 async def untrack_select(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
+    """a handler for button-based input in /untrack command"""
 
+    ## waiting for user response
     query = update.callback_query
     await query.answer()
     crn = cast(str, query.data)
-
+    ## perform untrcking from DB
     await untrack_section(crn=crn, user_id=update.effective_chat.id)
     await query.edit_message_text(
         text=f"Section with CRN `{crn} was untracked successfully!",
@@ -284,6 +307,7 @@ async def untrack_select(
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """a handler to cancel ongoing conversational commands"""
 
     await update.message.reply_text(
         text="All right, we won't change anything."
@@ -295,6 +319,7 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def clear(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> CommandEnum:
+    """a starting point for a full clear of selected terms' operation"""
 
     terms = await get_terms(update.effective_chat.id)
     terms.append(("All terms", "ALL"))
@@ -302,7 +327,7 @@ async def clear(
         terms, len(terms), is_callback_different=True
     )
     await update.message.reply_text(
-        text="Please select a term to clear, or clear all tracked terms at once",
+        text="Please select a term to clear, or clear all tracked terms at once. Use /cancel to stop the command",
         reply_markup=InlineKeyboardMarkup(term_rows),
     )
 
@@ -312,6 +337,7 @@ async def clear(
 async def clear_confirm(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
+    """a handler for term selection in /clear command"""
 
     query = update.callback_query
     await query.answer()
