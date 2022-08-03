@@ -120,6 +120,7 @@ def verify_user_from_token(
 
 
 async def get_terms(user_id: int) -> List[Tuple[str, str]]:
+    """getting all allowed terms form DB"""
     try:
         await get_user(user_id)
         return await fetch_terms()
@@ -130,6 +131,7 @@ async def get_terms(user_id: int) -> List[Tuple[str, str]]:
 
 @sync_to_async
 def fetch_terms() -> List[Tuple[str, str]]:
+    """a function to format term objects into accpetable format for InlineKEyboardButton callback data"""
     return [
         (term.short, term.long) for term in Term.objects.filter(allowed=True)
     ]
@@ -137,12 +139,14 @@ def fetch_terms() -> List[Tuple[str, str]]:
 
 @sync_to_async
 def get_departments() -> List[str]:
+    """a function to retrieve all stored departments"""
     result = DepartmentEnum.values
     result.pop(0)
     return result
 
 
 def get_courses(term: str, dept: str) -> List[str]:
+    """a function to retrieve all courses under specified department and term"""
 
     raw_courses = notifier_utils.fetch_data(term, dept)
     raw_courses = list({x["course_number"] for x in raw_courses})
@@ -153,6 +157,7 @@ def get_courses(term: str, dept: str) -> List[str]:
 
 @sync_to_async
 def get_tracked_crns(user_id: int) -> List[str]:
+    """a function to retrieve all CRNs in your tracking list"""
     tracked_list = TelegramProfile.objects.get(id=user_id).user.tracking_list
     tracked_courses = list(tracked_list.courses.all())
 
@@ -165,6 +170,7 @@ def get_tracked_crns(user_id: int) -> List[str]:
 async def get_sections(
     term: str, dept: str, course: str, user_id: int
 ) -> List[Tuple[str, Dict[str, str | int]]]:
+    """a function to return all untracked sections from a specific course, term, and a department"""
 
     dept_courses = notifier_utils.fetch_data(term, department=dept)
     # sort sections according to the `section_number`
@@ -181,7 +187,6 @@ async def get_sections(
     course_sections = [
         (
             format_section(
-                course=section["course_number"],
                 section=section["section_number"],
                 seats=section["available_seats"],
                 class_days=section["class_days"],
@@ -211,6 +216,7 @@ def submit_section(
     term: int,
     dept: str,
 ) -> None:
+    """a function to store a section data in the user tracking list"""
 
     # get all currently tracked courses
     tracking_list = TelegramProfile.objects.get(id=user_id).user.tracking_list
@@ -246,6 +252,7 @@ def submit_section(
 
 @sync_to_async
 def untrack_section(crn: str, user_id: int):
+    """a function to remove a section data in the user tracking list"""
     tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list
     tracking_list.courses.remove(tracking_list.courses.get(crn=crn))
     tracking_list.save()
@@ -253,6 +260,7 @@ def untrack_section(crn: str, user_id: int):
 
 @sync_to_async
 def clear_tracking(term: str, user_id: int):
+    """a function to remove all sections under specified terms from the tracking list"""
     tracking_list = TelegramProfile.objects.get(pk=user_id).user.tracking_list
     if term == "ALL":
         tracking_list.courses.clear()
@@ -262,11 +270,10 @@ def clear_tracking(term: str, user_id: int):
         tracking_list.save()
 
 
-####### formatting utilities ####
+#### formatting utilities ####
 
 
 def format_section(
-    course: str,
     class_type: str,
     section: str,
     seats: int,
@@ -275,6 +282,8 @@ def format_section(
     start_time: str,
     end_time: str,
 ) -> str:
+    """a fromatting function to format InlineKeyboardButtons for sections in /track command"""
+
     if start_time and end_time:
         return (
             f"{section}{'📘' if class_type == 'LEC' else '🧪' if class_type == 'LAB' else ''}"
@@ -292,6 +301,16 @@ def format_section(
 def construct_reply_callback_grid(
     input_list: List, row_length: int, is_callback_different: bool = False
 ) -> List[List[InlineKeyboardButton]]:
+    """a formatter function to allocate buttons according to the following:
+    
+    Args:
+        input_list(List[str, Tuple[str, str]]): the list which we would like to format into buttons
+        row_length(int): how many buttons to place in 1 row
+        is_callback_different(bool): used when the displayed text on the button is different from the
+        stored callback_data. 
+            - When True, the input_list elements must be of type Tuple[str, str].
+            - When False (default), the input_list elements must be of type str.
+    """
     result = []
     if is_callback_different:
         for i in range(int(len(input_list) / row_length)):
