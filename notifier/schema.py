@@ -7,6 +7,7 @@ import hmac
 import hashlib
 import dataclasses
 from typing import List
+
 from strawberry.scalars import JSON
 from strawberry.types import Info
 from strawberry_django_plus import gql
@@ -17,7 +18,7 @@ from django_q.tasks import async_task
 from telegram_bot.models import TelegramProfile
 from telegram_bot.utils import escape_md
 
-from .utils import fetch_data, get_course_info
+from .utils import fetch_data, get_course_info, instructor_info_from_name
 from .models import TrackingList, Course, ChannelEnum
 from .types import CourseInput, TermType, ChannelsType, PreferencesInput
 
@@ -96,6 +97,14 @@ class Query:
                 or title.lower() in course["course_title"].lower()
             ):
                 result.append(course)
+
+                # try to find some info about this instructor
+                # and append it to the course dict
+                if len(course["instructor_name"]) > 1:
+                    course |= instructor_info_from_name(
+                        course["instructor_name"], department
+                    )
+
         return result
 
 
