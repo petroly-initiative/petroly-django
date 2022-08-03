@@ -15,10 +15,14 @@ import requests as rq
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import send_mail
+from django.db.models import Q
 from django_q.tasks import async_task
 
 from telegram_bot import messages
 from telegram_bot import utils as bot_utils
+from evaluation.models import Instructor
+from evaluation.schema import crete_global_id
+from evaluation.types import InstructorNode
 
 from .models import TrackingList, Course, ChannelEnum
 
@@ -31,6 +35,7 @@ logging.basicConfig(
     level=logging.INFO,
 )
 logger = logging.getLogger(__name__)
+
 
 def fetch_data(term: str, department: str) -> List[Dict]:
     """This method performs a GET request to the KFUPM API
@@ -226,6 +231,7 @@ def formatter_text(info: dict) -> str:
 
     return msg
 
+
 class GracefulKiller:
     """To catch SIGINT $ SIGTERM signals
     then exit gracefully."""
@@ -300,8 +306,40 @@ def check_all_and_notify() -> None:
                 formatter_change_md(info),
             )
 
-
         sleep(5)
 
     logger.info("Stopping the Notifier Checking.")
     sys.exit(0)
+
+
+
+
+def instructor_info_from_name(name: str, department: str) -> Dict:
+    """Find a matching instructor
+    in our `Instructor` model.
+
+    Args:
+        name (str): the name as from API
+        department (str): department short form
+
+    Returns:
+        Dict: Some info
+    """
+
+    names = name.split(" ")
+    filters = Q(department=department)
+
+    for name_ in names:
+        if "dr" not in name_.lower() and "mr" not in name_.lower():
+            # ignore `dr` and `mr` from using in filtering
+            filters &= Q(name__icontains=name_)
+
+    queryset = Instructor.objects.filter(filters)
+    if len(queryset) == 1:
+        return {
+            "id": crete_global_id(InstructorNode, queryset[0].pk),
+            "profilePic": queryset[0].profile_pic.url,
+            "rating": queryset[0].avg()["overall_float"],
+        }
+
+    return {}
