@@ -66,7 +66,7 @@ class BotController:
         """to handle all assigned multi-step conversation handlers"""
 
         track_handler = ConversationHandler(
-            per_message=True,
+            per_user=True,
             entry_points=[CommandHandler("track", conversation.track)],  # type: ignore
             states={
                 CommandEnum.DEPT: [
@@ -90,7 +90,7 @@ class BotController:
         self.app.add_handler(track_handler)
 
         untrack_handler = ConversationHandler(
-            per_message=True,
+            per_user=True,
             entry_points=[CommandHandler("untrack", conversation.untrack)],  # type: ignore
             states={
                 CommandEnum.CRN: [
