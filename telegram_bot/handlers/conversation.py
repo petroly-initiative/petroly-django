@@ -47,7 +47,7 @@ async def track(
     context.bot.callback_data_cache.clear_callback_data()
     context.bot.callback_data_cache.clear_callback_queries()
     context.user_data.clear()
-    # getting avaialble terms and create reply buttons
+    # getting available terms and create reply buttons
     terms = await get_terms(update.effective_chat.id)
     term_rows = construct_reply_callback_grid(
         terms, len(terms), is_callback_different=True
@@ -73,7 +73,7 @@ async def track_dept(
     selected_term = cast(str, query.data)
     # storing persistent data for next steps
     context.user_data["term"] = selected_term
-    # getting all deprtments' data
+    # getting all departments' data
     departments = await get_departments()
     department_rows = construct_reply_callback_grid(departments, 3)
 
@@ -93,7 +93,7 @@ async def track_courses(
 ) -> CommandEnum:
     """a handler for course selection step in /track command"""
 
-     # waiting for the user response
+    # waiting for the user response
     query = update.callback_query
     await query.answer()
     selected_dept = cast(str, query.data)
@@ -123,8 +123,8 @@ async def track_courses(
 async def track_sections(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> CommandEnum:
-   """a handler for section selection step in /track command"""
-     # waiting for the user response
+    """a handler for section selection step in /track command"""
+    # waiting for the user response
     query = update.callback_query
     await query.answer()
     selected_course = cast(str, query.data)
@@ -273,14 +273,13 @@ async def untrack_crn(
 ) -> int | CommandEnum:
     """a handler for CRN-based input in /untrack command"""
 
-    ## checkign if the CRN exits in the user CRN list
+    ## checking if the CRN exits in the user CRN list
     crn = update.message.text.strip()
     if crn not in context.user_data.get("crns", []):
         await update.message.reply_text(
             text="Entered CRN does not exist in your tracking list",
         )
         return CommandEnum.CRN
-
 
     await untrack_section(crn=crn, user_id=update.effective_chat.id)
     await update.message.reply_text(
@@ -298,7 +297,7 @@ async def untrack_select(
     query = update.callback_query
     await query.answer()
     crn = cast(str, query.data)
-    ## perform untrcking from DB
+    ## perform unfrocking from DB
     await untrack_section(crn=crn, user_id=update.effective_chat.id)
     await query.edit_message_text(
         text=f"Section with CRN `{crn} was untracked successfully!",
@@ -327,7 +326,8 @@ async def clear(
         terms, len(terms), is_callback_different=True
     )
     await update.message.reply_text(
-        text="Please select a term to clear, or clear all tracked terms at once. Use /cancel to stop the command",
+        text="Please select a term to clear, "
+        "or clear all tracked terms at once. Use /cancel to stop the command",
         reply_markup=InlineKeyboardMarkup(term_rows),
     )
 
