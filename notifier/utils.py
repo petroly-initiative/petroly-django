@@ -4,7 +4,10 @@ from the KFUPM API
 """
 
 
+import sys
 import json
+import signal
+import logging
 from time import sleep
 from typing import List, Dict, Tuple
 
@@ -22,6 +25,12 @@ from .models import TrackingList, Course, ChannelEnum
 User = get_user_model()
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
 
+# setting up the logger for the bot status
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+)
+logger = logging.getLogger(__name__)
 
 def fetch_data(term: str, department: str) -> List[Dict]:
     """This method performs a GET request to the KFUPM API
@@ -217,6 +226,19 @@ def formatter_text(info: dict) -> str:
 
     return msg
 
+class GracefulKiller:
+    """To catch SIGINT $ SIGTERM signals
+    then exit gracefully."""
+
+    kill_now = False
+
+    def __init__(self):
+        signal.signal(signal.SIGINT, self.exit_gracefully)
+        signal.signal(signal.SIGTERM, self.exit_gracefully)
+
+    def exit_gracefully(self, *args):
+        self.kill_now = True
+
 
 def check_all_and_notify() -> None:
     """Check all tracked courses
@@ -243,7 +265,10 @@ def check_all_and_notify() -> None:
     }
     """
 
-    while True:
+    logger.info("Starting the Notifier Checking")
+    killer = GracefulKiller()
+
+    while not killer.kill_now:
         collection = collect_tracked_courses()
         changed_courses = []
 
@@ -277,3 +302,6 @@ def check_all_and_notify() -> None:
 
 
         sleep(5)
+
+    logger.info("Stopping the Notifier Checking.")
+    sys.exit(0)
