@@ -18,9 +18,16 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+      integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body
-    class="container d-flex justify-content-center border-0 p-4 flex-column"
+    class="container d-flex justify-content-center border-0 p-4 flex-column w-50"
   >
     <style>
       * {
@@ -91,12 +98,15 @@
     <h1>Petroly detected changes! 🥳</h1>
     <br />
     <br />
-    <p>We have detected changes in the following course!</p>
+    <p class="alert alert-primary">
+      <i class="fa-solid fa-circle-exclamation"></i>&nbsp;&nbsp; We have
+      detected changes in the following course!
+    </p>
     <!-- container -->
     <!-- PLACE THE LOOP HERE -->
     {% for course in info %}
     <div
-      class="card shadow m-4"
+      class="card shadow mb-4"
       style="display: flex; justify-content: center; align-items: center"
     >
       <div class="card-header w-100 p-4">
@@ -104,9 +114,9 @@
           {{ course.course.raw.course_number }}-{{
           course.course.raw.section_number }}
         </h2>
-        <h2 class="card-subtitle text-muted">
+        <h4 class="card-subtitle text-muted">
           CRN# <span>{{ course.course.raw.crn }}</span>
-        </h2>
+        </h4>
       </div>
       <div class="card-body">
         <h4 class="labels">🪑 Available Seats</h4>
