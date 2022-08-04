@@ -58,7 +58,8 @@ def format_courses(courses: List[Course]):
 
 @async_to_sync
 async def send_telegram_message(chat_id: int, msg: str):
-    """To make this method as sync
+    """Useful to send one-time message.
+    To make this method as sync
 
     Args:
         chat_id (int): like user's id
@@ -71,11 +72,34 @@ async def send_telegram_message(chat_id: int, msg: str):
             chat_id=chat_id,
             text=msg,
             parse_mode=ParseMode.MARKDOWN_V2,
-            reply_markup=InlineKeyboardMarkup([[
-                InlineKeyboardButton(
-                text= "Go to Registrar", 
-                url= "https://banner9-registration.kfupm.edu.sa/StudentRegistrationSsb/ssb/term/termSelection?mode=registration")
-            ]])
+        )
+
+@async_to_sync
+async def send_telegram_changes(chat_id: int, msg: str):
+    """Sending the changes notification.
+    To make this method as sync
+
+    Args:
+        chat_id (int): like user's id
+        msg (str): a MD text message
+    """
+    async with Application.builder().token(
+        settings.TELEGRAM_TOKEN
+    ).build() as app:
+        await app.bot.send_message(
+            chat_id=chat_id,
+            text=msg,
+            parse_mode=ParseMode.MARKDOWN_V2,
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="Go to Banner Now",
+                            url="https://banner9-registration.kfupm.edu.sa/StudentRegistrationSsb/ssb/term/termSelection?mode=registration",
+                        )
+                    ]
+                ]
+            ),
         )
 
 
@@ -302,12 +326,12 @@ def construct_reply_callback_grid(
     input_list: List, row_length: int, is_callback_different: bool = False
 ) -> List[List[InlineKeyboardButton]]:
     """a formatter function to allocate buttons according to the following:
-    
+
     Args:
         input_list(List[str, Tuple[str, str]]): the list which we would like to format into buttons
         row_length(int): how many buttons to place in 1 row
         is_callback_different(bool): used when the displayed text on the button is different from the
-        stored callback_data. 
+        stored callback_data.
             - When True, the input_list elements must be of type Tuple[str, str].
             - When False (default), the input_list elements must be of type str.
     """
