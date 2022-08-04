@@ -16,6 +16,7 @@ from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.db.models import Q
+from django.template import loader
 from django_q.tasks import async_task
 
 from telegram_bot import messages
@@ -150,16 +151,26 @@ def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
     return courses_dict
 
 
-def send_notification(user_pk: int, msg: str) -> None:
+def send_notification(user_pk: int, info: str) -> None:
     """Send a notification for every channel in `TrackingList.channels`"""
 
     user: User = User.objects.get(pk=user_pk)
     channels = user.tracking_list.channels
+    # deserialize the dict back
+    info_dict: List[Dict] = eval(info)
+
+    # inject `Course` objects into `info_dict`
+    for c in info_dict:
+        c["course"] = Course.objects.get(pk=c["course_pk"])
+    print(info_dict)
 
     if ChannelEnum.EMAIL in channels:
         send_mail(
             subject="Changes detected",
-            message=msg,
+            message=info,
+            html_message=loader.render_to_string(
+                "notifier/email_changes.html", context={"info": info_dict}
+            ),
             recipient_list=[user.email],
             fail_silently=False,
             from_email=None,
@@ -167,7 +178,8 @@ def send_notification(user_pk: int, msg: str) -> None:
 
     if ChannelEnum.TELEGRAM in channels:
         bot_utils.send_telegram_changes(
-            chat_id=user.telegram_profile.id, msg=msg
+            chat_id=user.telegram_profile.id,
+            msg=formatter_change_md(info_dict),
         )
 
 
@@ -215,23 +227,6 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
     return result.replace("-", "\\-")
 
 
-def formatter_text(info: dict) -> str:
-    """Format the info of
-    changed courses, in a nice readable shape.
-
-    Args:
-        info (str): The info obj to be formatted
-    """
-
-    msg = "A change detected in each of the following "
-    for c in info:
-        msg += f"\n\nCRN {c['course'].crn}:"
-        msg += f"\n \t available seats from {c['status']['available_seats_old']} to {c['status']['available_seats']}"
-        msg += f"\n \t waiting list count from {c['status']['waiting_list_count_old']} to {c['status']['waiting_list_count']}"
-
-    return msg
-
-
 class GracefulKiller:
     """To catch SIGINT $ SIGTERM signals
     then exit gracefully."""
@@ -257,15 +252,15 @@ def check_all_and_notify() -> None:
     return: the structure is
     {
         'user1_pk': [
-            {
-                'course1': <Course1>,
-                'status': {
-                    'available_seats': 0
-                    'waiting_list_count': 0
-                    'available_seats_old': 0
-                    'waiting_list_count_old': 0
-                }
-            },
+                {
+                    'course1': <Course1>,
+                    'status': {
+                        'available_seats': 0
+                        'waiting_list_count': 0
+                        'available_seats_old': 0
+                        'waiting_list_count_old': 0
+                    }
+                },
             ], ...
         'user2_pk': ...,
     }
@@ -287,31 +282,34 @@ def check_all_and_notify() -> None:
 
         # group `changed_courses` by unique trackers
         courses_by_tracker = {}
-        keys = ["course", "status"]
         for c in changed_courses:
             for tracker in c["trackers"]:
                 try:
                     courses_by_tracker[tracker.pk].append(
-                        {key: c[key] for key in keys}
+                        {
+                            "course_pk": c["course"].pk,
+                            "status": c["status"],
+                        }
                     )
                 except KeyError:
                     courses_by_tracker[tracker.pk] = [
-                        {key: c[key] for key in keys}
+                        {
+                            "course_pk": c["course"].pk,
+                            "status": c["status"],
+                        }
                     ]
 
         for tracker_pk, info in courses_by_tracker.items():
             async_task(
                 "notifier.utils.send_notification",
                 tracker_pk,
-                formatter_change_md(info),
+                str(info),
             )
 
         sleep(5)
 
     logger.info("Stopping the Notifier Checking.")
     sys.exit(0)
-
-
 
 
 def instructor_info_from_name(name: str, department: str) -> Dict:
