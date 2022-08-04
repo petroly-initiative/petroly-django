@@ -255,6 +255,7 @@ def submit_section(
 
         obj.available_seats = seats
         obj.waiting_list_count = waitlist_count
+        obj.raw = notifier_utils.get_course_info(obj)
         obj.save()
 
         # append the course to the list
@@ -262,13 +263,15 @@ def submit_section(
 
     except Course.DoesNotExist:
         # Create & append the course to the list
-        tracking_list.courses.create(
+        obj = tracking_list.courses.create(
             crn=crn,
             term=term,
             available_seats=seats,
             waiting_list_count=waitlist_count,
             department=dept,
         )
+        obj.raw = notifier_utils.get_course_info(obj)
+        obj.save()
 
     ## ? can a user reach this point without having a tracking list instance?
     ## ? if so we need to explicitly save the object for first time in ORM

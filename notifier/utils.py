@@ -159,10 +159,9 @@ def send_notification(user_pk: int, info: str) -> None:
     # deserialize the dict back
     info_dict: List[Dict] = eval(info)
 
-    # inject `Course` objects into `info_dict`
+    # inject `Course` objects and `course_api` into `info_dict`
     for c in info_dict:
         c["course"] = Course.objects.get(pk=c["course_pk"])
-    print(info_dict)
 
     if ChannelEnum.EMAIL in channels:
         send_mail(
@@ -189,15 +188,13 @@ def formatter_md(courses: List[Course]) -> str:
 
     result = ""
     for course in courses:
-        course = get_course_info(course)
-
         result += messages.TRACKED_COURSES.format(
-            crn=course["crn"],
-            course_number=course["course_number"],
-            section_number=course["section_number"],
-            available_seats=course["available_seats"],
+            crn=course.crn,
+            course_number=course.raw["course_number"],
+            section_number=course.raw["section_number"],
+            available_seats=course.available_seats,
             waiting_list_count="🔴 Closed"
-            if course["waiting_list_count"] > 0
+            if course.waiting_list_count > 0
             else "🟢 Open",
         )
 
@@ -210,17 +207,14 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
 
     result = "Changes detected 🥳\n\n"
     for course in info:
-        status = course["status"]
-        course = get_course_info(course["course"])
-
         result += messages.CHANGES_DETECTED.format(
-            crn=course["crn"],
-            course_number=course["course_number"],
-            section_number=course["section_number"],
-            available_seats=status["available_seats"],
-            available_seats_old=status["available_seats_old"],
+            crn=course['course'].crn,
+            course_number=course['course'].raw["course_number"],
+            section_number=course['course'].raw["section_number"],
+            available_seats=course['status']["available_seats"],
+            available_seats_old=course['status']["available_seats_old"],
             waiting_list_count="🔴 Closed"
-            if status["waiting_list_count"] > 0
+            if course['status']["waiting_list_count"] > 0
             else "🟢 Open",
         )
 

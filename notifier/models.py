@@ -59,6 +59,7 @@ class Course(models.Model):
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
     last_updated = models.DateTimeField(_("last updated"), auto_now=True)
     available_seats = models.IntegerField(_("available seats"), default=0)
+    raw = models.JSONField(_("raw info"), default=None, null=True)
     waiting_list_count = models.IntegerField(
         _("waiting list count"), default=0
     )
