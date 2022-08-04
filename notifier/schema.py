@@ -210,6 +210,7 @@ class Mutation:
                 course_info = get_course_info(course)
                 obj.available_seats = course_info["available_seats"]
                 obj.waiting_list_count = course_info["waiting_list_count"]
+                obj.raw = course_info
                 obj.save()
 
             # clear the old list and set the new one
