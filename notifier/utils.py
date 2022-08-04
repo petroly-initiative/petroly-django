@@ -166,7 +166,7 @@ def send_notification(user_pk: int, msg: str) -> None:
         )
 
     if ChannelEnum.TELEGRAM in channels:
-        bot_utils.send_telegram_message(
+        bot_utils.send_telegram_changes(
             chat_id=user.telegram_profile.id, msg=msg
         )
 
