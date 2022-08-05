@@ -27,7 +27,7 @@
     />
   </head>
   <body
-    class="container d-flex justify-content-center border-0 p-4 flex-column w-50"
+    class="container d-flex justify-content-center border-0 p-4 flex-column w-auto"
   >
     <style>
       * {
@@ -59,7 +59,9 @@
 
       .transition {
         display: flex;
+        margin-left: 26px;
         justify-content: space-between;
+        align-items: center;
       }
 
       .card-header {
@@ -67,8 +69,8 @@
       }
 
       .transition span {
-        margin: 8px 12px;
-        font-size: x-large;
+        margin: 0 4px;
+        font-size: large;
         font-weight: 700;
       }
 
@@ -80,8 +82,34 @@
       }
 
       .labels {
-        width: 100%;
+        display: flex;
+        align-items: center;
+        height: fit-content;
+        margin: 0;
         text-align: center;
+        justify-content: center;
+      }
+
+      .link {
+        background-color: #00ead3;
+        color: white;
+        width: fit-content;
+        font-size: 1.4rem;
+        text-decoration: none;
+      }
+
+      .link:hover {
+        text-decoration: underline;
+        color: white;
+      }
+
+      .link span {
+        padding-right: 12px;
+      }
+
+      .link i {
+        font-size: 1.4rem;
+        text-decoration: none;
       }
 
       body {
@@ -106,11 +134,11 @@
     <!-- PLACE THE LOOP HERE -->
     {% for course in info %}
     <div
-      class="card shadow mb-4"
+      class="card shadow mb-6"
       style="display: flex; justify-content: center; align-items: center"
     >
       <div class="card-header w-100 p-4">
-        <h2 class="card-title">
+        <h2 style="color: #00ead3" class="card-title">
           {{ course.course.raw.course_number }}-{{
           course.course.raw.section_number }}
         </h2>
@@ -118,33 +146,47 @@
           CRN# <span>{{ course.course.raw.crn }}</span>
         </h4>
       </div>
-      <div class="card-body">
-        <h4 class="labels">🪑 Available Seats</h4>
-        <div class="transition">
-          <span class="first">{{ course.status.available_seats_old }}</span
-          ><span>➡️</span
-          ><span class="last">{{ course.status.available_seats }}</span>
-        </div>
-      </div>
       <div
-        style="width: 100%; background: white; flex: 1 1 auto"
-        class="card-footer p-4 d-flex justify-content-center flex-column align-content-center justify-content-center"
+        style="height: fit-content; flex-flow: row wrap"
+        class="card-body d-flex align-content-center w-100"
       >
-        <h4 class="labels">⌛ Waitlist Seats:</h4>
         <div
-          style="
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            font-size: larger;
-            font-weight: 700;
-          "
+          style="height: fit-content"
+          class="flex-grow-1 d-flex justify-content-center align-items-center border rounded m-1 flex-row flex-wrap"
         >
-          {{ course.status.waiting_list_count }}
+          <h5 class="labels">
+            <i class="fa-solid fa-chair text-muted m-3"></i> Available Seats
+          </h5>
+          <div class="transition">
+            <span class="first">{{ course.status.available_seats_old }}</span
+            ><span>➡️</span
+            ><span class="last">{{ course.status.available_seats }}</span>
+          </div>
+        </div>
+        <div
+          style="height: fit-content"
+          class="flex-grow-1 d-flex justify-content-center align-items-center border rounded m-1 flex-row flex-wrap"
+        >
+          <h5 class="labels">
+            <i class="fa-solid fa-hourglass-end text-muted m-3"></i> Waitlist
+            Seats
+          </h5>
+          <div style="font-size: larger; font-weight: 700" class="transition">
+            {{ course.status.waiting_list_count }}
+          </div>
         </div>
       </div>
     </div>
     {% endfor %}
+    <div class="d-flex justify-content-center align-items-center">
+      <a
+        class="link rounded p-3"
+        href="https://banner9-registration.kfupm.edu.sa/StudentRegistrationSsb/ssb/term/termSelection?mode=registration"
+      >
+        <span> Register your courses!</span
+        ><i class="fa-solid fa-square-up-right"></i>
+      </a>
+    </div>
     <footer
       style="text-align: center"
       class="d-flex w-100 justify-content-center mt-4 flex-column align-content-center"
