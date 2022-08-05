@@ -22,7 +22,7 @@ class TelegramProfile(models.Model):
     id = models.IntegerField(_("telegram user ID"), primary_key=True)
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
     username = models.CharField(
-        _("telegram username"), max_length=256, unique=True, blank=True
+        _("telegram username"), max_length=256, blank=True, default=""
     )
 
     user = models.OneToOneField(
@@ -33,8 +33,7 @@ class TelegramProfile(models.Model):
     )
 
     def __str__(self):
-        return f"{self.id}";
-    
+        return f"{self.id}"
 
 
 def generate_token_str() -> str:
@@ -42,7 +41,6 @@ def generate_token_str() -> str:
 
     token = "".join(random.choices(string.ascii_letters, k=5))
     return token
-
 
 
 class Token(models.Model):
