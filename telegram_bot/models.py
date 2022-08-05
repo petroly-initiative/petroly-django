@@ -22,7 +22,7 @@ class TelegramProfile(models.Model):
     id = models.IntegerField(_("telegram user ID"), primary_key=True)
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
     username = models.CharField(
-        _("telegram username"), max_length=256, unique=True, blank=True
+        _("telegram username"), max_length=256, blank=True, default=""
     )
 
     user = models.OneToOneField(
