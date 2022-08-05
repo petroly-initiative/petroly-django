@@ -4,11 +4,8 @@ from the KFUPM API
 """
 
 
-import sys
 import json
-import signal
 import logging
-from time import sleep
 from typing import List, Dict, Tuple
 
 import requests as rq
@@ -17,7 +14,6 @@ from django.core.cache import cache
 from django.core.mail import send_mail
 from django.db.models import Q
 from django.template import loader
-from django_q.tasks import async_task
 
 from telegram_bot import messages
 from telegram_bot import utils as bot_utils
@@ -30,12 +26,7 @@ from .models import TrackingList, Course, ChannelEnum
 User = get_user_model()
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
 
-# setting up the logger for the bot status
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
-)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
@@ -54,12 +45,16 @@ def fetch_data(term: str, department: str) -> List[Dict]:
 
     if data:
         return data
-    print(f"cache miss for {term}-{department}")
-    res = rq.get(
-        API, params={"term_code": term, "department_code": department}
-    )
+    logger.info("cache miss for %s-%s", term, department)
 
-    assert res.ok
+    try:
+        res = rq.get(
+            API, params={"term_code": term, "department_code": department}
+        )
+    except rq.RequestException as exc:
+        logger.error("Failed fetching %s-%s form API - status: %s", term, department, exc)
+        return []
+
     data = json.loads(res.content)["data"]
     cache.set((term, department), data)  # store data into cache
 
@@ -208,102 +203,17 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
     result = "Changes detected 🥳\n\n"
     for course in info:
         result += messages.CHANGES_DETECTED.format(
-            crn=course['course'].crn,
-            course_number=course['course'].raw["course_number"],
-            section_number=course['course'].raw["section_number"],
-            available_seats=course['status']["available_seats"],
-            available_seats_old=course['status']["available_seats_old"],
+            crn=course["course"].crn,
+            course_number=course["course"].raw["course_number"],
+            section_number=course["course"].raw["section_number"],
+            available_seats=course["status"]["available_seats"],
+            available_seats_old=course["status"]["available_seats_old"],
             waiting_list_count="🔴 Closed"
-            if course['status']["waiting_list_count"] > 0
+            if course["status"]["waiting_list_count"] > 0
             else "🟢 Open",
         )
 
     return result.replace("-", "\\-")
-
-
-class GracefulKiller:
-    """To catch SIGINT $ SIGTERM signals
-    then exit gracefully."""
-
-    kill_now = False
-
-    def __init__(self):
-        signal.signal(signal.SIGINT, self.exit_gracefully)
-        signal.signal(signal.SIGTERM, self.exit_gracefully)
-
-    def exit_gracefully(self, *args):
-        self.kill_now = True
-
-
-def check_all_and_notify() -> None:
-    """Check all tracked courses
-    and grouped the notification by user
-    then send a notification details
-
-    This method is infinite loop,
-    it should be called from a async context.
-
-    return: the structure is
-    {
-        'user1_pk': [
-                {
-                    'course1': <Course1>,
-                    'status': {
-                        'available_seats': 0
-                        'waiting_list_count': 0
-                        'available_seats_old': 0
-                        'waiting_list_count_old': 0
-                    }
-                },
-            ], ...
-        'user2_pk': ...,
-    }
-    """
-
-    logger.info("Starting the Notifier Checking")
-    killer = GracefulKiller()
-
-    while not killer.kill_now:
-        collection = collect_tracked_courses()
-        changed_courses = []
-
-        for _, value in collection.items():
-            changed, status = check_changes(value["course"])
-
-            if changed:
-                value["status"] = status
-                changed_courses.append(value)
-
-        # group `changed_courses` by unique trackers
-        courses_by_tracker = {}
-        for c in changed_courses:
-            for tracker in c["trackers"]:
-                try:
-                    courses_by_tracker[tracker.pk].append(
-                        {
-                            "course_pk": c["course"].pk,
-                            "status": c["status"],
-                        }
-                    )
-                except KeyError:
-                    courses_by_tracker[tracker.pk] = [
-                        {
-                            "course_pk": c["course"].pk,
-                            "status": c["status"],
-                        }
-                    ]
-
-        for tracker_pk, info in courses_by_tracker.items():
-            async_task(
-                "notifier.utils.send_notification",
-                tracker_pk,
-                str(info),
-            )
-
-        sleep(5)
-
-    logger.info("Stopping the Notifier Checking.")
-    sys.exit(0)
 
 
 def instructor_info_from_name(name: str, department: str) -> Dict:
