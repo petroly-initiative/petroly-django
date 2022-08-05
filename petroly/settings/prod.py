@@ -1,14 +1,12 @@
-import warnings
-from .base import *
-from .constants import COSTOM_LOGGING
-
-
-from pathlib import Path
-import dj_database_url 
-import django_heroku
-import cloudinary
 import os
 import re
+from pathlib import Path
+
+import dj_database_url
+import django_heroku
+import cloudinary
+
+from .base import *
 
 # Extra app
 
@@ -69,7 +67,6 @@ IGNORABLE_404_URLS = [
     re.compile(r'^/robots\.txt$'),
     re.compile(r'^/ads\.txt$'),
 ]
-LOGGING = COSTOM_LOGGING
 
 
 django_heroku.settings(locals())

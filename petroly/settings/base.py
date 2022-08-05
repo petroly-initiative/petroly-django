@@ -1,10 +1,12 @@
+
+import os
 from datetime import timedelta
 from pathlib import Path
-from django.utils.translation import gettext_lazy as _
-import os
 
+from django.utils.translation import gettext_lazy as _
 from gqlauth.settings_type import GqlAuthSettings
 
+from .constants import CUSTOM_LOGGING
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -93,7 +95,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'TIMEOUT': 300000,
+        'TIMEOUT': 30,
     },
 }
 
@@ -120,6 +122,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGGING = CUSTOM_LOGGING
 
 # Static files (CSS, JavaScript, Images)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
