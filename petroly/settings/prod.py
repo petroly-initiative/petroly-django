@@ -69,7 +69,6 @@ IGNORABLE_404_URLS = [
     re.compile(r'^/robots\.txt$'),
     re.compile(r'^/ads\.txt$'),
 ]
-LOGGING = COSTOM_LOGGING
 
 
 django_heroku.settings(locals())
