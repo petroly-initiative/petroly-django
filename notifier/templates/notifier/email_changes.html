@@ -185,10 +185,13 @@
             ><span class="last">{{ course.status.available_seats }}</span>
           </div>
         </div>
+
         <div style="height: fit-content" class="sections">
           <h3 class="labels">⌛ Waitlist Seats:</h3>
-          <div style="font-size: larger; font-weight: 700" class="transition">
-            {{ course.status.waiting_list_count }}
+          <div class="transition">
+            <span class="first">{{ course.status.waiting_list_count_old }}</span
+            ><span>➡️</span
+            ><span class="last">{{ course.status.waiting_list_count }}</span>
           </div>
         </div>
       </div>
