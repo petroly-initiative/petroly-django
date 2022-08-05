@@ -170,7 +170,8 @@
     >
       <div class="course-title">
         <h2 style="color: #00ead3; margin: 0px" class="card-title">
-          {{ course.course.raw.course_number }}-{{course.course.raw.section_number }}
+          {{ course.course.raw.course_number
+          }}-{{course.course.raw.section_number }}
         </h2>
         <h4 class="card-subtitle text-muted">
           CRN# <span>{{ course.course.crn }}</span>
@@ -197,9 +198,17 @@
       </div>
     </div>
     {% endfor %}
-    <div>
+    <div
+      style="
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        height: fit-content;
+      "
+    >
       <a
-        class="link rounded p-3"
+        class="link"
+        style="height: fit-content"
         href="https://banner9-registration.kfupm.edu.sa/StudentRegistrationSsb/ssb/term/termSelection?mode=registration"
       >
         <span> Register your courses!</span>
