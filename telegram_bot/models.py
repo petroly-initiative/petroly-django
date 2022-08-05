@@ -33,8 +33,7 @@ class TelegramProfile(models.Model):
     )
 
     def __str__(self):
-        return f"{self.id}";
-    
+        return f"{self.id}"
 
 
 def generate_token_str() -> str:
@@ -42,7 +41,6 @@ def generate_token_str() -> str:
 
     token = "".join(random.choices(string.ascii_letters, k=5))
     return token
-
 
 
 class Token(models.Model):
