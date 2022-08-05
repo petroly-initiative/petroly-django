@@ -160,7 +160,6 @@ class Mutation:
                     TelegramProfile.objects.create(
                         id=input.telegram_id,
                         user=user,
-                        username="",
                     )
 
                 tracking_list.channels.add(ChannelEnum.TELEGRAM)
