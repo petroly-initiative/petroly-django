@@ -6,32 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-      crossorigin="anonymous"
-    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
-      integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-  </head>
-  <body
-    class="container d-flex justify-content-center border-0 p-4 flex-column w-auto"
-  >
     <style>
       * {
-        font-family: inter;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: inter !important;
       }
       h1 {
         text-align: center;
@@ -51,15 +37,9 @@
         justify-content: center;
       }
 
-      .container {
-        display: flex;
-        flex-direction: column;
-        border: 1px solid grey;
-      }
-
       .transition {
         display: flex;
-        margin-left: 26px;
+        margin-left: 16px;
         justify-content: space-between;
         align-items: center;
       }
@@ -96,24 +76,17 @@
         width: fit-content;
         font-size: 1.4rem;
         text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+        border-radius: 8px;
+        text-align: center;
       }
 
       .link:hover {
         text-decoration: underline;
         color: white;
-      }
-
-      .link span {
-        padding-right: 12px;
-      }
-
-      .link i {
-        font-size: 1.4rem;
-        text-decoration: none;
-      }
-
-      body {
-        width: fit-content;
       }
 
       p {
@@ -122,55 +95,99 @@
         text-align: center;
         margin-top: 0;
       }
+
+      .container {
+        width: 100vw !important;
+        display: flex;
+        justify-content: center;
+        border: 0;
+        align-items: center;
+        margin: 0;
+
+        flex-direction: column;
+      }
+
+      .alert {
+        background-color: #37bbe0ba;
+        width: fit-content;
+        font-weight: 700;
+        padding: 16px;
+        border: 3px solid #11a7d1;
+        color: white;
+        border-radius: 8px;
+      }
+
+      .course-title {
+        border-left: 5px solid grey;
+        height: fit-content;
+        padding-left: 16px;
+        width: 100%;
+        padding-bottom: 16px;
+      }
+      .card {
+        border: 2px solid rgba(128, 128, 128, 0.259);
+        padding: 22px;
+        width: fit-content;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .card-body {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+      }
+
+      .sections {
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+        align-items: center;
+        margin: 1em;
+        flex-flow: row wrap;
+      }
     </style>
+  </head>
+  <body class="container">
     <h1>Petroly detected changes! 🥳</h1>
     <br />
     <br />
-    <p class="alert alert-primary">
-      <i class="fa-solid fa-circle-exclamation"></i>&nbsp;&nbsp; We have
-      detected changes in the following course!
-    </p>
+    <p class="alert">We have detected changes in the following course!</p>
     <!-- container -->
     <!-- PLACE THE LOOP HERE -->
     {% for course in info %}
     <div
-      class="card shadow mb-6"
-      style="display: flex; justify-content: center; align-items: center"
+      class="card"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1em;
+      "
     >
-      <div class="card-header w-100 p-4">
-        <h2 style="color: #00ead3" class="card-title">
-          {{ course.course.raw.course_number }}-{{
-          course.course.raw.section_number }}
+      <div class="course-title">
+        <h2 style="color: #00ead3; margin: 0px" class="card-title">
+          {{ course.course.raw.course_number
+          }}-{{course.course.raw.section_number }}
         </h2>
-        <h4 class="card-subtitle text-muted">
-          CRN# <span>{{ course.course.crn }}</span>
+        <h4 style="padding-top: 0em; margin: 0px; color: grey">
+          CRN# <span>{{ course.course.raw.crn }}</span>
         </h4>
       </div>
-      <div
-        style="height: fit-content; flex-flow: row wrap"
-        class="card-body d-flex align-content-center w-100"
-      >
-        <div
-          style="height: fit-content"
-          class="flex-grow-1 d-flex justify-content-center align-items-center border rounded m-1 flex-row flex-wrap"
-        >
-          <h5 class="labels">
-            <i class="fa-solid fa-chair text-muted m-3"></i> Available Seats
-          </h5>
+      <div style="height: fit-content; flex-flow: row wrap" class="card-body">
+        <div style="height: fit-content" class="sections">
+          <h3 class="labels">🪑 Available Seats:</h3>
           <div class="transition">
             <span class="first">{{ course.status.available_seats_old }}</span
             ><span>➡️</span
             ><span class="last">{{ course.status.available_seats }}</span>
           </div>
         </div>
-        <div
-          style="height: fit-content"
-          class="flex-grow-1 d-flex justify-content-center align-items-center border rounded m-1 flex-row flex-wrap"
-        >
-          <h5 class="labels">
-            <i class="fa-solid fa-hourglass-end text-muted m-3"></i> Waitlist
-            Seats
-          </h5>
+        <div style="height: fit-content" class="sections">
+          <h3 class="labels">⌛ Waitlist Seats:</h3>
           <div style="font-size: larger; font-weight: 700" class="transition">
             {{ course.status.waiting_list_count }}
           </div>
@@ -178,13 +195,12 @@
       </div>
     </div>
     {% endfor %}
-    <div class="d-flex justify-content-center align-items-center">
+    <div>
       <a
         class="link rounded p-3"
         href="https://banner9-registration.kfupm.edu.sa/StudentRegistrationSsb/ssb/term/termSelection?mode=registration"
       >
-        <span> Register your courses!</span
-        ><i class="fa-solid fa-square-up-right"></i>
+        <span> Register your courses!</span>
       </a>
     </div>
     <footer
