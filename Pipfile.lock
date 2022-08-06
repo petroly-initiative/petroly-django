@@ -328,11 +328,11 @@
         },
         "strawberry-django-jwt": {
             "hashes": [
-                "sha256:692a2ccb2868e8402b863daaa02c92b65aa863c2147c0aea3db0afab77ba5a1a",
-                "sha256:970deb5a565186ff366ebc8ffdb9d2368bace517e81822c1566ac146e9a45028"
+                "sha256:46f08dd444092e1965d9c5351a4d58c2b3485666b7bb2ad1e7e1dfad68971c27",
+                "sha256:5771cf4a5668923324db07dd3833d16228f46812fea6eecd6155c5ac565cb7df"
             ],
             "index": "pypi",
-            "version": "==0.2.1"
+            "version": "==0.2.2"
         },
         "strawberry-django-plus": {
             "hashes": [
