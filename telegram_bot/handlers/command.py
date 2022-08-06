@@ -78,7 +78,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                     (
                         "/clear",
                         "deletes all tracked courses from your tracking list",
-                    ),
+                    )
                 ]
             )
 
@@ -117,7 +117,11 @@ async def tracked_courses(
     user: User = await user_from_telegram(user_id=user_id, update=update)
 
     await update.message.reply_text(
-        text="Here is the list of your currently tracked sections: \n\n"
+        text="""Here is the list of your currently tracked sections: 
+
+        **click on the CRN to copy it to your clipboard**
+
+        """
         + f"{await tracked_courses_(user)}",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
