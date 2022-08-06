@@ -254,7 +254,7 @@ async def untrack(
         await update.message.reply_text(
             text="Your CRNs have exceeded display limits, "
             "please enter the CRN you would like to untrack. Use /cancel to stop the command",
-            parse_mode=ParseMode.MARKDOWN_V2,
+            
         )
         return CommandEnum.CRN
 
@@ -262,7 +262,6 @@ async def untrack(
     crn_rows = construct_reply_callback_grid(crns, row_length=2)
     await update.message.reply_text(
         text="Please select the CRN to untrack from your CRN list. Use /cancel to stop the command",
-        parse_mode=ParseMode.MARKDOWN_V2,
         reply_markup=InlineKeyboardMarkup(crn_rows),
     )
     return CommandEnum.SELECT
@@ -300,7 +299,8 @@ async def untrack_select(
     ## perform unfrocking from DB
     await untrack_section(crn=crn, user_id=update.effective_chat.id)
     await query.edit_message_text(
-        text=f"Section with CRN `{crn} was untracked successfully!",
+        text=f"Section with CRN `{crn}` was untracked successfully\!",
+        parse_mode=ParseMode.MARKDOWN_V2
     )
     return ConversationHandler.END
 
