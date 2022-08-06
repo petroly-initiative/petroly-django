@@ -160,7 +160,7 @@ def send_notification(user_pk: int, info: str) -> None:
 
     if ChannelEnum.EMAIL in channels:
         send_mail(
-            subject="Changes detected",
+            subject="Petroly Radar Detected Changes",
             message=info,
             html_message=loader.render_to_string(
                 "notifier/email_changes.html", context={"info": info_dict}
