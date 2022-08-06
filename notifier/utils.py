@@ -200,7 +200,7 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
     """helper method to create a formatted message for each course in the tracking list"""
     # for each course we will create a message format
 
-    result = "Changes detected 🥳\n\n"
+    result = "Changes detected 🥳\nClick on the CRN number to copy it\n\n"
     for course in info:
         result += messages.CHANGES_DETECTED.format(
             crn=course["course"].crn,

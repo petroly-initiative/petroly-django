@@ -80,7 +80,7 @@ async def track_dept(
     # displaying the reply and buttons for next step
     await query.edit_message_text(
         text=f"Term {selected_term} was selected\\!\n\n"
-        + "Please Enter the department of the course\\. ",
+        + "Please Enter the department of the course\\. \n\nEnter /cancel to exit",
         reply_markup=InlineKeyboardMarkup(department_rows),
         parse_mode=ParseMode.MARKDOWN_V2,
     )
@@ -90,7 +90,7 @@ async def track_dept(
 
 async def track_courses(
     update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> CommandEnum:
+) -> CommandEnum | int:
     """a handler for course selection step in /track command"""
 
     # waiting for the user response
@@ -104,6 +104,11 @@ async def track_courses(
         term=context.user_data.get("term", "TERM_NOT_FOUND"),
         dept=selected_dept,
     )
+    if len(courses) == 0:
+        await query.edit_message_text(
+            text= f"Oops! seems like there are no offered courses for {selected_dept} department in term {context.user_data.get('term', 'TERM_NOT_FOUND')}"
+        )
+        return ConversationHandler.END
     row_length = len(courses) if len(courses) < 3 else 3
     course_rows = construct_reply_callback_grid(courses, row_length=row_length)
     # displaying the reply and buttons for next step
@@ -112,6 +117,8 @@ async def track_courses(
         **{selected_dept}** department was selected for term **{context.user_data.get("term", "TERM_NOT_FOUND")}**\\!
 
         Select a course
+
+        Enter /cancel to exit
         """,
         parse_mode=ParseMode.MARKDOWN_V2,
         reply_markup=InlineKeyboardMarkup(course_rows),
@@ -122,7 +129,7 @@ async def track_courses(
 
 async def track_sections(
     update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> CommandEnum:
+) -> CommandEnum | int:
     """a handler for section selection step in /track command"""
     # waiting for the user response
     query = update.callback_query
@@ -137,9 +144,18 @@ async def track_sections(
         term=context.user_data.get("term", "TERM_NOT_FOUND"),
         user_id=update.effective_user.id,
     )
+   
+    if len(sections) == 0:
+        await query.edit_message_text(
+            text= f"Oops! seems like there are no offered sections for {selected_course} course in term {context.user_data.get('term', 'TERM_NOT_FOUND')}"
+        )
+        return ConversationHandler.END
+
     section_rows = construct_reply_callback_grid(
-        sections, 1, is_callback_different=True
+        sections,row_length= 1, is_callback_different=True
     )
+
+    
 
     ## ! handle overflow by requesting the CRN explicitly
     if len(sections) > 100:
@@ -157,7 +173,7 @@ async def track_sections(
 
     await query.edit_message_text(
         text=f"Select a section for {selected_course} \\- "
-        + f"Term {context.user_data.get('term', 'TERM_NOT_FOUND')}",
+        + f"Term {context.user_data.get('term', 'TERM_NOT_FOUND')}\n\nEnter /cancel to exit",
         reply_markup=InlineKeyboardMarkup(section_rows),
         parse_mode=ParseMode.MARKDOWN_V2,
     )
@@ -181,7 +197,7 @@ async def track_crn(
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text="CRN does not exist or is already tracked, "
-            "please enter a valid CRN that you haven't tracked before",
+            "please enter a valid CRN that you haven't tracked before\n\nEnter /cancel to exit",
         )
         return CommandEnum.CRN
     ## getting the required data to store a section in our DB

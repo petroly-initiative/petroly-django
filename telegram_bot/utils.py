@@ -326,7 +326,7 @@ def format_section(
 
 
 def construct_reply_callback_grid(
-    input_list: List, row_length: int, is_callback_different: bool = False
+    input_list: List, row_length: int = 3, is_callback_different: bool = False
 ) -> List[List[InlineKeyboardButton]]:
     """a formatter function to allocate buttons according to the following:
 
@@ -338,7 +338,10 @@ def construct_reply_callback_grid(
             - When True, the input_list elements must be of type Tuple[str, str].
             - When False (default), the input_list elements must be of type str.
     """
+
+    
     result = []
+    print("inside", row_length)
     if is_callback_different:
         for i in range(int(len(input_list) / row_length)):
             result.append(
