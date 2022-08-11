@@ -29,8 +29,6 @@ jobs:
         command: install
     
     - name: Run Tests
-      uses: VaultVulp/action-pipenv@v2.0.1      
+      uses: VaultVulp/action-pipenv@v2.0.1
       with:
         command: run python manage.py test --settings=petroly.settings.dev --no-input  --exclude-tag=require_secretes  account
-
-

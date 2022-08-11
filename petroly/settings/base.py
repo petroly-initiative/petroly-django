@@ -1,10 +1,12 @@
+
+import os
 from datetime import timedelta
 from pathlib import Path
-from django.utils.translation import gettext_lazy as _
-import os
 
+from django.utils.translation import gettext_lazy as _
 from gqlauth.settings_type import GqlAuthSettings
 
+from .constants import CUSTOM_LOGGING
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -29,6 +31,9 @@ INSTALLED_APPS = [
     'strawberry.django',
     'gqlauth',
     'strawberry_django_jwt.refresh_token',
+    'notifier',
+    'django_q',
+    'telegram_bot',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +91,13 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
-
+# Cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'TIMEOUT': 30,
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -111,6 +122,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGGING = CUSTOM_LOGGING
 
 # Static files (CSS, JavaScript, Images)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -136,6 +148,8 @@ EMAIL_USE_SSL = True
 # Models
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
+# Telegram
+TELEGRAM_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 
 AUTHENTICATION_BACKENDS = [
     "gqlauth.backends.GraphQLAuthBackend",
@@ -173,6 +187,16 @@ GQL_AUTH = GqlAuthSettings(
     REGISTER_REQUIRE_CAPTCHA=False,
     ACTIVATION_PATH_ON_EMAIL="confirm",
     EMAIL_TEMPLATE_VARIABLES={
-        'frontend_domain': 'petroly.co'
+        'frontend_domain': 'react.petroly.co'
     },
 )
+
+
+Q_CLUSTER = {
+    'name': 'petroly',
+    'workers': 1,
+    'timeout': 30,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
+}
