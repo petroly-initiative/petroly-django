@@ -187,7 +187,7 @@ GQL_AUTH = GqlAuthSettings(
     REGISTER_REQUIRE_CAPTCHA=False,
     ACTIVATION_PATH_ON_EMAIL="confirm",
     EMAIL_TEMPLATE_VARIABLES={
-        'frontend_domain': 'react.petroly.co'
+        'frontend_domain': 'petroly.co'
     },
 )
 
