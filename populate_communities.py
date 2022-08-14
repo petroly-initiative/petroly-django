@@ -1,5 +1,8 @@
 """
- To populate telegram links into out `community` service.
+    To populate telegram links into out `community` service.
+    How to use:
+    run in the terminal:
+        `python populate_communities.py {dev|prod}`
 """
 
 import os
