@@ -7,7 +7,6 @@ import sys
 import csv
 
 import requests as rq
-from cloudinary.uploader import upload_image
 from requests.exceptions import RequestException
 from bs4 import BeautifulSoup
 
@@ -72,6 +71,8 @@ def find_and_populate():
 if __name__ == '__main__':
     import django
     django.setup()
+    from cloudinary.uploader import upload_image
+
     from communities.models import Community
 
     find_and_populate()
