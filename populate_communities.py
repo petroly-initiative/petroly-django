@@ -4,6 +4,7 @@
 
 import os
 import sys
+import csv
 
 import requests as rq
 from cloudinary.uploader import upload_image
@@ -20,14 +21,14 @@ os.environ.setdefault(
 print('DJANGO_SETTINGS_MODULE: ', os.environ.get("DJANGO_SETTINGS_MODULE"))
 
 
+with open('data/telegram_links.txt') as file:
+    urls = file.readlines()
 
-urls = [
-    "https://t.me/ST_KFUPM",
-    'https://t.me/physics_kfupm',
-]
 
 def find_and_populate():
     for url in urls:
+        url = url.removesuffix('\n')
+
         print(f'Working on {url}')
 
         try:
@@ -40,26 +41,27 @@ def find_and_populate():
         soup = BeautifulSoup(res.content, 'html.parser')
 
         title = soup.find('div', class_='tgme_page_title').span.contents[0]
-        img_url =  soup.find('img', class_='tgme_page_photo_image')['src']
+        img_url =  soup.find('img', class_='tgme_page_photo_image')
         description = soup.find('div', class_='tgme_page_description')
 
         try:
             obj = Community.objects.get(link=url)
-            print(obj, ' is already exist with the same link.')
+            print('Community is already exist with the same link. ', obj)
 
         except Community.DoesNotExist:
-            img = upload_image(
-                img_url,
-                format="jpg",
-                overwrite=True,
-                invalidate=True,
-                transformation=[{"width": 200, "height": 200, "crop": "fill"}],
-                folder=f"communities/{settings_type}/icons",
-            )
+            if img_url:
+                img = upload_image(
+                    img_url['src'],
+                    format="jpg",
+                    overwrite=True,
+                    invalidate=True,
+                    transformation=[{"width": 200, "height": 200, "crop": "fill"}],
+                    folder=f"communities/{settings_type}/icons",
+                )
             Community.objects.create(
                 link=url,
                 name=title,
-                icon=img,
+                icon=img if img_url else None,
                 category=Community.CategoryEnum.EDU,
                 platform=Community.PlatformEnum.TELEGRAM,
                 description=description.contents[0] if description else "",
