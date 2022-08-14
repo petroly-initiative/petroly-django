@@ -27,6 +27,7 @@ django-q = "*"
 tzdata = "*"
 python-telegram-bot = "*"
 django-multiselectfield = "*"
+certifi = "*"
 
 [dev-packages]
 black = "*"
