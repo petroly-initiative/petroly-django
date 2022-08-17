@@ -2,7 +2,6 @@
 A django custom command to start the Notifier checking.
 """
 
-import sys
 import time
 import signal
 import logging
