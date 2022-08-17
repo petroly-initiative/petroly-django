@@ -194,9 +194,9 @@ def formatter_md(courses: List[Course]) -> str:
             course_number=course.raw["course_number"],
             section_number=course.raw["section_number"],
             available_seats=course.available_seats,
-            waiting_list_count="🔴 Closed"
+            waiting_list_count="🟢 Open"
             if course.waiting_list_count > 0
-            else "🟢 Open",
+            else "🔴 Closed",
         )
 
     return result.replace("-", "\\-")
@@ -214,9 +214,9 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
             section_number=course["course"].raw["section_number"],
             available_seats=course["status"]["available_seats"],
             available_seats_old=course["status"]["available_seats_old"],
-            waiting_list_count="🔴 Closed"
+            waiting_list_count="🟢 Open"
             if course["status"]["waiting_list_count"] > 0
-            else "🟢 Open",
+            else "🔴 Closed",
         )
 
     return result.replace("-", "\\-")
