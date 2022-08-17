@@ -315,7 +315,7 @@ async def untrack_select(
     ## perform unfrocking from DB
     await untrack_section(crn=crn, user_id=update.effective_chat.id)
     await query.edit_message_text(
-        text=f"Section with CRN `{crn}` was untracked successfully\!",
+        text=f"Section with CRN `{crn}` was untracked successfully\\!",
         parse_mode=ParseMode.MARKDOWN_V2
     )
     return ConversationHandler.END
