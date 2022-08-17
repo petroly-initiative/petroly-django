@@ -5,13 +5,20 @@ A django custom command to start the Notifier checking.
 import time
 import signal
 import logging
+import warnings
+
 from django_q.tasks import async_task
+from django.core.cache import CacheKeyWarning
 from django.core.management.base import BaseCommand
 
 from notifier.utils import check_changes, collect_tracked_courses
 
+warnings.simplefilter('ignore', CacheKeyWarning)
+warnings.simplefilter('ignore', DeprecationWarning)
+
 # setting up the logger
-logger = logging.getLogger("django")
+logger = logging.getLogger(__name__)
+print(logger.name)
 
 
 class GracefulKiller:

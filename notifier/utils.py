@@ -26,7 +26,7 @@ from .models import TrackingList, Course, ChannelEnum
 User = get_user_model()
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
 
-logger = logging.getLogger("django")
+logger = logging.getLogger(__name__)
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
