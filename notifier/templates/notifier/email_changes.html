@@ -326,7 +326,9 @@
                                       "
                                       align="center"
                                     >
-                                      <img align="center" border="0" src={% static "notifier/images/image-5.png" %}
+                                      <img 
+                                      align="center" border="0" 
+                                      src="{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'notifier/images/image-5.png' %}"
                                       alt="Illustration" title="Illustration"
                                       style=" outline: none; text-decoration:
                                       none; -ms-interpolation-mode: bicubic;
@@ -1199,7 +1201,9 @@
                                       "
                                       align="center"
                                     >
-                                      <img align="center" border="0" src={% static "notifier/images/image-4.png" %}
+                                      <img 
+                                      align="center" border="0" 
+                                      src="{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'notifier/images/image-4.png' %}"
                                       alt="Logo" title="Logo" style=" outline:
                                       none; text-decoration: none;
                                       -ms-interpolation-mode: bicubic; clear:
@@ -1278,7 +1282,9 @@
                                               title="Twitter"
                                               target="_blank"
                                             >
-                                              <img src={% static "notifier/images/image-1.png" %}
+                                              <img 
+                                              
+                                              src="{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'notifier/images/image-1.png' %}"
                                               alt="Twitter" title="Twitter"
                                               width="32" style=" outline: none;
                                               text-decoration: none;
