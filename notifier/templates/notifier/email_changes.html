@@ -1,963 +1,1443 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--[if gte mso 9]>
+      <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG />
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+      </xml>
+    <![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      * {
+    <meta name="x-apple-disable-message-reformatting" />
+    <!--[if !mso]><!-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--<![endif]-->
+    <title></title>
+
+    <style type="text/css">
+      @media only screen and (min-width: 620px) {
+        .u-row {
+          width: 600px !important;
+        }
+        .u-row .u-col {
+          vertical-align: top;
+        }
+
+        .u-row .u-col-50 {
+          width: 300px !important;
+        }
+
+        .u-row .u-col-100 {
+          width: 600px !important;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .u-row-container {
+          max-width: 100% !important;
+          padding-left: 0px !important;
+          padding-right: 0px !important;
+        }
+        .u-row .u-col {
+          min-width: 320px !important;
+          max-width: 100% !important;
+          display: block !important;
+        }
+        .u-row {
+          width: calc(100% - 40px) !important;
+        }
+        .u-col {
+          width: 100% !important;
+        }
+        .u-col > div {
+          margin: 0 auto;
+        }
+      }
+      body {
         margin: 0;
         padding: 0;
-        box-sizing: border-box;
-        font-family: inter !important;
-      }
-      h1 {
-        text-align: center;
-        width: 100%;
-        font-family: inter;
-        color: #00ead3;
-        margin-bottom: 0;
       }
 
-      h2 {
-        font-weight: 700;
-      }
-
-      .content {
-        display: flex;
-        width: 100%;
-        justify-content: center;
-      }
-
-      .transition {
-        display: flex;
-        margin-left: 16px;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .card-header {
-        background-color: white;
-      }
-
-      .transition span {
-        margin: 0 4px;
-        font-size: large;
-        font-weight: 700;
-      }
-
-      .first {
-        color: grey;
-      }
-      .last {
-        color: #00ead3;
-      }
-
-      .labels {
-        display: flex;
-        align-items: center;
-        height: fit-content;
-        margin: 0;
-        text-align: center;
-        justify-content: center;
-      }
-
-      .link {
-        background-color: #00ead3;
-        color: white;
-        width: fit-content;
-        font-size: 1.4rem;
-        text-decoration: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 16px;
-        border-radius: 8px;
-        text-align: center;
-      }
-
-      .link:hover {
-        text-decoration: underline;
-        color: white;
+      table,
+      tr,
+      td {
+        vertical-align: top;
+        border-collapse: collapse;
       }
 
       p {
-        font-size: large;
-        width: 100%;
-        text-align: center;
-        margin-top: 0;
-      }
-
-      .container {
-        width: 100vw !important;
-        display: flex;
-        justify-content: center;
-        border: 0;
-        align-items: center;
         margin: 0;
-
-        flex-direction: column;
       }
 
-      .alert {
-        background-color: #37bbe0ba;
-        width: fit-content;
-        font-weight: 700;
-        padding: 16px;
-        border: 3px solid #11a7d1;
-        color: white;
-        border-radius: 8px;
+      .ie-container table,
+      .mso-container table {
+        table-layout: fixed;
       }
 
-      .course-title {
-        border-left: 5px solid grey;
-        height: fit-content;
-        padding-left: 16px;
-        width: 100%;
-        padding-bottom: 16px;
-      }
-      .card {
-        border: 2px solid rgba(128, 128, 128, 0.259);
-        padding: 22px;
-        width: fit-content;
-        border-radius: 8px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+      * {
+        line-height: inherit;
       }
 
-      .card-body {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        width: 100%;
+      a[x-apple-data-detectors="true"] {
+        color: inherit !important;
+        text-decoration: none !important;
       }
 
-      .sections {
-        display: flex;
-        flex-grow: 1;
-        justify-content: center;
-        align-items: center;
-        margin: 1em;
-        flex-flow: row wrap;
+      table,
+      td {
+        color: #000000;
+      }
+      #u_body a {
+        color: #0000ee;
+        text-decoration: underline;
+      }
+      @media (max-width: 480px) {
+        #u_content_heading_3 .v-font-size {
+          font-size: 23px !important;
+        }
+        #u_content_image_1 .v-src-width {
+          width: auto !important;
+        }
+        #u_content_image_1 .v-src-max-width {
+          max-width: 100% !important;
+        }
+        #u_content_text_1 .v-container-padding-padding {
+          padding: 60px 15px 20px !important;
+        }
+        #u_content_text_1 .v-text-align {
+          text-align: center !important;
+        }
+        #u_content_button_1 .v-size-width {
+          width: 45% !important;
+        }
+        #u_row_3 .v-row-background-image--inner {
+          background-position: center top !important;
+          background-repeat: no-repeat !important;
+        }
+        #u_row_3 .v-row-background-image--outer {
+          background-image: url("images/image-3.jpeg") !important;
+          background-position: center top !important;
+          background-repeat: no-repeat !important;
+        }
+        #u_row_3.v-row-background-image--outer {
+          background-image: url("images/image-3.jpeg") !important;
+          background-position: center top !important;
+          background-repeat: no-repeat !important;
+        }
+        #u_content_image_3 .v-container-padding-padding {
+          padding: 30px 10px 0px !important;
+        }
+        #u_content_image_3 .v-src-width {
+          width: auto !important;
+        }
+        #u_content_image_3 .v-src-max-width {
+          max-width: 35% !important;
+        }
+        #u_content_social_2 .v-container-padding-padding {
+          padding: 15px 10px 10px !important;
+        }
       }
     </style>
-  </head>
-  <body class="container">
-    <h1>Petroly detected changes! 🥳</h1>
-    <br />
-    <br />
-    <p class="alert">We have detected changes in the following course!</p>
-    <!-- container -->
-    <!-- PLACE THE LOOP HERE -->
-    {% for course in info %}
-    <div
-      class="card"
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 1em;
-      "
-    >
-      <div class="course-title">
-        <h2 style="color: #00ead3; margin: 0px" class="card-title">
-          {{ course.course.raw.course_number }}-{{course.course.raw.section_number }}
-        </h2>
-        <h4 class="card-subtitle text-muted">
-          CRN# <span>{{ course.course.crn }}</span>
-        </h4>
-      </div>
-      <div style="height: fit-content; flex-flow: row wrap" class="card-body">
-        <div style="height: fit-content" class="sections">
-          <h3 class="labels">🪑 Available Seats:</h3>
-          <div class="transition">
-            <span class="first">{{ course.status.available_seats_old }}</span
-            ><span>➡️</span
-            ><span class="last">{{ course.status.available_seats }}</span>
-          </div>
-        </div>
 
-        <div style="height: fit-content" class="sections">
-          <h3 class="labels">⌛ Waitlist Seats:</h3>
-          <div class="transition">
-            <span class="first">{{ course.status.waiting_list_count_old }}</span
-            ><span>➡️</span
-            ><span class="last">{{ course.status.waiting_list_count }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-    <div
+    <!--[if !mso]><!-->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bitter:wght@600&display=swap"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!--<![endif]-->
+  </head>
+
+  <body
+    class="clean-body u_body"
+    style="
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      background-color: #deeafa;
+      color: #000000;
+    "
+  >
+    <!--[if IE]><div class="ie-container"><![endif]-->
+    <!--[if mso]><div class="mso-container"><![endif]-->
+    <table
+      id="u_body"
       style="
+        border-collapse: collapse;
+        table-layout: fixed;
+        border-spacing: 0;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+        vertical-align: top;
+        min-width: 320px;
+        margin: 0 auto;
+        background-color: #deeafa;
         width: 100%;
-        display: flex;
-        justify-content: center;
-        height: fit-content;
       "
+      cellpadding="0"
+      cellspacing="0"
     >
-      <a
-        class="link"
-        style="height: fit-content"
-        href="https://banner9-registration.kfupm.edu.sa/StudentRegistrationSsb/ssb/term/termSelection?mode=registration"
-      >
-        <span> Register your courses!</span>
-      </a>
-    </div>
-    <footer
-      style="text-align: center"
-      class="d-flex w-100 justify-content-center mt-4 flex-column align-content-center"
-    >
-      Petroly Initiative Radar
-      <div class="d-flex w-100 justify-content-center mt-3">
-        <svg
-          id="svg5"
-          version="1.1"
-          viewBox="0 0 45.551113 9.9211148"
-          height="9.9211149mm"
-          width="45.551113mm"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:svg="http://www.w3.org/2000/svg"
-        >
-          <defs id="defs2">
-            <rect
-              x="318.75"
-              y="352.34375"
-              width="285.9375"
-              height="60.9375"
-              id="rect2925"
-            />
-            <linearGradient id="linearGradient2602">
-              <stop
-                style="stop-color: #000000; stop-opacity: 1"
-                offset="0"
-                id="stop2600"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2596">
-              <stop
-                style="stop-color: #ff0000; stop-opacity: 1"
-                offset="0"
-                id="stop2594"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2555">
-              <stop
-                style="stop-color: #2affd5; stop-opacity: 1"
-                offset="0"
-                id="stop2553"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2549">
-              <stop
-                style="stop-color: #bffff2; stop-opacity: 1"
-                offset="0"
-                id="stop2547"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2543">
-              <stop
-                style="stop-color: #00d6d6; stop-opacity: 1"
-                offset="0"
-                id="stop2541"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2537">
-              <stop
-                style="stop-color: #21d2ff; stop-opacity: 1"
-                offset="0"
-                id="stop2535"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2531">
-              <stop
-                style="stop-color: #00d6d6; stop-opacity: 1"
-                offset="0"
-                id="stop2529"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2525">
-              <stop
-                style="stop-color: #00d6d6; stop-opacity: 1"
-                offset="0"
-                id="stop2523"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2519">
-              <stop
-                style="stop-color: #21d2ff; stop-opacity: 1"
-                offset="0"
-                id="stop2517"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2513">
-              <stop
-                style="stop-color: #1dffff; stop-opacity: 1"
-                offset="0"
-                id="stop2511"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2507">
-              <stop
-                style="stop-color: #5bddff; stop-opacity: 1"
-                offset="0"
-                id="stop2505"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2499">
-              <stop
-                style="stop-color: #00ffff; stop-opacity: 1"
-                offset="0"
-                id="stop2497"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2493">
-              <stop
-                style="stop-color: #80e5ff; stop-opacity: 1"
-                offset="0"
-                id="stop2491"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2485">
-              <stop
-                style="stop-color: #2affd5; stop-opacity: 1"
-                offset="0"
-                id="stop2483"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2479">
-              <stop
-                style="stop-color: #00e8bb; stop-opacity: 1"
-                offset="0"
-                id="stop2477"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2473">
-              <stop
-                style="stop-color: #00cba4; stop-opacity: 1"
-                offset="0"
-                id="stop2471"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2467">
-              <stop
-                style="stop-color: #2affd5; stop-opacity: 1"
-                offset="0"
-                id="stop2465"
-              />
-            </linearGradient>
-            <linearGradient id="linearGradient2459">
-              <stop
-                style="stop-color: #bffff2; stop-opacity: 1"
-                offset="0"
-                id="stop2457"
-              />
-            </linearGradient>
-            <linearGradient
-              id="linearGradient11878"
-              gradientTransform="matrix(0.68388226,0,0,0.68388226,12.872616,249.47647)"
-            >
-              <stop
-                style="stop-color: #72edd9; stop-opacity: 1"
-                offset="0"
-                id="stop11876"
-              />
-            </linearGradient>
-            <linearGradient
-              id="linearGradient11884"
-              gradientTransform="matrix(0.46769495,0,0,0.46769495,21.67597,420.089)"
-            >
-              <stop
-                style="stop-color: #8dffff; stop-opacity: 1"
-                offset="0"
-                id="stop11882"
-              />
-            </linearGradient>
-            <linearGradient
-              xlink:href="#linearGradient2543"
-              id="linearGradient2598"
-              x1="137.64371"
-              y1="70.07386"
-              x2="165.01328"
-              y2="70.07386"
-              gradientUnits="userSpaceOnUse"
-              gradientTransform="matrix(0.54758838,0,0,0.54758838,292.76852,196.62726)"
-            />
-          </defs>
-          <g
-            id="layer1"
-            transform="matrix(0.19477341,0,0,0.19320555,-66.529836,-23.056885)"
-            style="stroke-width: 5.15496"
+      <tbody>
+        <tr style="vertical-align: top">
+          <td
+            style="
+              word-break: break-word;
+              border-collapse: collapse !important;
+              vertical-align: top;
+            "
           >
-            <g
-              id="g1033"
-              transform="translate(190.71633,-108.12896)"
-              style="stroke-width: 5.15496"
+            <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color: #deeafa;"><![endif]-->
+
+            <div
+              class="u-row-container v-row-background-image--outer"
+              style="padding: 0px; background-color: transparent"
             >
-              <path
+              <div
+                class="u-row"
                 style="
-                  color: #000000;
-                  fill: #5ff1d8;
-                  fill-opacity: 1;
-                  stroke-width: 5.15496;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 600px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
                 "
-                d="m 243.94856,249.98122 c -2.76131,2.8e-4 -4.99972,2.23869 -5,5 v 18.82625 c 0,2.76142 2.23858,5 5,5 2.76142,0 5,-2.23858 5,-5 v -13.82625 h 39.92855 c 2.76142,0 5,-2.23858 5,-5 0,-2.76142 -2.23858,-5 -5,-5 z"
-                id="path211066"
-              />
-              <path
-                style="
-                  color: #000000;
-                  opacity: 0.660584;
-                  fill: #13debb;
-                  fill-opacity: 1;
-                  stroke-width: 4.79214;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-                d="m 248.93843,273.8174 a 4.9900609,4.9900609 0 0 1 -4.99006,4.99007 4.9900609,4.9900609 0 0 1 -4.99006,-4.99007 4.9900609,4.9900609 0 0 1 4.99006,-4.99006 4.9900609,4.9900609 0 0 1 4.99006,4.99006 z"
-                id="path4591"
-              />
-              <path
-                style="
-                  color: #000000;
-                  fill: #13debb;
-                  fill-opacity: 1;
-                  stroke-width: 4.79214;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-                d="m 229.54018,273.8174 a 4.9900609,4.9900609 0 0 1 -4.99006,4.99007 4.9900609,4.9900609 0 0 1 -4.99006,-4.99007 4.9900609,4.9900609 0 0 1 4.99006,-4.99006 4.9900609,4.9900609 0 0 1 4.99006,4.99006 z"
-                id="path4429"
-              />
-              <path
-                style="
-                  color: #000000;
-                  fill: #00b6e6;
-                  fill-opacity: 1;
-                  stroke-width: 51.5496;
-                  stroke-linecap: round;
-                "
-                d="M 224.55012,273.8174 V 260.2168"
-                id="path4989"
-              />
-              <path
-                style="
-                  color: #000000;
-                  fill: #5ff1d8;
-                  fill-opacity: 1;
-                  stroke-width: 5.15496;
-                  stroke-linecap: round;
-                "
-                d="m 229.55005,253.32304 c 0,-2.76142 -2.23858,-5 -5,-5 -2.76142,0 -5,2.23858 -5,5 v 20.4946 c 0,2.76142 2.23858,5 5,5 2.76142,0 5,-2.23858 5,-5 z"
-                id="path4991"
-              />
-              <path
-                style="
-                  color: #000000;
-                  opacity: 0.7;
-                  fill: #00b6e6;
-                  fill-opacity: 0.989712;
-                  stroke-width: 6.49824;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-                d="m 217.84561,240.21718 c -6.464,1.3e-4 -11.70407,5.2402 -11.70419,11.7042 -1.6e-4,6.4642 5.23999,11.70458 11.70419,11.70471 6.4644,1.6e-4 11.70487,-5.24031 11.70471,-11.70471 -1.2e-4,-6.4642 -5.24051,-11.70436 -11.70471,-11.7042 z m 1.4e-4,10.00028 c 0.94119,-7e-5 1.70423,0.76287 1.7043,1.70406 7e-5,0.94128 -0.76302,1.70436 -1.7043,1.70429 -0.94119,-7e-5 -1.70413,-0.76311 -1.70406,-1.70429 7e-5,-0.9411 0.76297,-1.70399 1.70406,-1.70406 z"
-                id="path210837"
-              />
-              <path
-                style="
-                  color: #000000;
-                  opacity: 0.660584;
-                  fill: #13debb;
-                  fill-opacity: 1;
-                  stroke-width: 4.79214;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-                d="m 229.54018,273.8174 a 4.9900609,4.9900609 0 0 1 -4.99006,4.99007 4.9900609,4.9900609 0 0 1 -4.99006,-4.99007 4.9900609,4.9900609 0 0 1 4.99006,-4.99006 4.9900609,4.9900609 0 0 1 4.99006,4.99006 z"
-                id="path13726"
-              />
-              <g
-                id="g6433"
-                transform="translate(-227.54167,107.45391)"
-                style="stroke-width: 5.15496"
               >
-                <g
-                  id="path207636"
+                <div
+                  class="v-row-background-image--inner"
                   style="
-                    opacity: 0.7;
-                    fill: #00b6e6;
-                    fill-opacity: 0.989712;
-                    stroke-width: 5.15496;
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
                   "
-                  transform="translate(0,1.7470987)"
                 >
-                  <path
+                  <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="v-row-background-image--outer" style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr class="v-row-background-image--inner" style="background-color: transparent;"><![endif]-->
+
+                  <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+                  <div
+                    class="u-col u-col-100"
                     style="
-                      color: #000000;
-                      fill: #00b6e6;
-                      fill-opacity: 0.989712;
-                      stroke-width: 51.5496;
-                      stroke-linecap: round;
+                      max-width: 320px;
+                      min-width: 600px;
+                      display: table-cell;
+                      vertical-align: top;
                     "
-                    d="m 488.48023,129.11126 h -13.6006"
-                    id="path100973"
-                  />
-                  <path
-                    style="
-                      color: #000000;
-                      fill: #00b6e6;
-                      fill-opacity: 0.989712;
-                      stroke-width: 5.15496;
-                      stroke-linecap: round;
-                    "
-                    d="m 474.87891,124.11133 a 5,5 0 0 0 -5,5 5,5 0 0 0 5,5 h 13.60156 a 5,5 0 0 0 5,-5 5,5 0 0 0 -5,-5 z"
-                    id="path100975"
-                  />
-                </g>
-                <path
-                  style="
-                    color: #000000;
-                    opacity: 0.660584;
-                    fill: #00a3ce;
-                    fill-opacity: 0.698039;
-                    stroke-width: 4.79214;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                  "
-                  d="m 479.86969,130.85835 a 4.9900609,4.9900609 0 0 1 -4.99006,4.99007 4.9900609,4.9900609 0 0 1 -4.99006,-4.99007 4.9900609,4.9900609 0 0 1 4.99006,-4.99006 4.9900609,4.9900609 0 0 1 4.99006,4.99006 z"
-                  id="path18063"
-                />
-              </g>
-              <path
-                style="
-                  color: #000000;
-                  fill: #5ff1d8;
-                  fill-opacity: 1;
-                  stroke-width: 5.15496;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-                d="m 195.01692,229.48664 c -2.76142,0 -5,2.23858 -5,5 v 15.4946 h -18.26639 -7.11387 c -7.55033,0 -13.77735,6.22702 -13.77735,13.77735 -1.1e-4,0.0189 -1.1e-4,0.0377 0,0.0566 0.0838,7.49658 6.33741,13.61112 13.83399,13.52734 h 0.33067 c 2.76142,0 5,-2.23858 5,-5 0,-2.76142 -2.23858,-5 -5,-5 h -0.38731 c -0.0182,-1e-4 -0.0365,-1e-4 -0.0547,0 -2.08266,0.0233 -3.67869,-1.53358 -3.7168,-3.61133 0.0149,-2.13137 1.6354,-3.75 3.77149,-3.75 h 7.11387 23.26639 c 2.76131,-2.8e-4 4.99972,-2.23869 5,-5 v -20.4946 c 0,-2.76142 -2.23858,-5 -5,-5 z"
-                id="path211536"
-              />
-              <path
-                style="
-                  color: #000000;
-                  opacity: 0.660584;
-                  fill: #13debb;
-                  fill-opacity: 1;
-                  stroke-width: 4.79214;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-                d="m 170.01403,272.35246 c 1e-5,2.75594 -2.23412,4.99007 -4.99006,4.99007 -2.75594,0 -4.99006,-2.23413 -4.99006,-4.99007 0,-2.75593 2.23413,-4.99006 4.99006,-4.99006 2.75593,0 4.99006,2.23413 4.99006,4.99006 z"
-                id="path13728"
-              />
-              <g
-                id="path211538"
-                style="
-                  opacity: 0.7;
-                  fill: #00b6e6;
-                  fill-opacity: 0.989712;
-                  stroke-width: 5.15496;
-                "
-                transform="translate(-227.54167,107.45391)"
-              >
-                <path
-                  style="
-                    color: #000000;
-                    fill: #00b6e6;
-                    fill-opacity: 0.989712;
-                    stroke-width: 51.5496;
-                    stroke-linecap: round;
-                  "
-                  d="m 414.13878,164.88921 h -13.6006"
-                  id="path100965"
-                />
-                <path
-                  style="
-                    color: #000000;
-                    fill: #00b6e6;
-                    fill-opacity: 0.989712;
-                    stroke-width: 5.15496;
-                    stroke-linecap: round;
-                  "
-                  d="m 405.38845,159.88867 a 5,5 0 0 0 -5,5 5,5 0 0 0 5,5 h 13.59961 a 5,5 0 0 0 5,-5 5,5 0 0 0 -5,-5 z"
-                  id="path100967"
-                />
-              </g>
-              <path
-                style="
-                  color: #000000;
-                  opacity: 0.660584;
-                  fill: #00a3ce;
-                  fill-opacity: 0.698039;
-                  stroke-width: 4.79214;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-                d="m 196.57723,272.34311 a 4.9900609,4.9900609 0 0 1 -4.99006,4.99007 4.9900609,4.9900609 0 0 1 -4.99006,-4.99007 4.9900609,4.9900609 0 0 1 4.99006,-4.99006 4.9900609,4.9900609 0 0 1 4.99006,4.99006 z"
-                id="path18065"
-              />
-              <path
-                style="
-                  color: #000000;
-                  fill: #00b5e5;
-                  fill-opacity: 0.698039;
-                  stroke-width: 4.79214;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                "
-                d="m 288.02185,272.34256 a 4.9900609,4.9900609 0 0 1 -4.99006,4.99007 4.9900609,4.9900609 0 0 1 -4.99006,-4.99007 4.9900609,4.9900609 0 0 1 4.99006,-4.99006 4.9900609,4.9900609 0 0 1 4.99006,4.99006 z"
-                id="path18147"
-              />
-              <g
-                id="g26012"
-                transform="matrix(1.2796844,0,0,1.2796844,-340.53789,68.891347)"
-                style="stroke-width: 5.15496"
-              >
-                <path
-                  id="path25509"
-                  style="
-                    color: #000000;
-                    fill: #00b5e5;
-                    fill-opacity: 0.698039;
-                    stroke-width: 4.79214;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                  "
-                  d="m 402.67854,134.88773 a 4.9900609,4.9900609 0 0 1 -4.98988,-4.98988 h 2.95951 a 2.0306704,2.0306704 0 0 0 2.03037,2.03088 2.0306704,2.0306704 0 0 0 2.03089,-2.03088 h 2.9595 a 4.9900609,4.9900609 0 0 1 -4.99039,4.98988 z"
-                />
-                <path
-                  id="path25922"
-                  style="
-                    color: #000000;
-                    fill: #00b5e5;
-                    fill-opacity: 0.698039;
-                    stroke-width: 4.79214;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                  "
-                  d="m 395.65777,134.88773 a 4.9900609,4.9900609 0 0 1 -4.98988,-4.98988 h 2.95951 a 2.0306704,2.0306704 0 0 0 2.03037,2.03088 2.0306704,2.0306704 0 0 0 2.03089,-2.03088 h 2.9595 a 4.9900609,4.9900609 0 0 1 -4.99039,4.98988 z"
-                />
-              </g>
-            </g>
-            <g
-              id="g1009"
-              transform="translate(190.71633,-108.12896)"
-              style="stroke-width: 5.15496"
+                  >
+                    <div style="height: 100%; width: 100% !important">
+                      <!--[if (!mso)&(!IE)]><!--><div
+                        style="
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                        "
+                      ><!--<![endif]-->
+                        <table
+                          id="u_content_heading_3"
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 35px 10px 0px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <h1
+                                  class="v-text-align v-font-size"
+                                  style="
+                                    margin: 0px;
+                                    color: #06d0f5;
+                                    line-height: 210%;
+                                    text-align: center;
+                                    word-wrap: break-word;
+                                    font-weight: normal;
+                                    font-family: 'Raleway', sans-serif;
+                                    font-size: 40px;
+                                  "
+                                >
+                                  <strong>Radar Detected Changes!</strong>
+                                </h1>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <table
+                          id="u_content_image_1"
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 0px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <table
+                                  width="100%"
+                                  cellpadding="0"
+                                  cellspacing="0"
+                                  border="0"
+                                >
+                                  <tr>
+                                    <td
+                                      class="v-text-align"
+                                      style="
+                                        padding-right: 0px;
+                                        padding-left: 0px;
+                                      "
+                                      align="center"
+                                    >
+                                      <img align="center" border="0" src={%
+                                      static "notifier/images/image-5.png" %}
+                                      alt="Illustration" title="Illustration"
+                                      style=" outline: none; text-decoration:
+                                      none; -ms-interpolation-mode: bicubic;
+                                      clear: both; display: inline-block
+                                      !important; border: none; height: auto;
+                                      float: none; width: 25%; max-width: 150px;
+                                      " width="150" class="v-src-width
+                                      v-src-max-width" />
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <!--[if (!mso)&(!IE)]><!-->
+                      </div>
+                      <!--<![endif]-->
+                    </div>
+                  </div>
+                  <!--[if (mso)|(IE)]></td><![endif]-->
+                  <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="u-row-container v-row-background-image--outer"
+              style="padding: 0px; background-color: transparent"
             >
-              <path
-                d="m 369.41478,241.37762 13.64066,0.60945 -13.84085,-13.97637 z"
+              <div
+                class="u-row"
                 style="
-                  fill: url(#linearGradient2598);
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 600px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
                 "
-                id="path2187"
-              />
-              <path
-                d="m 349.44775,227.93551 19.96703,13.44211 -0.20019,-13.36692 z"
+              >
+                <div
+                  class="v-row-background-image--inner"
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="v-row-background-image--outer" style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr class="v-row-background-image--inner" style="background-color: transparent;"><![endif]-->
+
+                  <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 600px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <!--[if (!mso)&(!IE)]><!--><div
+                        style="
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      ><!--<![endif]-->
+                        <table
+                          id="u_content_text_1"
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 20px 30px 10px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <div
+                                  class="v-text-align"
+                                  style="
+                                    line-height: 100%;
+                                    text-align: justify;
+                                    word-wrap: break-word;
+                                  "
+                                >
+                                  <p
+                                    style="
+                                      font-size: 14px;
+                                      line-height: 100%;
+                                      text-align: center;
+                                    "
+                                  >
+                                    <span
+                                      style="
+                                        font-family: Bitter;
+                                        font-size: 14px;
+                                        line-height: 14px;
+                                      "
+                                      ><strong
+                                        ><span
+                                          style="
+                                            font-size: 16px;
+                                            line-height: 16px;
+                                          "
+                                          ><span
+                                            style="
+                                              line-height: 16px;
+                                              font-size: 16px;
+                                            "
+                                            >We detected Changes in the
+                                            following Courses:</span
+                                          ></span
+                                        ></strong
+                                      ></span
+                                    >
+                                  </p>
+                                  <p
+                                    style="
+                                      font-size: 14px;
+                                      line-height: 100%;
+                                      text-align: center;
+                                    "
+                                  >
+                                     
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <!--[if (!mso)&(!IE)]><!-->
+                      </div>
+                      <!--<![endif]-->
+                    </div>
+                  </div>
+                  <!--[if (mso)|(IE)]></td><![endif]-->
+                  <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                </div>
+              </div>
+            </div>
+            <!-- START LOOPING HERE -->
+            {% for course in info %}
+            <div
+              class="u-row-container v-row-background-image--outer"
+              style="padding: 0px; background-color: transparent"
+            >
+              <div
+                class="u-row"
                 style="
-                  fill: #00e8bb;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 600px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
                 "
-                id="path2189"
-              />
-              <path
-                d="m 335.56841,241.75599 9.43728,7.6163 4.44206,-21.43678 z"
+              >
+                <div
+                  class="v-row-background-image--inner"
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="v-row-background-image--outer" style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr class="v-row-background-image--inner" style="background-color: transparent;"><![endif]-->
+
+                  <!--[if (mso)|(IE)]><td align="center" width="595" style="width: 595px;padding: 0px 0px 11px;border-top: 0px solid transparent;border-left: 5px solid #CCC;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 600px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <!--[if (!mso)&(!IE)]><!--><div
+                        style="
+                          padding: 0px 0px 11px;
+                          border-top: 0px solid transparent;
+                          border-left: 5px solid #ccc;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      ><!--<![endif]-->
+                        <table
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px 10px 2px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <h1
+                                  class="v-text-align v-font-size"
+                                  style="
+                                    margin: 0px;
+                                    color: #009fff;
+                                    line-height: 100%;
+                                    text-align: left;
+                                    word-wrap: break-word;
+                                    font-weight: normal;
+                                    font-family: arial, helvetica, sans-serif;
+                                    font-size: 22px;
+                                  "
+                                >
+                                  <strong>
+                                    {{ course.course.raw.course_number }}-{{course.course.raw.section_number }}<br
+                                  /></strong>
+                                </h1>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <table
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <div
+                                  class="v-text-align"
+                                  style="
+                                    line-height: 100%;
+                                    text-align: left;
+                                    word-wrap: break-word;
+                                  "
+                                >
+                                  <p style="font-size: 14px; line-height: 100%">
+                                    CRN # {{ course.course.crn }}
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <!--[if (!mso)&(!IE)]><!-->
+                      </div>
+                      <!--<![endif]-->
+                    </div>
+                  </div>
+                  <!--[if (mso)|(IE)]></td><![endif]-->
+                  <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="u-row-container v-row-background-image--outer"
+              style="padding: 0px; background-color: transparent"
+            >
+              <div
+                class="u-row"
                 style="
-                  fill: #98ffeb;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 600px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
                 "
-                id="path2191"
-              />
-              <path
-                d="m 349.44775,227.93551 9.81607,23.77093 10.15096,-10.32882 z"
+              >
+                <div
+                  class="v-row-background-image--inner"
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="v-row-background-image--outer" style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr class="v-row-background-image--inner" style="background-color: transparent;"><![endif]-->
+
+                  <!--[if (mso)|(IE)]><td align="center" width="300" style="width: 300px;padding: 0px 0px 30px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                  <div
+                    class="u-col u-col-50"
+                    style="
+                      max-width: 320px;
+                      min-width: 300px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <!--[if (!mso)&(!IE)]><!--><div
+                        style="
+                          padding: 0px 0px 30px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      ><!--<![endif]-->
+                        <table
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <h2
+                                  class="v-text-align v-font-size"
+                                  style="
+                                    margin: 0px;
+                                    line-height: 140%;
+                                    text-align: center;
+                                    word-wrap: break-word;
+                                    font-weight: normal;
+                                    font-family: arial, helvetica, sans-serif;
+                                    font-size: 20px;
+                                  "
+                                >
+                                  🪑 Available Seats
+                                </h2>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <table
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <div
+                                  class="v-text-align"
+                                  style="
+                                    line-height: 140%;
+                                    text-align: left;
+                                    word-wrap: break-word;
+                                  "
+                                >
+                                  <p
+                                    style="
+                                      font-size: 14px;
+                                      line-height: 140%;
+                                      text-align: center;
+                                    "
+                                  >
+                                    <span
+                                      style="
+                                        font-size: 22px;
+                                        line-height: 30.8px;
+                                      "
+                                      ><strong
+                                        >{{ course.status.available_seats_old }}</strong
+                                      ></span
+                                    >
+                                    <span
+                                      style="
+                                        font-size: 22px;
+                                        line-height: 30.8px;
+                                      "
+                                      >▶️
+                                      <strong
+                                        ><span
+                                          style="
+                                            color: #09e9bd;
+                                            line-height: 30.8px;
+                                            font-size: 22px;
+                                          "
+                                          >{{ course.status.available_seats }}</span
+                                        ></strong
+                                      ></span
+                                    >
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <!--[if (!mso)&(!IE)]><!-->
+                      </div>
+                      <!--<![endif]-->
+                    </div>
+                  </div>
+                  <!--[if (mso)|(IE)]></td><![endif]-->
+                  <!--[if (mso)|(IE)]><td align="center" width="300" style="width: 300px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                  <div
+                    class="u-col u-col-50"
+                    style="
+                      max-width: 320px;
+                      min-width: 300px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <!--[if (!mso)&(!IE)]><!--><div
+                        style="
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      ><!--<![endif]-->
+                        <table
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <h2
+                                  class="v-text-align v-font-size"
+                                  style="
+                                    margin: 0px;
+                                    line-height: 140%;
+                                    text-align: center;
+                                    word-wrap: break-word;
+                                    font-weight: normal;
+                                    font-family: arial, helvetica, sans-serif;
+                                    font-size: 20px;
+                                  "
+                                >
+                                  ⌛ Waitlist count
+                                </h2>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <table
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <div
+                                  class="v-text-align"
+                                  style="
+                                    line-height: 140%;
+                                    text-align: left;
+                                    word-wrap: break-word;
+                                  "
+                                >
+                                  <p
+                                    style="
+                                      font-size: 14px;
+                                      line-height: 140%;
+                                      text-align: center;
+                                    "
+                                  >
+                                    <span
+                                      style="
+                                        font-size: 22px;
+                                        line-height: 30.8px;
+                                      "
+                                      ><strong
+                                        >{{ course.status.waiting_list_count_old}}</strong
+                                      >
+                                      ▶️
+                                      <span
+                                        style="
+                                          font-size: 22px;
+                                          line-height: 30.8px;
+                                          color: #09e9bd;
+                                        "
+                                        ><strong
+                                          >{{ course.status.waiting_list_count}}</strong
+                                        ></span
+                                      ></span
+                                    >
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <!--[if (!mso)&(!IE)]><!-->
+                      </div>
+                      <!--<![endif]-->
+                    </div>
+                  </div>
+                  <!--[if (mso)|(IE)]></td><![endif]-->
+                  <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                </div>
+              </div>
+            </div>
+            {% endofor %}
+            <div
+              class="u-row-container v-row-background-image--outer"
+              style="padding: 0px; background-color: transparent"
+            >
+              <div
+                class="u-row"
                 style="
-                  fill: #00d6d6;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 600px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
                 "
-                id="path2193"
-              />
-              <path
-                d="m 345.00569,249.37229 14.25813,2.33415 -9.81607,-23.77093 z"
+              >
+                <div
+                  class="v-row-background-image--inner"
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="v-row-background-image--outer" style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr class="v-row-background-image--inner" style="background-color: transparent;"><![endif]-->
+
+                  <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 600px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <!--[if (!mso)&(!IE)]><!--><div
+                        style="
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      ><!--<![endif]-->
+                        <table
+                          id="u_content_button_1"
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <div class="v-text-align" align="center">
+                                  <a
+                                    href="https://banner9-registration.kfupm.edu.sa/StudentRegistrationSsb/ssb/term/termSelection?mode=registration"
+                                    target="_blank"
+                                    class="v-size-width"
+                                    style="
+                                      box-sizing: border-box;
+                                      display: inline-block;
+                                      font-family: 'Raleway', sans-serif;
+                                      text-decoration: none;
+                                      -webkit-text-size-adjust: none;
+                                      text-align: center;
+                                      color: #ffffff;
+                                      background-color: #09e9bd;
+                                      border-radius: 4px;
+                                      -webkit-border-radius: 4px;
+                                      -moz-border-radius: 4px;
+                                      width: 28%;
+                                      max-width: 100%;
+                                      overflow-wrap: break-word;
+                                      word-break: break-word;
+                                      word-wrap: break-word;
+                                      mso-border-alt: none;
+                                    "
+                                  >
+                                    <span
+                                      style="
+                                        display: block;
+                                        padding: 10px 20px;
+                                        line-height: 120%;
+                                      "
+                                      >Register Now!</span
+                                    >
+                                  </a>
+                                  <!--[if mso]></center></v:roundrect></td></tr></table><![endif]-->
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <!--[if (!mso)&(!IE)]><!-->
+                      </div>
+                      <!--<![endif]-->
+                    </div>
+                  </div>
+                  <!--[if (mso)|(IE)]></td><![endif]-->
+                  <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="u_row_3"
+              class="u-row-container v-row-background-image--outer"
+              style="
+                padding: 0px;
+                background-image: url('images/image-2.jpeg');
+                background-repeat: no-repeat;
+                background-position: center top;
+                background-color: #ffffff;
+              "
+            >
+              <div
+                class="u-row"
                 style="
-                  fill: #2affd5;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 600px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
                 "
-                id="path2195"
-              />
-              <path
-                d="m 365.94714,257.68884 3.46764,-16.31122 -10.15096,10.32882 z"
+              >
+                <div
+                  class="v-row-background-image--inner"
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="v-row-background-image--outer" style="padding: 0px;background-image: url('images/image-2.jpeg');background-repeat: no-repeat;background-position: center top;background-color: #ffffff;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr class="v-row-background-image--inner" style="background-color: transparent;"><![endif]-->
+
+                  <!--[if (mso)|(IE)]><td align="center" width="600" style="background-color: #ffffff;width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 600px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        background-color: #ffffff;
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <!--[if (!mso)&(!IE)]><!--><div
+                        style="
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      ><!--<![endif]-->
+                        <table
+                          id="u_content_image_3"
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 1px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <table
+                                  width="100%"
+                                  cellpadding="0"
+                                  cellspacing="0"
+                                  border="0"
+                                >
+                                  <tr>
+                                    <td
+                                      class="v-text-align"
+                                      style="
+                                        padding-right: 0px;
+                                        padding-left: 0px;
+                                      "
+                                      align="center"
+                                    >
+                                      <img align="center" border="0" src={%
+                                      static "notifier/images/image-4.png" %}
+                                      alt="Logo" title="Logo" style=" outline:
+                                      none; text-decoration: none;
+                                      -ms-interpolation-mode: bicubic; clear:
+                                      both; display: inline-block !important;
+                                      border: none; height: auto; float: none;
+                                      width: 65%; max-width: 388.7px; "
+                                      width="388.7" class="v-src-width
+                                      v-src-max-width" />
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <table
+                          id="u_content_social_2"
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <div align="center">
+                                  <div style="display: table; max-width: 46px">
+                                    <!--[if (mso)|(IE)]><table width="46" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-collapse:collapse;" align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; mso-table-lspace: 0pt;mso-table-rspace: 0pt; width:46px;"><tr><![endif]-->
+
+                                    <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 0px;" valign="top"><![endif]-->
+                                    <table
+                                      align="left"
+                                      border="0"
+                                      cellspacing="0"
+                                      cellpadding="0"
+                                      width="32"
+                                      height="32"
+                                      style="
+                                        width: 32px !important;
+                                        height: 32px !important;
+                                        display: inline-block;
+                                        border-collapse: collapse;
+                                        table-layout: fixed;
+                                        border-spacing: 0;
+                                        mso-table-lspace: 0pt;
+                                        mso-table-rspace: 0pt;
+                                        vertical-align: top;
+                                        margin-right: 0px;
+                                      "
+                                    >
+                                      <tbody>
+                                        <tr style="vertical-align: top">
+                                          <td
+                                            align="left"
+                                            valign="middle"
+                                            style="
+                                              word-break: break-word;
+                                              border-collapse: collapse !important;
+                                              vertical-align: top;
+                                            "
+                                          >
+                                            <a
+                                              href="https://twitter.com/PetrolyInit"
+                                              title="Twitter"
+                                              target="_blank"
+                                            >
+                                              <img src={% static
+                                              "notifier/images//image-1.png" %}
+                                              alt="Twitter" title="Twitter"
+                                              width="32" style=" outline: none;
+                                              text-decoration: none;
+                                              -ms-interpolation-mode: bicubic;
+                                              clear: both; display: block
+                                              !important; border: none; height:
+                                              auto; float: none; max-width: 32px
+                                              !important; " />
+                                            </a>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                    <!--[if (mso)|(IE)]></td><![endif]-->
+
+                                    <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <!--[if (!mso)&(!IE)]><!-->
+                      </div>
+                      <!--<![endif]-->
+                    </div>
+                  </div>
+                  <!--[if (mso)|(IE)]></td><![endif]-->
+                  <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="u-row-container v-row-background-image--outer"
+              style="padding: 0px; background-color: transparent"
+            >
+              <div
+                class="u-row"
                 style="
-                  fill: #00ffff;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 600px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
                 "
-                id="path2197"
-              />
-              <path
-                d="m 335.47269,261.42558 9.533,-12.05329 -9.43728,-7.6163 z"
-                style="
-                  fill: #2affd5;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
-                "
-                id="path2199"
-              />
-              <path
-                d="m 365.94714,257.68884 17.1083,-15.70177 -13.64066,-0.60945 z"
-                style="
-                  fill: #00ffff;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
-                "
-                id="path2201"
-              />
-              <path
-                d="m 365.94714,257.68884 17.01247,3.96782 0.0958,-19.66959 z"
-                style="
-                  fill: #52dcff;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
-                "
-                id="path2203"
-              />
-              <path
-                d="m 335.47269,261.42558 13.8409,13.97665 -4.3079,-26.02994 z"
-                style="
-                  fill: #bffff2;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
-                "
-                id="path2205"
-              />
-              <path
-                d="m 349.31359,275.40223 9.95023,-23.69579 -14.25813,-2.33415 z"
-                style="
-                  fill: #00e6e6;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
-                "
-                id="path2207"
-              />
-              <path
-                d="m 368.98351,275.49806 13.9761,-13.8414 -17.01247,-3.96782 0.72726,4.26565 z"
-                style="
-                  fill: #21d2ff;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
-                "
-                id="path2209"
-              />
-              <path
-                d="m 349.31359,275.40223 16.63355,-17.71339 -6.68332,-5.9824 z"
-                style="
-                  fill: #94ffff;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
-                "
-                id="path2211"
-              />
-              <path
-                d="m 349.31359,275.40223 19.66992,0.0958 -2.30911,-13.54357 -0.72726,-4.26565 z"
-                style="
-                  fill: #00bcec;
-                  fill-opacity: 1;
-                  stroke: none;
-                  stroke-width: 3.85313;
-                  stroke-linecap: butt;
-                  stroke-linejoin: round;
-                  stroke-miterlimit: 4;
-                  stroke-dasharray: none;
-                  stroke-opacity: 1;
-                "
-                id="path2213"
-              />
-              <path
-                style="
-                  fill: #00e6e6;
-                  fill-opacity: 1;
-                  stroke: #00e6e6;
-                  stroke-width: 1.36391px;
-                  stroke-linecap: butt;
-                  stroke-linejoin: miter;
-                  stroke-opacity: 1;
-                "
-                d="m 349.31359,275.40223 -4.3079,-26.02995 14.25813,2.33416 z"
-                id="path52378"
-              />
-              <path
-                style="
-                  fill: none;
-                  stroke: #00ffff;
-                  stroke-width: 1.36391px;
-                  stroke-linecap: butt;
-                  stroke-linejoin: miter;
-                  stroke-opacity: 1;
-                "
-                d="m 359.26382,251.70644 6.68331,5.9824 17.10831,-15.70177 -13.64066,-0.60945 z"
-                id="path58180"
-              />
-              <path
-                style="
-                  fill: none;
-                  stroke: #21d2ff;
-                  stroke-width: 1.36391px;
-                  stroke-linecap: butt;
-                  stroke-linejoin: miter;
-                  stroke-opacity: 1;
-                "
-                d="m 382.95961,261.65666 -17.01247,-3.96782 3.03636,17.80919"
-                id="path65019"
-              />
-              <path
-                style="
-                  fill: none;
-                  stroke: #94ffff;
-                  stroke-width: 1.36391px;
-                  stroke-linecap: butt;
-                  stroke-linejoin: miter;
-                  stroke-opacity: 1;
-                "
-                d="m 365.94714,257.68884 -16.63355,17.71339"
-                id="path69697"
-              />
-              <path
-                style="
-                  fill: none;
-                  stroke: #00e8bb;
-                  stroke-width: 1.36391px;
-                  stroke-linecap: butt;
-                  stroke-linejoin: miter;
-                  stroke-opacity: 1;
-                "
-                d="m 349.48851,228.03423 19.92627,13.34339 -0.20019,-13.36692"
-                id="path72737"
-              />
-              <path
-                style="
-                  fill: none;
-                  stroke: #2affd5;
-                  stroke-width: 1.36391px;
-                  stroke-linecap: butt;
-                  stroke-linejoin: bevel;
-                  stroke-opacity: 1;
-                "
-                d="m 359.26382,251.70644 -9.74579,-23.37509 -4.51234,21.04093"
-                id="path78000"
-              />
-              <path
-                style="
-                  fill: none;
-                  stroke: #00ffff;
-                  stroke-width: 1.36391px;
-                  stroke-linecap: butt;
-                  stroke-linejoin: miter;
-                  stroke-opacity: 1;
-                "
-                d="m 369.41478,241.37762 -3.46764,16.31122"
-                id="path82478"
-              />
-            </g>
-          </g>
-        </svg>
-      </div>
-    </footer>
+              >
+                <div
+                  class="v-row-background-image--inner"
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="v-row-background-image--outer" style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr class="v-row-background-image--inner" style="background-color: transparent;"><![endif]-->
+
+                  <!--[if (mso)|(IE)]><td align="center" width="600" style="background-color: #deeafa;width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 600px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        background-color: #deeafa;
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <!--[if (!mso)&(!IE)]><!--><div
+                        style="
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      ><!--<![endif]-->
+                        <table
+                          style="font-family: 'Raleway', sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                class="v-container-padding-padding"
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 20px 10px;
+                                  font-family: 'Raleway', sans-serif;
+                                "
+                                align="left"
+                              >
+                                <div
+                                  class="v-text-align"
+                                  style="
+                                    line-height: 140%;
+                                    text-align: center;
+                                    word-wrap: break-word;
+                                  "
+                                >
+                                  <p style="font-size: 14px; line-height: 140%">
+                                    <span
+                                      style="
+                                        font-family: Raleway, sans-serif;
+                                        font-size: 14px;
+                                        line-height: 19.6px;
+                                      "
+                                      >2022 ©  Petroly Initiative. All Rights
+                                      Reserved</span
+                                    >
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <!--[if (!mso)&(!IE)]><!-->
+                      </div>
+                      <!--<![endif]-->
+                    </div>
+                  </div>
+                  <!--[if (mso)|(IE)]></td><![endif]-->
+                  <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                </div>
+              </div>
+            </div>
+
+            <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!--[if mso]></div><![endif]-->
+    <!--[if IE]></div><![endif]-->
   </body>
 </html>
