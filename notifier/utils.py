@@ -169,7 +169,7 @@ def send_notification(user_pk: int, info: str) -> None:
             message=info,
             html_message=loader.render_to_string(
                 "notifier/email_changes.html",
-                context={"info": info_dict, "domain": "https://petroly.co"},
+                context={"info": info_dict, "domain": "https://api.petroly.co"},
             ),
             recipient_list=[user.email],
             fail_silently=False,
