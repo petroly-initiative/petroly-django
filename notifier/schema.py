@@ -131,44 +131,47 @@ class Mutation:
                 tracking_list.channels.add(ChannelEnum[channel])
 
         # ! check for the hashing and return false to the caller if the hashing was incorrect
-        if (
-            input.channels.TELEGRAM
-            and input.telegram_id
-            and input.dataCheckString
-        ):
-            # calculate the hash from check string
-            message = (
-                input.dataCheckString.encode("utf-8")
-                .decode("unicode-escape")
-                .encode("ISO-8859-1")
-            )
-            check_hash = hmac.new(
-                key=hashlib.sha256(
-                    bytes(settings.TELEGRAM_TOKEN, "utf-8")
-                ).digest(),
-                msg=message,
-                digestmod=hashlib.sha256,
-            ).hexdigest()
+        if input.channels.TELEGRAM:
+            if input.telegram_id and input.dataCheckString:
+                # calculate the hash from check string
+                message = (
+                    input.dataCheckString.encode("utf-8")
+                    .decode("unicode-escape")
+                    .encode("ISO-8859-1")
+                )
+                check_hash = hmac.new(
+                    key=hashlib.sha256(
+                        bytes(settings.TELEGRAM_TOKEN, "utf-8")
+                    ).digest(),
+                    msg=message,
+                    digestmod=hashlib.sha256,
+                ).hexdigest()
 
-            if check_hash == input.hash:
-                # if the hash match
-                # try to get or create a `TelegramProfile` obj
-                try:
-                    print(TelegramProfile.objects.get(id=input.telegram_id))
+                if check_hash == input.hash:
+                    # if the hash match
+                    # try to get or create a `TelegramProfile` obj
+                    try:
+                        TelegramProfile.objects.get(id=input.telegram_id)
 
-                except TelegramProfile.DoesNotExist:
-                    TelegramProfile.objects.create(
-                        id=input.telegram_id,
-                        user=user,
+                    except TelegramProfile.DoesNotExist:
+                        TelegramProfile.objects.create(
+                            id=input.telegram_id,
+                            user=user,
+                        )
+
+                    tracking_list.channels.add(ChannelEnum.TELEGRAM)
+
+                    async_task(
+                        "telegram_bot.utils.send_telegram_message",
+                        task_name=f"sending-success-connection-{user.pk}",
+                        chat_id=input.telegram_id,
+                        msg=f"Hey {escape_md(user.username)}, "
+                        "we connected your telegram with Petroly \\!",
                     )
-
-                tracking_list.channels.add(ChannelEnum.TELEGRAM)
-
-                async_task(
-                    "telegram_bot.utils.send_telegram_message",
-                    task_name=f"sending-success-connection-{user.pk}",
-                    chat_id=input.telegram_id,
-                    msg=f"Hey {escape_md(user.username)}, we connected your telegram with Petroly \\!",
+            else:
+                raise ValueError(
+                    "`telegram_id` wasn't found. "
+                    "Make sure you click `Log in with Telegram`."
                 )
 
         tracking_list.save()
