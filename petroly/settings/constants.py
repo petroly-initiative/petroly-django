@@ -23,7 +23,7 @@ CUSTOM_LOGGING = {
             'style': '{',
         },
         'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'format': '{levelname} {module} {process:d} - {message}',
             'style': '{',
         },
     },
