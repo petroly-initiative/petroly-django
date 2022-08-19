@@ -31,7 +31,7 @@ urlpatterns = [
     path('evaluation/', include('evaluation.urls')),
     path('roommate/', include('roommate.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
-    path('endpoint/', csrf_exempt(GraphQLView.as_view(graphiql=False, schema=schema))),
+    path('endpoint/', csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),
     path("robots.txt",TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
     path("bot/", include("telegram_bot.urls"))
 ]
