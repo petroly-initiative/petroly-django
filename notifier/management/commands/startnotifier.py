@@ -13,8 +13,8 @@ from django.core.management.base import BaseCommand
 
 from notifier.utils import check_changes, collect_tracked_courses
 
-warnings.simplefilter('ignore', CacheKeyWarning)
-warnings.simplefilter('ignore', DeprecationWarning)
+warnings.simplefilter("ignore", CacheKeyWarning)
+warnings.simplefilter("ignore", DeprecationWarning)
 
 # setting up the logger
 logger = logging.getLogger(__name__)
@@ -69,50 +69,53 @@ class Command(BaseCommand):
         killer = GracefulKiller()
 
         while not killer.kill_now:
-            t_start = time.perf_counter()
+            try:
+                t_start = time.perf_counter()
 
-            collection = collect_tracked_courses()
-            changed_courses = []
+                collection = collect_tracked_courses()
+                changed_courses = []
 
-            for _, value in collection.items():
-                changed, status = check_changes(value["course"])
+                for _, value in collection.items():
+                    changed, status = check_changes(value["course"])
 
-                if changed:
-                    value["status"] = status
-                    changed_courses.append(value)
+                    if changed:
+                        value["status"] = status
+                        changed_courses.append(value)
 
-            # group `changed_courses` by unique trackers
-            courses_by_tracker = {}
-            for c in changed_courses:
-                for tracker in c["trackers"]:
-                    try:
-                        courses_by_tracker[tracker.pk].append(
-                            {
-                                "course_pk": c["course"].pk,
-                                "status": c["status"],
-                            }
-                        )
-                    except KeyError:
-                        courses_by_tracker[tracker.pk] = [
-                            {
-                                "course_pk": c["course"].pk,
-                                "status": c["status"],
-                            }
-                        ]
+                # group `changed_courses` by unique trackers
+                courses_by_tracker = {}
+                for c in changed_courses:
+                    for tracker in c["trackers"]:
+                        try:
+                            courses_by_tracker[tracker.pk].append(
+                                {
+                                    "course_pk": c["course"].pk,
+                                    "status": c["status"],
+                                }
+                            )
+                        except KeyError:
+                            courses_by_tracker[tracker.pk] = [
+                                {
+                                    "course_pk": c["course"].pk,
+                                    "status": c["status"],
+                                }
+                            ]
 
-            for tracker_pk, info in courses_by_tracker.items():
-                async_task(
-                    "notifier.utils.send_notification",
-                    tracker_pk,
-                    str(info),
-                )
+                for tracker_pk, info in courses_by_tracker.items():
+                    async_task(
+                        "notifier.utils.send_notification",
+                        tracker_pk,
+                        str(info),
+                    )
+
+            except Exception as exc:
+                logger.error(exc)
 
             # log execution time
             logger.info(
                 "Courses changes checked within %0.4f",
                 time.perf_counter() - t_start,
             )
-
             time.sleep(5)
 
         logger.info("Stopping the Notifier Checking.")
