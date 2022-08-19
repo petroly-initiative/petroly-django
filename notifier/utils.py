@@ -53,7 +53,7 @@ def fetch_data(term: str, department: str) -> List[Dict]:
         )
     except rq.RequestException as exc:
         logger.error(
-            "Failed fetching %s-%s form API - status: %s",
+            "Failed fetching %s-%s from API - Exception: %s",
             term,
             department,
             exc,
