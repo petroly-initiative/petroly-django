@@ -53,11 +53,11 @@ CUSTOM_LOGGING = {
     },
     "loggers": {
         "notifier": {
-            "handlers": ["console", "mail_admins", "send_discord"],
+            "handlers": ["console", "send_discord"],
             "level": "INFO",
         },
         "telegram_bot": {
-            "handlers": ["console", "mail_admins", "send_discord"],
+            "handlers": ["console", "send_discord"],
             "level": "INFO",
         },
         "django.server": {
