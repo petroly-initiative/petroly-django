@@ -58,7 +58,7 @@ def fetch_data(term: str, department: str) -> List[Dict]:
             department,
             exc,
         )
-        return []
+        raise exc
 
     data = json.loads(res.content)["data"]
     cache.set((term, department), data)  # store data into cache

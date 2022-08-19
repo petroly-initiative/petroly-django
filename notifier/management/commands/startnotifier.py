@@ -6,6 +6,7 @@ import time
 import signal
 import logging
 import warnings
+import requests as rq
 
 from django_q.tasks import async_task
 from django.core.cache import CacheKeyWarning
@@ -107,6 +108,9 @@ class Command(BaseCommand):
                         tracker_pk,
                         str(info),
                     )
+
+            except rq.RequestException:
+                pass
 
             except Exception as exc:
                 logger.error(exc)
