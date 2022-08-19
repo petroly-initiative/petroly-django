@@ -163,6 +163,7 @@ GRAPHQL_JWT = {
     "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
     'JWT_EXPIRATION_DELTA': timedelta(minutes=60*24),
     'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
+    'JWT_AUTHENTICATE_INTROSPECTION': False,
     # 'JWT_ALLOW_ARGUMENT': True,
     "JWT_ALLOW_ANY_CLASSES": [
         "gqlauth.user.arg_mutations.Register",
