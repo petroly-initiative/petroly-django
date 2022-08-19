@@ -72,6 +72,7 @@ class Query:
             "name__icontains": input.name.i_contains,
         } | ({"department": input.department} if input.department else {})
 
+        # TODO sort them by overall rating
         return Instructor.objects.filter(**filters)
 
     department_list = strawberry.field(resolve_department_list)
