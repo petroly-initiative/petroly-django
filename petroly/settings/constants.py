@@ -45,15 +45,17 @@ CUSTOM_LOGGING = {
         }
     },
     'loggers': {
-        'django': {
+        'notifier': {
             'handlers': ['console', 'mail_admins'],
             'level': 'INFO',
-            'propagate': False,
+        },
+        'telegram_bot': {
+            'handlers': ['console', 'mail_admins'],
+            'level': 'INFO',
         },
         'django.server': {
             'handlers': ['django.server'],
             'level': 'INFO',
-            'propagate': False,
         },
     }
 }
