@@ -3,7 +3,7 @@ This module is to define the fetching, filtering, and processing the data
 from the KFUPM API
 """
 
-
+import os
 import json
 import logging
 from typing import List, Dict, Tuple
@@ -23,28 +23,27 @@ from evaluation.types import InstructorNode
 
 from .models import TrackingList, Course, ChannelEnum, Cache
 
-User = get_user_model()
-API = "https://registrar.kfupm.edu.sa/api/course-offering"
-
 logger = logging.getLogger(__name__)
+User = get_user_model()
+
+API = "https://registrar.kfupm.edu.sa/api/course-offering"
+proxies = {
+    "http": os.environ.get('HTTP_PROXY'),
+    "https": os.environ.get('HTTPS_PROXY'),
+}
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
     """This load data from our DB."""
 
     try:
-        obj = Cache.objects.get(
-            term=term, department=department
-        )
+        obj = Cache.objects.get(term=term, department=department)
 
     except Cache.DoesNotExist:
         request_data(term, department)
-        obj = Cache.objects.get(
-            term=term, department=department
-        )
+        obj = Cache.objects.get(term=term, department=department)
 
     return obj.get_data()
-
 
 
 def request_data(term, department) -> None:
@@ -63,8 +62,12 @@ def request_data(term, department) -> None:
 
     try:
         res = rq.get(
-            API, params={"term_code": term, "department_code": department}
+            API,
+            params={"term_code": term, "department_code": department},
+            proxies=proxies,
+            timeout=10,
         )
+
     except rq.RequestException as exc:
         logger.error(
             "Failed fetching %s-%s from API - Exception: %s",
@@ -76,9 +79,7 @@ def request_data(term, department) -> None:
     data = json.loads(res.content)["data"]
 
     if data:
-        obj, _ = Cache.objects.get_or_create(
-            term=term, department=department
-        )
+        obj, _ = Cache.objects.get_or_create(term=term, department=department)
         obj.data = data
         obj.stale = False
         obj.updated_on = now()
