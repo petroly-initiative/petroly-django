@@ -45,6 +45,7 @@ class CacheAdmin(admin.ModelAdmin):
         "term",
         "department",
         "updated_on",
+        "stale",
         valid,
     ]
     list_filter = [
