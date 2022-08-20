@@ -4,6 +4,7 @@ from the KFUPM API
 """
 
 import os
+import json
 import logging
 from typing import List, Dict, Tuple
 
@@ -86,7 +87,12 @@ def request_data(term, department) -> None:
 
 
     if res.ok:
-        data = res.json()["data"]
+        try:
+            data = res.json()["data"]
+        except json.decoder.JSONDecodeError:
+            logger.warning("JSON Decoding failed")
+            print(res.content)
+            raise
 
         obj, _ = Cache.objects.get_or_create(term=term, department=department)
         obj.data = data
