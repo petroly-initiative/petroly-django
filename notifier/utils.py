@@ -73,6 +73,7 @@ def request_data(term, department) -> None:
             department,
             exc,
         )
+        return
 
     data = json.loads(res.content)["data"]
 
