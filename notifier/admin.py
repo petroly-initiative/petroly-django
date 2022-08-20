@@ -8,7 +8,6 @@ from . import models
 admin.site.register(
     [
         models.NotificationEvent,
-        models.Cache,
     ]
 )
 
@@ -29,6 +28,28 @@ class TrackingListAdmin(admin.ModelAdmin):
     ]
     filter_horizontal = [
         "courses",
+    ]
+
+@admin.decorators.display(description="Valid", boolean=True)
+def valid(obj) -> bool:
+    return obj.is_valid()
+
+@admin.register(models.Cache)
+class CacheAdmin(admin.ModelAdmin):
+    """
+    Custom settings for `Cache` model in admin site.
+    """
+
+    list_display = [
+        "id",
+        "term",
+        "department",
+        "updated_on",
+        valid,
+    ]
+    list_filter = [
+        "term",
+        "department",
     ]
 
 
