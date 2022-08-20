@@ -23,11 +23,71 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 from django_choices_field import TextChoicesField
+from django.utils.timezone import timedelta, now, datetime
+from django_q.tasks import async_task
 from multiselectfield import MultiSelectField
 
 from data import DepartmentEnum
 
 User = get_user_model()
+
+
+class Cache(models.Model):
+    """
+    This is a simple in-DB cache,
+
+    that has:
+    - `updated_on` is when the last update for the data.
+    - `data` is a JSON field to store the actual data.
+    - `age` number of seconds until the data is invalid.
+    - `stale` True indicating new data is being fetch.
+    - `swr` number of seconds until the next request
+        pass the cache while new data is being fetched.
+    """
+
+    updated_on = models.DateTimeField(_("updated on"), auto_now_add=True)
+    stale = models.BooleanField(_("stale"), default=False)
+    age = models.IntegerField(_("age"), default=30)
+    swr = models.IntegerField(_("swr"), default=60)
+
+    data = models.JSONField(_("data"), null=True)
+    department = models.CharField(_("department"), max_length=7)
+    term = models.CharField(_("term"), max_length=7)
+
+    class Meta:
+        verbose_name = _("cache item")
+        verbose_name_plural = _("cache items")
+
+    def is_valid(self) -> bool:
+        """Wether the data has exceeded its age"""
+        return now() <= self.updated_on + timedelta(seconds=self.age)
+
+    def passed_swr(self) -> bool:
+        """Wether the data has exceeded `swr` seconds"""
+        return now() > self.updated_on + timedelta(seconds=self.swr)
+
+    def get_data(self) -> dict:
+        """This check the age of date
+        and triggers fetch for new data if `stale` is False"""
+
+        if self.is_valid():
+            return self.data
+
+        if not self.stale:
+            # call async to update from API
+            self.stale = True
+            self.save()
+            async_task(
+                'notifier.utils.request_data',
+                self.term,
+                self.department,
+                task_name=f'request-data-{self.term}-{self.department}',
+            )
+
+        return self.data
+
+    def __str__(self) -> str:
+        return str(self.id)
 
 
 class Term(models.Model):

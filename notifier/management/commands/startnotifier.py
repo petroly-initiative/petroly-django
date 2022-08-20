@@ -19,7 +19,6 @@ warnings.simplefilter("ignore", DeprecationWarning)
 
 # setting up the logger
 logger = logging.getLogger(__name__)
-print(logger.name)
 
 
 class GracefulKiller:
