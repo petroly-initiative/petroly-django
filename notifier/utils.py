@@ -4,7 +4,6 @@ from the KFUPM API
 """
 
 import os
-import json
 import logging
 from typing import List, Dict, Tuple
 
@@ -87,7 +86,7 @@ def request_data(term, department) -> None:
 
 
     if res.ok:
-        data = json.loads(res.content)["data"]
+        data = res.json()["data"]
 
         obj, _ = Cache.objects.get_or_create(term=term, department=department)
         obj.data = data
