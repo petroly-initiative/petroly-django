@@ -195,8 +195,8 @@ GQL_AUTH = GqlAuthSettings(
 
 Q_CLUSTER = {
     'name': 'petroly',
-    'workers': 5,
-    'timeout': 30,
+    'workers': 8,
+    'timeout': 50,
     'queue_limit': 50,
     'bulk': 10,
     'orm': 'default'
