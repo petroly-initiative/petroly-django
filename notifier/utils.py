@@ -28,8 +28,8 @@ User = get_user_model()
 
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
 proxies = {
-    "http": os.environ.get('API_HTTP_PROXY'),
-    "https": os.environ.get('API_HTTPS_PROXY'),
+    "http": os.environ.get("API_HTTP_PROXY"),
+    "https": os.environ.get("API_HTTPS_PROXY"),
 }
 
 
@@ -66,6 +66,13 @@ def request_data(term, department) -> None:
             params={"term_code": term, "department_code": department},
             proxies=proxies,
             timeout=20,
+        )
+
+    except rq.Timeout:
+        logger.warning(
+            "Timeout on %s-%s",
+            term,
+            department,
         )
 
     except rq.RequestException as exc:
