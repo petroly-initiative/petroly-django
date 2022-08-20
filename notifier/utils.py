@@ -4,6 +4,7 @@ from the KFUPM API
 """
 
 import os
+import time
 import json
 import logging
 from typing import List, Dict, Tuple
@@ -57,7 +58,7 @@ def request_data(term, department) -> None:
     Returns:
         dict: the response JSON after converting into dict object,
     """
-
+    t_start = time.perf_counter()
     logger.info("Requesting %s-%s", term, department)
 
     try:
@@ -102,6 +103,12 @@ def request_data(term, department) -> None:
 
     else:
         logger.info("No data was returned from API")
+
+    # log execution time
+    logger.info(
+        "API requested within %0.4f",
+        time.perf_counter() - t_start,
+    )
 
 
 def get_course_info(course: Course) -> dict:
