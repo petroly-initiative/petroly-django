@@ -92,7 +92,7 @@ def request_data(term, department) -> None:
             data = res.json()["data"]
         except json.decoder.JSONDecodeError:
             logger.warning("JSON Decoding failed")
-            print(res.content)
+            print(res.content[:200])
             raise
 
         obj, _ = Cache.objects.get_or_create(term=term, department=department)
