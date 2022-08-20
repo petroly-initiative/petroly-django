@@ -74,6 +74,7 @@ def request_data(term, department) -> None:
             term,
             department,
         )
+        raise
 
     except rq.RequestException as exc:
         logger.error(
@@ -82,7 +83,7 @@ def request_data(term, department) -> None:
             department,
             exc,
         )
-        return
+        raise
 
     data = json.loads(res.content)["data"]
 
