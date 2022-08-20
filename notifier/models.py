@@ -18,12 +18,13 @@ Here are the related models definition for the `notifier` app.
             - `sent_on`
 """
 
+import os
 
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 from django_choices_field import TextChoicesField
-from django.utils.timezone import timedelta, now, datetime
+from django.utils.timezone import timedelta, now
 from django_q.tasks import async_task
 from multiselectfield import MultiSelectField
 
@@ -47,8 +48,6 @@ class Cache(models.Model):
 
     updated_on = models.DateTimeField(_("updated on"), auto_now_add=True)
     stale = models.BooleanField(_("stale"), default=False)
-    age = models.IntegerField(_("age"), default=30)
-    swr = models.IntegerField(_("swr"), default=60)
 
     data = models.JSONField(_("data"), null=True)
     department = models.CharField(_("department"), max_length=7)
@@ -59,12 +58,18 @@ class Cache(models.Model):
         verbose_name_plural = _("cache items")
 
     def is_valid(self) -> bool:
-        """Wether the data has exceeded its age"""
-        return now() <= self.updated_on + timedelta(seconds=self.age)
+        """Wether the data has exceeded its age
+        default to 5 mins"""
+        return now() <= self.updated_on + timedelta(
+            seconds=int(os.environ.get("CACHE_AGE", 60 * 5))
+        )
 
     def passed_swr(self) -> bool:
-        """Wether the data has exceeded `swr` seconds"""
-        return now() > self.updated_on + timedelta(seconds=self.swr)
+        """Wether the data has exceeded `swr` seconds
+        default to 6 min"""
+        return now() > self.updated_on + timedelta(
+            seconds=int(os.environ.get("CACHE_SWR", 60 * 6))
+        )
 
     def get_data(self) -> dict:
         """This check the age of date
@@ -78,10 +83,10 @@ class Cache(models.Model):
             self.stale = True
             self.save()
             async_task(
-                'notifier.utils.request_data',
+                "notifier.utils.request_data",
                 self.term,
                 self.department,
-                task_name=f'request-data-{self.term}-{self.department}',
+                task_name=f"request-data-{self.term}-{self.department}",
             )
 
         return self.data
