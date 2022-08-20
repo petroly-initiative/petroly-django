@@ -10,10 +10,10 @@ from typing import List, Dict, Tuple
 
 import requests as rq
 from django.contrib.auth import get_user_model
-from django.core.cache import cache
 from django.core.mail import send_mail
 from django.db.models import Q
 from django.template import loader
+from django.utils.timezone import now
 
 from telegram_bot import messages
 from telegram_bot import utils as bot_utils
@@ -21,7 +21,7 @@ from evaluation.models import Instructor
 from evaluation.schema import crete_global_id
 from evaluation.types import InstructorNode
 
-from .models import TrackingList, Course, ChannelEnum
+from .models import TrackingList, Course, ChannelEnum, Cache
 
 User = get_user_model()
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
@@ -30,6 +30,24 @@ logger = logging.getLogger(__name__)
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
+    """This load data from our DB."""
+
+    try:
+        obj = Cache.objects.get(
+            term=term, department=department
+        )
+
+    except Cache.DoesNotExist:
+        request_data(term, department)
+        obj = Cache.objects.get(
+            term=term, department=department
+        )
+
+    return obj.get_data()
+
+
+
+def request_data(term, department) -> None:
     """This method performs a GET request to the KFUPM API
     for the specific args.
 
@@ -41,11 +59,7 @@ def fetch_data(term: str, department: str) -> List[Dict]:
         dict: the response JSON after converting into dict object,
     """
 
-    data = cache.get((term, department))
-
-    if data:
-        return data
-    logger.info("cache miss for %s-%s", term, department)
+    logger.info("Requesting %s-%s", term, department)
 
     try:
         res = rq.get(
@@ -58,12 +72,20 @@ def fetch_data(term: str, department: str) -> List[Dict]:
             department,
             exc,
         )
-        return []
 
     data = json.loads(res.content)["data"]
-    cache.set((term, department), data)  # store data into cache
 
-    return data
+    if data:
+        obj, _ = Cache.objects.get_or_create(
+            term=term, department=department
+        )
+        obj.data = data
+        obj.stale = False
+        obj.updated_on = now()
+        obj.save()
+
+    else:
+        logger.info("No data was returned from API")
 
 
 def get_course_info(course: Course) -> dict:
@@ -169,7 +191,10 @@ def send_notification(user_pk: int, info: str) -> None:
             message=info,
             html_message=loader.render_to_string(
                 "notifier/email_changes.html",
-                context={"info": info_dict, "domain": "https://api.petroly.co"},
+                context={
+                    "info": info_dict,
+                    "domain": "https://api.petroly.co",
+                },
             ),
             recipient_list=[user.email],
             fail_silently=False,
