@@ -60,6 +60,7 @@ def request_data(term, department) -> None:
     """
     t_start = time.perf_counter()
     logger.info("Requesting %s-%s", term, department)
+    obj, _ = Cache.objects.get_or_create(term=term, department=department)
 
     try:
         res = rq.get(
@@ -75,6 +76,8 @@ def request_data(term, department) -> None:
             term,
             department,
         )
+        obj.stale = False
+        obj.save()
         raise
 
     except rq.RequestException as exc:
@@ -84,6 +87,8 @@ def request_data(term, department) -> None:
             department,
             exc,
         )
+        obj.stale = False
+        obj.save()
         raise
 
 
@@ -93,9 +98,10 @@ def request_data(term, department) -> None:
         except json.decoder.JSONDecodeError:
             logger.warning("JSON Decoding failed")
             print(res.content[:200])
+            obj.stale = False
+            obj.save()
             raise
 
-        obj, _ = Cache.objects.get_or_create(term=term, department=department)
         obj.data = data
         obj.stale = False
         obj.updated_on = now()
