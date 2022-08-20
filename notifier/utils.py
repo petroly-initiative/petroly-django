@@ -66,7 +66,7 @@ def request_data(term, department) -> None:
             API,
             params={"term_code": term, "department_code": department},
             proxies=proxies,
-            timeout=35,
+            timeout=50,
         )
 
     except rq.Timeout:
