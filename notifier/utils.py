@@ -62,6 +62,7 @@ def request_data(term, department) -> None:
     logger.info("Requesting %s-%s", term, department)
 
     try:
+        # TODO use proxy
         res = rq.get(
             API, params={"term_code": term, "department_code": department}
         )
