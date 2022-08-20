@@ -59,7 +59,6 @@ def request_data(term, department) -> None:
     """
 
     logger.info("Requesting %s-%s", term, department)
-    print(rq.get("https://ipinfo.io/json", proxies=proxies).json())
 
     try:
         res = rq.get(
