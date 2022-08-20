@@ -28,8 +28,8 @@ User = get_user_model()
 
 API = "https://registrar.kfupm.edu.sa/api/course-offering"
 proxies = {
-    "http": os.environ.get('HTTP_PROXY'),
-    "https": os.environ.get('HTTPS_PROXY'),
+    "http": os.environ.get('API_HTTP_PROXY'),
+    "https": os.environ.get('API_HTTPS_PROXY'),
 }
 
 
@@ -61,7 +61,6 @@ def request_data(term, department) -> None:
     logger.info("Requesting %s-%s", term, department)
 
     try:
-        # TODO use proxy
         res = rq.get(
             API,
             params={"term_code": term, "department_code": department},
