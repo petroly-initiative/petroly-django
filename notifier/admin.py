@@ -30,9 +30,11 @@ class TrackingListAdmin(admin.ModelAdmin):
         "courses",
     ]
 
+
 @admin.decorators.display(description="Valid", boolean=True)
 def valid(obj) -> bool:
     return obj.is_valid()
+
 
 @admin.register(models.Cache)
 class CacheAdmin(admin.ModelAdmin):
@@ -52,17 +54,21 @@ class CacheAdmin(admin.ModelAdmin):
         "term",
         "department",
     ]
-    actions = ["add_5_seconds", "sub_5_seconds"]
+    actions = ["add_5_seconds", "sub_5_seconds", "make_stale_false"]
+
+    def make_stale_false(self, request, queryset):
+        """Toggle the value of `stale` field"""
+        queryset.update(stale=False)
 
     def add_5_seconds(self, request, queryset):
-        "add 5 to `swr` & age"
+        """add 5 to `swr` & age"""
         for q in queryset:
             q.age = q.age + 5
             q.swr = q.swr + 5
             q.save()
 
     def sub_5_seconds(self, request, queryset):
-        "subtract 5 to `swr` & age"
+        """subtract 5 to `swr` & age"""
         for q in queryset:
             q.age = q.age - 5
             q.swr = q.swr - 5
