@@ -51,6 +51,21 @@ class CacheAdmin(admin.ModelAdmin):
         "term",
         "department",
     ]
+    actions = ["add_5_seconds", "sub_5_seconds"]
+
+    def add_5_seconds(self, request, queryset):
+        "add 5 to `swr` & age"
+        for q in queryset:
+            q.age = q.age + 5
+            q.swr = q.swr + 5
+            q.save()
+
+    def sub_5_seconds(self, request, queryset):
+        "subtract 5 to `swr` & age"
+        for q in queryset:
+            q.age = q.age - 5
+            q.swr = q.swr - 5
+            q.save()
 
 
 @admin.register(models.Course)
