@@ -66,6 +66,7 @@ def request_data(term, department) -> None:
         res = rq.get(
             API,
             params={"term_code": term, "department_code": department},
+            headers={'User-Agent': 'Chrome'},
             proxies=proxies,
             timeout=50,
         )
