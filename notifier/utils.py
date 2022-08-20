@@ -85,9 +85,10 @@ def request_data(term, department) -> None:
         )
         raise
 
-    data = json.loads(res.content)["data"]
 
-    if data:
+    if res.ok:
+        data = json.loads(res.content)["data"]
+
         obj, _ = Cache.objects.get_or_create(term=term, department=department)
         obj.data = data
         obj.stale = False
