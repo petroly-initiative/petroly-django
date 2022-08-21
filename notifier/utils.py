@@ -179,6 +179,7 @@ def check_changes(course: Course) -> Tuple:
 
     except KeyError:
         logger.warning("Course: %s might have been removed from source", course.crn)
+        raise
 
 
 def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
