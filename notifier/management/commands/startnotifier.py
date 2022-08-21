@@ -110,7 +110,7 @@ class Command(BaseCommand):
                     )
 
             except Exception as exc:
-                logger.warning(exc.with_traceback())
+                logger.warning(exc)
 
             # log execution time
             logger.info(
