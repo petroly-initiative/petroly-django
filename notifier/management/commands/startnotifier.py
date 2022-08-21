@@ -106,6 +106,7 @@ class Command(BaseCommand):
                         "notifier.utils.send_notification",
                         tracker_pk,
                         str(info),
+                        task_name=f"sending-notification-{tracker_pk}",
                     )
 
             except rq.RequestException:
