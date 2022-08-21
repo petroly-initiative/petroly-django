@@ -93,23 +93,24 @@ def request_data(term, department) -> None:
         raise
 
 
-    if res.ok:
-        try:
-            data = res.json()["data"]
-        except json.decoder.JSONDecodeError:
-            logger.warning("JSON Decoding failed")
-            print(res.content[:200])
-            obj.stale = False
-            obj.save()
-            raise
+    try:
+        data = res.json()["data"]
+    except json.decoder.JSONDecodeError:
+        logger.warning("JSON Decoding failed")
+        print(res.content[:200])
 
+        obj.stale = False
+        obj.save()
+        raise
+
+    if data:
         obj.data = data
         obj.stale = False
         obj.updated_on = now()
         obj.save()
 
     else:
-        logger.info("No data was returned from API")
+        logger.info("No data returned")
 
     # log execution time
     logger.info(
