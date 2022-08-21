@@ -154,31 +154,31 @@ def check_changes(course: Course) -> Tuple:
     """
 
     course_info = get_course_info(course)
-    print('Checking course: ', course, course_info)
-    keys = ["available_seats", "waiting_list_count"]
-    info = {key: course_info[key] for key in keys}
-    increased = (
-        info["available_seats"] > course.available_seats
-        or info["waiting_list_count"] > course.waiting_list_count
-    )
-    decreased = (
-        info["available_seats"] < course.available_seats
-        or info["waiting_list_count"] < course.waiting_list_count
-    )
 
-    # add the old numbers to returned info
-    info["available_seats_old"] = course.available_seats
-    info["waiting_list_count_old"] = course.waiting_list_count
+    try:
+        keys = ["available_seats", "waiting_list_count"]
+        info = {key: course_info[key] for key in keys}
+        increased = (
+            info["available_seats"] > course.available_seats
+            or info["waiting_list_count"] > course.waiting_list_count
+        )
 
-    # update the course obj with new numbers
-    course.available_seats = info["available_seats"]
-    course.waiting_list_count = info["waiting_list_count"]
+        # add the old numbers to returned info
+        info["available_seats_old"] = course.available_seats
+        info["waiting_list_count_old"] = course.waiting_list_count
 
-    # this is important even if there is no change,
-    # to auto update the `last_updated` field to now.
-    course.save()
+        # update the course obj with new numbers
+        course.available_seats = info["available_seats"]
+        course.waiting_list_count = info["waiting_list_count"]
 
-    return (increased, info)
+        # this is important even if there is no change,
+        # to auto update the `last_updated` field to now.
+        course.save()
+
+        return (increased, info)
+
+    except KeyError:
+        logger.warning("Course: %s might have been removed from source", course.crn)
 
 
 def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
