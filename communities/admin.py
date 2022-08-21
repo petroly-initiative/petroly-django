@@ -16,6 +16,9 @@ class CommunityAdmin(admin.ModelAdmin):
         "likes",
     ]
 
+    def make_ammar_owner(self, request, queryset):
+        queryset.update(owner=9)
+
     def make_verified(self, request, queryset):
         queryset.update(verified=True)
 
