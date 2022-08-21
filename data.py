@@ -11,7 +11,6 @@ years = [
 
 class DepartmentEnum(TextChoices):
 
-    AF = ("AF", "Accounting & Finance")
     ACFN = ("ACFN", "Accounting & Finance")
     AE = ("AE", "Aerospace Engineering")
     ARE = ("ARE", "Architectural Engineering")
