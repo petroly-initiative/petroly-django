@@ -31,6 +31,3 @@ class Mutation:
         obj = Token.objects.create(user=user)
 
         return obj.token
-        
-def print_obj(task):
-    print(task.result)
