@@ -20,19 +20,6 @@ class Query:
 class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
 
-    @gql.mutation
-    def start_telegram_bot(self) -> None:
-        """Thi enqueue a task for running the Telegram Bot.
-        If there is a task for this method,
-        no need to call this mutation.
-        """
-
-        async_task(
-            "telegram_bot.bot_controller.BotController",
-            task_name="telegram-bot",
-            hook="hooks.print_obj"
-        )
-
     @gql.mutation(directives=[IsAuthenticated()])
     def get_telegram_token(self, info: Info) -> str:
         """
