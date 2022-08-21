@@ -109,11 +109,8 @@ class Command(BaseCommand):
                         task_name=f"sending-notification-{tracker_pk}",
                     )
 
-            except rq.RequestException:
-                pass
-
             except Exception as exc:
-                logger.error(exc)
+                logger.warning(exc)
 
             # log execution time
             logger.info(
