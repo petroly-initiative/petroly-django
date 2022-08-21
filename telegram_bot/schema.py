@@ -6,7 +6,6 @@ of the `telegram_bot` app.
 from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
-from django_q.tasks import async_task
 
 from .models import Token
 
