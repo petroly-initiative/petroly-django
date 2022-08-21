@@ -153,6 +153,7 @@ def check_changes(course: Course) -> Tuple:
         the second element is a dict of the fields latest info.
     """
 
+    print('Checking course: ', course)
     course_info = get_course_info(course)
     keys = ["available_seats", "waiting_list_count"]
     info = {key: course_info[key] for key in keys}
