@@ -164,6 +164,7 @@ class Mutation:
                     async_task(
                         "telegram_bot.utils.send_telegram_message",
                         task_name=f"sending-success-connection-{user.pk}",
+                        group="telegram_connection",
                         chat_id=input.telegram_id,
                         msg=f"Hey {escape_md(user.username)}, "
                         "we connected your telegram with Petroly \\!",

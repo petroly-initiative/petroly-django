@@ -107,6 +107,7 @@ class Command(BaseCommand):
                         tracker_pk,
                         str(info),
                         task_name=f"sending-notification-{tracker_pk}",
+                        group="change_notification",
                     )
 
             except Exception as exc:
