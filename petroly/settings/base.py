@@ -199,5 +199,6 @@ Q_CLUSTER = {
     'timeout': 45,
     'queue_limit': 50,
     'bulk': 10,
-    'orm': 'default'
+    'orm': 'default',
+    'save_limit': 10_000,
 }
