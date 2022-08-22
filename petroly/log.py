@@ -55,10 +55,12 @@ CUSTOM_LOGGING = {
         "notifier": {
             "handlers": ["console", "send_discord"],
             "level": "INFO",
+            "propagate": False,
         },
         "telegram_bot": {
             "handlers": ["console", "send_discord"],
             "level": "INFO",
+            "propagate": False,
         },
         "django.server": {
             "handlers": ["django.server"],
