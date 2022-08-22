@@ -87,6 +87,7 @@ class Cache(models.Model):
                 self.term,
                 self.department,
                 task_name=f"request-data-{self.term}-{self.department}",
+                group='request_data',
             )
 
         return self.data
