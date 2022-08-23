@@ -53,7 +53,7 @@ CUSTOM_LOGGING = {
     },
     "loggers": {
         "notifier": {
-            "handlers": ["console", "send_discord"],
+            "handlers": ["console",],
             "level": "INFO",
             "propagate": False,
         },
