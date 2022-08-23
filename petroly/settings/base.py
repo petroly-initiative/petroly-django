@@ -200,5 +200,5 @@ Q_CLUSTER = {
     'queue_limit': 50,
     'bulk': 10,
     'orm': 'default',
-    'save_limit': 100_000,
+    'save_limit': 10_000,
 }
