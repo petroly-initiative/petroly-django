@@ -65,7 +65,6 @@ def request_data(term, department) -> None:
     Returns:
         dict: the response JSON after converting into dict object,
     """
-    t_start = time.perf_counter()
     obj, created = Cache.objects.get_or_create(
         term=term, department=department
     )
@@ -145,12 +144,6 @@ def request_data(term, department) -> None:
 
     else:
         logger.info("No data returned")
-
-    # log execution time
-    logger.info(
-        "API requested within %0.4f",
-        time.perf_counter() - t_start,
-    )
 
 
 def get_course_info(course: Course) -> dict:
