@@ -78,8 +78,8 @@ class Command(BaseCommand):
 
         while not killer.kill_now:
             if api_status.status == StatusEnum.DOWN:
-                time.sleep(60)
                 logger.warning("API is still Down")
+                time.sleep(60)
                 try:
                     res = rq.get(API)
                     if "maintenance" not in str(res.content):

@@ -71,6 +71,10 @@ def request_data(term, department) -> None:
     )
     api_obj, _ = Status.objects.get_or_create(key="API")
     if api_obj.status == StatusEnum.DOWN:
+        obj.stale = False
+        obj.save()
+        if created:
+            obj.delete()
         return
 
     try:
