@@ -247,27 +247,30 @@ def send_notification(user_pk: int, info: str) -> None:
     for c in info_dict:
         c["course"] = Course.objects.get(pk=c["course_pk"])
 
-    if ChannelEnum.EMAIL in channels:
-        send_mail(
-            subject="Petroly Radar Detected Changes",
-            message=info,
-            html_message=loader.render_to_string(
-                "notifier/email_changes.html",
-                context={
-                    "info": info_dict,
-                    "domain": "https://api.petroly.co",
-                },
-            ),
-            recipient_list=[user.email],
-            fail_silently=False,
-            from_email=None,
-        )
-
     if ChannelEnum.TELEGRAM in channels:
         bot_utils.send_telegram_changes(
             chat_id=user.telegram_profile.id,
             msg=formatter_change_md(info_dict),
         )
+
+    if ChannelEnum.EMAIL in channels:
+        try:
+            send_mail(
+                subject="Petroly Radar Detected Changes",
+                message=info,
+                html_message=loader.render_to_string(
+                    "notifier/email_changes.html",
+                    context={
+                        "info": info_dict,
+                        "domain": "https://api.petroly.co",
+                    },
+                ),
+                recipient_list=[user.email],
+                fail_silently=False,
+                from_email=None,
+            )
+        except Exception as exc:
+            logger.error("Couldn't send email: %s", exc)
 
 
 def formatter_md(courses: List[Course]) -> str:
