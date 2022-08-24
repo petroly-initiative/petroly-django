@@ -60,7 +60,7 @@ def request_data(term, department) -> None:
     """
     t_start = time.perf_counter()
     logger.info("Requesting %s-%s", term, department)
-    obj, _ = Cache.objects.get_or_create(term=term, department=department)
+    obj, created = Cache.objects.get_or_create(term=term, department=department)
 
     try:
         res = rq.get(
@@ -79,6 +79,9 @@ def request_data(term, department) -> None:
         )
         obj.stale = False
         obj.save()
+        if created:
+            obj.delete()
+
         raise
 
     except rq.RequestException as exc:
@@ -90,6 +93,9 @@ def request_data(term, department) -> None:
         )
         obj.stale = False
         obj.save()
+        if created:
+            obj.delete()
+
         raise
 
     try:
@@ -100,6 +106,9 @@ def request_data(term, department) -> None:
 
         obj.stale = False
         obj.save()
+        if created:
+            obj.delete()
+
         raise
 
     if data:
