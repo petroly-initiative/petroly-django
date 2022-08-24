@@ -36,7 +36,7 @@ User = get_user_model()
 class StatusEnum(models.TextChoices):
     """Choices of status of API"""
 
-    UP = "up", _("U")
+    UP = "up", _("Up")
     DOWN = "down", _("Down")
 
 
@@ -44,14 +44,14 @@ class Status(models.Model):
     """This model to store the some general status"""
 
     key = models.CharField(_("key"), max_length=50, unique=True)
-    status = models.CharField(_("status"), max_length=10)
+    status = models.CharField(_("status"), max_length=10, choices=StatusEnum.choices)
 
     class Meta:
         verbose_name = _("status")
         verbose_name_plural = _("status")
 
     def __str__(self):
-        return self.id
+        return str(self.key)
 
 
 class Cache(models.Model):

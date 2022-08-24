@@ -8,6 +8,7 @@ from . import models
 admin.site.register(
     [
         models.NotificationEvent,
+        models.Status,
     ]
 )
 
