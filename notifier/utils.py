@@ -98,11 +98,18 @@ def request_data(term, department) -> None:
 
         raise
 
+    if "maintenance" in res.url:
+        logger.warning("The source API is down.")
+        obj.stale = False
+        obj.save()
+        if created:
+            obj.delete()
+
+
     try:
         data = res.json()["data"]
     except json.decoder.JSONDecodeError:
         logger.warning("JSON Decoding failed")
-        print(res.content[:200])
 
         obj.stale = False
         obj.save()
