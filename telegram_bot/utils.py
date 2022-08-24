@@ -204,7 +204,7 @@ async def get_sections(
 
     dept_courses = fetch_data_async(term, dept)
     # sort sections according to the `section_number`
-    dept_courses.sort(key=lambda el: el["section_number"])
+    await dept_courses.sort(key=lambda el: el["section_number"])
 
     tracked_sections = await get_tracked_crns(user_id)
     # filtering already tracked sections, and course-specific sections
