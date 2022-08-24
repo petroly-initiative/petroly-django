@@ -45,7 +45,7 @@ class PreferencesInput:
     """An input type for `TrackingList`"""
 
     channels: ChannelsInput
-    telegram_id: Optional[int]
+    telegram_id: Optional[str]
     ## added the hash and data check strings as optional params
     hash: Optional[str]
     dataCheckString: Optional[str]
