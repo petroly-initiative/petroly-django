@@ -74,6 +74,7 @@ async def send_telegram_message(chat_id: int, msg: str):
             parse_mode=ParseMode.MARKDOWN_V2,
         )
 
+
 @async_to_sync
 async def send_telegram_changes(chat_id: int, msg: str):
     """Sending the changes notification.
@@ -169,10 +170,15 @@ def get_departments() -> List[str]:
     return result
 
 
+@sync_to_async
+def fetch_data_async(term, department):
+    return notifier_utils.fetch_data(term, department)
+
+
 def get_courses(term: str, dept: str) -> List[str]:
     """a function to retrieve all courses under specified department and term"""
 
-    raw_courses = notifier_utils.fetch_data(term, dept)
+    raw_courses = fetch_data_async(term, dept)
     raw_courses = list({x["course_number"] for x in raw_courses})
     raw_courses.sort()
 
@@ -189,9 +195,6 @@ def get_tracked_crns(user_id: int) -> List[str]:
         course.crn for course in tracked_courses if len(tracked_courses) != 0
     ]
 
-@sync_to_async
-def fetch_data_async(term, department):
-    return notifier_utils.fetch_data(term, department)
 
 # ! we need to filter hybrid sections, and eliminate already tracked courses
 async def get_sections(
@@ -342,7 +345,6 @@ def construct_reply_callback_grid(
             - When False (default), the input_list elements must be of type str.
     """
 
-    
     result = []
     print("inside", row_length)
     if is_callback_different:
