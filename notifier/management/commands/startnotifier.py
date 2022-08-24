@@ -142,6 +142,6 @@ class Command(BaseCommand):
                 "Courses changes checked within %0.4f",
                 time.perf_counter() - t_start,
             )
-            time.sleep(5)
+            time.sleep(10)
 
         logger.info("Stopping the Notifier Checking.")
