@@ -50,8 +50,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if user_id:
         try:
             await update.message.reply_text(
-                text=f"Hi {escape_md(update.effective_user.username)}, I am *Petroly* Bot",
-                parse_mode=ParseMode.MARKDOWN_V2,
+                text=f"Hi {update.effective_user.username}, I am Petroly Bot",
             )
 
             # try to identify the user form its telegram id
@@ -78,7 +77,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                     (
                         "/clear",
                         "deletes all tracked courses from your tracking list",
-                    )
+                    ),
                 ]
             )
 
