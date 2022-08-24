@@ -65,15 +65,13 @@ def request_data(term, department) -> None:
     Returns:
         dict: the response JSON after converting into dict object,
     """
-    obj, created = Cache.objects.get_or_create(
+    api_obj, _ = Status.objects.get_or_create(key="API")
+    obj, _ = Cache.objects.get_or_create(
         term=term, department=department
     )
-    api_obj, _ = Status.objects.get_or_create(key="API")
     if api_obj.status == StatusEnum.DOWN:
         obj.stale = False
         obj.save()
-        if created:
-            obj.delete()
         return
 
     try:
@@ -93,9 +91,6 @@ def request_data(term, department) -> None:
         )
         obj.stale = False
         obj.save()
-        if created:
-            obj.delete()
-
         raise
 
     except rq.RequestException as exc:
@@ -107,9 +102,6 @@ def request_data(term, department) -> None:
         )
         obj.stale = False
         obj.save()
-        if created:
-            obj.delete()
-
         raise
 
     if "maintenance" in str(res.content):
@@ -118,9 +110,6 @@ def request_data(term, department) -> None:
 
         api_obj.status = StatusEnum.DOWN
         api_obj.save()
-
-        if created:
-            obj.delete()
 
         raise ConnectionError("The source API is down.")
 
@@ -131,9 +120,6 @@ def request_data(term, department) -> None:
 
         obj.stale = False
         obj.save()
-        if created:
-            obj.delete()
-
         raise
 
     if data:
