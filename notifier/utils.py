@@ -104,6 +104,7 @@ def request_data(term, department) -> None:
         obj.save()
         if created:
             obj.delete()
+        return
 
 
     try:
