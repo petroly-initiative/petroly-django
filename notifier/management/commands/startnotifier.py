@@ -6,16 +6,19 @@ import time
 import signal
 import logging
 import warnings
-import requests as rq
 
+import requests as rq
 from django_q.tasks import async_task
 from django.core.cache import CacheKeyWarning
 from django.core.management.base import BaseCommand
 
 from notifier.utils import check_changes, collect_tracked_courses
+from notifier.models import Status, StatusEnum
 
 warnings.simplefilter("ignore", CacheKeyWarning)
 warnings.simplefilter("ignore", DeprecationWarning)
+
+API = "https://registrar.kfupm.edu.sa/api/course-offering"
 
 # setting up the logger
 logger = logging.getLogger(__name__)
@@ -67,8 +70,25 @@ class Command(BaseCommand):
 
         logger.info("Starting the Notifier Checking")
         killer = GracefulKiller()
+        status, _ = Status.objects.get_or_create(key="API")
 
         while not killer.kill_now:
+            if status.status == StatusEnum.DOWN:
+                time.sleep(60)
+                logger.warning("API is still Down")
+                try:
+                    res = rq.get(API)
+                    if "maintenance" not in str(res.content):
+                        status.status = StatusEnum.UP
+                        status.save()
+
+                    continue
+
+                except Exception as exc:
+                    logger.error(exc)
+                    continue
+
+
             try:
                 t_start = time.perf_counter()
 
