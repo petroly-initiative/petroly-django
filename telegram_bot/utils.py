@@ -189,6 +189,9 @@ def get_tracked_crns(user_id: int) -> List[str]:
         course.crn for course in tracked_courses if len(tracked_courses) != 0
     ]
 
+@sync_to_async
+def fetch_data_async(term, department):
+    return notifier_utils.fetch_data(term, department)
 
 # ! we need to filter hybrid sections, and eliminate already tracked courses
 async def get_sections(
@@ -196,7 +199,7 @@ async def get_sections(
 ) -> List[Tuple[str, Dict[str, str | int]]]:
     """a function to return all untracked sections from a specific course, term, and a department"""
 
-    dept_courses = notifier_utils.fetch_data(term, department=dept)
+    dept_courses = fetch_data_async(term, dept)
     # sort sections according to the `section_number`
     dept_courses.sort(key=lambda el: el["section_number"])
 

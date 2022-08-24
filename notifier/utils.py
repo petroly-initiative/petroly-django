@@ -70,7 +70,6 @@ def request_data(term, department) -> None:
         term=term, department=department
     )
     api_obj, _ = Status.objects.get_or_create(key="API")
-
     if api_obj.status == StatusEnum.DOWN:
         return
 
