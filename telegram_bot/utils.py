@@ -175,7 +175,8 @@ def fetch_data_async(term, department):
     data = notifier_utils.fetch_data(term, department)
 
     # sort sections according to the `section_number`
-    return data.sort(key=lambda el: el["section_number"])
+    data.sort(key=lambda el: el["section_number"])
+    return data
 
 @sync_to_async
 def get_courses(term: str, dept: str) -> List[str]:
