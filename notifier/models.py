@@ -69,10 +69,13 @@ class Cache(models.Model):
         pass the cache while new data is being fetched.
     """
 
+    def data_default():
+        return []
+
     updated_on = models.DateTimeField(_("updated on"), auto_now_add=True)
     stale = models.BooleanField(_("stale"), default=False)
 
-    data = models.JSONField(_("data"), null=True)
+    data = models.JSONField(_("data"), default=data_default)
     department = models.CharField(_("department"), max_length=7)
     term = models.CharField(_("term"), max_length=7)
 
