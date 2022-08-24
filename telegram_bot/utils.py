@@ -172,7 +172,10 @@ def get_departments() -> List[str]:
 
 @sync_to_async
 def fetch_data_async(term, department):
-    return notifier_utils.fetch_data(term, department)
+    data = notifier_utils.fetch_data(term, department)
+    
+    # sort sections according to the `section_number`
+    return data.sort(key=lambda el: el["section_number"])
 
 @sync_to_async
 def get_courses(term: str, dept: str) -> List[str]:
@@ -203,8 +206,6 @@ async def get_sections(
     """a function to return all untracked sections from a specific course, term, and a department"""
 
     dept_courses = fetch_data_async(term, dept)
-    # sort sections according to the `section_number`
-    await dept_courses.sort(key=lambda el: el["section_number"])
 
     tracked_sections = await get_tracked_crns(user_id)
     # filtering already tracked sections, and course-specific sections
