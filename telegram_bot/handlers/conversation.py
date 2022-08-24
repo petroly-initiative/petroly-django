@@ -100,7 +100,7 @@ async def track_courses(
     # storing persistent data for next steps
     context.user_data["department"] = selected_dept
     # getting courses under the selected department and term
-    courses = get_courses(
+    courses = await get_courses(
         term=context.user_data.get("term", "TERM_NOT_FOUND"),
         dept=selected_dept,
     )
