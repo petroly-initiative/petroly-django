@@ -18,6 +18,7 @@ Here are the related models definition for the `notifier` app.
             - `sent_on`
 """
 
+
 import os
 
 from django.db import models
