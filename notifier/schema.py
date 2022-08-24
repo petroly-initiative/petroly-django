@@ -151,11 +151,11 @@ class Mutation:
                     # if the hash match
                     # try to get or create a `TelegramProfile` obj
                     try:
-                        TelegramProfile.objects.get(id=input.telegram_id)
+                        TelegramProfile.objects.get(id=int(input.telegram_id))
 
                     except TelegramProfile.DoesNotExist:
                         TelegramProfile.objects.create(
-                            id=input.telegram_id,
+                            id=int(input.telegram_id),
                             user=user,
                         )
 
@@ -165,7 +165,7 @@ class Mutation:
                         "telegram_bot.utils.send_telegram_message",
                         task_name=f"sending-success-connection-{user.pk}",
                         group="telegram_connection",
-                        chat_id=input.telegram_id,
+                        chat_id=int(input.telegram_id),
                         msg=f"Hey {escape_md(user.username)}, "
                         "we connected your telegram with Petroly \\!",
                     )
