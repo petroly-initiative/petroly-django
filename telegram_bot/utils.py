@@ -174,11 +174,11 @@ def get_departments() -> List[str]:
 def fetch_data_async(term, department):
     return notifier_utils.fetch_data(term, department)
 
-
+@sync_to_async
 def get_courses(term: str, dept: str) -> List[str]:
     """a function to retrieve all courses under specified department and term"""
 
-    raw_courses = fetch_data_async(term, dept)
+    raw_courses = notifier_utils.fetch_data(term, dept)
     raw_courses = list({x["course_number"] for x in raw_courses})
     raw_courses.sort()
 
