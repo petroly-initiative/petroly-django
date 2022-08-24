@@ -18,6 +18,7 @@ Here are the related models definition for the `notifier` app.
             - `sent_on`
 """
 
+
 import os
 
 from django.db import models
@@ -70,7 +71,7 @@ class Cache(models.Model):
     updated_on = models.DateTimeField(_("updated on"), auto_now_add=True)
     stale = models.BooleanField(_("stale"), default=False)
 
-    data = models.JSONField(_("data"), null=True)
+    data = models.JSONField(_("data"), default= lambda: [])
     department = models.CharField(_("department"), max_length=7)
     term = models.CharField(_("term"), max_length=7)
 
