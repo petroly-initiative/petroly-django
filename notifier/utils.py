@@ -99,12 +99,11 @@ def request_data(term, department) -> None:
         raise
 
     if "maintenance" in str(res.content):
-        logger.warning("The source API is down.")
         obj.stale = False
         obj.save()
         if created:
             obj.delete()
-        return
+        raise Exception("The source API is down.")
 
 
     try:
