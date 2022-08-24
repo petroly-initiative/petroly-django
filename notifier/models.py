@@ -44,7 +44,9 @@ class Status(models.Model):
     """This model to store the some general status"""
 
     key = models.CharField(_("key"), max_length=50, unique=True)
-    status = models.CharField(_("status"), max_length=10, choices=StatusEnum.choices)
+    status = models.CharField(
+        _("status"), max_length=10, choices=StatusEnum.choices
+    )
 
     class Meta:
         verbose_name = _("status")
@@ -100,16 +102,17 @@ class Cache(models.Model):
             return self.data
 
         if not self.stale:
-            # call async to update from API
-            self.stale = True
-            self.save()
-            async_task(
-                "notifier.utils.request_data",
-                self.term,
-                self.department,
-                task_name=f"request-data-{self.term}-{self.department}",
-                group="request_data",
-            )
+            if Status.objects.get(key="API").status == StatusEnum.UP:
+                # call async to update from API
+                self.stale = True
+                self.save()
+                async_task(
+                    "notifier.utils.request_data",
+                    self.term,
+                    self.department,
+                    task_name=f"request-data-{self.term}-{self.department}",
+                    group="request_data",
+                )
 
         return self.data
 
