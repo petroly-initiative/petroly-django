@@ -22,7 +22,14 @@ from evaluation.models import Instructor
 from evaluation.schema import crete_global_id
 from evaluation.types import InstructorNode
 
-from .models import TrackingList, Course, ChannelEnum, Cache
+from .models import (
+    TrackingList,
+    Course,
+    ChannelEnum,
+    Cache,
+    Status,
+    StatusEnum,
+)
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -59,8 +66,9 @@ def request_data(term, department) -> None:
         dict: the response JSON after converting into dict object,
     """
     t_start = time.perf_counter()
-    logger.info("Requesting %s-%s", term, department)
-    obj, created = Cache.objects.get_or_create(term=term, department=department)
+    obj, created = Cache.objects.get_or_create(
+        term=term, department=department
+    )
 
     try:
         res = rq.get(
@@ -99,13 +107,16 @@ def request_data(term, department) -> None:
         raise
 
     if "maintenance" in str(res.content):
-        obj.stale = True
+        obj.stale = False
         obj.save()
+
+        obj, _ = Status.objects.get_or_create(key="API")
+        obj.status = StatusEnum.DOWN
+
         if created:
             obj.delete()
 
         raise ConnectionError("The source API is down.")
-
 
     try:
         data = res.json()["data"]

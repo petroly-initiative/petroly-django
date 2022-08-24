@@ -33,6 +33,27 @@ from data import DepartmentEnum
 User = get_user_model()
 
 
+class StatusEnum(models.TextChoices):
+    """Choices of status of API"""
+
+    UP = "up", _("U")
+    DOWN = "down", _("Down")
+
+
+class Status(models.Model):
+    """This model to store the some general status"""
+
+    key = models.CharField(_("key"), max_length=50, unique=True)
+    status = models.CharField(_("status"), max_length=10)
+
+    class Meta:
+        verbose_name = _("status")
+        verbose_name_plural = _("status")
+
+    def __str__(self):
+        return self.id
+
+
 class Cache(models.Model):
     """
     This is a simple in-DB cache,
@@ -87,7 +108,7 @@ class Cache(models.Model):
                 self.term,
                 self.department,
                 task_name=f"request-data-{self.term}-{self.department}",
-                group='request_data',
+                group="request_data",
             )
 
         return self.data
