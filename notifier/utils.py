@@ -69,6 +69,10 @@ def request_data(term, department) -> None:
     obj, created = Cache.objects.get_or_create(
         term=term, department=department
     )
+    api_obj, _ = Status.objects.get_or_create(key="API")
+
+    if api_obj.status == StatusEnum.DOWN:
+        return
 
     try:
         res = rq.get(
@@ -110,8 +114,8 @@ def request_data(term, department) -> None:
         obj.stale = False
         obj.save()
 
-        obj, _ = Status.objects.get_or_create(key="API")
-        obj.status = StatusEnum.DOWN
+        api_obj.status = StatusEnum.DOWN
+        api_obj.save()
 
         if created:
             obj.delete()
