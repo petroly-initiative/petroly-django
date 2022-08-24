@@ -1,7 +1,7 @@
 """
 All `telegram_bot` models.
 
-models: 
+models:
     - TelegramProfile
 """
 import random
@@ -19,7 +19,7 @@ class TelegramProfile(models.Model):
     A class to represent the link between a django user and the telegram account
     """
 
-    id = models.IntegerField(_("telegram user ID"), primary_key=True)
+    id = models.BigIntegerField(_("telegram user ID"), primary_key=True)
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
     username = models.CharField(
         _("telegram username"), max_length=256, blank=True, default=""
