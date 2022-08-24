@@ -98,7 +98,7 @@ def request_data(term, department) -> None:
 
         raise
 
-    if "maintenance" in res.url:
+    if "maintenance" in str(res.content):
         logger.warning("The source API is down.")
         obj.stale = False
         obj.save()
