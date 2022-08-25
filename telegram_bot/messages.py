@@ -31,7 +31,7 @@ your Petroly account with your Telegram's one."""
 # MD
 CHANGES_DETECTED = """**{course_number}-{section_number}**  - `{crn}`
 Available Seats: {available_seats_old} ➡️  {available_seats}
-Waiting list: {waiting_list_count}\n\n"""
+Waiting list: {waiting_list_count_old} ➡️  {waiting_list_count}\n\n"""
 
 # MD
 TRACKED_COURSES = """**{course_number}-{section_number}**  - `{crn}`
