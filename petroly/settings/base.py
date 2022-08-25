@@ -122,7 +122,7 @@ USE_L10N = False
 
 USE_TZ = True
 
-DATETIME_FORMAT = 'N j, Y, H:i:s'
+DATETIME_FORMAT = 'N j, Y, H:i'
 
 LOGGING = CUSTOM_LOGGING
 
