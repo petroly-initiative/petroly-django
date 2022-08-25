@@ -66,9 +66,7 @@ def request_data(term, department) -> None:
         dict: the response JSON after converting into dict object,
     """
     api_obj, _ = Status.objects.get_or_create(key="API")
-    obj, _ = Cache.objects.get_or_create(
-        term=term, department=department
-    )
+    obj, _ = Cache.objects.get_or_create(term=term, department=department)
     if api_obj.status == StatusEnum.DOWN:
         obj.stale = False
         obj.save()
@@ -293,9 +291,8 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
             section_number=course["course"].raw["section_number"],
             available_seats=course["status"]["available_seats"],
             available_seats_old=course["status"]["available_seats_old"],
-            waiting_list_count="🟢 Open"
-            if course["status"]["waiting_list_count"] > 0
-            else "🔴 Closed",
+            waiting_list_count=course["status"]["waiting_list_count"],
+            waiting_list_count_old=course["status"]["waiting_list_count_old"],
         )
 
     return result.replace("-", "\\-")
