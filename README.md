@@ -45,7 +45,7 @@ This is Petroly backend for our website [Visit us](https://petroly.co)
 ### Clone Repository
 
 > **Note**
-> Do not clone this repo directly.
+>  Do not clone this repo directly.
 
 Steps:
 
@@ -82,10 +82,8 @@ We really prefer to set up your python env:
    ```shell
    py -m pipenv shell
    ```
-   > **Note**
-   > If you face an error in installing `psycopg2-binary`, delete first line temporarily
-   from `` file. Then repeat installing.
-   > This package is meant for production only. not needed in dev stage.
+> **Note**
+> If you face an error in installing `psycopg2-binary`, delete first line temporarily from `` file. Then repeat installing. This package is meant for production only. not needed in dev stage.
 
 ### Run Django
 
@@ -105,8 +103,8 @@ We really prefer to set up your python env:
    ```shell
    python manage.py startbot
    ```
-    > **Note**
-    > to use the telegram bot setup you need to generate a telegram bot token from [BotFather](https://t.me/BotFather). and use as an environmental variable named `TELEGRAM_BOT_TOKEN` ( *we recommend using `secrets` vscode extension* ) in the backend codebase. After naming your bot, change the bot name <u>**In your fork**</u> from the frontend in `NotificationsModal.jsx` in the telegram button component to link it to your bot
+   > **Note**
+   > to use the telegram bot setup you need to generate a telegram bot token from [BotFather](https://t.me/BotFather). and use as an environmental variable named `TELEGRAM_BOT_TOKEN` ( *we recommend using `secrets` vscode extension* ) in the backend codebase. After naming your bot, change the bot name <u>**In your fork**</u> from the frontend in `NotificationsModal.jsx` in the telegram button component to link it to your bot
 4) Run the async task for periodic checking
    ```shell
    python manage.py qcluster
