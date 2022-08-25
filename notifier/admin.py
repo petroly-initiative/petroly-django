@@ -93,6 +93,7 @@ class CourseAdmin(admin.ModelAdmin):
         "term",
         "department",
     ]
+    search_fields = ["crn"]
 
 
 @admin.register(models.Term)
