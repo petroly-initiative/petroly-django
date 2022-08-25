@@ -70,13 +70,13 @@ class Command(BaseCommand):
 
         logger.info("Starting the Notifier Checking")
         killer = GracefulKiller()
-        api_status, status_created = Status.objects.get_or_create(key="API")
-
-        if status_created:
-            api_status.status = StatusEnum.UP
-            api_status.save()
 
         while not killer.kill_now:
+            api_status, status_created = Status.objects.get_or_create(key="API")
+            if status_created:
+                api_status.status = StatusEnum.UP
+                api_status.save()
+
             if api_status.status == StatusEnum.DOWN:
                 logger.info("API is still Down")
                 time.sleep(60)
