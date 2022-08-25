@@ -1,4 +1,15 @@
-# Petroly Backend
+<p  align="center">
+<img  width="100" height="100" src="https://i.postimg.cc/L6NPJzgv/new-favicon.png">
+</p>
+
+<h1 align="center" > Petroly Backend Codebase</h1>
+
+<div align="center">
+
+<img alt="GitHub Sponsors" src="https://img.shields.io/github/sponsors/petroly-initiative?color=%2300ead3&label=Petroly%20Sponsors">
+<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/PetrolyInit?style=social">
+<img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed-raw/petroly-initiative/petroly-django?color=00ead3">
+</div>
 
 This is Petroly backend for our website [Visit us](https://petroly.co)
 <!-- TODO: ADD TOOL ICONS -->
@@ -33,7 +44,8 @@ This is Petroly backend for our website [Visit us](https://petroly.co)
 
 ### Clone Repository
 
-> Do not colne this repo directly.
+> **Note**
+> Do not clone this repo directly.
 
 Steps:
 
@@ -52,26 +64,26 @@ Steps:
 
 We really prefer to set up your python env:
 
-1) install latest python 3.9
-2) create env
+1) install latest python 3.10
+2) install pipenv
 
    ```shell
-   python3 -m venv env
+   pip install pipenv
    ```
 
-3) activate env
+3) create the virtual environment and install dependencies
 
    ```shell
-   source env/bin/activate
+   py -m pipenv install
    ```
 
-4) install `requirements.txt`
+4) activate the virtual environment
 
    ```shell
-   pip install -r requirements.txt
+   py -m pipenv shell
    ```
-
-   If you face an error in installing `psycopg2-binary`, delete first line temporarily
+   > **Note**
+   > If you face an error in installing `psycopg2-binary`, delete first line temporarily
    from `` file. Then repeat installing.
    > This package is meant for production only. not needed in dev stage.
 
@@ -88,8 +100,22 @@ We really prefer to set up your python env:
    ```shell
    python manage.py runserver
    ```
+3) Start the telegram bot
 
-Done, enjoy 🤩.
+   ```shell
+   python manage.py startbot
+   ```
+    > **Note**
+    > to use the telegram bot setup you need to generate a telegram bot token from [BotFather](https://t.me/BotFather). and use as an environmental variable named `TELEGRAM_BOT_TOKEN` ( *we recommend using `secrets` vscode extension* ) in the backend codebase. After naming your bot, change the bot name <u>**In your fork**</u> from the frontend in `NotificationsModal.jsx` in the telegram button component to link it to your bot
+4) Run the async task for periodic checking
+   ```shell
+   python manage.py qcluster
+   ```
+    > **Warning**
+    > This process is stopped by only killing the terminal running it. As the periodic checking is run infintely    
+
+
+
 
 ## The main branch
 
