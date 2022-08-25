@@ -4,6 +4,7 @@ It also helps converting some ORM methods into async.
 """
 
 import re
+import logging
 from typing import Dict, List, Tuple
 from asgiref.sync import sync_to_async, async_to_sync
 
@@ -21,6 +22,7 @@ from .models import TelegramProfile, Token
 
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 def escape_md(txt) -> str:
@@ -68,11 +70,15 @@ async def send_telegram_message(chat_id: int, msg: str):
     async with Application.builder().token(
         settings.TELEGRAM_TOKEN
     ).build() as app:
-        await app.bot.send_message(
-            chat_id=chat_id,
-            text=msg,
-            parse_mode=ParseMode.MARKDOWN_V2,
-        )
+        try:
+            await app.bot.send_message(
+                chat_id=chat_id,
+                text=msg,
+                parse_mode=ParseMode.MARKDOWN_V2,
+            )
+
+        except Exception as exc:
+            logger.error("Couldn't send to Telegram: %s - %s", chat_id, exc)
 
 
 @async_to_sync
