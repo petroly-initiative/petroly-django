@@ -9,11 +9,12 @@ import logging
 from typing import List, Dict, Tuple
 
 import requests as rq
-from django.contrib.auth import get_user_model
-from django.core.mail import send_mail
+from telegram import error
 from django.db.models import Q
 from django.template import loader
 from django.utils.timezone import now
+from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
 
 from telegram_bot import messages
 from telegram_bot import utils as bot_utils
@@ -230,10 +231,16 @@ def send_notification(user_pk: int, info: str) -> None:
         c["course"] = Course.objects.get(pk=c["course_pk"])
 
     if ChannelEnum.TELEGRAM in channels:
-        bot_utils.send_telegram_changes(
-            chat_id=user.telegram_profile.id,
-            msg=formatter_change_md(info_dict),
-        )
+        try:
+            bot_utils.send_telegram_changes(
+                chat_id=user.telegram_profile.id,
+                msg=formatter_change_md(info_dict),
+            )
+        except error.Forbidden as exc:
+            logger.error("The user %s might have blocked us - %s", user, exc)
+
+        except Exception as exc:
+            logger.error("Couldn't send to Telegram: %s - %s", user, exc)
 
     if ChannelEnum.EMAIL in channels:
         try:
