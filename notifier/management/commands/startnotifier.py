@@ -78,7 +78,7 @@ class Command(BaseCommand):
 
         while not killer.kill_now:
             if api_status.status == StatusEnum.DOWN:
-                logger.warning("API is still Down")
+                logger.info("API is still Down")
                 time.sleep(60)
                 try:
                     res = rq.get(API)
