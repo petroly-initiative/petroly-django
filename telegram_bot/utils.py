@@ -8,6 +8,7 @@ import logging
 from typing import Dict, List, Tuple
 from asgiref.sync import sync_to_async, async_to_sync
 
+from telegram import error
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Application
 from telegram.constants import ParseMode
@@ -76,6 +77,9 @@ async def send_telegram_message(chat_id: int, msg: str):
                 text=msg,
                 parse_mode=ParseMode.MARKDOWN_V2,
             )
+
+        except error.Forbidden as exc:
+            logger.error("The user %s might have blocked us - %s", chat_id, exc)
 
         except Exception as exc:
             logger.error("Couldn't send to Telegram: %s - %s", chat_id, exc)
