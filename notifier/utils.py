@@ -4,7 +4,6 @@ from the KFUPM API
 """
 
 import os
-import time
 import json
 import logging
 from typing import List, Dict, Tuple
