@@ -78,11 +78,12 @@ class Command(BaseCommand):
                 api_status.save()
 
             if api_status.status == StatusEnum.DOWN:
-                logger.info("API is still Down")
+                logger.warning("API is still Down")
                 time.sleep(60)
                 try:
                     res = rq.get(API)
                     if "maintenance" not in str(res.content):
+                        logger.info("API is Up again")
                         api_status.status = StatusEnum.UP
                         api_status.save()
 
