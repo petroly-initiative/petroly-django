@@ -120,6 +120,12 @@ class Mutation:
         This also is responsible for creating TrackingList for
         first time user and `TelegramProfile`"""
 
+        # we don't support notifications on email
+        if input.channels.EMAIL:
+            raise ValueError(
+                "We don't support sending notification through email anymore."
+            )
+
         user = info.context.request.user
         tracking_list, cerated = TrackingList.objects.get_or_create(user=user)
         channels = dataclasses.asdict(input.channels)
