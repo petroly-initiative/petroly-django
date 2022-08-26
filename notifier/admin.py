@@ -30,6 +30,9 @@ class TrackingListAdmin(admin.ModelAdmin):
     filter_horizontal = [
         "courses",
     ]
+    search_fields = [
+        "user",
+    ]
 
 
 @admin.decorators.display(description="Valid", boolean=True)
