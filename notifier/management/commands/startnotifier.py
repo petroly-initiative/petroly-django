@@ -82,7 +82,7 @@ class Command(BaseCommand):
                 time.sleep(60)
                 try:
                     res = rq.get(API)
-                    if "maintenance" not in str(res.content):
+                    if "maintenance" not in res.text:
                         logger.info("API is Up again")
                         api_status.status = StatusEnum.UP
                         api_status.save()
