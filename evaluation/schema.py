@@ -75,7 +75,7 @@ class Query:
 
         sorted_by_overall = (
             Instructor.objects.filter(**filters)
-            .annotate(
+            .alias(
                 count=Count("evaluation"),
                 overall=(
                     Avg("evaluation__grading", default=0)
