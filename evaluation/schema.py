@@ -8,7 +8,7 @@ from strawberry_django_plus import gql
 from strawberry_django_plus.gql import relay
 from strawberry_django_plus.relay import Connection, Node
 from strawberry_django_plus.permissions import IsAuthenticated
-from django.db.models import QuerySet
+from django.db.models import Avg
 
 from data import DepartmentEnum
 from .models import Evaluation, Instructor
@@ -73,14 +73,20 @@ class Query:
             "name__icontains": input.name.i_contains,
         } | ({"department": input.department} if input.department else {})
 
-        sorted_instructors = sorted(
-            Instructor.objects.filter(**filters),
-            key=lambda obj: obj.avg()["overall_float"],
-            reverse=True,
+        sorted_by_overall = (
+            Instructor.objects.filter(**filters)
+            .annotate(
+                overall=(
+                    Avg("evaluation__grading", default=0)
+                    + Avg("evaluation__teaching", default=0)
+                    + Avg("evaluation__personality", default=0)
+                )
+                / 3
+            )
+            .order_by("-overall")
         )
-        return Instructor.objects.filter(
-            pk__in=[obj.pk for obj in sorted_instructors]
-        )
+
+        return sorted_by_overall
 
     department_list = strawberry.field(resolve_department_list)
     evaluated_instructors = strawberry.field(resolve_evaluated_instructors)
