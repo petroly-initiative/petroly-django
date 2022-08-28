@@ -31,7 +31,7 @@ class TrackingListAdmin(admin.ModelAdmin):
         "courses",
     ]
     search_fields = [
-        "user",
+        "user__username",
     ]
 
 
