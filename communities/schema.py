@@ -81,16 +81,21 @@ def resolve_community_create(
 
 
 def resolve_quick_add(root, info: Info, text: str) -> bool:
-    matches = re.findall(r'https:\/\/chat.whatsapp.com\/[A-Za-z0-9]*', text)
 
-    async_task(
-        'communities.populate.whatsapp_populate',
-        matches,
-        task_name='populate_whatsapp',
-        group='communities',
-        timeout=60 * 60     # 1 hour
-    )
-    return True
+    try:
+        matches = re.findall(r'https:\/\/chat.whatsapp.com\/[A-Za-z0-9]*', text)
+
+        async_task(
+            'communities.populate.whatsapp_populate',
+            matches,
+            task_name='populate_whatsapp',
+            group='communities',
+            timeout=60 * 60     # 1 hour
+        )
+        return True
+
+    except Exception:
+        return False
 
 
 @gql.type
