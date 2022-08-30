@@ -1,16 +1,16 @@
-from typing import List, Optional
 
-from django.contrib.auth.models import User
-from django.utils.translation import gettext_lazy as _
+import re
+from typing import List
+
+
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.sites.shortcuts import get_current_site
 
 from strawberry import ID
 from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
-
-from cloudinary.uploader import upload_image
+from django_q.tasks import async_task
 
 from .models import Community, Report
 from .types import (
@@ -23,6 +23,7 @@ from .types import (
     ReportInput,
 )
 
+User = get_user_model()
 
 def resolve_community_interactions(
     root, info: Info, pk: ID
@@ -32,7 +33,9 @@ def resolve_community_interactions(
 
     return CommunityInteractionsType(
         liked=Community.objects.filter(pk=pk, likes=user).exists(),
-        reported=Community.objects.filter(pk=pk, reports__reporter=user).exists(),
+        reported=Community.objects.filter(
+            pk=pk, reports__reporter=user
+        ).exists(),
     )
 
 
@@ -77,6 +80,19 @@ def resolve_community_create(
     ...
 
 
+def resolve_quick_add(root, info: Info, text: str) -> bool:
+    matches = re.findall(r'https:\/\/chat.whatsapp.com\/[A-Za-z0-9]*', text)
+
+    async_task(
+        'communities.populate.whatsapp_populate',
+        matches,
+        task_name='populate_whatsapp',
+        group='communities',
+        timeout=60 * 60     # 1 hour
+    )
+    return True
+
+
 @gql.type
 class Query:
 
@@ -90,6 +106,7 @@ class Query:
 @gql.type
 class Mutation:
 
+    quick_add: bool = gql.field(resolve_quick_add)
     community_create: CommunityType = gql.django.create_mutation(
         CommunityInput, directives=[IsAuthenticated(), MatchIdentity()]
     )
@@ -100,7 +117,9 @@ class Mutation:
         CommunityPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
     )
 
-    report_create = gql.mutation(resolve_report, directives=[IsAuthenticated()])
+    report_create = gql.mutation(
+        resolve_report, directives=[IsAuthenticated()]
+    )
 
     toggle_like_community = gql.mutation(
         rsolve_toggle_like_community,

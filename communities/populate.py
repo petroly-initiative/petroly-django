@@ -7,27 +7,20 @@
 
 import os
 import sys
-import csv
 
 import requests as rq
 from requests.exceptions import RequestException
 from bs4 import BeautifulSoup
+from cloudinary.uploader import upload_image
+from django.contrib.auth import get_user_model
+from django.conf import settings
 
-settings_type = sys.argv[1]
-os.environ.setdefault(
-    "DJANGO_SETTINGS_MODULE", "petroly.settings." + settings_type
-)
-# the above line is sufficient
-# settings.configure()
+from communities.models import Community
 
-print('DJANGO_SETTINGS_MODULE: ', os.environ.get("DJANGO_SETTINGS_MODULE"))
+User = get_user_model()
 
+def whatsapp_populate(urls):
 
-with open('data/groups.txt', encoding='utf-8') as file:
-    urls = file.readlines()
-
-
-def find_and_populate():
     for url in urls:
         url = url.removesuffix('\n')
 
@@ -52,13 +45,14 @@ def find_and_populate():
 
         except Community.DoesNotExist:
             if img_url:
+                env = 'dev' if settings.DEBUG else 'prod'
                 img = upload_image(
                     img_url['src'],
                     format="jpg",
                     overwrite=True,
                     invalidate=True,
-                    transformation=[{"width": 200, "height": 200, "crop": "fill"}],
-                    folder=f"communities/{settings_type}/icons",
+                    transformation=[{"width": 100, "height": 100, "crop": "fill"}],
+                    folder=f"communities/{env}/icons",
                 )
             Community.objects.create(
                 link=url,
@@ -66,15 +60,5 @@ def find_and_populate():
                 icon=img if img_url else None,
                 category=Community.CategoryEnum.SECTION,
                 platform=Community.PlatformEnum.WHATSAPP,
+                owner=User.objects.get(username='admin')
             )
-
-
-
-if __name__ == '__main__':
-    import django
-    django.setup()
-    from cloudinary.uploader import upload_image
-
-    from communities.models import Community
-
-    find_and_populate()
