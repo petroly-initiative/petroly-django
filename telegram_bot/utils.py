@@ -79,12 +79,15 @@ async def send_telegram_message(chat_id: int, msg: str):
             )
 
         except error.Forbidden as exc:
-            logger.error("The user %s might have blocked us - %s", chat_id, exc)
+            logger.error(
+                "The user %s might have blocked us - %s", chat_id, exc
+            )
 
         except Exception as exc:
             logger.error("Couldn't send to Telegram: %s - %s", chat_id, exc)
 
-def mass_send_telegram_message(chat_ids:List[int], message: str) -> None:
+
+def mass_send_telegram_message(chat_ids: List[int], message: str) -> None:
     """send many message to many users
 
     Args:
@@ -94,6 +97,7 @@ def mass_send_telegram_message(chat_ids:List[int], message: str) -> None:
 
     for chat_id in chat_ids:
         send_telegram_message(chat_id, message)
+
 
 @async_to_sync
 async def send_telegram_changes(chat_id: int, msg: str):
@@ -197,6 +201,7 @@ def fetch_data_async(term, department):
     # sort sections according to the `section_number`
     data.sort(key=lambda el: el["section_number"])
     return data
+
 
 @sync_to_async
 def get_courses(term: str, dept: str) -> List[str]:
