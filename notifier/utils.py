@@ -102,6 +102,17 @@ def request_data(term, department) -> None:
         obj.save()
         raise
 
+    except Exception as exc:
+        logger.error(
+            "Failed fetching %s-%s from API - Exception: %s",
+            term,
+            department,
+            exc,
+        )
+        obj.stale = False
+        obj.save()
+        raise
+
     if "maintenance" in str(res.content):
         obj.stale = False
         obj.save()
