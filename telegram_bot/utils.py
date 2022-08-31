@@ -84,6 +84,16 @@ async def send_telegram_message(chat_id: int, msg: str):
         except Exception as exc:
             logger.error("Couldn't send to Telegram: %s - %s", chat_id, exc)
 
+def mass_send_telegram_message(chat_ids:List[int], message: str) -> None:
+    """send many message to many users
+
+    Args:
+        chat_ids (List[int]): list of users to send them
+        message (str): the message to send
+    """
+
+    for chat_id in chat_ids:
+        send_telegram_message(chat_id, message)
 
 @async_to_sync
 async def send_telegram_changes(chat_id: int, msg: str):

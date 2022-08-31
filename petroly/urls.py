@@ -15,9 +15,9 @@ Including another URLconf
 """
 import debug_toolbar
 from django.contrib import admin
-from django.urls import path,include 
+from django.urls import path,include
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic.base import TemplateView 
+from django.views.generic.base import TemplateView
 from strawberry.django.views import GraphQLView
 
 from .schema import schema
@@ -30,8 +30,8 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('evaluation/', include('evaluation.urls')),
     path('roommate/', include('roommate.urls')),
+    path('telegram_bot/', include('telegram_bot.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
     path('endpoint/', csrf_exempt(GraphQLView.as_view(graphiql=False, schema=schema))),
     path("robots.txt",TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
-    path("bot/", include("telegram_bot.urls"))
 ]
