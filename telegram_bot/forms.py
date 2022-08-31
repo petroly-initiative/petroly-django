@@ -21,4 +21,5 @@ class TelegramMessageForm(forms.Form):
             message,
             task_name="sending-mass-telegram",
             group="telegram_message",
+            timeout=60 * 60 # 1 hour
         )
