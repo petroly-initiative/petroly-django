@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Send Telegram Message
+{% endblock title %}
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    
+    <br>
+    <button type="submit">SEND</button>
+</form>
+{% endblock body %}
