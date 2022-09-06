@@ -179,10 +179,8 @@ class Mutation:
                 if cerated:
                     # if `TrackingList` is just created remove
                     tracking_list.delete()
-                raise ValueError(
-                    "`telegram_id` wasn't found. "
-                    "Make sure you click `Log in with Telegram`."
-                )
+                else:
+                    return False;
 
         tracking_list.save()
 
