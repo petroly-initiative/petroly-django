@@ -48,14 +48,6 @@
             "markers": "python_version >= '3.7'",
             "version": "==3.5.2"
         },
-        "backports.cached-property": {
-            "hashes": [
-                "sha256:9306f9eed6ec55fd156ace6bc1094e2c86fae5fb2bf07b6a9c00745c656e75dd",
-                "sha256:baeb28e1cd619a3c9ab8941431fe34e8490861fb998c6c4590693d50171db0cc"
-            ],
-            "markers": "python_version >= '3.6'",
-            "version": "==1.0.2"
-        },
         "blessed": {
             "hashes": [
                 "sha256:63b8554ae2e0e7f43749b6715c734cc8f3883010a809bf16790102563e6cf25b",
@@ -483,11 +475,11 @@
         },
         "strawberry-graphql": {
             "hashes": [
-                "sha256:02e7f6e5d5541779fd2ece3f5302ff6c606b7727b8d23eb712fff07abdafc8e0",
-                "sha256:68841617fc9314027dd1c856c7a24f1456fe65952fd33d38f081cc9af81ecebb"
+                "sha256:110e5b95aecb63825c9032fd95325f0a5a3e2ad3d8d6fb45ddb4669191e8ec67",
+                "sha256:2b1b694f914bd2f286f2c10ac6244ce14d6a7f83ef6f84ddfcdadcd246c5a473"
             ],
             "index": "pypi",
-            "version": "==0.124.0"
+            "version": "==0.128.0"
         },
         "strawberry-graphql-django": {
             "hashes": [
@@ -565,11 +557,11 @@
     "develop": {
         "astroid": {
             "hashes": [
-                "sha256:9b408d5d540387a74ca5405a5197aa24fbf9178b4019b16b3e532fbdf0e467cc",
-                "sha256:cd468be9d9d03d086d4d7e6643a59bfc025762d2c895e1e22cf21feced7bb148"
+                "sha256:0dafbfcf4ebdecd3c8f6d742c9d9c88508229ca823d5c98ab872d964f3321e56",
+                "sha256:27a22f40e45af6d362498647a0940e8ae9c35f71cb572a1b6f8f810122a11918"
             ],
             "markers": "python_full_version >= '3.7.2'",
-            "version": "==2.12.7"
+            "version": "==2.12.9"
         },
         "beautifulsoup4": {
             "hashes": [
@@ -761,11 +753,11 @@
         },
         "pylint": {
             "hashes": [
-                "sha256:4b124affc198b7f7c9b5f9ab690d85db48282a025ef9333f51d2d7281b92a6c3",
-                "sha256:4f3f7e869646b0bd63b3dfb79f3c0f28fc3d2d923ea220d52620fd625aed92b0"
+                "sha256:2f3e1f00bf4b7f5a1b9880f62d89351754caa3e87d96b1eebc6fdbc84a92cab8",
+                "sha256:371977f62fab339be3fac7705963e3f6cba9e641191b53e216350f70d4838981"
             ],
             "markers": "python_full_version >= '3.7.2'",
-            "version": "==2.15.0"
+            "version": "==2.16.0.dev0"
         },
         "pylint-django": {
             "hashes": [
@@ -796,7 +788,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_full_version < '3.11.0a7'",
+            "markers": "python_version < '3.11'",
             "version": "==2.0.1"
         },
         "tomlkit": {
