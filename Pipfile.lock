@@ -385,11 +385,11 @@
         },
         "python-telegram-bot": {
             "hashes": [
-                "sha256:009522b9ce05dced9b729f7efa072507eac6d08023ee4af84fc560aef4e41e95",
-                "sha256:ebdcf70cadcc4a0be1f53ff0feb7a0b62604ae76813f2ed439bdcb7ffb77e9f9"
+                "sha256:3ec10b5169d40697aba77f245538ecdf989e9ae429fcaddc69a202579b4a6dcb",
+                "sha256:79ce5a179017baeae362382c86c19951413a277ac8dd3f736824da36432ed2e9"
             ],
             "index": "pypi",
-            "version": "==20.0a2"
+            "version": "==20.0a4"
         },
         "pytz": {
             "hashes": [
