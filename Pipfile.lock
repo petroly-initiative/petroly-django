@@ -48,14 +48,6 @@
             "markers": "python_version >= '3.7'",
             "version": "==3.5.2"
         },
-        "backports.cached-property": {
-            "hashes": [
-                "sha256:9306f9eed6ec55fd156ace6bc1094e2c86fae5fb2bf07b6a9c00745c656e75dd",
-                "sha256:baeb28e1cd619a3c9ab8941431fe34e8490861fb998c6c4590693d50171db0cc"
-            ],
-            "markers": "python_version >= '3.6'",
-            "version": "==1.0.2"
-        },
         "blessed": {
             "hashes": [
                 "sha256:63b8554ae2e0e7f43749b6715c734cc8f3883010a809bf16790102563e6cf25b",
@@ -355,11 +347,11 @@
         },
         "pyjwt": {
             "hashes": [
-                "sha256:72d1d253f32dbd4f5c88eaf1fdc62f3a19f676ccbadb9dbc5d07e951b2b26daf",
-                "sha256:d42908208c699b3b973cbeb01a969ba6a96c821eefb1c5bfe4c390c01d67abba"
+                "sha256:8d82e7087868e94dd8d7d418e5088ce64f7daab4b36db654cbaedb46f9d1ca80",
+                "sha256:e77ab89480905d86998442ac5788f35333fa85f65047a534adc38edf3c88fc3b"
             ],
-            "markers": "python_version >= '3.6'",
-            "version": "==2.4.0"
+            "markers": "python_version >= '3.7'",
+            "version": "==2.5.0"
         },
         "pyparsing": {
             "hashes": [
@@ -490,11 +482,11 @@
         },
         "strawberry-graphql": {
             "hashes": [
-                "sha256:02e7f6e5d5541779fd2ece3f5302ff6c606b7727b8d23eb712fff07abdafc8e0",
-                "sha256:68841617fc9314027dd1c856c7a24f1456fe65952fd33d38f081cc9af81ecebb"
+                "sha256:5020c13987b051d67f83b5ac15fea428289a34dccd1079ce01faf8511664d606",
+                "sha256:76a6472e8822d80059ac9530a8b3284b5649c36c8ec48a19cbbc20fa66d0c3a7"
             ],
             "index": "pypi",
-            "version": "==0.124.0"
+            "version": "==0.131.1"
         },
         "strawberry-graphql-django": {
             "hashes": [
@@ -572,11 +564,11 @@
     "develop": {
         "astroid": {
             "hashes": [
-                "sha256:0dafbfcf4ebdecd3c8f6d742c9d9c88508229ca823d5c98ab872d964f3321e56",
-                "sha256:27a22f40e45af6d362498647a0940e8ae9c35f71cb572a1b6f8f810122a11918"
+                "sha256:81f870105d892e73bf535da77a8261aa5bde838fa4ed12bb2f435291a098c581",
+                "sha256:997e0c735df60d4a4caff27080a3afc51f9bdd693d3572a4a0b7090b645c36c5"
             ],
             "markers": "python_full_version >= '3.7.2'",
-            "version": "==2.12.9"
+            "version": "==2.12.10"
         },
         "beautifulsoup4": {
             "hashes": [
