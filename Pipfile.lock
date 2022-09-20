@@ -482,8 +482,7 @@
         },
         "strawberry-graphql": {
             "hashes": [
-                "sha256:5020c13987b051d67f83b5ac15fea428289a34dccd1079ce01faf8511664d606",
-                "sha256:76a6472e8822d80059ac9530a8b3284b5649c36c8ec48a19cbbc20fa66d0c3a7"
+                "sha256:e04a1dff92127d09fcec3c6a6bd7f8cfdff62d634de4b834098ba8434cfde08e"
             ],
             "index": "pypi",
             "version": "==0.127.4"
