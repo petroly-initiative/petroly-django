@@ -385,10 +385,10 @@
         },
         "pytz": {
             "hashes": [
-                "sha256:220f481bdafa09c3955dfbdddb7b57780e9a94f5127e35456a48589b9e0c0197",
-                "sha256:cea221417204f2d1a2aa03ddae3e867921971d0d76f14d87abb4414415bbdcf5"
+                "sha256:2c0784747071402c6e99f0bafdb7da0fa22645f06554c7ae06bf6358897e9c91",
+                "sha256:48ce799d83b6f8aab2020e369b627446696619e79645419610b9facd909b3174"
             ],
-            "version": "==2022.2.1"
+            "version": "==2022.4"
         },
         "pytz-deprecation-shim": {
             "hashes": [
@@ -490,11 +490,11 @@
         },
         "strawberry-graphql-django": {
             "hashes": [
-                "sha256:9e69ae68be76204a311dd8906b29a7006849e308c749211ea19d6d63aea7ef14",
-                "sha256:d321f173834f9156e33cc91a175000ff38e72afa9c7f412b30c678d7f274d014"
+                "sha256:00297ec673272a6c91d349fad2ce699a5d903f747b4d377dc09eea2a2a777a0f",
+                "sha256:36fa5df088b1857a5e944b5aea173729eb53c636f7ffbeb190bbdadb5fd200fe"
             ],
             "index": "pypi",
-            "version": "==0.4.0"
+            "version": "==0.5.3"
         },
         "tornado": {
             "hashes": [
@@ -796,7 +796,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_full_version < '3.11.0a7'",
+            "markers": "python_version < '3.11'",
             "version": "==2.0.1"
         },
         "tomlkit": {
