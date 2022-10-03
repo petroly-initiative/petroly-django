@@ -197,7 +197,7 @@ class TrackingList(models.Model):
         blank=True,
     )
     channels = MultiSelectField(
-        choices=ChannelEnum.choices, default=ChannelEnum.EMAIL
+        choices=ChannelEnum.choices, default=ChannelEnum.EMAIL, max_length=100,
     )
 
 
