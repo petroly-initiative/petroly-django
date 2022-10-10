@@ -490,11 +490,11 @@
         },
         "strawberry-graphql-django": {
             "hashes": [
-                "sha256:9e69ae68be76204a311dd8906b29a7006849e308c749211ea19d6d63aea7ef14",
-                "sha256:d321f173834f9156e33cc91a175000ff38e72afa9c7f412b30c678d7f274d014"
+                "sha256:086f3e903cbf6296eb71f31bcf381c0ee210b0a7e5ed326d7820ea62da691959",
+                "sha256:a065c881bb278fb1c1fe00860ffbd2ef07ce1b4c44cfb75be1a4abb5ea67f6a1"
             ],
             "index": "pypi",
-            "version": "==0.4.0"
+            "version": "==0.5.4"
         },
         "tornado": {
             "hashes": [
@@ -564,11 +564,11 @@
     "develop": {
         "astroid": {
             "hashes": [
-                "sha256:81f870105d892e73bf535da77a8261aa5bde838fa4ed12bb2f435291a098c581",
-                "sha256:997e0c735df60d4a4caff27080a3afc51f9bdd693d3572a4a0b7090b645c36c5"
+                "sha256:2df4f9980c4511474687895cbfdb8558293c1a826d9118bb09233d7c2bff1c83",
+                "sha256:867a756bbf35b7bc07b35bfa6522acd01f91ad9919df675e8428072869792dce"
             ],
             "markers": "python_full_version >= '3.7.2'",
-            "version": "==2.12.10"
+            "version": "==2.12.11"
         },
         "beautifulsoup4": {
             "hashes": [
@@ -679,7 +679,7 @@
                 "sha256:fccdf7c2c5821a8cbd0a9440a456f5050492f2270bd54e94360cac663398739b",
                 "sha256:fd45683c3caddf83abbb1249b653a266e7069a09f486daa8863fb0e7496a9fdb"
             ],
-            "markers": "python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6'",
             "version": "==1.7.1"
         },
         "mccabe": {
@@ -687,7 +687,7 @@
                 "sha256:348e0240c33b60bbdf4e523192ef919f28cb2c3d7d5c7794f74009290f236325",
                 "sha256:6c2d30ab6be0e4a46919781807b4f0d834ebdd6c6e3dca0bda5a15f863427b6e"
             ],
-            "markers": "python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6'",
             "version": "==0.7.0"
         },
         "mypy": {
@@ -748,7 +748,7 @@
                 "sha256:2c9607871d58c76354b697b42f5d57e1ada7d261c261efac224b664affdc5785",
                 "sha256:d1735fc58b418fd7c5f658d28d943854f8a849b01a5d0a1e6f3f3fdd0166804b"
             ],
-            "markers": "python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6'",
             "version": "==2.9.1"
         },
         "pyflakes": {
@@ -756,7 +756,7 @@
                 "sha256:4579f67d887f804e67edb544428f264b7b24f435b263c4614f384135cea553d2",
                 "sha256:491feb020dca48ccc562a8c0cbe8df07ee13078df59813b83959cbdada312ea3"
             ],
-            "markers": "python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6'",
             "version": "==2.5.0"
         },
         "pylint": {
@@ -788,7 +788,7 @@
                 "sha256:3b2503d3c7084a42b1ebd08116e5f81aadfaea95863628c80a3b774a11b7c759",
                 "sha256:fc53893b3da2c33de295667a0e19f078c14bf86544af307354de5fcf12a3f30d"
             ],
-            "markers": "python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6'",
             "version": "==2.3.2.post1"
         },
         "tomli": {
@@ -796,7 +796,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_version < '3.11'",
+            "markers": "python_full_version < '3.11.0a7'",
             "version": "==2.0.1"
         },
         "tomlkit": {
@@ -804,7 +804,7 @@
                 "sha256:571854ebbb5eac89abcb4a2e47d7ea27b89bf29e09c35395da6f03dd4ae23d1c",
                 "sha256:f2ef9da9cef846ee027947dc99a45d6b68a63b0ebc21944649505bf2e8bc5fe7"
             ],
-            "markers": "python_version < '4.0' and python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6' and python_version < '4.0'",
             "version": "==0.11.5"
         },
         "typing-extensions": {
