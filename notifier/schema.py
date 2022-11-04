@@ -93,13 +93,14 @@ class Query:
         result = []
         for course in raw:
             if (
-                title.lower() in course["course_number"].lower()
-                or title.lower() in course["course_title"].lower()
+                title.lower() in course["courseNumber"].lower()
+                or title.lower() in course["subjectCourse"].lower()
             ):
                 result.append(course)
 
                 # try to find some info about this instructor
                 # and append it to the course dict
+                continue
                 if len(course["instructor_name"]) > 1:
                     course |= instructor_info_from_name(
                         course["instructor_name"], department
@@ -180,16 +181,14 @@ class Mutation:
                     # if `TrackingList` is just created remove
                     tracking_list.delete()
                 else:
-                    return False;
+                    return False
 
         tracking_list.save()
 
         return True
 
     @gql.mutation(directives=[IsAuthenticated()])
-    def update_tracking_list(
-        self, info: Info, courses: List[CourseInput]
-    ) -> bool:
+    def update_tracking_list(self, info: Info, courses: List[CourseInput]) -> bool:
         """Add all `courses` to the user's tracking list
         then update each course status from the cache.
 
