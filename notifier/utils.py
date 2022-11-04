@@ -143,7 +143,7 @@ def get_course_info(course: Course) -> dict:
 
     data = fetch_data(course.term, course.department)
     for api_course in data:
-        if api_course["crn"] == course.crn:
+        if api_course["courseReferenceNumber"] == course.crn:
             return api_course
 
     return {}
@@ -170,9 +170,10 @@ def check_changes(course: Course) -> Tuple:
             f"Course: {course.crn} not found, it might have been removed from source"
         )
 
-    keys = ["available_seats", "waiting_list_count"]
-    # TODO update to new banner keys
-    info = {key: course_info[key] for key in keys}
+    info = {
+        "available_seats": course_info["seatsAvailable"],
+        "waiting_list_count": course_info["waitCount"],
+    }
     increased = (
         info["available_seats"] > course.available_seats
         or info["waiting_list_count"] > course.waiting_list_count
