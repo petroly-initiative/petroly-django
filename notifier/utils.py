@@ -68,7 +68,7 @@ def request_data(term, department) -> None:
         return
 
     try:
-        res = banner_api.fetch(term, department)
+        data = banner_api.fetch(term, department)
 
     except rq.Timeout:
         logger.warning(
@@ -91,6 +91,13 @@ def request_data(term, department) -> None:
         obj.save()
         raise
 
+    except json.decoder.JSONDecodeError:
+        logger.warning("JSON Decoding failed")
+
+        obj.stale = False
+        obj.save()
+        raise
+
     except Exception as exc:
         logger.error(
             "Failed fetching %s-%s from API - Exception: %s",
@@ -98,24 +105,6 @@ def request_data(term, department) -> None:
             department,
             exc,
         )
-        obj.stale = False
-        obj.save()
-        raise
-
-    if "maintenance" in str(res.content):
-        obj.stale = False
-        obj.save()
-
-        api_obj.status = StatusEnum.DOWN
-        api_obj.save()
-
-        raise ConnectionError("The source API is down.")
-
-    try:
-        data = res.json()["data"]
-    except json.decoder.JSONDecodeError:
-        logger.warning("JSON Decoding failed")
-
         obj.stale = False
         obj.save()
         raise

@@ -45,9 +45,7 @@ class Status(models.Model):
     """This model to store the some general status"""
 
     key = models.CharField(_("key"), max_length=50, unique=True)
-    status = models.CharField(
-        _("status"), max_length=10, choices=StatusEnum.choices
-    )
+    status = models.CharField(_("status"), max_length=10, choices=StatusEnum.choices)
 
     class Meta:
         verbose_name = _("status")
@@ -88,7 +86,7 @@ class Cache(models.Model):
         """Wether the data has exceeded its age
         default to 5 mins"""
         return now() <= self.updated_on + timedelta(
-            seconds=int(os.environ.get("CACHE_AGE", 60 * 5))
+            seconds=int(os.environ.get("CACHE_AGE", 60 * 60 * 24))
         )
 
     def passed_swr(self) -> bool:
@@ -154,9 +152,7 @@ class Course(models.Model):
     last_updated = models.DateTimeField(_("last updated"), auto_now=True)
     available_seats = models.IntegerField(_("available seats"), default=0)
     raw = models.JSONField(_("raw info"), default=None, null=True)
-    waiting_list_count = models.IntegerField(
-        _("waiting list count"), default=0
-    )
+    waiting_list_count = models.IntegerField(_("waiting list count"), default=0)
     department = TextChoicesField(
         verbose_name=_("department"), choices_enum=DepartmentEnum
     )
@@ -197,7 +193,9 @@ class TrackingList(models.Model):
         blank=True,
     )
     channels = MultiSelectField(
-        choices=ChannelEnum.choices, default=ChannelEnum.EMAIL, max_length=100,
+        choices=ChannelEnum.choices,
+        default=ChannelEnum.EMAIL,
+        max_length=100,
     )
 
 
@@ -207,15 +205,9 @@ class NotificationEvent(models.Model):
     """
 
     success = models.BooleanField(_("success"), default=True, blank=True)
-    sent_on = models.DateTimeField(
-        _("sent on"), auto_now=False, auto_now_add=True
-    )
+    sent_on = models.DateTimeField(_("sent on"), auto_now=False, auto_now_add=True)
     course = models.ForeignKey(
         Course, verbose_name=_("course"), on_delete=models.CASCADE
     )
-    to = models.ForeignKey(
-        User, verbose_name=_("user"), on_delete=models.CASCADE
-    )
-    channel = models.CharField(
-        _("channel"), max_length=50, choices=ChannelEnum.choices
-    )
+    to = models.ForeignKey(User, verbose_name=_("user"), on_delete=models.CASCADE)
+    channel = models.CharField(_("channel"), max_length=50, choices=ChannelEnum.choices)

@@ -199,7 +199,7 @@ def fetch_data_async(term, department):
     data = notifier_utils.fetch_data(term, department)
 
     # sort sections according to the `section_number`
-    data.sort(key=lambda el: el["section_number"])
+    data.sort(key=lambda el: el["sequenceNumber"])
     return data
 
 
