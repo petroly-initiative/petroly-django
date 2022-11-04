@@ -28,6 +28,7 @@ tzdata = "*"
 python-telegram-bot = "*"
 django-multiselectfield = "*"
 certifi = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 black = "*"

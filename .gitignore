@@ -264,3 +264,5 @@ proj/media
 !.vscode/extensions.json
 *sampleData.py
 # End of https://www.toptal.com/developers/gitignore/api/vscode,python,macos,osx,django
+
+banner_api.py

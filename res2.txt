@@ -1,0 +1,648 @@
+ ICS 104-01  LEC  22785  Introduction to Programming in Python and C   UT  0800-0850  24-120
+Open
+
+Closed
+ ICS 104-02  LEC  22780  Introduction to Programming in Python and C   UT  0900-0950  24-120
+Open
+
+Closed
+ ICS 104-03  LEC  22781  Introduction to Programming in Python and C   UT  1000-1050  24-120
+Open
+
+Closed
+ ICS 104-04  LEC  22795  Introduction to Programming in Python and C   MW  0900-0950  24-120
+Open
+
+Closed
+ ICS 104-05  LEC  23830  Introduction to Programming in Python and C   MW  1100-1150  59-1001
+Open
+
+Closed
+ ICS 104-06  LEC  22813  Introduction to Programming in Python and C   MW  1300-1350  24-120
+Open
+
+Closed
+ ICS 104-51  LAB  22814  Introduction to Programming in Python and C   M  0800-1040  23-070
+Open
+
+Closed
+ ICS 104-52  LAB  22815  Introduction to Programming in Python and C   W  0800-1040  23-070
+Open
+
+Closed
+ ICS 104-53  LAB  22816  Introduction to Programming in Python and C   U  1100-1340  23-070
+Open
+
+Closed
+ ICS 104-54  LAB  22817  Introduction to Programming in Python and C   T  1100-1340  23-070
+Open
+
+Closed
+ ICS 104-55  LAB  22826  Introduction to Programming in Python and C   U  1400-1640  23-070
+Open
+
+Closed
+ ICS 104-56  LAB  22818  Introduction to Programming in Python and C   M  1400-1640  23-070
+Open
+
+Closed
+ ICS 104-57  LAB  22819  Introduction to Programming in Python and C   T  1400-1640  23-070
+Open
+
+Closed
+ ICS 104-58  LAB  22820  Introduction to Programming in Python and C   W  1400-1640  23-070
+Open
+
+Closed
+ ICS 104-59  LAB  22821  Introduction to Programming in Python and C   M  0800-1040  23-077
+Open
+
+Closed
+ ICS 104-60  LAB  22822  Introduction to Programming in Python and C   W  0800-1040  23-077
+Open
+
+Closed
+ ICS 104-61  LAB  22823  Introduction to Programming in Python and C   U  1100-1340  23-077
+Open
+
+Closed
+ ICS 104-62  LAB  22824  Introduction to Programming in Python and C   T  1100-1340  23-077
+Open
+
+Closed
+ ICS 104-63  LAB  22825  Introduction to Programming in Python and C   U  1400-1640  23-077
+Open
+
+Closed
+ ICS 104-64  LAB  22848  Introduction to Programming in Python and C   M  1400-1640  23-077
+Open
+
+Closed
+ ICS 104-65  LAB  22827  Introduction to Programming in Python and C   T  1400-1640  23-077
+Open
+
+Closed
+ ICS 104-F11  LEC  23690  Introduction to Programming in Python and C   MW  0800-0850  7-116
+Open
+
+Closed
+ ICS 104-F12  LEC  22812  Introduction to Programming in Python and C   MW  0900-0950  7-116
+Open
+
+Closed
+ ICS 104-F13  LEC  22811  Introduction to Programming in Python and C   MW  1100-1150  7-116
+Open
+
+Closed
+ ICS 104-F14  LEC  22810  Introduction to Programming in Python and C   MW  1300-1350  7-116
+Open
+
+Closed
+ ICS 104-F71  LAB  22844  Introduction to Programming in Python and C   M  1100-1340  7-137
+Open
+
+Closed
+ ICS 104-F72  LAB  22845  Introduction to Programming in Python and C   M  1400-1640  7-137
+Open
+
+Closed
+ ICS 104-F73  LAB  22846  Introduction to Programming in Python and C   W  1100-1340  7-137
+Open
+
+Closed
+ ICS 104-F74  LAB  22847  Introduction to Programming in Python and C   W  1400-1640  7-137
+Open
+
+Closed
+ ICS 108-01  LEC  22849  Object-Oriented Programming   MW  0800-0915  22-339
+Open
+
+Closed
+ ICS 108-01  LAB  22849  Object-Oriented Programming   MW  0930-1045  22-339
+Open
+
+Closed
+ ICS 108-02  LEC  22866  Object-Oriented Programming   UT  1100-1215  22-335
+Open
+
+Closed
+ ICS 108-02  LAB  22866  Object-Oriented Programming   UT  1230-1345  22-335
+Open
+
+Closed
+ ICS 108-03  LEC  22850  Object-Oriented Programming   MW  1100-1215  22-339
+Open
+
+Closed
+ ICS 108-03  LAB  22850  Object-Oriented Programming   MW  1230-1345  22-339
+Open
+
+Closed
+ ICS 108-04  LEC  22864  Object-Oriented Programming   MW  0800-0915  22-335
+Open
+
+Closed
+ ICS 108-04  LAB  22864  Object-Oriented Programming   MW  0930-1045  22-335
+Open
+
+Closed
+ ICS 108-05  LEC  22865  Object-Oriented Programming   MW  1400-1515  22-339
+Open
+
+Closed
+ ICS 108-05  LAB  22865  Object-Oriented Programming   MW  1530-1645  22-339
+Open
+
+Closed
+ ICS 108-06  LEC  22867  Object-Oriented Programming   MW  1400-1515  22-335
+Open
+
+Closed
+ ICS 108-06  LAB  22867  Object-Oriented Programming   MW  1530-1645  22-335
+Open
+
+Closed
+ ICS 108-F11  LEC  22868  Object-Oriented Programming   UT  0800-0915  7-137
+Open
+
+Closed
+ ICS 108-F11  LAB  22868  Object-Oriented Programming   UT  0930-1045  7-137
+Open
+
+Closed
+ ICS 108-F12  LEC  22869  Object-Oriented Programming   UT  1100-1215  7-137
+Open
+
+Closed
+ ICS 108-F12  LAB  22869  Object-Oriented Programming   UT  1230-1345  7-137
+Open
+
+Closed
+ ICS 108-F13  LEC  22870  Object-Oriented Programming   UT  1400-1515  7-137
+Open
+
+Closed
+ ICS 108-F13  LAB  22870  Object-Oriented Programming   UT  1530-1645  7-137
+Open
+
+Closed
+ ICS 202-01  LEC  20502  Data Structures and Algorithms   UTR  0800-0850  22-125
+Open
+
+Closed
+ ICS 202-02  LEC  22099  Data Structures and Algorithms   UTR  0900-0950  24-165
+Open
+
+Closed
+ ICS 202-03  LEC  22851  Data Structures and Algorithms   UTR  1100-1150  22-119
+Open
+
+Closed
+ ICS 202-04  LEC  22098  Data Structures and Algorithms   UTR  0900-0950  24-180
+Open
+
+Closed
+ ICS 202-05  LEC  24070  Data Structures and Algorithms   UTR  1000-1050  22-130
+Open
+
+Closed
+ ICS 202-06  LEC  24071  Data Structures and Algorithms   UTR  1200-1250  59-1007
+Open
+
+Closed
+ ICS 202-51  LAB  20503  Data Structures and Algorithms   U  1400-1640  22-335
+Open
+
+Closed
+ ICS 202-52  LAB  20504  Data Structures and Algorithms   T  1400-1640  22-335
+Open
+
+Closed
+ ICS 202-53  LAB  22095  Data Structures and Algorithms   R  1400-1640  22-335
+Open
+
+Closed
+ ICS 202-54  LAB  22096  Data Structures and Algorithms   U  1400-1640  22-339
+Open
+
+Closed
+ ICS 202-55  LAB  24072  Data Structures and Algorithms   T  1400-1640  22-339
+Open
+
+Closed
+ ICS 202-56  LAB  24073  Data Structures and Algorithms   R  1400-1640  22-339
+Open
+
+Closed
+ ICS 202-57  LAB  24074  Data Structures and Algorithms   U  1100-1340  22-339
+Open
+
+Closed
+ ICS 253-01  LEC  22101  Discrete Structures   UTR  0800-0850  24-158
+Open
+
+Closed
+ ICS 253-02  LEC  20506  Discrete Structures   UTR  1000-1050  24-146
+Open
+
+Closed
+ ICS 253-03  LEC  23300  Discrete Structures   UTR  1100-1150  24-128
+Open
+
+Closed
+ ICS 253-04  LEC  22100  Discrete Structures   UTR  1000-1050  24-158
+Open
+
+Closed
+ ICS 309-01  LEC  21753  Computing & Society   MW  1400-1450  22-127
+Open
+
+Closed
+ ICS 321-01  LEC  24090  Database Systems   UTR  0800-0850  24-125
+Open
+
+Closed
+ ICS 321-02  LEC  24091  Database Systems   UTR  0900-0950  24-115
+Open
+
+Closed
+ ICS 321-03  LEC  24092  Database Systems   UTR  1100-1150  59-2022
+Open
+
+Closed
+ ICS 321-04  LEC  24093  Database Systems   UTR  0800-0850  24-151
+Open
+
+Closed
+ ICS 321-05  LEC  24094  Database Systems   UTR  0900-0950  24-141
+Open
+
+Closed
+ ICS 343-01  LEC  22103  Fundamentals of Computer Networks   UTR  0900-0950  24-240
+Open
+
+Closed
+ ICS 343-02  LEC  20509  Fundamentals of Computer Networks   UTR  1000-1050  24-165
+Open
+
+Closed
+ ICS 343-03  LEC  23642  Fundamentals of Computer Networks   UTR  1200-1250  22-127
+Open
+
+Closed
+ ICS 343-51  LAB  20954  Fundamentals of Computer Networks (Old Curriculum)   U  1400-1640  22-347A
+Open
+
+Closed
+ ICS 343-52  LAB  20510  Fundamentals of Computer Networks   T  1400-1640  22-347A
+Open
+
+Closed
+ ICS 343-53  LAB  21293  Fundamentals of Computer Networks   R  1400-1640  22-347A
+Open
+
+Closed
+ ICS 343-54  LAB  23643  Fundamentals of Computer Networks   U  1100-1340  22-347A
+Open
+
+Closed
+ ICS 343-55  LAB  24067  Fundamentals of Computer Networks   T  1100-1340  22-347A
+Open
+
+Closed
+ ICS 344-01  LEC  24095  Information Security   UTR  0800-0850  24-165
+Open
+
+Closed
+ ICS 344-02  LEC  24096  Information Security   UTR  0900-0950  22-132
+Open
+
+Closed
+ ICS 344-03  LEC  24097  Information Security   UTR  1100-1150  59-1010
+Open
+
+Closed
+ ICS 351-01  COP  21503  Cooperative Work  
+Open
+
+Closed
+ ICS 353-01  LEC  22105  Design and Analysis of Algorithms   UTR  1000-1050  22-119
+Open
+
+Closed
+ ICS 353-02  LEC  20511  Design and Analysis of Algorithms   UTR  1200-1250  22-132
+Open
+
+Closed
+ ICS 353-03  LEC  22104  Design and Analysis of Algorithms   UTR  1300-1350  24-178
+Open
+
+Closed
+ ICS 381-01  LEC  20512  Principles of Artificial Intelligence   UTR  1300-1350  22-127
+Open
+
+Closed
+ ICS 410-01  LEC  21754  Programming Languages   UTR  0800-0850  59-1017
+Open
+
+Closed
+ ICS 411-01  PRJ  21209  Senior Project  
+Open
+
+Closed
+ ICS 431-01  LEC  20514  Operating Systems   UTR  1000-1050  24-128
+Open
+
+Closed
+ ICS 431-02  LEC  20513  Operating Systems   UTR  1100-1150  24-129
+Open
+
+Closed
+ ICS 431-03  LEC  24068  Operating Systems   UTR  1300-1350  24-149
+Open
+
+Closed
+ ICS 431-51  LAB  20515  Operating Systems   U  1720-2000  22-336
+Open
+
+Closed
+ ICS 431-52  LAB  20516  Operating Systems   M  1720-2000  22-336
+Open
+
+Closed
+ ICS 431-53  LAB  24069  Operating Systems   T  1720-2000  22-336
+Open
+
+Closed
+ ICS 442-01  LEC  22854  Penetration Testing and Ethical Hacking   UTR  0900-0950  24-250
+Closed
+
+Closed
+ ICS 445-01  LEC  23303  Network Management and Security   MW  1400-1515  23-011
+Closed
+
+Closed
+ ICS 472-01  LEC  23689  Natural Language Processing   UT  1400-1515  24-137
+Closed
+
+Closed
+ ICS 474-01  LEC  22855  Big Data Analytics   UT  1230-1345  59-2021
+Closed
+
+Closed
+ ICS 483-01  LEC  22856  Computer Vision   UT  1230-1345  22-134
+Closed
+
+Closed
+ ICS 502-01  LEC  24098  Machine Learning   UT  1720-1835  24-125
+Closed
+
+Closed
+ ICS 504-01  LEC  22921  Deep Learning   UT  1720-1835  59-1011
+Closed
+
+Closed
+ ICS 504-02  LEC  22922  Deep Learning   UT  1845-2000  24-125
+Closed
+
+Closed
+ ICS 505-01  LEC  22923  Computer Vision   UT  2010-2125  24-125
+Closed
+
+Closed
+ ICS 507-01  LEC  24099  Design & Anals of Parallel Alg   UT  1845-2000  24-146
+Closed
+
+Closed
+ ICS 535-01  LEC  24100  Des & Impl Of Prog Languages   UT  1720-1835  24-135
+Open
+
+Closed
+ ICS 557-01  LEC  23508  Advanced Machine Learning   MW  1845-2000  59-2009
+Open
+
+Closed
+ ICS 574-01  LEC  22859  Big Data Analytics   MW  1845-2000  24-125
+Closed
+
+Closed
+ ICS 574-02  LEC  23311  Big Data Analytics   UT  1825-1940  24-137
+Closed
+
+Closed
+ ICS 574-03  LEC  23312  Big Data Analytics   UT  2010-2125  24-137
+Closed
+
+Closed
+ ICS 599-01  SEM  21164  Seminar   T  1430-1545  22-130
+Open
+
+Closed
+ ICS 610-01  THS  20517  Thesis  
+Closed
+
+Closed
+ ICS 699-01  SEM  21643  Seminar   T  1430-1545  22-130
+Open
+
+Closed
+ ICS 711-01  DIS  21644  PhD Pre-Dissertation  
+Closed
+
+Closed
+ ICS 712-01  DIS  21838  PhD. Dissertation  
+Closed
+
+Closed
+ SEC 521-01  LEC  24101  Network Security   UT  1845-2000  24-153
+Closed
+
+Closed
+ SEC 528-01  LEC  24102  Security in Wireless Networks   MW  1720-1835  24-125
+Open
+
+Closed
+ SEC 542-01  LEC  22925  Penetration Testing and Ethical Hacking   UT  1720-1835  59-2002
+Closed
+
+Closed
+ SEC 599-01  SEM  21645  Graduate Seminar   T  1430-1545  22-130
+Open
+
+Closed
+ SEC 610-01  THS  21646  Thesis  
+Closed
+
+Closed
+ SWE 206-01  LEC  23313  Introduction to Software Engineering   MW  0800-0850  23-011
+Open
+
+Closed
+ SWE 206-02  LEC  23314  Introduction to Software Engineering   MW  0900-0950  22-127
+Open
+
+Closed
+ SWE 206-03  LEC  23644  Introduction to Software Engineering   MW  1100-1150  22-125
+Open
+
+Closed
+ SWE 206-04  LEC  24075  Introduction to Software Engineering   MW  1300-1350  22-132
+Open
+
+Closed
+ SWE 206-05  LEC  24076  Introduction to Software Engineering   MW  0900-0950  22-121
+Open
+
+Closed
+ SWE 206-06  LEC  24077  Introduction to Software Engineering   MW  1100-1150  22-121
+Open
+
+Closed
+ SWE 206-51  LAB  23315  Introduction to Software Engineering   U  1400-1640  22-334
+Open
+
+Closed
+ SWE 206-52  LAB  23316  Introduction to Software Engineering   M  1400-1640  22-334
+Open
+
+Closed
+ SWE 206-53  LAB  23645  Introduction to Software Engineering   T  1400-1640  22-334
+Open
+
+Closed
+ SWE 206-54  LAB  24078  Introduction to Software Engineering   W  1400-1640  22-334
+Open
+
+Closed
+ SWE 206-55  LAB  24079  Introduction to Software Engineering   R  1400-1640  22-334
+Open
+
+Closed
+ SWE 206-56  LAB  24080  Introduction to Software Engineering   T  1400-1640  24-None
+Open
+
+Closed
+ SWE 206-57  LAB  24081  Introduction to Software Engineering   T  1100-1340  22-334
+Open
+
+Closed
+ SWE 216-01  LEC  23317  Software Requirements Engineering   MW  1000-1115  24-137
+Open
+
+Closed
+ SWE 216-02  LEC  23318  Software Requirements Engineering   MW  1230-1345  24-137
+Open
+
+Closed
+ SWE 302-01  LEC  24103  Game Programming   UTR  1100-1150  24-250
+Open
+
+Closed
+ SWE 311-01  LEC  20518  Principes of Software Engineering   UTR  0800-0850  24-137
+Open
+
+Closed
+ SWE 311-51  LAB  20519  Principes of Software Engineering   T  1720-2000  22-334
+Open
+
+Closed
+ SWE 316-01  LEC  20955  Software Design and Construction   UTR  1000-1050  22-127
+Open
+
+Closed
+ SWE 316-02  LEC  24082  Software Design and Construction   UTR  1100-1150  59-2017
+Open
+
+Closed
+ SWE 326-01  LEC  20520  Software Testing   UTR  0800-0850  59-2002
+Open
+
+Closed
+ SWE 326-02  LEC  22108  Software Testing   UTR  0900-0950  24-153
+Open
+
+Closed
+ SWE 326-03  LEC  24083  Software Testing   UTR  1100-1150  24-116
+Open
+
+Closed
+ SWE 326-04  LEC  24084  Software Testing   UTR  0800-0850  22-119
+Open
+
+Closed
+ SWE 326-05  LEC  24085  Software Testing   UTR  1000-1050  23-014
+Open
+
+Closed
+ SWE 363-01  LEC  20521  Web Engineering & Development   MW  0830-0945  24-115
+Open
+
+Closed
+ SWE 363-02  LEC  21852  Web Engineering & Development   MW  1000-1115  24-128
+Open
+
+Closed
+ SWE 363-03  LEC  24086  Web Engineering & Development   MW  1230-1345  22-130
+Open
+
+Closed
+ SWE 387-01  LEC  20522  Software Project Management   MW  1000-1115  23-014
+Open
+
+Closed
+ SWE 387-02  LEC  21853  Software Project Management   MW  1230-1345  22-125
+Open
+
+Closed
+ SWE 417-01  LPJ  22094  Software Engineering Project I   R  1720-2000  24-153
+Open
+
+Closed
+ SWE 418-01  PRJ  20956  Software Engineering Project II   R  1720-2000  24-125
+Open
+
+Closed
+ SWE 418-02  PRJ  22109  Software Engineering Project II   R  1720-2000  24-135
+Open
+
+Closed
+ SWE 418-03  PRJ  22110  Software Engineering Project II   R  1720-2000  24-146
+Open
+
+Closed
+ SWE 418-04  PRJ  24087  Software Engineering Project II   R  1720-2000  22-119
+Open
+
+Closed
+ SWE 418-05  PRJ  24088  Software Engineering Project II   R  1720-2000  22-121
+Open
+
+Closed
+ SWE 445-01  LEC  22863  Secure Software Development   MW  1000-1115  24-153
+Closed
+
+Closed
+ SWE 445-02  LEC  24089  Secure Software Development   MW  1230-1345  22-127
+Closed
+
+Closed
+ SWE 455-01  LEC  24105  Cloud Applications Engineering   MW  1230-1345  24-153
+Closed
+
+Closed
+ SWE 526-01  LEC  24106  Software Valid.,Vari. & QA   UT  1845-2000  24-158
+Open
+
+Closed
+ SWE 555-01  LEC  24107  Embedded Software Engineering   MW  1720-1835  24-137
+Closed
+
+Closed
+ SWE 599-01  SEM  21647  Seminar   T  1430-1545  24-151
+Open
+
+Closed
+ SWE 610-01  THS  21648  Thesis  
+Closed
+
+Closed

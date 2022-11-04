@@ -22,6 +22,7 @@ from evaluation.models import Instructor
 from evaluation.schema import crete_global_id
 from evaluation.types import InstructorNode
 
+from . import banner_api
 from .models import (
     TrackingList,
     Course,
@@ -33,12 +34,6 @@ from .models import (
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
-
-API = "https://registrar.kfupm.edu.sa/api/course-offering"
-proxies = {
-    "http": os.environ.get("API_HTTP_PROXY"),
-    "https": os.environ.get("API_HTTPS_PROXY"),
-}
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
@@ -73,13 +68,7 @@ def request_data(term, department) -> None:
         return
 
     try:
-        res = rq.get(
-            API,
-            params={"term_code": term, "department_code": department},
-            headers={"User-Agent": "Chrome"},
-            proxies=proxies,
-            timeout=50,
-        )
+        res = banner_api.fetch(term, department)
 
     except rq.Timeout:
         logger.warning(
@@ -182,6 +171,7 @@ def check_changes(course: Course) -> Tuple:
         )
 
     keys = ["available_seats", "waiting_list_count"]
+    # TODO update to new banner keys
     info = {key: course_info[key] for key in keys}
     increased = (
         info["available_seats"] > course.available_seats
