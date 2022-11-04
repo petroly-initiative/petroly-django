@@ -18,7 +18,7 @@ from notifier.models import Status, StatusEnum
 warnings.simplefilter("ignore", CacheKeyWarning)
 warnings.simplefilter("ignore", DeprecationWarning)
 
-API = "https://registrar.kfupm.edu.sa/api/course-offering"
+API = "https://registrar.kfupm.edu.sa/courses-classes/course-offering1/"
 
 # setting up the logger
 logger = logging.getLogger(__name__)
@@ -92,7 +92,6 @@ class Command(BaseCommand):
                 except Exception as exc:
                     logger.error(exc)
                     continue
-
 
             try:
                 t_start = time.perf_counter()
