@@ -6,6 +6,7 @@ of the `notifier` app.
 import hmac
 import hashlib
 import dataclasses
+import json
 from typing import List
 
 from strawberry.scalars import JSON
@@ -92,10 +93,7 @@ class Query:
         raw = fetch_data(term, department)
         result = []
         for course in raw:
-            if (
-                title.lower() in course["courseNumber"].lower()
-                or title.lower() in course["subjectCourse"].lower()
-            ):
+            if title.lower() in course["subjectCourse"].lower():
                 result.append(course)
 
                 # try to find some info about this instructor
@@ -188,7 +186,9 @@ class Mutation:
         return True
 
     @gql.mutation(directives=[IsAuthenticated()])
-    def update_tracking_list(self, info: Info, courses: List[CourseInput]) -> bool:
+    def update_tracking_list(
+        self, info: Info, courses: List[CourseInput]
+    ) -> bool:
         """Add all `courses` to the user's tracking list
         then update each course status from the cache.
 
