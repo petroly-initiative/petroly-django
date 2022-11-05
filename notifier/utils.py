@@ -53,7 +53,7 @@ with open('notifier/banner_api.py.bin', 'rb') as file:
     banner_api = imp.new_module(code)
     exec(code, banner_api.__dict__)
 
-
+from notifier import banner_api
 
 def fetch_data(term: str, department: str) -> List[Dict]:
     """This load data from our DB."""
@@ -115,6 +115,14 @@ def request_data(term, department) -> None:
 
         obj.stale = False
         obj.save()
+        raise
+
+    except banner_api.APIDownException:
+        obj.stale = False
+        obj.save()
+
+        api_obj.status = StatusEnum.DOWN
+        api_obj.save()
         raise
 
     except Exception as exc:
