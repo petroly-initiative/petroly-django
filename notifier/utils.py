@@ -3,6 +3,7 @@ This module is to define the fetching, filtering, and processing the data
 from the KFUPM API
 """
 
+import imp
 import os
 import json
 import logging
@@ -21,8 +22,9 @@ from telegram_bot import utils as bot_utils
 from evaluation.models import Instructor
 from evaluation.schema import crete_global_id
 from evaluation.types import InstructorNode
+from cryptography.fernet import Fernet
 
-from . import banner_api
+# from . import banner_api
 from .models import (
     TrackingList,
     Course,
@@ -34,6 +36,23 @@ from .models import (
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
+
+# with open('notifier/banner_api.py', 'r') as file:
+#     file_data = file.read().encode()
+#     f = Fernet(os.environ.get('ENC_KEY').encode())
+#     dec_file = f.encrypt(file_data)
+
+# with open('notifier/banner_api.py.bin', 'wb') as file:
+#     file.write(dec_file)
+
+# decrypt the python code into a module
+with open('notifier/banner_api.py.bin', 'rb') as file:
+    f = Fernet(os.environ.get('ENC_KEY').encode())
+    code = f.decrypt(file.read()).decode()
+    import imp
+    banner_api = imp.new_module(code)
+    exec(code, banner_api.__dict__)
+
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
