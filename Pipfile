@@ -28,7 +28,6 @@ tzdata = "*"
 python-telegram-bot = "*"
 django-multiselectfield = "*"
 certifi = "*"
-beautifulsoup4 = "*"
 cryptography = "*"
 
 [dev-packages]
