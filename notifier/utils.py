@@ -46,14 +46,14 @@ User = get_user_model()
 #     file.write(dec_file)
 
 # decrypt the python code into a module
-with open('notifier/banner_api.py.bin', 'rb') as file:
-    f = Fernet(os.environ.get('ENC_KEY').encode())
+with open("notifier/banner_api.py.bin", "rb") as file:
+    f = Fernet(os.environ.get("ENC_KEY").encode())
     code = f.decrypt(file.read()).decode()
     import imp
+
     banner_api = imp.new_module(code)
     exec(code, banner_api.__dict__)
 
-from notifier import banner_api
 
 def fetch_data(term: str, department: str) -> List[Dict]:
     """This load data from our DB."""

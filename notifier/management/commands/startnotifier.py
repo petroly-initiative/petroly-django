@@ -12,13 +12,11 @@ from django_q.tasks import async_task
 from django.core.cache import CacheKeyWarning
 from django.core.management.base import BaseCommand
 
-from notifier.utils import check_changes, collect_tracked_courses
+from notifier.utils import check_changes, collect_tracked_courses, banner_api
 from notifier.models import Status, StatusEnum
 
 warnings.simplefilter("ignore", CacheKeyWarning)
 warnings.simplefilter("ignore", DeprecationWarning)
-
-API = "https://registrar.kfupm.edu.sa/courses-classes/course-offering1/"
 
 # setting up the logger
 logger = logging.getLogger(__name__)
@@ -72,7 +70,9 @@ class Command(BaseCommand):
         killer = GracefulKiller()
 
         while not killer.kill_now:
-            api_status, status_created = Status.objects.get_or_create(key="API")
+            api_status, status_created = Status.objects.get_or_create(
+                key="API"
+            )
             if status_created:
                 api_status.status = StatusEnum.UP
                 api_status.save()
@@ -81,7 +81,7 @@ class Command(BaseCommand):
                 logger.warning("API is still Down")
                 time.sleep(30)
                 try:
-                    res = rq.get(API)
+                    res = rq.get(banner_api.URL4)
                     if "maintenance" not in res.text:
                         logger.info("API is Up again")
                         api_status.status = StatusEnum.UP
