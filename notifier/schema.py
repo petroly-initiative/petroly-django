@@ -200,7 +200,7 @@ class Mutation:
             bool: A success flag
         """
         user = info.context.request.user
-        tracking_list = TrackingList.objects.get_or_create(user=user)[0]
+        tracking_list, _ = TrackingList.objects.get_or_create(user=user)
 
         try:
             # get all `Course` objects or create them
@@ -217,8 +217,8 @@ class Mutation:
                 # This will guarantee that the course status is to date
                 # before it's being tracked
                 course_info = get_course_info(course)
-                obj.available_seats = course_info["available_seats"]
-                obj.waiting_list_count = course_info["waiting_list_count"]
+                obj.available_seats = course_info["seatsAvailable"]
+                obj.waiting_list_count = course_info["waitCount"]
                 obj.raw = course_info
                 obj.save()
 
@@ -226,7 +226,7 @@ class Mutation:
             tracking_list.courses.set(new_list, clear=True)
 
         except Exception as exc:
-            print(exc)
+            print(f"Error while updating the tracking list for user {user.pk}: ", exc)
             return False
 
         return True
