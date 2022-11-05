@@ -208,7 +208,7 @@ def get_courses(term: str, dept: str) -> List[str]:
     """a function to retrieve all courses under specified department and term"""
 
     raw_courses = notifier_utils.fetch_data(term, dept)
-    raw_courses = list({x["course_number"] for x in raw_courses})
+    raw_courses = list({x["subjectCourse"] for x in raw_courses})
     raw_courses.sort()
 
     return raw_courses

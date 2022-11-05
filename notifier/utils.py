@@ -305,8 +305,8 @@ def formatter_change_md(info: List[Dict[str, Course | Dict]]) -> str:
     for course in info:
         result += messages.CHANGES_DETECTED.format(
             crn=course["course"].crn,
-            course_number=course["course"].raw["course_number"],
-            section_number=course["course"].raw["section_number"],
+            course_number=course["course"].raw["subjectCourse"],
+            section_number=course["course"].raw["sequenceNumber"],
             available_seats=course["status"]["available_seats"],
             available_seats_old=course["status"]["available_seats_old"],
             waiting_list_count=course["status"]["waiting_list_count"],
