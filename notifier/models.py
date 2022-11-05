@@ -86,7 +86,7 @@ class Cache(models.Model):
         """Wether the data has exceeded its age
         default to 5 mins"""
         return now() <= self.updated_on + timedelta(
-            seconds=int(os.environ.get("CACHE_AGE", 60 * 60 * 24))
+            seconds=int(os.environ.get("CACHE_AGE", 60 * 5))
         )
 
     def passed_swr(self) -> bool:
