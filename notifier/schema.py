@@ -98,11 +98,11 @@ class Query:
 
                 # try to find some info about this instructor
                 # and append it to the course dict
-                continue
-                if len(course["instructor_name"]) > 1:
-                    course |= instructor_info_from_name(
-                        course["instructor_name"], department
-                    )
+                for faculty in course['faculty']:
+                    if len(faculty["displayName"]) > 1:
+                        faculty |= instructor_info_from_name(
+                            faculty["displayName"], department
+                        )
 
         return result
 
