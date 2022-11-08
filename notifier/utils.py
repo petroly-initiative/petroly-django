@@ -339,7 +339,7 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
     queryset = Instructor.objects.filter(filters)
     if len(queryset) == 1:
         return {
-            "id": crete_global_id(InstructorNode, queryset[0].pk),
+            "pk": crete_global_id(InstructorNode, queryset[0].pk),
             "profilePic": queryset[0].profile_pic.url,
             "rating": queryset[0].avg()["overall_float"],
         }
