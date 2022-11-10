@@ -98,7 +98,7 @@ class Query:
 
                 # try to find some info about this instructor
                 # and append it to the course dict
-                for faculty in course['faculty']:
+                for faculty in course["faculty"]:
                     if len(faculty["displayName"]) > 1:
                         faculty |= instructor_info_from_name(
                             faculty["displayName"], department
@@ -202,6 +202,9 @@ class Mutation:
         user = info.context.request.user
         tracking_list, _ = TrackingList.objects.get_or_create(user=user)
 
+        if len(courses) > 3:
+            raise Exception("Sorry you can't track more than 30 sections, consider the Premium plan.")
+
         try:
             # get all `Course` objects or create them
             new_list = []
@@ -226,7 +229,10 @@ class Mutation:
             tracking_list.courses.set(new_list, clear=True)
 
         except Exception as exc:
-            print(f"Error while updating the tracking list for user {user.pk}: ", exc)
+            print(
+                f"Error while updating the tracking list for user {user.pk}: ",
+                exc,
+            )
             return False
 
         return True
