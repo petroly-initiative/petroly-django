@@ -238,24 +238,24 @@ async def get_sections(
     course_sections = [
         section
         for section in dept_courses
-        if section["course_number"] == course
-        and section["crn"] not in tracked_sections
+        if section["subjectCourse"] == course
+        and section["courseReferenceNumber"] not in tracked_sections
     ]
     course_sections = [
         (
             format_section(
-                section=section["section_number"],
-                seats=section["available_seats"],
-                class_days=section["class_days"],
-                class_type=section["class_type"],
-                start_time=section["start_time"],
-                end_time=section["end_time"],
-                waitlist_count=section["waiting_list_count"],
+                section=section["sequenceNumber"],
+                seats=section["seatsAvailable"],
+                class_days='',
+                class_type=section['meetingsFaculty'][0]['meetingTime']["meetingScheduleType"],
+                start_time=section['meetingsFaculty'][0]['meetingTime']["beginTime"],
+                end_time=section['meetingsFaculty'][0]['meetingTime']["endTime"],
+                waitlist_count=section["waitCount"],
             ),
             {
-                "crn": section["crn"],
-                "seats": section["available_seats"],
-                "waitlist": section["waiting_list_count"],
+                "crn": section["courseReferenceNumber"],
+                "seats": section["seatsAvailable"],
+                "waitlist": section["waitCount"],
             },
         )
         for section in course_sections
@@ -346,13 +346,13 @@ def format_section(
 
     if start_time and end_time:
         return (
-            f"{section}{'📘' if class_type == 'LEC' else '🧪' if class_type == 'LAB' else ''}"
+            f"{section}{'📘' if class_type == 'LC' else '🧪' if class_type == 'LB' else ''}"
             + f" {'🔴 FULL' if seats <= 0 else f'🟢 {seats}🪑 - {waitlist_count}⏳'}"
             + f" {class_days} | {start_time[0:2]}:{start_time[2:]}-{start_time[0:2]}:{end_time[2:]}"
         )
 
     return (
-        f"{section}{'📘' if class_type == 'LEC' else '🧪' if class_type == 'LAB' else ''}"
+        f"{section}{'📘' if class_type == 'LC' else '🧪' if class_type == 'LB' else ''}"
         + f" {'🔴 FULL' if seats <= 0 else f'🟢 {seats}🪑 - {waitlist_count}⏳'}"
         + f" {class_days} | No time info"
     )
@@ -373,7 +373,6 @@ def construct_reply_callback_grid(
     """
 
     result = []
-    print("inside", row_length)
     if is_callback_different:
         for i in range(int(len(input_list) / row_length)):
             result.append(
