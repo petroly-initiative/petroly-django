@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c22b5646f5e73e2b6cdeba7e07f5d9567d0746f6a2b1f491b98990c88cf1c3d2"
+            "sha256": "6e87b32d1acfde983d20c7c14f0d4b319de8b968fa597f0af757c1f93da87cad"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -569,11 +569,11 @@
         },
         "strawberry-django-auth": {
             "hashes": [
-                "sha256:0fa2069893f5c736b6ec0e5e524879f5c6d83508d4ab7df422b86e260f2a2ee8",
-                "sha256:91fd1005d3a60dc330c8fbb7598fca506a65f9adce71ebe64db31074ec91149b"
+                "sha256:1122136cd3185fe981d3e813de34376deb8f113f6daad8211004da0fa5d8d030",
+                "sha256:2ca309d4a5ce4f3e7caf25280618d7cee531fc9417343f95d84df759277f21e7"
             ],
             "index": "pypi",
-            "version": "==0.3.4.1"
+            "version": "==0.3.6.0"
         },
         "strawberry-django-jwt": {
             "hashes": [
@@ -585,19 +585,19 @@
         },
         "strawberry-django-plus": {
             "hashes": [
-                "sha256:2adb38571b4b235bd71a9e480a9321c740b1c0ee3f118f7b11aeda730a7c6822",
-                "sha256:2c3cd13820ce2379fc57f822fd29d93593e3fb8aff1b2eac132ba8ffadcae6fd"
+                "sha256:39b3130ca5c22e8da1ada4c08f4f11d8a8fb9f9e92d0e436a163a2f0953d1b91",
+                "sha256:8707b023b09ce0e15004c3b00b6cb27285e3bc24564bc95b61bb8c63a97e0902"
             ],
             "index": "pypi",
-            "version": "==1.26.1"
+            "version": "==1.27"
         },
         "strawberry-graphql": {
             "hashes": [
-                "sha256:a729d1dc0ade8fe33cb8412a747d1d7dd7950d82dd6467aaca752910804007f9",
-                "sha256:e04a1dff92127d09fcec3c6a6bd7f8cfdff62d634de4b834098ba8434cfde08e"
+                "sha256:65cdc13e28529bc498b86cb2ee77245f4aa7310e4e8eb03d3bcbe241ef7bc4f8",
+                "sha256:96230df8da4e8077243ee82cce996d788826d3db1efb4bafd01e8db4a69dd104"
             ],
             "index": "pypi",
-            "version": "==0.127.4"
+            "version": "==0.132.1"
         },
         "strawberry-graphql-django": {
             "hashes": [
