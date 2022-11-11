@@ -21,8 +21,8 @@ class TermType:
     long: auto
     short: auto
 
-    def get_queryset(self, queryset, info: Info):
-        return queryset.filter(allowed=True)
+    def get_queryset(self, info: Info):
+        return Term.objects.filter(allowed=True)
 
 
 @gql.input

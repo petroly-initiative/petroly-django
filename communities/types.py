@@ -84,7 +84,7 @@ class CommunityType:
         return self.likes.count()
 
     def get_queryset(
-        self, queryset: QuerySet, info: Info, filters=None, **kw
+        self, queryset: QuerySet, filters=None, **kw
     ) -> QuerySet:
         # descending order for number of likes
         return (

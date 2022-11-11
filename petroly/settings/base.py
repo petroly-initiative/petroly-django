@@ -184,7 +184,6 @@ GRAPHQL_JWT = {
 
 
 GQL_AUTH = GqlAuthSettings(
-    LOGIN_REQUIRED_FIELDS = ['username', 'password'],
     ALLOW_LOGIN_NOT_VERIFIED = False,
     LOGIN_REQUIRE_CAPTCHA = False,
     REGISTER_REQUIRE_CAPTCHA=False,
