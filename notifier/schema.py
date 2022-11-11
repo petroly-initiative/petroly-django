@@ -202,7 +202,7 @@ class Mutation:
         user = info.context.request.user
         tracking_list, _ = TrackingList.objects.get_or_create(user=user)
 
-        if len(courses) > 3:
+        if len(courses) > 30:
             raise Exception("Sorry you can't track more than 30 sections, consider the Premium plan.")
 
         try:
