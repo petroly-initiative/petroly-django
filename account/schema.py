@@ -25,14 +25,14 @@ from .types import (
 
 @strawberry.type
 class UserMutations:
-    token_auth = arg_mutations.ObtainJSONWebToken.Field  # login mutation
-    verify_token = arg_mutations.VerifyToken.Field
-    refresh_token = arg_mutations.RefreshToken.Field
-    revoke_token = arg_mutations.RevokeToken.Field
-    register = arg_mutations.Register.Field
-    verify_account = arg_mutations.VerifyAccount.Field
-    send_password_reset_email = arg_mutations.SendPasswordResetEmail.Field
-    password_reset = arg_mutations.PasswordReset.Field
+    token_auth = arg_mutations.ObtainJSONWebToken.field  # login mutation
+    verify_token = arg_mutations.VerifyToken.field
+    refresh_token = arg_mutations.RefreshToken.field
+    revoke_token = arg_mutations.RevokeToken.field
+    register = arg_mutations.Register.field
+    verify_account = arg_mutations.VerifyAccount.field
+    send_password_reset_email = arg_mutations.SendPasswordResetEmail.field
+    password_reset = arg_mutations.PasswordReset.field
 
 
 @strawberry.type
