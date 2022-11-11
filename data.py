@@ -44,3 +44,4 @@ class DepartmentEnum(TextChoices):
     PHYS = ("PHYS", "Physics")
     PSE = ("PSE", "Prep Science & Engineering")
     SE = ("SE", "Industrial and Systems Engineering")
+    ISE = ("ISE", "Industrial and Systems Engineering")
