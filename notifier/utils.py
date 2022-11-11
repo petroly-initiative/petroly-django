@@ -286,8 +286,8 @@ def formatter_md(courses: List[Course]) -> str:
     for course in courses:
         result += messages.TRACKED_COURSES.format(
             crn=course.crn,
-            course_number=course.raw["course_number"],
-            section_number=course.raw["section_number"],
+            course_number=course.raw["subjectCourse"],
+            section_number=course.raw["sequenceNumber"],
             available_seats=course.available_seats,
             waiting_list_count="🟢 Open"
             if course.waiting_list_count > 0
