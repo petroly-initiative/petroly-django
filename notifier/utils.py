@@ -16,6 +16,7 @@ from django.template import loader
 from django.utils.timezone import now
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
+from data import DepartmentEnum
 
 from telegram_bot import messages
 from telegram_bot import utils as bot_utils
@@ -87,6 +88,10 @@ def request_data(term, department) -> None:
         return
 
     try:
+        # convert department into course name
+        if department is DepartmentEnum.ELD:
+            department = 'ENGL'
+
         data = banner_api.fetch(term, department)
 
     except rq.Timeout:
