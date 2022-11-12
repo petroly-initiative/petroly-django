@@ -16,7 +16,7 @@ from django.template import loader
 from django.utils.timezone import now
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
-from data import DepartmentEnum
+from data import DepartmentEnum, SubjectEnum
 
 from telegram_bot import messages
 from telegram_bot import utils as bot_utils
@@ -330,6 +330,19 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
     """
 
     names = name.split(" ")
+    if department == SubjectEnum.SWE:
+        department = DepartmentEnum.ICS
+
+    elif department == SubjectEnum.ENGL:
+        department = DepartmentEnum.ELD
+
+    elif (
+        department == SubjectEnum.ACCT
+        or department == SubjectEnum.MKT
+        or department == SubjectEnum.BUS
+    ):
+        department = DepartmentEnum.ACFN
+
     filters = Q(department=department)
 
     for name_ in names:

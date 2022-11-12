@@ -86,3 +86,4 @@ class SubjectEnum(TextChoices):
     BUS = ("BUS", "Business")
     ENGL = ("ENGL", "English")
     ACCT = ("ACCT", "Accounting")
+    MKT = ("MKT", "Marketing")
