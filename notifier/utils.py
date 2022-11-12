@@ -89,7 +89,7 @@ def request_data(term, department) -> None:
 
     try:
         # convert department into course name
-        if department is DepartmentEnum.ELD:
+        if department == DepartmentEnum.ELD:
             department = 'ENGL'
 
         data = banner_api.fetch(term, department)
