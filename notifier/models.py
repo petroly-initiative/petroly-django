@@ -29,7 +29,7 @@ from django.utils.timezone import timedelta, now
 from django_q.tasks import async_task
 from multiselectfield import MultiSelectField
 
-from data import DepartmentEnum
+from data import SubjectEnum
 
 User = get_user_model()
 
@@ -154,7 +154,7 @@ class Course(models.Model):
     raw = models.JSONField(_("raw info"), default=None, null=True)
     waiting_list_count = models.IntegerField(_("waiting list count"), default=0)
     department = TextChoicesField(
-        verbose_name=_("department"), choices_enum=DepartmentEnum
+        verbose_name=_("department"), choices_enum=SubjectEnum
     )
 
     class Meta:
