@@ -17,7 +17,7 @@ from django.contrib.auth import get_user_model
 
 from notifier import utils as notifier_utils
 from notifier.models import Course, Term
-from data import DepartmentEnum
+from data import SubjectEnum
 
 from .models import TelegramProfile, Token
 
@@ -189,7 +189,7 @@ def fetch_terms() -> List[Tuple[str, str]]:
 @sync_to_async
 def get_departments() -> List[str]:
     """a function to retrieve all stored departments"""
-    result = DepartmentEnum.values
+    result = SubjectEnum.values
     result.pop(0)
     return result
 
