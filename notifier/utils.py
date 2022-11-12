@@ -88,12 +88,6 @@ def request_data(term, department) -> None:
         return
 
     try:
-        # convert department into course name
-        if department == DepartmentEnum.ELD:
-            department = 'ENGL'
-        elif department == DepartmentEnum.ACFN:
-            department = 'ACCT'
-
         data = banner_api.fetch(term, department)
 
     except rq.Timeout:
