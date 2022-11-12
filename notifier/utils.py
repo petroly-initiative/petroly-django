@@ -342,6 +342,9 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
         or department == SubjectEnum.BUS
     ):
         department = DepartmentEnum.ACFN
+    
+    elif department == SubjectEnum.STAT:
+        department = DepartmentEnum.MATH
 
     filters = Q(department=department)
 
