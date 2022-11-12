@@ -49,3 +49,5 @@ class DepartmentEnum(TextChoices):
     # not departments
     SWE = ("SWE", "Software Engineering")
     BUS = ("BUS", "Business")
+    ENGL = ("ENGL", "English")
+    ACCT = ("ACCT", "Accounting")
