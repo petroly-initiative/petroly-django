@@ -9,6 +9,7 @@ import dataclasses
 import json
 from typing import List
 
+import strawberry
 from strawberry.scalars import JSON
 from strawberry.types import Info
 from strawberry_django_plus import gql
@@ -19,10 +20,22 @@ from django_q.tasks import async_task
 from telegram_bot.models import TelegramProfile
 from telegram_bot.utils import escape_md
 
+from data import SubjectEnum
 from .utils import fetch_data, get_course_info, instructor_info_from_name
 from .models import TrackingList, Course, ChannelEnum
 from .types import CourseInput, TermType, ChannelsType, PreferencesInput
 
+def resolve_subject_list(root, info: Info, short: bool = True) -> List[str]:
+    subject_short: List[str] = []
+    subject_long: List[str] = []
+    for short_, long_ in SubjectEnum.choices:
+        subject_short.append(short_)
+        subject_long.append(long_)
+
+    if short:
+        return subject_short
+
+    return subject_long
 
 @gql.type
 class Query:
@@ -49,6 +62,8 @@ class Query:
             res |= {name: ChannelEnum[name] in user.tracking_list.channels}
 
         return ChannelsType(**res)
+
+    subject_list = strawberry.field(resolve_subject_list)
 
     @gql.field(directives=[IsAuthenticated()])
     def tracked_courses(self, info: Info) -> JSON:
