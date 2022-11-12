@@ -45,3 +45,6 @@ class DepartmentEnum(TextChoices):
     PSE = ("PSE", "Prep Science & Engineering")
     # SE = ("SE", "Industrial and Systems Engineering")
     ISE = ("ISE", "Industrial and Systems Engineering")
+
+    # not departments
+    SWE = ("SWE", "Software Engineering")
