@@ -204,4 +204,5 @@ Q_CLUSTER = {
     'bulk': 10,
     'orm': 'default',
     'save_limit': 10_000,
+    'max_attempts': 1
 }
