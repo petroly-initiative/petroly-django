@@ -349,6 +349,9 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
     elif department == SubjectEnum.STAT:
         department = DepartmentEnum.MATH
 
+    elif department == SubjectEnum.ISE:
+        department = DepartmentEnum.SE
+
     filters = Q(department=department)
 
     for name_ in names:
