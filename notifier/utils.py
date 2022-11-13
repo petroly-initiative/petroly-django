@@ -98,7 +98,7 @@ def request_data(term, department) -> None:
         )
         obj.stale = False
         obj.save()
-        raise
+        return
 
     except rq.RequestException as exc:
         logger.error(
@@ -109,14 +109,14 @@ def request_data(term, department) -> None:
         )
         obj.stale = False
         obj.save()
-        raise
+        return
 
     except json.decoder.JSONDecodeError:
         logger.warning("JSON Decoding failed")
 
         obj.stale = False
         obj.save()
-        raise
+        return
 
     except banner_api.APIDownException:
         obj.stale = False
@@ -124,7 +124,7 @@ def request_data(term, department) -> None:
 
         api_obj.status = StatusEnum.DOWN
         api_obj.save()
-        raise
+        return
 
     except Exception as exc:
         logger.error(
@@ -135,7 +135,7 @@ def request_data(term, department) -> None:
         )
         obj.stale = False
         obj.save()
-        raise
+        return
 
     if data:
         obj.data = data
