@@ -12,6 +12,7 @@ from typing import Dict, cast
 from telegram.ext import ContextTypes, ConversationHandler
 from telegram.constants import ParseMode
 from telegram import InlineKeyboardMarkup, Update
+from telegram_bot.models import TelegramProfile
 
 from telegram_bot.utils import (
     clear_tracking,
@@ -21,6 +22,7 @@ from telegram_bot.utils import (
     get_sections,
     get_terms,
     get_tracked_crns,
+    get_user,
     submit_section,
     untrack_section,
 )
@@ -48,6 +50,13 @@ async def track(
     context.bot.callback_data_cache.clear_callback_queries()
     context.user_data.clear()
     # getting available terms and create reply buttons
+    try:
+        TelegramProfile.objects.aget(update.effective_user.id)
+    except TelegramProfile.DoesNotExist:
+        await update.message.reply_text(
+            "You need to set up your tracking list form Petorly.co"
+        )
+
     terms = await get_terms(update.effective_chat.id)
     term_rows = construct_reply_callback_grid(
         terms, len(terms), is_callback_different=True
@@ -106,7 +115,7 @@ async def track_courses(
     )
     if len(courses) == 0:
         await query.edit_message_text(
-            text= f"Oops! seems like there are no offered courses for {selected_dept} department in term {context.user_data.get('term', 'TERM_NOT_FOUND')}"
+            text=f"Oops! seems like there are no offered courses for {selected_dept} department in term {context.user_data.get('term', 'TERM_NOT_FOUND')}"
         )
         return ConversationHandler.END
     row_length = len(courses) if len(courses) < 3 else 3
@@ -144,18 +153,16 @@ async def track_sections(
         term=context.user_data.get("term", "TERM_NOT_FOUND"),
         user_id=update.effective_user.id,
     )
-   
+
     if len(sections) == 0:
         await query.edit_message_text(
-            text= f"Oops! seems like there are no offered sections for {selected_course} course in term {context.user_data.get('term', 'TERM_NOT_FOUND')}"
+            text=f"Oops! seems like there are no offered sections for {selected_course} course in term {context.user_data.get('term', 'TERM_NOT_FOUND')}"
         )
         return ConversationHandler.END
 
     section_rows = construct_reply_callback_grid(
-        sections,row_length= 1, is_callback_different=True
+        sections, row_length=1, is_callback_different=True
     )
-
-    
 
     ## ! handle overflow by requesting the CRN explicitly
     if len(sections) > 100:
@@ -270,7 +277,6 @@ async def untrack(
         await update.message.reply_text(
             text="Your CRNs have exceeded display limits, "
             "please enter the CRN you would like to untrack. Use /cancel to stop the command",
-            
         )
         return CommandEnum.CRN
 
@@ -316,7 +322,7 @@ async def untrack_select(
     await untrack_section(crn=crn, user_id=update.effective_chat.id)
     await query.edit_message_text(
         text=f"Section with CRN `{crn}` was untracked successfully\\!",
-        parse_mode=ParseMode.MARKDOWN_V2
+        parse_mode=ParseMode.MARKDOWN_V2,
     )
     return ConversationHandler.END
 

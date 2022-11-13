@@ -170,12 +170,8 @@ def verify_user_from_token(
 
 async def get_terms(user_id: int) -> List[Tuple[str, str]]:
     """getting all allowed terms form DB"""
-    try:
-        await get_user(user_id)
-        return await fetch_terms()
 
-    except TelegramProfile.DoesNotExist as exc:
-        raise exc
+    return await fetch_terms()
 
 
 @sync_to_async
