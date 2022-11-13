@@ -258,11 +258,14 @@ def send_notification(user_pk: int, info: str) -> None:
 
         except Exception as exc:
             logger.error("Couldn't send to Telegram: %s - %s", user, exc)
+            # fall to sending and email
+            channels.append(ChannelEnum.EMAIL)
 
     if ChannelEnum.EMAIL in channels:
         try:
             send_mail(
-                subject="Petroly Radar Detected Changes",
+                subject="Petroly Radar Detected Changes -  We couldn't send it by Telegram"
+                "Please check your Petroly settings",
                 message=info,
                 html_message=loader.render_to_string(
                     "notifier/email_changes.html",
@@ -342,7 +345,7 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
         or department == SubjectEnum.BUS
     ):
         department = DepartmentEnum.ACFN
-    
+
     elif department == SubjectEnum.STAT:
         department = DepartmentEnum.MATH
 
