@@ -51,7 +51,7 @@ async def track(
     context.user_data.clear()
     # getting available terms and create reply buttons
     try:
-        await TelegramProfile.objects.aget(update.effective_user.id)
+        await TelegramProfile.objects.aget(pk=update.effective_user.id)
     except TelegramProfile.DoesNotExist:
         await update.message.reply_text(
             "You need to set up your tracking list form Petorly.co"
