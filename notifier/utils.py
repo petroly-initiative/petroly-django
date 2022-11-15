@@ -336,7 +336,7 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
     if department == SubjectEnum.SWE:
         department = DepartmentEnum.ICS
 
-    elif department == SubjectEnum.ENGL:
+    elif department == SubjectEnum.ENGL or department == SubjectEnum.CGS:
         department = DepartmentEnum.ELD
 
     elif (
