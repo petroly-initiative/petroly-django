@@ -33,5 +33,8 @@ jobs:
     - name: Sync Pipfile
       run:  pipenv sync
 
+    env:
+      ENC_KEY: ${{ secrets.ENC_KEY}}
+
     - name: Run Tests
       run: pipenv run python manage.py test --settings=petroly.settings.dev --no-input  --exclude-tag=require_secretes  account
