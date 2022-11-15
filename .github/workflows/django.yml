@@ -30,8 +30,8 @@ jobs:
       with:
         pipenv-version: ${{ matrix.pipenv-version }}
 
-    - name: Sync Pipfile
-      run: pipenv sync
+    - name: Sync Pipfile & Activate
+      run: pipenv sync && pipenv shell
     
     - name: Run Tests
       run: python manage.py test --settings=petroly.settings.dev --no-input  --exclude-tag=require_secretes  account
