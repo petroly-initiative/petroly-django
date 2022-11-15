@@ -88,3 +88,4 @@ class SubjectEnum(TextChoices):
     ACCT = ("ACCT", "Accounting")
     MKT = ("MKT", "Marketing")
     STAT = ("STAT", "Statistics")
+    CGS = ("CGS", "College of General Studies ")
