@@ -32,9 +32,6 @@ jobs:
 
     - name: Sync Pipfile
       run:  pipenv sync
-    
-    - name: Activate Pipenv
-      run:  pipenv shell
-    
+
     - name: Run Tests
-      run: python manage.py test --settings=petroly.settings.dev --no-input  --exclude-tag=require_secretes  account
+      run: pipenv run python manage.py test --settings=petroly.settings.dev --no-input  --exclude-tag=require_secretes  account
