@@ -340,7 +340,7 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
         case SubjectEnum.ENGL | SubjectEnum.CGS:
             department = DepartmentEnum.ELD
 
-        case SubjectEnum.ACCT | SubjectEnum.MKT | SubjectEnum.BUS:
+        case SubjectEnum.ACCT | SubjectEnum.MKT | SubjectEnum.BUS | SubjectEnum.ECON:
             department = DepartmentEnum.ACFN
 
         case SubjectEnum.STAT:
