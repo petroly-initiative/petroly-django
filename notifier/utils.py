@@ -189,7 +189,7 @@ def check_changes(course: Course) -> Tuple:
 
     info = {
         "available_seats": course_info["seatsAvailable"],
-        "waiting_list_count": course_info["waitCount"],
+        "waiting_list_count": course_info["waitAvailable"],
     }
     increased = (
         info["available_seats"] > course.available_seats

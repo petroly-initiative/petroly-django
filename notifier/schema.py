@@ -236,7 +236,7 @@ class Mutation:
                 # before it's being tracked
                 course_info = get_course_info(course)
                 obj.available_seats = course_info["seatsAvailable"]
-                obj.waiting_list_count = course_info["waitCount"]
+                obj.waiting_list_count = course_info["waitAvailable"]
                 obj.raw = course_info
                 obj.save()
 
