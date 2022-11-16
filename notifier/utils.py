@@ -333,24 +333,24 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
     """
 
     names = name.split(" ")
-    if department == SubjectEnum.SWE:
-        department = DepartmentEnum.ICS
+    match department:
+        case SubjectEnum.SWE:
+            department = DepartmentEnum.ICS
 
-    elif department == SubjectEnum.ENGL or department == SubjectEnum.CGS:
-        department = DepartmentEnum.ELD
+        case SubjectEnum.ENGL | SubjectEnum.CGS:
+            department = DepartmentEnum.ELD
 
-    elif (
-        department == SubjectEnum.ACCT
-        or department == SubjectEnum.MKT
-        or department == SubjectEnum.BUS
-    ):
-        department = DepartmentEnum.ACFN
+        case SubjectEnum.ACCT | SubjectEnum.MKT | SubjectEnum.BUS:
+            department = DepartmentEnum.ACFN
 
-    elif department == SubjectEnum.STAT:
-        department = DepartmentEnum.MATH
+        case SubjectEnum.STAT:
+            department = DepartmentEnum.MATH
 
-    elif department == SubjectEnum.ISE:
-        department = DepartmentEnum.SE
+        case SubjectEnum.ISE:
+            department = DepartmentEnum.SE
+
+        case SubjectEnum.ISE:
+            department = DepartmentEnum.SE
 
     filters = Q(department=department)
 
