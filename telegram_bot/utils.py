@@ -246,12 +246,12 @@ async def get_sections(
                 class_type=section['meetingsFaculty'][0]['meetingTime']["meetingScheduleType"],
                 start_time=section['meetingsFaculty'][0]['meetingTime']["beginTime"],
                 end_time=section['meetingsFaculty'][0]['meetingTime']["endTime"],
-                waitlist_count=section["waitCount"],
+                waitlist_count=section["waitAvailable"],
             ),
             {
                 "crn": section["courseReferenceNumber"],
                 "seats": section["seatsAvailable"],
-                "waitlist": section["waitCount"],
+                "waitlist": section["waitAvailable"],
             },
         )
         for section in course_sections
