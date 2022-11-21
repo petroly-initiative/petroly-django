@@ -6,8 +6,7 @@ of the `notifier` app.
 import hmac
 import hashlib
 import dataclasses
-import json
-from typing import List
+from typing import Dict, List, Optional
 
 import strawberry
 from strawberry.scalars import JSON
@@ -25,6 +24,7 @@ from .utils import fetch_data, get_course_info, instructor_info_from_name
 from .models import TrackingList, Course, ChannelEnum
 from .types import CourseInput, TermType, ChannelsType, PreferencesInput
 
+
 def resolve_subject_list(root, info: Info, short: bool = True) -> List[str]:
     subject_short: List[str] = []
     subject_long: List[str] = []
@@ -36,6 +36,7 @@ def resolve_subject_list(root, info: Info, short: bool = True) -> List[str]:
         return subject_short
 
     return subject_long
+
 
 @gql.type
 class Query:
@@ -66,7 +67,7 @@ class Query:
     subject_list = strawberry.field(resolve_subject_list)
 
     @gql.field(directives=[IsAuthenticated()])
-    def tracked_courses(self, info: Info) -> JSON:
+    def tracked_courses(self, info: Info) -> List[JSON]:
         """get all tracked courses' CRNs by the
         current logged in user.
 
@@ -218,7 +219,9 @@ class Mutation:
         tracking_list, _ = TrackingList.objects.get_or_create(user=user)
 
         if len(courses) > 30:
-            raise Exception("Sorry you can't track more than 30 sections, consider the Premium plan.")
+            raise Exception(
+                "Sorry you can't track more than 30 sections, consider the Premium plan."
+            )
 
         try:
             # get all `Course` objects or create them
