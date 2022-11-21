@@ -6,13 +6,14 @@ of the `notifier` app.
 import hmac
 import hashlib
 import dataclasses
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import strawberry
 from strawberry.scalars import JSON
 from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
+from strawberry_django_plus.types import OperationMessage
 from django.conf import settings
 from django_q.tasks import async_task
 
@@ -53,7 +54,7 @@ class Query:
         return fetch_data(term, department)
 
     @gql.field(directives=[IsAuthenticated()])
-    def tracking_list_channels(self, info: Info) -> ChannelsType:
+    def tracking_list_channels(self, info: Info) -> Optional[ChannelsType]:
         """Get the user's tracking list tracking_list_channels."""
 
         user = info.context.request.user
