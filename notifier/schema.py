@@ -13,7 +13,6 @@ from strawberry.scalars import JSON
 from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
-from strawberry_django_plus.types import OperationMessage
 from django.conf import settings
 from django_q.tasks import async_task
 
@@ -68,7 +67,7 @@ class Query:
     subject_list = strawberry.field(resolve_subject_list)
 
     @gql.field(directives=[IsAuthenticated()])
-    def tracked_courses(self, info: Info) -> List[JSON]:
+    def tracked_courses(self, info: Info) -> Optional[JSON]:
         """get all tracked courses' CRNs by the
         current logged in user.
 
