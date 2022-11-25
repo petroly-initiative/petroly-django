@@ -28,6 +28,7 @@ python-telegram-bot = "*"
 django-multiselectfield = "*"
 certifi = "*"
 cryptography = "*"
+strawberry-ratelimit = "*"
 
 [dev-packages]
 black = "*"
