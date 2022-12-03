@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6678eb9ffad31443e6a44d84e1ecd186a33c4a79b49b7fbbb9b8db169830f7c7"
+            "sha256": "d8b768db61e7c8f8c3dd34c5c3698fc99d861763c6fcbc034cf5b410ed80ba7f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -201,7 +201,7 @@
                 "sha256:8ee2a0c8d360099919072e18af5f93c67a4fbf6c272acb16f9558bc9935a21ee",
                 "sha256:d7491cd817d4dbf36f020a69f99db7687e3d1470207dc3f2cf649e53ead307d0"
             ],
-            "markers": "python_version < '4.0' and python_full_version >= '3.6.1'",
+            "markers": "python_version < '4' and python_full_version >= '3.6.1'",
             "version": "==1.3.0"
         },
         "django-choices-field": {
@@ -273,7 +273,7 @@
                 "sha256:06d2aad0ac723e35b1cb47885d3e5c45e956a53bc1b209a9fc5369007fe46676",
                 "sha256:5766780452bd5ec8ba133f8bf287dc92713e3868ddd83aee4faab9fc3e303dc3"
             ],
-            "markers": "python_version >= '3.6' and python_version < '4.0'",
+            "markers": "python_version >= '3.6' and python_version < '4'",
             "version": "==3.2.3"
         },
         "gunicorn": {
@@ -525,11 +525,11 @@
         },
         "strawberry-django-plus": {
             "hashes": [
-                "sha256:0daf08fef5474dd0c480c9542e1e43494f460286fdeae416980c89869a82438e",
-                "sha256:f5713458d14143e2c690433fc4b68dee6a5422db87d553790772f8e831ad6cb2"
+                "sha256:55d30fd63daab971e06c1ee52fd0916502fcaaa2ae21bc871a14739fea1d4a06",
+                "sha256:5dabc34c7183efd61aece2e84d15c638e8d121e318d9c658216239c01dca18a4"
             ],
             "index": "pypi",
-            "version": "==1.29"
+            "version": "==1.31.1"
         },
         "strawberry-graphql": {
             "hashes": [
@@ -808,7 +808,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_full_version < '3.11.0a7'",
+            "markers": "python_version < '3.11'",
             "version": "==2.0.1"
         },
         "tomlkit": {
