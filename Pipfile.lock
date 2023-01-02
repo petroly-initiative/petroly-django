@@ -434,11 +434,11 @@
         },
         "python-telegram-bot": {
             "hashes": [
-                "sha256:61e8c4d92d4641391d853d9431c8b0b1f21678a0bff8d990bc6de777f53f843e",
-                "sha256:70dec236386a809f777d0227117fb37fa4f5ca0c367a4c392d28346657749687"
+                "sha256:2f7f0a0eee6517ffb3e9732b622b5c97c107517f35dc2a97273c74cb5ed39e9d",
+                "sha256:9ff3d7b03d0e621df6c903622338e30d761e121c27179e13f62ba2216b7c6d32"
             ],
             "index": "pypi",
-            "version": "==20.0b0"
+            "version": "==20.0"
         },
         "redis": {
             "hashes": [
@@ -790,7 +790,7 @@
                 "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
                 "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
-            "markers": "python_version < '3.11'",
+            "markers": "python_full_version < '3.11.0a7'",
             "version": "==2.0.1"
         },
         "tomlkit": {
