@@ -18,6 +18,7 @@ import notifier.schema
 import telegram_bot.schema
 from strawberry_ratelimit.ratelimit import ExtensionRatelimit
 
+
 Query = merge_types(
     "Query",
     (
