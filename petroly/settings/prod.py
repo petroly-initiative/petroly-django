@@ -12,7 +12,7 @@ IS_HEROKU = "DYNO" in os.environ
 
 # Generally avoid wildcards(*). However since Heroku router provides hostname validation it is ok
 SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = os.environ.get("DEBUG", 'False') == 'True'
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 if IS_HEROKU:
     ALLOWED_HOSTS = ["*"]
@@ -21,32 +21,39 @@ else:
 
 # Extra app
 INSTALLED_APPS += [
-    'django.contrib.admindocs',
+    "django.contrib.admindocs",
 ]
 
 MIDDLEWARE += [
-    'account.middleware.DiscordNotificationMiddleware',
+    "account.middleware.DiscordNotificationMiddleware",
 ]
 
 # For Discord notification
-DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", default='')
+DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", default="")
 
 
-
-ALLOWED_HOSTS = ['.petroly.co', '.petroly-main.herokuapp.com']
+ALLOWED_HOSTS = [
+    ".petroly.co",
+    ".petroly-main.herokuapp.com",
+    "petroly-pr-201.herokuapp.com",
+]
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 # CORS lib
-CORS_ALLOWED_ORIGINS = ['https://petroly.vercel.app', 'https://react.petroly.co', 'https://petroly.co']
+CORS_ALLOWED_ORIGINS = [
+    "https://petroly.vercel.app",
+    "https://react.petroly.co",
+    "https://petroly.co",
+]
 
 
 # Clouddinary: for media
 cloudinary.config(
-    cloud_name = 'petroly-initiative',
-    api_key = '777263134962661',
-    api_secret = os.environ.get("CLOUDINARY_API_SECRET", '') 
+    cloud_name="petroly-initiative",
+    api_key="777263134962661",
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET", ""),
 )
 
 # Database
@@ -58,25 +65,25 @@ MAX_CONN_AGE = 600
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3")
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 }
 
 if "DATABASE_URL" in os.environ:
     # Configure Django for DATABASE_URL environment variable.
     DATABASES["default"] = dj_database_url.config(
-        conn_max_age=MAX_CONN_AGE, ssl_require=True)
+        conn_max_age=MAX_CONN_AGE, ssl_require=True
+    )
 
     # Enable test database if found in CI environment.
     if "CI" in os.environ:
         DATABASES["default"]["TEST"] = DATABASES["default"]
 
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-MEDIA_URL = '/media/'
-STATIC_URL = '/static/'
+MEDIA_URL = "/media/"
+STATIC_URL = "/static/"
 
 # Enable WhiteNoise's GZip compression of static assets.
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
@@ -98,16 +105,14 @@ if "CI" in os.environ:
 
 
 # To get Email when >500 error happens
-SERVER_EMAIL = 'Error@petroly.co'
-ADMINS = [
-    ('Ammar', 'A@ammarf.com')
-]
+SERVER_EMAIL = "Error@petroly.co"
+ADMINS = [("Ammar", "A@ammarf.com")]
 # To get 404 errors
 MANAGERS = ADMINS
 # Ignore these pattern errors
 IGNORABLE_404_URLS = [
-    re.compile(r'^/apple-touch-icon.*\.png$'),
-    re.compile(r'^/favicon\.ico$'),
-    re.compile(r'^/robots\.txt$'),
-    re.compile(r'^/ads\.txt$'),
+    re.compile(r"^/apple-touch-icon.*\.png$"),
+    re.compile(r"^/favicon\.ico$"),
+    re.compile(r"^/robots\.txt$"),
+    re.compile(r"^/ads\.txt$"),
 ]
