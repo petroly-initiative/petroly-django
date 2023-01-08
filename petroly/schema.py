@@ -4,17 +4,19 @@ into a single `RootQuery` and `RootMutation`.
 """
 
 import strawberry
+from graphql.validation import NoSchemaIntrospectionCustomRule
+from strawberry.extensions import AddValidationRules, QueryDepthLimiter
 from strawberry.tools import merge_types
 from strawberry_django_jwt.middleware import JSONWebTokenMiddleware
 from strawberry_django_plus.optimizer import DjangoOptimizerExtension
 from strawberry_django_plus.directives import SchemaDirectiveExtension
-from strawberry_ratelimit.ratelimit import ExtensionRatelimit
 
 import account.schema
 import communities.schema
 import evaluation.schema
 import notifier.schema
 import telegram_bot.schema
+from strawberry_ratelimit.ratelimit import ExtensionRatelimit
 
 Query = merge_types(
     "Query",
@@ -42,17 +44,17 @@ schema = strawberry.Schema(
     query=Query,
     mutation=Mutation,
     extensions=[
-        DjangoOptimizerExtension,
-        SchemaDirectiveExtension,
-        JSONWebTokenMiddleware,
+        # AddValidationRules([NoSchemaIntrospectionCustomRule]),
+        QueryDepthLimiter(max_depth=10),
         ExtensionRatelimit(
             type_name=[
                 "me",
             ],
-            rate_max=1,
+            rate_max=5,
             rate_seconds=10,
-            depth_max=10,  # Maximum depth of the query
-            call_max=100,  # Maximum call count
         ),
+        DjangoOptimizerExtension,
+        SchemaDirectiveExtension,
+        JSONWebTokenMiddleware,
     ],
 )
