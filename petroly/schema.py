@@ -62,6 +62,11 @@ schema = strawberry.Schema(
             rate_max=120,
             rate_seconds=60,
         ),
+        ExtensionRatelimit(
+            type_name=["register"],
+            rate_max=3,
+            rate_seconds=60 * 60,
+        ),
         DjangoOptimizerExtension,
         SchemaDirectiveExtension,
         JSONWebTokenMiddleware,
