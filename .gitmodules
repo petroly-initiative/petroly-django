@@ -1,3 +1,0 @@
-[submodule "strawberry-ratelimit"]
-	path = strawberry-ratelimit
-	url = https://github.com/stypr/strawberry-ratelimit
