@@ -31,5 +31,5 @@ urlpatterns = [
     path("roommate/", include("roommate.urls")),
     path("telegram_bot/", include("telegram_bot.urls")),
     path("__debug__/", include(debug_toolbar.urls)),
-    path("endpoint/", csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),
+    path("endpoint/", csrf_exempt(GraphQLView.as_view(graphiql=False, schema=schema))),
 ]
