@@ -180,6 +180,7 @@ class TrackingList(models.Model):
     pk: OneToOneField `user`.
     """
 
+    updated_on = models.DateTimeField(_("updated on"), auto_now_add=True)
     user = models.OneToOneField(
         User,
         verbose_name=_("user"),
