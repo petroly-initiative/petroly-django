@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "Petroly Initiative backend and API"
 authors = ["ammar-faifi <a@ammarf.com>"]
 readme = "README.md"
-packages = [{include = "petroly_django"}]
+packages = []
 
 [tool.poetry.dependencies]
 python = "3.11.1"
