@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1296ddfdb8ffd740253077a126320a4d060bf555c1872444b8122d06483cf3af"
+            "sha256": "2fd4e30debecb952bb66a6c7ef7b23db48368684382e1865777718633017c47e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -130,7 +130,7 @@
                 "sha256:5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845",
                 "sha256:83e9a75d1911279afd89352c68b45348559d1fc0506b054b346651b5e7fee29f"
             ],
-            "markers": "python_full_version >= '3.6.0'",
+            "markers": "python_version >= '3.6'",
             "version": "==2.1.1"
         },
         "cloudinary": {
@@ -269,7 +269,7 @@
                 "sha256:06d2aad0ac723e35b1cb47885d3e5c45e956a53bc1b209a9fc5369007fe46676",
                 "sha256:5766780452bd5ec8ba133f8bf287dc92713e3868ddd83aee4faab9fc3e303dc3"
             ],
-            "markers": "python_version >= '3.6' and python_version < '4'",
+            "markers": "python_version >= '3.6' and python_version < '4.0'",
             "version": "==3.2.3"
         },
         "gunicorn": {
@@ -314,11 +314,11 @@
         },
         "packaging": {
             "hashes": [
-                "sha256:2198ec20bd4c017b8f9717e00f0c8714076fc2fd93816750ab48e2c41de2cfd3",
-                "sha256:957e2148ba0e1a3b282772e791ef1d8083648bc131c8ab0c1feba110ce1146c3"
+                "sha256:714ac14496c3e68c99c29b00845f7a2b85f3bb6f1078fd9f72fd20f0570002b2",
+                "sha256:b6ad297f8907de0fa2fe1ccbd26fdaf387f5f47c7275fedf8cce89f99446cf97"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==22.0"
+            "version": "==23.0"
         },
         "pillow": {
             "hashes": [
@@ -506,11 +506,11 @@
         },
         "strawberry-django-auth": {
             "hashes": [
-                "sha256:0fa2069893f5c736b6ec0e5e524879f5c6d83508d4ab7df422b86e260f2a2ee8",
-                "sha256:91fd1005d3a60dc330c8fbb7598fca506a65f9adce71ebe64db31074ec91149b"
+                "sha256:b79f7c3bfadfd1fb3a4de140031a5ab4e628972987f0e80aa35bf530d7b4f60e",
+                "sha256:d5b7e6857ae8fe1fbdc5ece86fbdafebb5080f035ed5f47643803314bd72ce1f"
             ],
             "index": "pypi",
-            "version": "==0.3.4.1"
+            "version": "==0.372.0"
         },
         "strawberry-django-jwt": {
             "hashes": [
@@ -640,7 +640,7 @@
                 "sha256:6db30c5ded9815d813932c04c2f85a360bcdd35fed496f4d8f35495ef0a261b6",
                 "sha256:c033fd0edb91000a7f09527fe5c75321878f98322a77ddcc81adbd83724afb7b"
             ],
-            "markers": "python_full_version >= '3.7.0'",
+            "markers": "python_version >= '3.7'",
             "version": "==5.11.4"
         },
         "lazy-object-proxy": {
@@ -792,6 +792,14 @@
             "markers": "python_full_version >= '3.6.2'",
             "version": "==0.7"
         },
+        "tomli": {
+            "hashes": [
+                "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
+                "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
+            ],
+            "markers": "python_version < '3.11'",
+            "version": "==2.0.1"
+        },
         "tomlkit": {
             "hashes": [
                 "sha256:07de26b0d8cfc18f871aec595fda24d95b08fef89d147caa861939f37230bf4b",
@@ -875,7 +883,7 @@
                 "sha256:ee6acae74a2b91865910eef5e7de37dc6895ad96fa23603d1d27ea69df545015",
                 "sha256:ef3f72c9666bba2bab70d2a8b79f2c6d2c1a42a7f7e2b0ec83bb2f9e383950af"
             ],
-            "markers": "python_version >= '3.11'",
+            "markers": "python_version < '3.11'",
             "version": "==1.14.1"
         }
     }
