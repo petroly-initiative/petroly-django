@@ -21,20 +21,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-        cache: "pipenv"
 
-    - name: Run image
-      uses: tiagovrtr/actions-pipenv@v1
-      with:
-        pipenv-version: ${{ matrix.pipenv-version }}
+    - uses: Gr1N/setup-poetry@v8
+    - run: poetry --version
 
-    - name: Sync Pipfile
-      run:  pipenv sync
+    - name: Install Dependencies
+      run:  poetry install
 
     - name: Run Tests
-      run: pipenv run python manage.py test --settings=petroly.settings.dev --no-input  --exclude-tag=require_secretes  account
+      run: poetry run python manage.py test --settings=petroly.settings.dev --no-input  --exclude-tag=require_secretes  account
