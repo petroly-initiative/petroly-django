@@ -25,6 +25,7 @@ cloudinary = "^1.30.0"
 python-telegram-bot = "^20.0"
 django-multiselectfield = "^0.1.12"
 cryptography = "^39.0.0"
+requests = "^2.28.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
