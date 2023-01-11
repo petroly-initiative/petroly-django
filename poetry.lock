@@ -132,6 +132,18 @@ six = ">=1.9.0"
 wcwidth = ">=0.1.4"
 
 [[package]]
+name = "cachetools"
+version = "5.2.1"
+description = "Extensible memoizing collections and decorators"
+category = "main"
+optional = false
+python-versions = "~=3.7"
+files = [
+    {file = "cachetools-5.2.1-py3-none-any.whl", hash = "sha256:8462eebf3a6c15d25430a8c27c56ac61340b2ecf60c9ce57afc2b97e450e47da"},
+    {file = "cachetools-5.2.1.tar.gz", hash = "sha256:5991bc0e08a1319bb618d3195ca5b6bc76646a49c21d55962977197b301cc1fe"},
+]
+
+[[package]]
 name = "certifi"
 version = "2022.12.7"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -1096,6 +1108,7 @@ files = [
 ]
 
 [package.dependencies]
+cachetools = {version = ">=5.2.0,<5.3.0", optional = true, markers = "extra == \"callback-data\""}
 httpx = ">=0.23.1,<0.24.0"
 
 [package.extras]
@@ -1488,4 +1501,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.1"
-content-hash = "f34f1254aaed675c1d5ebb7373a957c6dcb00ee89a57964c3383b96c206c93cd"
+content-hash = "6aefd730c6f04561b7bc1dfb16eb9dcccc7a4dd48867c85802f250b2338ea0eb"
