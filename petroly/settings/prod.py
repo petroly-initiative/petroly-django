@@ -37,6 +37,13 @@ ALLOWED_HOSTS = [
     ".petroly-main.herokuapp.com",
     "petroly-pr-201.herokuapp.com",
 ]
+# get other hosts from env
+hosts = os.environ.get("ALLOWED_HOSTS", "")
+if hosts:
+    for host in hosts.split(","):
+        ALLOWED_HOSTS.append(host)
+
+
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
