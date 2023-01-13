@@ -52,38 +52,38 @@ Steps:
 1) Fork this repo.
 2) Open a new terminal/powershell window.
 3) Move to the directory where you want. For example:
-4) Clone the repo that you forked:
+4) Clone the repo that you forked, it'll similar to this:
 
    ```shell
    git clone https://github.com/YOUR_NAME/petroly.git
    ```
 
-5) Open a new VS Code window, then drag & drop the cloned folder into VS Code.
+5) Open a new VS Code window, or any other IDE, then drag & drop the cloned folder into VS Code.
 
 ### Setup python env
 
 We really prefer to set up your python env:
 
-1) install latest python 3.10
-2) install pipenv
-
-   ```shell
-   pip install pipenv
-   ```
-
+1) install latest python specified in `pyproject.toml` file, we advise you to use `pyenv` manager 
+2) install `poerty` from [here](https://python-poetry.org/docs/#installation)
 3) create the virtual environment and install dependencies
 
    ```shell
-   py -m pipenv install
+   poetry install
    ```
 
 4) activate the virtual environment
 
    ```shell
-   py -m pipenv shell
+   poetry shell
    ```
 > **Note**
-> If you face an error in installing `psycopg2-binary`, delete first line temporarily from `` file. Then repeat installing. This package is meant for production only. not needed in dev stage.
+> If you face an error in installing `psycopg2`, because it need to build from source, you might need to install PostgresSQL, for MacOS
+
+``` shell
+    brew install postgresql
+```
+[Check this Q](https://stackoverflow.com/questions/35104097/how-to-install-psycopg2-with-pg-config-error#46877364)
 
 ### Run Django
 
