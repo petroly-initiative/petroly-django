@@ -185,8 +185,11 @@ def check_changes(course: Course) -> Tuple:
 
     course_info = get_course_info(course)
     if not course_info:
+        course_crn = course.crn
+        del course
         raise ValueError(
-            f"Course: {course.crn} not found, it might have been removed from source"
+            f"Course: {course_crn} not found, it might have been removed from source, "
+            "It's deleted."
         )
 
     info = {
