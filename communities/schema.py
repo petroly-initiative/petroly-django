@@ -1,4 +1,3 @@
-
 import re
 from typing import List
 
@@ -25,6 +24,7 @@ from .types import (
 
 User = get_user_model()
 
+
 def resolve_community_interactions(
     root, info: Info, pk: ID
 ) -> CommunityInteractionsType:
@@ -33,9 +33,7 @@ def resolve_community_interactions(
 
     return CommunityInteractionsType(
         liked=Community.objects.filter(pk=pk, likes=user).exists(),
-        reported=Community.objects.filter(
-            pk=pk, reports__reporter=user
-        ).exists(),
+        reported=Community.objects.filter(pk=pk, reports__reporter=user).exists(),
     )
 
 
@@ -80,24 +78,6 @@ def resolve_community_create(
     ...
 
 
-def resolve_quick_add(root, info: Info, text: str) -> bool:
-
-    try:
-        matches = re.findall(r'https:\/\/chat.whatsapp.com\/[A-Za-z0-9]*', text)
-
-        async_task(
-            'communities.populate.whatsapp_populate',
-            matches,
-            task_name='populate_whatsapp',
-            group='communities',
-            timeout=60 * 60     # 1 hour
-        )
-        return True
-
-    except Exception:
-        return False
-
-
 @gql.type
 class Query:
 
@@ -111,7 +91,6 @@ class Query:
 @gql.type
 class Mutation:
 
-    quick_add: bool = gql.field(resolve_quick_add)
     community_create: CommunityType = gql.django.create_mutation(
         CommunityInput, directives=[IsAuthenticated(), MatchIdentity()]
     )
@@ -122,12 +101,32 @@ class Mutation:
         CommunityPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
     )
 
-    report_create = gql.mutation(
-        resolve_report, directives=[IsAuthenticated()]
-    )
+    report_create = gql.mutation(resolve_report, directives=[IsAuthenticated()])
 
     toggle_like_community = gql.mutation(
         rsolve_toggle_like_community,
         directives=[IsAuthenticated()],
         description="This will toggle the community like for the logged user",
     )
+
+    @gql.field
+    def quick_add(root, info: Info, text: str) -> str:
+        """Quickly, using regex, extract WhatsApp links, and add them as
+        as a Section, with empty section number"""
+
+        try:
+            matches = re.findall(r"https:\/\/chat.whatsapp.com\/[A-Za-z0-9]*", text)
+
+            async_task(
+                "communities.populate.whatsapp_populate",
+                matches,
+                task_name="populate_whatsapp",
+                group="communities",
+                timeout=60 * 60,  # 1 hour
+            )
+            return (
+                f"Adding {len(matches)} group(s),  they should appear within minutes."
+            )
+
+        except Exception as exc:
+            return f"An issue occured - {exc}"
