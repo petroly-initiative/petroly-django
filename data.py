@@ -90,5 +90,4 @@ class SubjectEnum(TextChoices):
     STAT = ("STAT", "Statistics")
     CGS = ("CGS", "College of General Studies")
     ECON = ("ECON", "Economics")
-
-    # TODO make sure to map new subjects in instructor search
+    GEOL = ("GEOL", "Geology")
