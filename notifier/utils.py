@@ -357,6 +357,9 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
         case SubjectEnum.ISE:
             department = DepartmentEnum.SE
 
+        case SubjectEnum.GEOL:
+            department = DepartmentEnum.ERTH
+
     filters = Q(department=department)
 
     for name_ in names:
