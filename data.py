@@ -64,7 +64,7 @@ class SubjectEnum(TextChoices):
     ERTH = ("ERTH", "Earth Sciences")
     EE = ("EE", "Electrical Engineering")
     # ELI = ("ELI", "English Language Inst. (Prep)")
-    ELD = ("ELD", "English Language Department")
+    # ELD = ("ELD", "English Language Department")
     FIN = ("FIN", "Finance")
     # ISOM = ("ISOM", "Info. Systems & Operations Mgt")
     GS = ("GS", "Global Studies")
