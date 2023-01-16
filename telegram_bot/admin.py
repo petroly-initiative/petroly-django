@@ -14,7 +14,9 @@ class TelegramProfileAdmin(admin.ModelAdmin):
     Custom settings for `TelegramProfile` app in admin site.
     """
 
+    search_fields = ["user"]
     list_display = [
         "user",
+        "id",
         "username",
     ]
