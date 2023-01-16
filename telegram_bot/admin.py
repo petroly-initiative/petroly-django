@@ -15,6 +15,7 @@ class TelegramProfileAdmin(admin.ModelAdmin):
     """
 
     search_fields = ["user__username"]
+    search_help_text = "Search in usernames"
     list_display = [
         "user",
         "id",
