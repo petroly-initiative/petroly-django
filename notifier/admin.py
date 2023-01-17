@@ -19,11 +19,7 @@ class TrackingListAdmin(admin.ModelAdmin):
     Custom settings for `TrackingList` app in admin site.
     """
 
-    list_display = [
-        "id",
-        "user",
-        "channels",
-    ]
+    list_display = ["id", "user", "channels", "updated_on"]
     list_filter = [
         "channels",
     ]
