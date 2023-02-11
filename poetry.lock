@@ -1336,14 +1336,14 @@ enum = ["django-choices-field (>=2.0)"]
 
 [[package]]
 name = "strawberry-graphql"
-version = "0.152.0"
+version = "0.156.3"
 description = "A library for creating GraphQL APIs"
 category = "main"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "strawberry_graphql-0.152.0-py3-none-any.whl", hash = "sha256:89f5b2d6cf56783fb061699d4d0148e2f3423646c4cca4a084751e1c63d635ee"},
-    {file = "strawberry_graphql-0.152.0.tar.gz", hash = "sha256:6482fe4e3eee35c9ace4dce50d22dfa1f36b1bf156e5d1fb75cec73333ade80e"},
+    {file = "strawberry_graphql-0.156.3-py3-none-any.whl", hash = "sha256:46c786abe3d0cb44be9fa0f169b329de3f48f0025d7ab58cf7747b1beb1c27f0"},
+    {file = "strawberry_graphql-0.156.3.tar.gz", hash = "sha256:04b866bb9289bff631710867ca700312b673e3de3b52ae022294faa479d3da54"},
 ]
 
 [package.dependencies]
@@ -1539,4 +1539,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "f761439bcbff7336bbc1f7e46317be31dd0ee5f9677412e2fd72eec286533721"
+content-hash = "b0b0d065e4219bfad6daa99e5c2aa1b6aee945526dd71d3fbc2f31447deaf3a7"
