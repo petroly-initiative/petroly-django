@@ -1271,24 +1271,22 @@ files = [
 
 [[package]]
 name = "strawberry-django-auth"
-version = "0.3.4.1"
+version = "0.374.0"
 description = "Graphql authentication system with Strawberry for Django."
 category = "main"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = ">=3.8,<3.12"
 files = [
-    {file = "strawberry-django-auth-0.3.4.1.tar.gz", hash = "sha256:91fd1005d3a60dc330c8fbb7598fca506a65f9adce71ebe64db31074ec91149b"},
-    {file = "strawberry_django_auth-0.3.4.1-py3-none-any.whl", hash = "sha256:0fa2069893f5c736b6ec0e5e524879f5c6d83508d4ab7df422b86e260f2a2ee8"},
+    {file = "strawberry_django_auth-0.374.0-py3-none-any.whl", hash = "sha256:d76b02f4744080f8eed3a0f83fd807a61164345ec3ea2a5fdd5c5cb0c94e1b6f"},
+    {file = "strawberry_django_auth-0.374.0.tar.gz", hash = "sha256:12b5f22aaceb24f560669ef2454032a040983d30aa3937d7638a0670a412b5df"},
 ]
 
 [package.dependencies]
-Django = {version = ">=3.2,<5", markers = "python_version >= \"3.8\""}
-django-admin-display = ">=1.3.0,<2.0.0"
-packaging = ">=20.0,<30.0"
+Django = ">=3.2,<4.2"
 Pillow = ">=9.2.0,<10.0.0"
-PyJWT = ">=1.7.1,<3.0"
-strawberry-django-jwt = ">=0.2.1,<0.3.0"
-strawberry-graphql = ">=0.69.0,<1.0.0"
+PyJWT = ">=2.6.0,<3.0"
+strawberry-django-plus = ">=1.25.2,<2.0.0"
+strawberry-graphql = ">=0.128,<0.171.0"
 strawberry-graphql-django = ">=0.2.5,<4.0"
 
 [[package]]
@@ -1541,4 +1539,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "096906e6a853970b93844e28ad0fbd9666bd3e3ff301c0f010fe65aca26d5aa3"
+content-hash = "2b769f5ee499568ba6511f434f8c5c777e073ef23b73b8ab79f966893e79744b"
