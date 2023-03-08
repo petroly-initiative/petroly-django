@@ -3,9 +3,10 @@ This module provides some utilities for `telegram_bot` app.
 It also helps converting some ORM methods into async.
 """
 
-from io import BytesIO
+import os
 import re
 import logging
+from io import BytesIO
 from typing import Dict, List, Tuple
 from asgiref.sync import sync_to_async, async_to_sync
 
@@ -437,7 +438,7 @@ def generate_card(out: BytesIO) -> Image.Image:
                 "image_file": ("img.png", out, "image/png"),
             },
             headers={
-                "x-api-key": "d7731806d2e837df5c70e4611298091e09269844c417904847f95c75c6e205e1a1e56bf21cf1bde18f9d9d85f74cf0d1",
+                "x-api-key": os.environ.get("CLIPDROP_TOKE", ""),
             },
         )
 
