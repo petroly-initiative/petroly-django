@@ -428,7 +428,7 @@ def request_remove(out: BytesIO, width: int, height: int) -> Image.Image:
 
 
 @sync_to_async
-def generate_card(out: BytesIO) -> Image.Image:
+def generate_card(out: BytesIO) -> BytesIO:
     # it's a must to reset the file cursor to the begining
     out.seek(0)
     try:
@@ -438,7 +438,7 @@ def generate_card(out: BytesIO) -> Image.Image:
                 "image_file": ("img.png", out, "image/png"),
             },
             headers={
-                "x-api-key": os.environ.get("CLIPDROP_TOKE", ""),
+                "x-api-key": os.environ.get("CLIPDROP_TOKEN", ""),
             },
         )
 
@@ -465,4 +465,11 @@ def generate_card(out: BytesIO) -> Image.Image:
         # draw text, half opacity
         d.text((30, height // 2 - 50), qoute, font=fnt, fill=(255, 255, 255, 150))
 
-        return Image.alpha_composite(background, txt)
+        res = Image.alpha_composite(background, txt)
+        res = res.reduce(3).convert("RGB")
+
+        res_io = BytesIO()
+        res.save(res_io, format="jpeg")
+        res_io.seek(0)
+
+        return res_io

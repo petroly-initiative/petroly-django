@@ -378,8 +378,10 @@ async def start_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     if update.message:
         out = BytesIO()
+        await update.message.reply_text("Wait ...")
         file = await update.message.photo[-1].get_file()
         print(file)
+
         await file.download_to_memory(out)
-        image = await generate_card(out)
-        image.show()
+        image_io = await generate_card(out)
+        await update.message.reply_photo(image_io)
