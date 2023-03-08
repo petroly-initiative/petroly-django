@@ -3,6 +3,7 @@ This module provides some utilities for `telegram_bot` app.
 It also helps converting some ORM methods into async.
 """
 
+from io import BytesIO
 import re
 import logging
 from typing import Dict, List, Tuple
@@ -14,6 +15,8 @@ from telegram.ext import Application
 from telegram.constants import ParseMode
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from PIL import Image, ImageFont, ImageDraw
+import requests
 
 from notifier import utils as notifier_utils
 from notifier.models import Course, Term
@@ -68,9 +71,7 @@ async def send_telegram_message(chat_id: int, msg: str):
         chat_id (int): like user's id
         msg (str): a MD text message
     """
-    async with Application.builder().token(
-        settings.TELEGRAM_TOKEN
-    ).build() as app:
+    async with Application.builder().token(settings.TELEGRAM_TOKEN).build() as app:
         try:
             await app.bot.send_message(
                 chat_id=chat_id,
@@ -79,9 +80,7 @@ async def send_telegram_message(chat_id: int, msg: str):
             )
 
         except error.Forbidden as exc:
-            logger.error(
-                "The user %s might have blocked us - %s", chat_id, exc
-            )
+            logger.error("The user %s might have blocked us - %s", chat_id, exc)
 
         except Exception as exc:
             logger.error("Couldn't send to Telegram: %s - %s", chat_id, exc)
@@ -108,9 +107,7 @@ async def send_telegram_changes(chat_id: int, msg: str):
         chat_id (int): like user's id
         msg (str): a MD text message
     """
-    async with Application.builder().token(
-        settings.TELEGRAM_TOKEN
-    ).build() as app:
+    async with Application.builder().token(settings.TELEGRAM_TOKEN).build() as app:
         await app.bot.send_message(
             chat_id=chat_id,
             text=msg,
@@ -136,9 +133,7 @@ def tracked_courses_(user: User):
 
 
 @sync_to_async
-def verify_user_from_token(
-    token: str, user_id: int, username: str
-) -> User | None:
+def verify_user_from_token(token: str, user_id: int, username: str) -> User | None:
     """To make connection between user's Petroly account
     and Telegram's one"""
 
@@ -177,9 +172,7 @@ async def get_terms(user_id: int) -> List[Tuple[str, str]]:
 @sync_to_async
 def fetch_terms() -> List[Tuple[str, str]]:
     """a function to format term objects into accpetable format for InlineKEyboardButton callback data"""
-    return [
-        (term.short, term.long) for term in Term.objects.filter(allowed=True)
-    ]
+    return [(term.short, term.long) for term in Term.objects.filter(allowed=True)]
 
 
 @sync_to_async
@@ -216,9 +209,7 @@ def get_tracked_crns(user_id: int) -> List[str]:
     tracked_list = TelegramProfile.objects.get(id=user_id).user.tracking_list
     tracked_courses = list(tracked_list.courses.all())
 
-    return [
-        course.crn for course in tracked_courses if len(tracked_courses) != 0
-    ]
+    return [course.crn for course in tracked_courses if len(tracked_courses) != 0]
 
 
 # ! we need to filter hybrid sections, and eliminate already tracked courses
@@ -242,10 +233,12 @@ async def get_sections(
             format_section(
                 section=section["sequenceNumber"],
                 seats=section["seatsAvailable"],
-                class_days='',
-                class_type=section['meetingsFaculty'][0]['meetingTime']["meetingScheduleType"],
-                start_time=section['meetingsFaculty'][0]['meetingTime']["beginTime"],
-                end_time=section['meetingsFaculty'][0]['meetingTime']["endTime"],
+                class_days="",
+                class_type=section["meetingsFaculty"][0]["meetingTime"][
+                    "meetingScheduleType"
+                ],
+                start_time=section["meetingsFaculty"][0]["meetingTime"]["beginTime"],
+                end_time=section["meetingsFaculty"][0]["meetingTime"]["endTime"],
                 waitlist_count=section["waitAvailable"],
             ),
             {
@@ -374,9 +367,7 @@ def construct_reply_callback_grid(
             result.append(
                 [
                     InlineKeyboardButton(text=el[0], callback_data=el[1])
-                    for el in input_list[
-                        i * row_length : i * row_length + row_length
-                    ]
+                    for el in input_list[i * row_length : i * row_length + row_length]
                 ]
             )
         if len(input_list) % row_length != len(input_list) / row_length:
@@ -394,9 +385,7 @@ def construct_reply_callback_grid(
             result.append(
                 [
                     InlineKeyboardButton(text=el, callback_data=el)
-                    for el in input_list[
-                        i * row_length : i * row_length + row_length
-                    ]
+                    for el in input_list[i * row_length : i * row_length + row_length]
                 ]
             )
 
@@ -410,3 +399,69 @@ def construct_reply_callback_grid(
                 ]
             )
     return result
+
+
+@sync_to_async
+def request_remove(out: BytesIO, width: int, height: int) -> Image.Image:
+    # image = image.resize((int(width / 2.5), int(height / 2.5))) #
+    # img_io = BytesIO()
+    # image.save(img_io, format="jpeg")
+    # img_io.seek(0)
+
+    try:
+        r = requests.post(
+            "https://clipdrop-api.co/remove-background/v1",
+            files={
+                "image_file": ("img.jpeg", out, "image/jpeg"),
+            },
+            headers={
+                "x-api-key": "d7731806d2e837df5c70e4611298091e09269844c417904847f95c75c6e205e1a1e56bf21cf1bde18f9d9d85f74cf0d1",
+            },
+        )
+
+        out.close()
+        return Image.open(BytesIO(r.content))
+
+    except Exception as e:
+        raise e
+
+
+@sync_to_async
+def generate_card(out: BytesIO) -> Image.Image:
+    # it's a must to reset the file cursor to the begining
+    out.seek(0)
+    try:
+        r = requests.post(
+            "https://clipdrop-api.co/remove-background/v1",
+            files={
+                "image_file": ("img.png", out, "image/png"),
+            },
+            headers={
+                "x-api-key": "d7731806d2e837df5c70e4611298091e09269844c417904847f95c75c6e205e1a1e56bf21cf1bde18f9d9d85f74cf0d1",
+            },
+        )
+
+        if r.ok:
+            out.close()
+            front = Image.open(BytesIO(r.content))
+        else:
+            r.raise_for_status()
+
+    except Exception as e:
+        raise e
+
+    with Image.open("./template.png").convert("RGBA") as background:
+        width, height = background.size
+        front = front.resize((int(front.size[0] * 1.4), int(front.size[1] * 1.4)))
+        background.paste(front, (width // 3, height - front.size[1]), front)
+        # make a blank image for the text, initialized to transparent text color
+        txt = Image.new("RGBA", background.size, (255, 255, 255, 0))
+        fnt = ImageFont.truetype("./Arial Rounded Bold.ttf", 150)
+        # get a drawing context
+        qoute = '"I\'m so happy I achieved this!"'.replace(" ", " \n")
+        d = ImageDraw.Draw(txt)
+
+        # draw text, half opacity
+        d.text((30, height // 2 - 50), qoute, font=fnt, fill=(255, 255, 255, 150))
+
+        return Image.alpha_composite(background, txt)
