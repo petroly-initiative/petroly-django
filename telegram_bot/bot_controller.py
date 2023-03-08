@@ -69,21 +69,13 @@ class BotController:
             per_user=True,
             entry_points=[CommandHandler("track", conversation.track)],  # type: ignore
             states={
-                CommandEnum.DEPT: [
-                    CallbackQueryHandler(conversation.track_dept)
-                ],
-                CommandEnum.COURSE: [
-                    CallbackQueryHandler(conversation.track_courses)
-                ],
+                CommandEnum.DEPT: [CallbackQueryHandler(conversation.track_dept)],
+                CommandEnum.COURSE: [CallbackQueryHandler(conversation.track_courses)],
                 CommandEnum.SECTION: [
                     CallbackQueryHandler(conversation.track_sections)
                 ],
-                CommandEnum.CRN: [
-                    MessageHandler(filters.TEXT, conversation.track_crn)
-                ],
-                CommandEnum.CONFIRM: [
-                    CallbackQueryHandler(conversation.track_confirm)
-                ],
+                CommandEnum.CRN: [MessageHandler(filters.TEXT, conversation.track_crn)],
+                CommandEnum.CONFIRM: [CallbackQueryHandler(conversation.track_confirm)],
             },  # type: ignore
             fallbacks=[CommandHandler("cancel", conversation.cancel)],  # type: ignore
         )
@@ -110,3 +102,12 @@ class BotController:
             fallbacks=[CommandHandler("cancel", conversation.cancel)],
         )
         self.app.add_handler(clear_handler)
+
+        self.app.add_handler(
+            ConversationHandler(
+                per_user=True,
+                entry_points=[MessageHandler(filters.PHOTO, conversation.start_card)],
+                states={},
+                fallbacks=[CommandHandler("cancel", conversation.cancel)],
+            )
+        )

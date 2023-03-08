@@ -7,16 +7,20 @@ a course.
 # pyright: reportIncompatibleMethodOverride=false
 
 from enum import Enum
+from io import BytesIO
 from typing import Dict, cast
+from django.db.models.fields.related import utils
 
 from telegram.ext import ContextTypes, ConversationHandler
 from telegram.constants import ParseMode
 from telegram import InlineKeyboardMarkup, Update
 from telegram_bot.models import TelegramProfile
+from PIL import Image
 
 from telegram_bot.utils import (
     clear_tracking,
     construct_reply_callback_grid,
+    generate_card,
     get_courses,
     get_departments,
     get_sections,
@@ -39,11 +43,10 @@ class CommandEnum(Enum):
     CRN = 4
     CLOSE = 5
     SELECT = 6
+    CARD = 7
 
 
-async def track(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> CommandEnum:
+async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     """starting point for the /track command"""
     # cleaning data from previous sessions
     context.bot.callback_data_cache.clear_callback_data()
@@ -70,9 +73,7 @@ async def track(
     return CommandEnum.DEPT  # type: ignore
 
 
-async def track_dept(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> CommandEnum:
+async def track_dept(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     """a handler for department selection step in /track command"""
 
     # waiting for the user response
@@ -309,9 +310,7 @@ async def untrack_crn(
     return ConversationHandler.END
 
 
-async def untrack_select(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
+async def untrack_select(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """a handler for button-based input in /untrack command"""
 
     ## waiting for user response
@@ -330,16 +329,12 @@ async def untrack_select(
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """a handler to cancel ongoing conversational commands"""
 
-    await update.message.reply_text(
-        text="All right, we won't change anything."
-    )
+    await update.message.reply_text(text="All right, we won't change anything.")
 
     return ConversationHandler.END
 
 
-async def clear(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> CommandEnum:
+async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     """a starting point for a full clear of selected terms' operation"""
 
     terms = await get_terms(update.effective_chat.id)
@@ -356,9 +351,7 @@ async def clear(
     return CommandEnum.CONFIRM
 
 
-async def clear_confirm(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
+async def clear_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """a handler for term selection in /clear command"""
 
     query = update.callback_query
@@ -374,3 +367,19 @@ async def clear_confirm(
     )
 
     return ConversationHandler.END
+
+
+async def start_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Start point to create a card"""
+    # cleaning data from previous sessions
+    context.bot.callback_data_cache.clear_callback_data()
+    context.bot.callback_data_cache.clear_callback_queries()
+    context.user_data.clear()
+
+    if update.message:
+        out = BytesIO()
+        file = await update.message.photo[-1].get_file()
+        print(file)
+        await file.download_to_memory(out)
+        image = await generate_card(out)
+        image.show()
