@@ -376,7 +376,7 @@ async def clear_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 async def send_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Generate card"""
 
-    await update.message.reply_text("Working in your card 🤩")
+    await update.message.reply_text("Working on your card 🤩")
     out = BytesIO()
 
     if update.message:
