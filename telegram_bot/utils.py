@@ -430,6 +430,7 @@ def request_remove(out: BytesIO, width: int, height: int) -> Image.Image:
 
 def _break_words(text: str) -> str:
     """To healp break words in multiple lines"""
+    text = '"' + text + '"'
     MAX_CHAR = 8
     words = text.split()
     lines = []
@@ -444,10 +445,7 @@ def _break_words(text: str) -> str:
     if current_line:
         lines.append(current_line.strip())
 
-    lines = " \n".join(lines)
-    # Add qutation marks
-    lines = '"' + lines + '"'
-    return lines
+    return " \n".join(lines)
 
 
 @sync_to_async
@@ -489,11 +487,11 @@ def generate_card(out: BytesIO, text: str) -> BytesIO:
             (30, height // 2 - 50),
             _break_words(text),
             font=fnt,
-            fill=(255, 255, 255, 150),
+            fill=(255, 255, 255, 160),
         )
 
         res = Image.alpha_composite(background, txt)
-        res = res.reduce(3).convert("RGB")
+        res = res.convert("RGB")
 
         res_io = BytesIO()
         res.save(res_io, format="jpeg")

@@ -42,6 +42,9 @@ class TelegramRecord(models.Model):
     user_id = models.BigIntegerField(_("user id"))
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
 
+    def __str__(self):
+        return str(self.user_id)
+
 
 def generate_token_str() -> str:
     """generate random letters of length 5"""

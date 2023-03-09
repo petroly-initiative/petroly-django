@@ -389,6 +389,10 @@ async def send_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             image_io = await generate_card(out, text)
             await update.message.reply_photo(image_io)
             await TelegramRecord.objects.acreate(user_id=update.effective_user.id)
+            await update.message.reply_text(
+                "Consider supporting us on GitHub\n\n"
+                "https://github.com/petroly-initiative/petroly-django"
+            )
         except Exception as e:
             await update.effective_message.reply_text(f"An error occured {e}")
 
