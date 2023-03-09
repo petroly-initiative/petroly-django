@@ -47,6 +47,7 @@ class CommandEnum(Enum):
     CARD = 7
     GET_PHOTO = 8
     GET_QUOTE = 9
+    CARD_NAME = 10
 
 
 async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
@@ -375,18 +376,18 @@ async def clear_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 async def send_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Generate card"""
 
-    await update.message.reply_text("Wait ...")
+    await update.message.reply_text("Working in your card 🤩")
     out = BytesIO()
 
     if update.message:
         try:
             photo = context.user_data["photo"]
             print(photo)
-            text = update.effective_message.text.strip()
+            name = update.effective_message.text.strip()
             file = await photo.get_file()
 
             await file.download_to_memory(out)
-            image_io = await generate_card(out, text)
+            image_io = await generate_card(out, context.user_data["text"], name)
             await update.message.reply_photo(image_io)
             await TelegramRecord.objects.acreate(user_id=update.effective_user.id)
             await update.message.reply_text(
@@ -426,8 +427,18 @@ async def ask_card_text(
 ) -> CommandEnum:
     """To get the card text then send the card"""
 
-    print(update.message.photo[-1].file_id)
     context.user_data["photo"] = update.message.photo[-1]  # type:ignore
-    await update.message.reply_text("Write your Quote, don't excced 10 words.")
+    await update.message.reply_text("Write your Quote, don't excced 20 words.")
 
     return CommandEnum.GET_QUOTE
+
+
+async def ask_card_name(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum:
+    """To get the card text then send the card"""
+
+    context.user_data["text"] = update.message.text
+    await update.message.reply_text("Write your name.")
+
+    return CommandEnum.CARD_NAME
