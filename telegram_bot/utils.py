@@ -431,7 +431,7 @@ def request_remove(out: BytesIO, width: int, height: int) -> Image.Image:
 def _break_words(text: str) -> str:
     """To healp break words in multiple lines"""
     text = '"' + text + '"'
-    MAX_CHAR = 8
+    MAX_CHAR = 20
     words = text.split()
     lines = []
     current_line = ""
@@ -449,7 +449,7 @@ def _break_words(text: str) -> str:
 
 
 @sync_to_async
-def generate_card(out: BytesIO, text: str) -> BytesIO:
+def generate_card(out: BytesIO, text: str, name: str) -> BytesIO:
     # it's a must to reset the file cursor to the begining
     out.seek(0)
     try:
@@ -474,23 +474,36 @@ def generate_card(out: BytesIO, text: str) -> BytesIO:
 
     with Image.open("./template.png").convert("RGBA") as background:
         width, height = background.size
-        front = front.resize((int(front.size[0] * 1.4), int(front.size[1] * 1.4)))
-        background.paste(front, (width // 3, height - front.size[1]), front)
+        front_h = 1900
+        front_w = int(front_h / front.size[1] * front.size[0])
+        front = front.resize((front_w, front_h))
+        background.paste(front, (width - front_w - 100, height - front_h), front)
         # make a blank image for the text, initialized to transparent text color
         txt = Image.new("RGBA", background.size, (255, 255, 255, 0))
-        fnt = ImageFont.truetype("./Arial Rounded Bold.ttf", 150)
+        txt_name = Image.new("RGBA", background.size, (255, 255, 255, 0))
+        fnt_it = ImageFont.truetype("./MinionPro-BoldCnIt.otf", 150)
+        fnt = ImageFont.truetype("./MinionPro-Regular.otf", 50)
         # get a drawing context
         d = ImageDraw.Draw(txt)
-
-        # draw text, half opacity
+        d_name = ImageDraw.Draw(txt)
+        # draw text quote
         d.text(
-            (30, height // 2 - 50),
+            (width // 4 - 100, height // 2 - 200),
             _break_words(text),
+            font=fnt_it,
+            fill=(255, 255, 255, 200),
+            spacing=60,
+            align="center",
+        )
+        # draw text name
+        d_name.text(
+            (width // 4, height - 150),
+            f"- {name} (2023)",
             font=fnt,
             fill=(255, 255, 255, 160),
         )
-
         res = Image.alpha_composite(background, txt)
+        res = Image.alpha_composite(res, txt_name)
         res = res.convert("RGB")
 
         res_io = BytesIO()

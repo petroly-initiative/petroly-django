@@ -112,6 +112,9 @@ class BotController:
                         MessageHandler(filters.PHOTO, conversation.ask_card_text)
                     ],  # type:ignore
                     CommandEnum.GET_QUOTE: [
+                        MessageHandler(filters.TEXT, conversation.ask_card_name)
+                    ],
+                    CommandEnum.CARD_NAME: [
                         MessageHandler(filters.TEXT, conversation.send_card)
                     ],
                 },
