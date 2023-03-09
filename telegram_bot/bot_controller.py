@@ -106,8 +106,17 @@ class BotController:
         self.app.add_handler(
             ConversationHandler(
                 per_user=True,
-                entry_points=[MessageHandler(filters.PHOTO, conversation.start_card)],
-                states={},
-                fallbacks=[CommandHandler("cancel", conversation.cancel)],
+                entry_points=[CommandHandler("card", conversation.start_card)],  # type: ignore
+                states={
+                    CommandEnum.GET_PHOTO: [
+                        MessageHandler(filters.PHOTO, conversation.ask_card_text)
+                    ],  # type:ignore
+                    CommandEnum.GET_QUOTE: [
+                        MessageHandler(filters.TEXT, conversation.send_card)
+                    ],
+                },
+                fallbacks=[
+                    CommandHandler("cancel", conversation.cancel)
+                ],  # type:ignore
             )
         )

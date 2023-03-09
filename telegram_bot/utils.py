@@ -3,11 +3,12 @@ This module provides some utilities for `telegram_bot` app.
 It also helps converting some ORM methods into async.
 """
 
+from collections.abc import Callable
 import os
 import re
 import logging
 from io import BytesIO
-from typing import Dict, List, Tuple
+from typing import Awaitable, Dict, List, Tuple, overload
 from asgiref.sync import sync_to_async, async_to_sync
 
 from telegram import error
@@ -427,8 +428,30 @@ def request_remove(out: BytesIO, width: int, height: int) -> Image.Image:
         raise e
 
 
+def _break_words(text: str) -> str:
+    """To healp break words in multiple lines"""
+    MAX_CHAR = 8
+    words = text.split()
+    lines = []
+    current_line = ""
+
+    for word in words:
+        if len(current_line + word) <= MAX_CHAR:
+            current_line += " " + word if current_line else word
+        else:
+            lines.append(current_line.strip())
+            current_line = word
+    if current_line:
+        lines.append(current_line.strip())
+
+    lines = " \n".join(lines)
+    # Add qutation marks
+    lines = '"' + lines + '"'
+    return lines
+
+
 @sync_to_async
-def generate_card(out: BytesIO) -> BytesIO:
+def generate_card(out: BytesIO, text: str) -> BytesIO:
     # it's a must to reset the file cursor to the begining
     out.seek(0)
     try:
@@ -459,11 +482,15 @@ def generate_card(out: BytesIO) -> BytesIO:
         txt = Image.new("RGBA", background.size, (255, 255, 255, 0))
         fnt = ImageFont.truetype("./Arial Rounded Bold.ttf", 150)
         # get a drawing context
-        qoute = '"I\'m so happy I achieved this!"'.replace(" ", " \n")
         d = ImageDraw.Draw(txt)
 
         # draw text, half opacity
-        d.text((30, height // 2 - 50), qoute, font=fnt, fill=(255, 255, 255, 150))
+        d.text(
+            (30, height // 2 - 50),
+            _break_words(text),
+            font=fnt,
+            fill=(255, 255, 255, 150),
+        )
 
         res = Image.alpha_composite(background, txt)
         res = res.reduce(3).convert("RGB")

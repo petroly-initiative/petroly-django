@@ -9,12 +9,13 @@ a course.
 from enum import Enum
 from io import BytesIO
 from typing import Dict, cast
+from asgiref.sync import sync_to_async
 from django.db.models.fields.related import utils
 
 from telegram.ext import ContextTypes, ConversationHandler
 from telegram.constants import ParseMode
 from telegram import InlineKeyboardMarkup, Update
-from telegram_bot.models import TelegramProfile
+from telegram_bot.models import TelegramProfile, TelegramRecord
 from PIL import Image
 
 from telegram_bot.utils import (
@@ -44,6 +45,8 @@ class CommandEnum(Enum):
     CLOSE = 5
     SELECT = 6
     CARD = 7
+    GET_PHOTO = 8
+    GET_QUOTE = 9
 
 
 async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
@@ -369,19 +372,58 @@ async def clear_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     return ConversationHandler.END
 
 
-async def start_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Start point to create a card"""
-    # cleaning data from previous sessions
-    context.bot.callback_data_cache.clear_callback_data()
-    context.bot.callback_data_cache.clear_callback_queries()
-    context.user_data.clear()
+async def send_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Generate card"""
+
+    await update.message.reply_text("Wait ...")
+    out = BytesIO()
 
     if update.message:
-        out = BytesIO()
-        await update.message.reply_text("Wait ...")
-        file = await update.message.photo[-1].get_file()
-        print(file)
+        try:
+            photo = context.user_data["photo"]
+            print(photo)
+            text = update.effective_message.text.strip()
+            file = await photo.get_file()
 
-        await file.download_to_memory(out)
-        image_io = await generate_card(out)
-        await update.message.reply_photo(image_io)
+            await file.download_to_memory(out)
+            image_io = await generate_card(out, text)
+            await update.message.reply_photo(image_io)
+            await TelegramRecord.objects.acreate(user_id=update.effective_user.id)
+        except Exception as e:
+            await update.effective_message.reply_text(f"An error occured {e}")
+
+    return ConversationHandler.END
+
+
+@sync_to_async
+def _get_number_trials(user_id) -> int:
+    return TelegramRecord.objects.filter(user_id=user_id).count()
+
+
+async def start_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
+    """Start point to create a card"""
+    # cleaning data from previous sessions
+    context.user_data.clear()
+    trials = await _get_number_trials(update.effective_user.id)
+
+    if trials == 3:
+        await update.message.reply_text("Sorry you excceded the number of trials")
+        return ConversationHandler.END
+
+    await update.message.reply_text(
+        f"Send your photo, you have {3 - trials} card generations"
+    )
+
+    return CommandEnum.GET_PHOTO
+
+
+async def ask_card_text(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum:
+    """To get the card text then send the card"""
+
+    print(update.message.photo[-1].file_id)
+    context.user_data["photo"] = update.message.photo[-1]  # type:ignore
+    await update.message.reply_text("Write your Quote, don't excced 10 words.")
+
+    return CommandEnum.GET_QUOTE
