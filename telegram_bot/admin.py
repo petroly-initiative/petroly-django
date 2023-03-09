@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import TelegramProfile, Token
+from .models import TelegramProfile, Token, TelegramRecord
+
+admin.site.register([TelegramRecord])
 
 
 @admin.register(Token)
