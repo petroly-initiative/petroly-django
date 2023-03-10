@@ -416,9 +416,7 @@ def request_remove(out: BytesIO, width: int, height: int) -> Image.Image:
             files={
                 "image_file": ("img.jpeg", out, "image/jpeg"),
             },
-            headers={
-                "x-api-key": "d7731806d2e837df5c70e4611298091e09269844c417904847f95c75c6e205e1a1e56bf21cf1bde18f9d9d85f74cf0d1",
-            },
+            headers={"x-api-key": os.environ.get("CLIPDROP_TOKEN", "")},
         )
 
         out.close()
