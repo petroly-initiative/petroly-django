@@ -411,7 +411,7 @@ async def start_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Comm
     context.user_data.clear()
     trials = await _get_number_trials(update.effective_user.id)
 
-    if trials == 3:
+    if trials == 5:
         await update.message.reply_text("Sorry you excceded the number of trials")
         return ConversationHandler.END
 
