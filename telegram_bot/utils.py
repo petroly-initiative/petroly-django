@@ -449,7 +449,7 @@ def generate_card(out: BytesIO, text: str, name: str) -> BytesIO:
 
     with Image.open("./template.png").convert("RGBA") as background:
         width, height = background.size
-        front_h = 1900
+        front_h = 1800
         front_w = int(front_h / front.size[1] * front.size[0])
         front = front.resize((front_w, front_h))
         background.paste(front, (width - front_w - 100, height - front_h), front)
@@ -470,7 +470,7 @@ def generate_card(out: BytesIO, text: str, name: str) -> BytesIO:
         d_name = ImageDraw.Draw(txt)
         # draw text quote
         d.text(
-            (width // 4 - 100, height // 2 - 200),
+            (width // 4 - 100, height // 2 - 500),
             _break_words(text),
             font=fnt_it,
             fill=(255, 255, 255, 200),
