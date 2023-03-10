@@ -403,29 +403,6 @@ def construct_reply_callback_grid(
     return result
 
 
-@sync_to_async
-def request_remove(out: BytesIO, width: int, height: int) -> Image.Image:
-    # image = image.resize((int(width / 2.5), int(height / 2.5))) #
-    # img_io = BytesIO()
-    # image.save(img_io, format="jpeg")
-    # img_io.seek(0)
-
-    try:
-        r = requests.post(
-            "https://clipdrop-api.co/remove-background/v1",
-            files={
-                "image_file": ("img.jpeg", out, "image/jpeg"),
-            },
-            headers={"x-api-key": os.environ.get("CLIPDROP_TOKEN", "")},
-        )
-
-        out.close()
-        return Image.open(BytesIO(r.content))
-
-    except Exception as e:
-        raise e
-
-
 def _break_words(text: str) -> str:
     """To healp break words in multiple lines"""
     text = '"' + text + '"'
