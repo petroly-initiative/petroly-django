@@ -456,8 +456,15 @@ def generate_card(out: BytesIO, text: str, name: str) -> BytesIO:
         # make a blank image for the text, initialized to transparent text color
         txt = Image.new("RGBA", background.size, (255, 255, 255, 0))
         txt_name = Image.new("RGBA", background.size, (255, 255, 255, 0))
-        fnt_it = ImageFont.truetype("./MinionPro-BoldCnIt.otf", 150)
-        fnt = ImageFont.truetype("./MinionPro-Regular.otf", 50)
+        if text.isascii():
+            fnt_it = ImageFont.truetype("./MinionPro-BoldCnIt.otf", 140)
+        else:
+            fnt_it = ImageFont.truetype("./Gulzar-Regular.ttf", 130)
+        if name.isascii():
+            fnt = ImageFont.truetype("./MinionPro-Regular.otf", 50)
+        else:
+            fnt = ImageFont.truetype("./Harir_complete_OTF_Harir.otf", 50)
+
         # get a drawing context
         d = ImageDraw.Draw(txt)
         d_name = ImageDraw.Draw(txt)
