@@ -106,6 +106,12 @@ class Query:
             JSON: the same structure of the API data.
         """
 
+        if term is None or not term:
+            raise Exception("You should specify a term")
+
+        if department is None or not department:
+            raise Exception("You should specify a department")
+
         raw = fetch_data(term, department)
         result = []
         for course in raw:
@@ -202,9 +208,7 @@ class Mutation:
         return True
 
     @gql.mutation(directives=[IsAuthenticated()])
-    def update_tracking_list(
-        self, info: Info, courses: List[CourseInput]
-    ) -> bool:
+    def update_tracking_list(self, info: Info, courses: List[CourseInput]) -> bool:
         """Add all `courses` to the user's tracking list
         then update each course status from the cache.
 
