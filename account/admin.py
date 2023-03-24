@@ -1,10 +1,12 @@
 from django.contrib import admin
-from .models import Profile
 from django.apps import apps
+
 # from graphql_auth.models import UserStatus
 from django.contrib.auth.admin import UserAdmin
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
+
+from .models import Profile, UserLog
 
 
 @admin.decorators.display(description="Verified", boolean=True)
@@ -57,6 +59,13 @@ class UserAdminCostom(UserAdmin):
 class ProfileAdmin(admin.ModelAdmin):
 
     list_display = ["user", "major", "year"]
+
+
+@admin.register(UserLog)
+class UserLogAdmin(admin.ModelAdmin):
+    """Custom admin for `UserLog` model class."""
+
+    list_display = ["ip", "updated_on", "created_on", "function"]
 
 
 # app = apps.get_app_config('graphql_auth')
