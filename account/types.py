@@ -1,6 +1,5 @@
 import dataclasses
 import strawberry
-import strawberry_django
 from strawberry import auto, ID, BasePermission, Private
 from strawberry.types import Info
 from strawberry.file_uploads import Upload
@@ -12,13 +11,14 @@ from typing import Any
 from django.contrib.auth import get_user_model
 
 from . import models
-from communities.types import CommunityType
-from evaluation.types import EvaluationType
+import communities.types
+import evaluation.types
 
 
 @strawberry.django.type(model=get_user_model())
 # @inject_field({user_pk_field: auto})
-class UserType:
+class UserType_:
+    # gqlauth has a type `UserType`
     pk: ID
     username: auto
     email: auto
@@ -28,8 +28,8 @@ class UserType:
     date_joined: auto
     profile: "ProfileType"
 
-    owned_communities: list[CommunityType]
-    evaluation_set: list[EvaluationType]
+    owned_communities: list[communities.types.CommunityType]
+    evaluation_set: list[evaluation.types.EvaluationType]
 
     @gql.field
     def owned_communities_count(self) -> int:
@@ -43,7 +43,7 @@ class UserType:
 @gql.django.type(models.Profile)
 class ProfileType:
     pk: ID
-    user: UserType
+    user: UserType_
     major: str
     year: str
     language: str
@@ -97,7 +97,7 @@ class OwnsObjPerm(ConditionDirective):
     message: Private[str] = "You don't own this object."
 
     def check_condition(
-        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
+        self, root: Any, info: GraphQLResolveInfo, user: UserType_, **kwargs
     ):
         pk = kwargs["input"]["pk"]
         if pk:
