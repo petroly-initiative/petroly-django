@@ -50,9 +50,7 @@ class ProfileTestCase(UserTestCase):
     def test_auto_create_profile(self):
         # try to get the user's profile
         self.assertTrue(hasattr(self.user, "profile"))
-        profile = Profile.objects.get(
-            user__username=self.user_info["username"]
-        )
+        profile = Profile.objects.get(user__username=self.user_info["username"])
         self.assertEqual(self.user.profile, profile)
 
         self.assertEqual(
@@ -63,9 +61,7 @@ class ProfileTestCase(UserTestCase):
             profile.language,
             Profile._meta.get_field("language").get_default(),
         )
-        self.assertEqual(
-            profile.theme, Profile._meta.get_field("theme").get_default()
-        )
+        self.assertEqual(profile.theme, Profile._meta.get_field("theme").get_default())
         self.assertEqual(profile.major, None)
         self.assertEqual(profile.year, None)
 
@@ -85,9 +81,7 @@ class ProfileTestCase(UserTestCase):
             Profile.objects.create(user=new_user)
 
         Profile.objects.filter(user__username="sad-orea").exists()
-        self.assertTrue(
-            Profile.objects.filter(user__username="sad-orea").exists()
-        )
+        self.assertTrue(Profile.objects.filter(user__username="sad-orea").exists())
         profile = Profile.objects.get(user__username="sad-orea")
 
         # delete the user object; will also delete its profile object
@@ -107,9 +101,7 @@ class ProfileTestCase(UserTestCase):
         )
 
         self.assertEqual(res["public_id"], "profile_pics/test/user-test1")
-        self.user.profile.profile_pic = CloudinaryImage(
-            public_id=res["public_id"]
-        )
+        self.user.profile.profile_pic = CloudinaryImage(public_id=res["public_id"])
         self.user.profile.major = DepartmentEnum.choices[7][0]
         self.user.profile.year = years[2][0]
         self.user.profile.language = "ar-SA"
@@ -256,17 +248,18 @@ class AccountGraphQLTestCase(TestCase):
         mutation {
             tokenAuth(username: "im-poor-user", password: "%s") {
                 success
-                obtainPayload {
-                payload {
-                    username
-                    exp
-                    origIat
-                }
-                token
-                refreshExpiresIn
-                refreshToken
-                }
                 errors
+                token {
+                    token
+                    payload {
+                        username
+                        exp
+                        origIat
+                    }
+                }
+                refreshToken {
+                    token
+                }
             }
         }
         """
@@ -288,9 +281,7 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
         self.assertEqual(len(mail.outbox), 1)  # there is an email sent
-        self.assertEqual(
-            mail.outbox[0].subject, "Activate your account on petroly.co"
-        )
+        self.assertEqual(mail.outbox[0].subject, "Activate your account on petroly.co")
         self.assertIn("i-saw-u@somewhere.com", mail.outbox[0].to)
 
         # the user is not verified yet. check that
@@ -319,9 +310,7 @@ class AccountGraphQLTestCase(TestCase):
         data = json.loads(res.content)["data"]["tokenAuth"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertFalse(data["success"])
-        self.assertEqual(
-            data["errors"]["nonFieldErrors"][0]["code"], "not_verified"
-        )
+        self.assertEqual(data["errors"]["nonFieldErrors"][0]["code"], "not_verified")
         # told ya, he's not verified
 
         # extract the token from the activation email
@@ -349,17 +338,18 @@ class AccountGraphQLTestCase(TestCase):
         mutation {
             tokenAuth(username: "long-testing", password: "nothing-is-secret") {
                 success
-                obtainPayload {
-                payload {
-                    username
-                    exp
-                    origIat
-                }
-                token
-                refreshExpiresIn
-                refreshToken
-                }
                 errors
+                token {
+                    token
+                    payload {
+                        username
+                        exp
+                        origIat
+                    }
+                }
+                refreshToken{
+                    token
+                }
             }
         }
         """
@@ -368,28 +358,26 @@ class AccountGraphQLTestCase(TestCase):
             verifyToken(token: "%s") {
                 success
                 errors
-                verifyPayload {
-                    payload{
-                        username
-                    }
+                user {
+                    username
                 }
             }
         }        
         """
         refreshToken = """
         mutation {
-            refreshToken(refreshToken: "%s") {
+            refreshToken(refreshToken: "%s", revokeRefreshToken:false) {
                 success
                 errors
-                refreshPayload {
+                token {
                     token
-                    refreshToken
-                    refreshExpiresIn
                     payload {
-                        exp
-                        origIat
                         username
                     }
+                }
+                refreshToken {
+                    created
+                    revoked
                 }
             }
         }
@@ -425,26 +413,22 @@ class AccountGraphQLTestCase(TestCase):
         )
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["tokenAuth"]
-        r_token = data["obtainPayload"]["refreshToken"]
+        r_token = data["refreshToken"]["token"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
-        self.assertTrue(
-            data["obtainPayload"]["payload"]["username"], self.user.username
-        )
+        self.assertTrue(data["token"]["payload"]["username"], self.user.username)
 
         # verify that token
         res = self.client.post(
             self.endpoint,
-            data={"query": verifyToken % data["obtainPayload"]["token"]},
+            data={"query": verifyToken % data["token"]["token"]},
             content_type="application/json",
         )
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["verifyToken"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
-        self.assertEqual(
-            data["verifyPayload"]["payload"]["username"], self.user.username
-        )
+        self.assertEqual(data["user"]["username"], self.user.username)
 
         # refresh that token
         res = self.client.post(
@@ -454,7 +438,6 @@ class AccountGraphQLTestCase(TestCase):
         )
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["refreshToken"]
-        r_token = data["refreshPayload"]["refreshToken"]
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["success"])
 
@@ -463,7 +446,7 @@ class AccountGraphQLTestCase(TestCase):
             self.endpoint,
             data={"query": me},
             content_type="application/json",
-            HTTP_AUTHORIZATION="JWT " + data["refreshPayload"]["token"],
+            HTTP_AUTHORIZATION="JWT " + data["token"]["token"],
         )
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["me"]
@@ -525,9 +508,7 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(res.wsgi_request.content_type, "application/json")
         self.assertTrue(data["sendPasswordResetEmail"]["success"])
         self.assertEqual(len(mail.outbox), 1)  # there is an email sent
-        self.assertEqual(
-            mail.outbox[0].subject, "Reset your password on petroly.co"
-        )
+        self.assertEqual(mail.outbox[0].subject, "Reset your password on petroly.co")
         self.assertIn(self.user2.email, mail.outbox[0].to)
 
         # extract the token from the resset-password email
@@ -586,13 +567,11 @@ class AccountGraphQLTestCase(TestCase):
         self.assertIsNotNone(res.data)
         data = res.data["profileUpdate"]
         self.assertEqual(data["__typename"], "OperationInfo")
-        self.assertEqual(
-            data["messages"][0]["message"], "User is not authenticated."
-        )
+        self.assertEqual(data["messages"][0]["message"], "User is not authenticated.")
 
         # login the user and pass its token in the HTTP header
         client = Client()
-        client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[1])
+        client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[0])
         self.client = TestClient(self.endpoint, client)
         # update other user's profile
         res = self.client.query(
@@ -606,9 +585,7 @@ class AccountGraphQLTestCase(TestCase):
         self.assertIsNone(res.errors)
         self.assertIsNotNone(res.data)
         data = res.data["profileUpdate"]
-        self.assertEqual(
-            data["messages"][0]["message"], "You don't own this Profile."
-        )
+        self.assertEqual(data["messages"][0]["message"], "You don't own this Profile.")
 
         # update the user profile
         res = self.client.query(
@@ -651,7 +628,7 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(res.wsgi_request.content_type, "multipart/form-data")
 
         # login in the user
-        self.client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[1])
+        self.client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[0])
         with open("static/img/blank_profile.png", "rb") as file:
             res = file_graphql_query(
                 query=profilePicUpdate,
