@@ -15,7 +15,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from cloudinary.uploader import upload_image
 
 from .types import (
-    UserType,
+    UserType_,
     ProfileType,
     ProfilePicUpdateType,
     ProfileInput,
@@ -42,7 +42,7 @@ class Query:
     """
 
     @strawberry.field
-    def me(self, info) -> Optional[UserType]:
+    def me(self, info) -> Optional[UserType_]:
         user = info.context.request.user
         if user.is_anonymous:
             return None
@@ -68,9 +68,7 @@ class Mutation(UserMutations):
     # maybe create custom login_required decorator
     @strawberry.mutation(directives=[IsAuthenticated()])
     # @login_required
-    def profile_pic_update(
-        self, info, file: Upload
-    ) -> Optional[ProfilePicUpdateType]:
+    def profile_pic_update(self, info, file: Upload) -> Optional[ProfilePicUpdateType]:
         """
         Mutation to help upload only a profile pic to Cloudinary
         then save it to Profile model.

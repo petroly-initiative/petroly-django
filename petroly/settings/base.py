@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     "corsheaders",
     "strawberry.django",
     "gqlauth",
-    "strawberry_django_jwt.refresh_token",
     "notifier",
     "django_q",
     "telegram_bot",
@@ -44,6 +43,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "gqlauth.core.middlewares.django_jwt_middleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
@@ -150,37 +150,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 
 AUTHENTICATION_BACKENDS = [
-    "gqlauth.backends.GraphQLAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
-
-
-GRAPHQL_JWT = {
-    "JWT_VERIFY_EXPIRATION": True,
-    "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
-    "JWT_EXPIRATION_DELTA": timedelta(minutes=60 * 24),
-    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=7),
-    "JWT_AUTHENTICATE_INTROSPECTION": False,
-    # 'JWT_ALLOW_ARGUMENT': True,
-    "JWT_ALLOW_ANY_CLASSES": [
-        "gqlauth.user.arg_mutations.Register",
-        "gqlauth.user.arg_mutations.VerifyAccount",
-        "gqlauth.user.arg_mutations.ResendActivationEmail",
-        "gqlauth.user.arg_mutations.SendPasswordResetEmail",
-        "gqlauth.user.arg_mutations.PasswordReset",
-        "gqlauth.user.arg_mutations.ObtainJSONWebToken",
-        "gqlauth.user.arg_mutations.VerifyToken",
-        "gqlauth.user.arg_mutations.RefreshToken",
-        "gqlauth.user.arg_mutations.RevokeToken",
-        "gqlauth.user.arg_mutations.VerifySecondaryEmail",
-    ],
-}
 
 
 GQL_AUTH = GqlAuthSettings(
     ALLOW_LOGIN_NOT_VERIFIED=False,
     LOGIN_REQUIRE_CAPTCHA=False,
     REGISTER_REQUIRE_CAPTCHA=False,
+    JWT_LONG_RUNNING_REFRESH_TOKEN=True,
     ACTIVATION_PATH_ON_EMAIL="confirm",
     EMAIL_TEMPLATE_VARIABLES={"frontend_domain": "petroly.co"},
 )
