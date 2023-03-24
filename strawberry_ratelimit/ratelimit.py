@@ -10,6 +10,7 @@ Strawberry GraphQL ratelimit extension
 
 import re
 import time
+import json
 
 from collections.abc import Iterable
 from typing import Callable, Union
@@ -357,3 +358,6 @@ class ExtensionRatelimit(Extension):
                         USER_LOG[client_key][func_name] = []
 
                     USER_LOG[client_key][func_name].append(time.time())
+
+        with open("user_log.json", "w") as file:
+            file.write(json.dumps(USER_LOG))

@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import TelegramProfile, Token
+from .models import TelegramProfile, Token, TelegramRecord
+
+
+@admin.register(TelegramRecord)
+class TelegramRecordAdmin(admin.ModelAdmin):
+
+    list_display = ["user_id", "created_on"]
+    search_fields = ["user_id"]
 
 
 @admin.register(Token)

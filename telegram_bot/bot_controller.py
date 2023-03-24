@@ -69,21 +69,13 @@ class BotController:
             per_user=True,
             entry_points=[CommandHandler("track", conversation.track)],  # type: ignore
             states={
-                CommandEnum.DEPT: [
-                    CallbackQueryHandler(conversation.track_dept)
-                ],
-                CommandEnum.COURSE: [
-                    CallbackQueryHandler(conversation.track_courses)
-                ],
+                CommandEnum.DEPT: [CallbackQueryHandler(conversation.track_dept)],
+                CommandEnum.COURSE: [CallbackQueryHandler(conversation.track_courses)],
                 CommandEnum.SECTION: [
                     CallbackQueryHandler(conversation.track_sections)
                 ],
-                CommandEnum.CRN: [
-                    MessageHandler(filters.TEXT, conversation.track_crn)
-                ],
-                CommandEnum.CONFIRM: [
-                    CallbackQueryHandler(conversation.track_confirm)
-                ],
+                CommandEnum.CRN: [MessageHandler(filters.TEXT, conversation.track_crn)],
+                CommandEnum.CONFIRM: [CallbackQueryHandler(conversation.track_confirm)],
             },  # type: ignore
             fallbacks=[CommandHandler("cancel", conversation.cancel)],  # type: ignore
         )
@@ -110,3 +102,24 @@ class BotController:
             fallbacks=[CommandHandler("cancel", conversation.cancel)],
         )
         self.app.add_handler(clear_handler)
+
+        self.app.add_handler(
+            ConversationHandler(
+                per_user=True,
+                entry_points=[CommandHandler("card", conversation.start_card)],  # type: ignore
+                states={
+                    CommandEnum.GET_PHOTO: [
+                        MessageHandler(filters.PHOTO, conversation.ask_card_text)
+                    ],  # type:ignore
+                    CommandEnum.GET_QUOTE: [
+                        MessageHandler(filters.TEXT, conversation.ask_card_name)
+                    ],
+                    CommandEnum.CARD_NAME: [
+                        MessageHandler(filters.TEXT, conversation.send_card)
+                    ],
+                },
+                fallbacks=[
+                    CommandHandler("cancel", conversation.cancel)
+                ],  # type:ignore
+            )
+        )

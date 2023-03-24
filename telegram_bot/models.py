@@ -36,6 +36,16 @@ class TelegramProfile(models.Model):
         return f"{self.id}"
 
 
+class TelegramRecord(models.Model):
+    """To record any anonymous user"""
+
+    user_id = models.BigIntegerField(_("user id"))
+    created_on = models.DateTimeField(_("created on"), auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user_id)
+
+
 def generate_token_str() -> str:
     """generate random letters of length 5"""
 
@@ -58,9 +68,7 @@ class Token(models.Model):
         help_text=_("random generated"),
         default=generate_token_str,
     )
-    user = models.ForeignKey(
-        User, verbose_name=_("user"), on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(User, verbose_name=_("user"), on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("token")
