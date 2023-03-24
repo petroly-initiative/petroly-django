@@ -3,9 +3,12 @@ This module provides some utilities for `telegram_bot` app.
 It also helps converting some ORM methods into async.
 """
 
+from collections.abc import Callable
+import os
 import re
 import logging
-from typing import Dict, List, Tuple
+from io import BytesIO
+from typing import Awaitable, Dict, List, Tuple, overload
 from asgiref.sync import sync_to_async, async_to_sync
 
 from telegram import error
@@ -14,6 +17,8 @@ from telegram.ext import Application
 from telegram.constants import ParseMode
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from PIL import Image, ImageFont, ImageDraw
+import requests
 
 from notifier import utils as notifier_utils
 from notifier.models import Course, Term
@@ -68,9 +73,7 @@ async def send_telegram_message(chat_id: int, msg: str):
         chat_id (int): like user's id
         msg (str): a MD text message
     """
-    async with Application.builder().token(
-        settings.TELEGRAM_TOKEN
-    ).build() as app:
+    async with Application.builder().token(settings.TELEGRAM_TOKEN).build() as app:
         try:
             await app.bot.send_message(
                 chat_id=chat_id,
@@ -79,9 +82,7 @@ async def send_telegram_message(chat_id: int, msg: str):
             )
 
         except error.Forbidden as exc:
-            logger.error(
-                "The user %s might have blocked us - %s", chat_id, exc
-            )
+            logger.error("The user %s might have blocked us - %s", chat_id, exc)
 
         except Exception as exc:
             logger.error("Couldn't send to Telegram: %s - %s", chat_id, exc)
@@ -108,9 +109,7 @@ async def send_telegram_changes(chat_id: int, msg: str):
         chat_id (int): like user's id
         msg (str): a MD text message
     """
-    async with Application.builder().token(
-        settings.TELEGRAM_TOKEN
-    ).build() as app:
+    async with Application.builder().token(settings.TELEGRAM_TOKEN).build() as app:
         await app.bot.send_message(
             chat_id=chat_id,
             text=msg,
@@ -136,9 +135,7 @@ def tracked_courses_(user: User):
 
 
 @sync_to_async
-def verify_user_from_token(
-    token: str, user_id: int, username: str
-) -> User | None:
+def verify_user_from_token(token: str, user_id: int, username: str) -> User | None:
     """To make connection between user's Petroly account
     and Telegram's one"""
 
@@ -177,9 +174,7 @@ async def get_terms(user_id: int) -> List[Tuple[str, str]]:
 @sync_to_async
 def fetch_terms() -> List[Tuple[str, str]]:
     """a function to format term objects into accpetable format for InlineKEyboardButton callback data"""
-    return [
-        (term.short, term.long) for term in Term.objects.filter(allowed=True)
-    ]
+    return [(term.short, term.long) for term in Term.objects.filter(allowed=True)]
 
 
 @sync_to_async
@@ -216,9 +211,7 @@ def get_tracked_crns(user_id: int) -> List[str]:
     tracked_list = TelegramProfile.objects.get(id=user_id).user.tracking_list
     tracked_courses = list(tracked_list.courses.all())
 
-    return [
-        course.crn for course in tracked_courses if len(tracked_courses) != 0
-    ]
+    return [course.crn for course in tracked_courses if len(tracked_courses) != 0]
 
 
 # ! we need to filter hybrid sections, and eliminate already tracked courses
@@ -242,10 +235,12 @@ async def get_sections(
             format_section(
                 section=section["sequenceNumber"],
                 seats=section["seatsAvailable"],
-                class_days='',
-                class_type=section['meetingsFaculty'][0]['meetingTime']["meetingScheduleType"],
-                start_time=section['meetingsFaculty'][0]['meetingTime']["beginTime"],
-                end_time=section['meetingsFaculty'][0]['meetingTime']["endTime"],
+                class_days="",
+                class_type=section["meetingsFaculty"][0]["meetingTime"][
+                    "meetingScheduleType"
+                ],
+                start_time=section["meetingsFaculty"][0]["meetingTime"]["beginTime"],
+                end_time=section["meetingsFaculty"][0]["meetingTime"]["endTime"],
                 waitlist_count=section["waitAvailable"],
             ),
             {
@@ -374,9 +369,7 @@ def construct_reply_callback_grid(
             result.append(
                 [
                     InlineKeyboardButton(text=el[0], callback_data=el[1])
-                    for el in input_list[
-                        i * row_length : i * row_length + row_length
-                    ]
+                    for el in input_list[i * row_length : i * row_length + row_length]
                 ]
             )
         if len(input_list) % row_length != len(input_list) / row_length:
@@ -394,9 +387,7 @@ def construct_reply_callback_grid(
             result.append(
                 [
                     InlineKeyboardButton(text=el, callback_data=el)
-                    for el in input_list[
-                        i * row_length : i * row_length + row_length
-                    ]
+                    for el in input_list[i * row_length : i * row_length + row_length]
                 ]
             )
 
@@ -410,3 +401,95 @@ def construct_reply_callback_grid(
                 ]
             )
     return result
+
+
+def _break_words(text: str) -> str:
+    """To healp break words in multiple lines"""
+    text = '"' + text + '"'
+    MAX_CHAR = 20
+    words = text.split()
+    lines = []
+    current_line = ""
+
+    for word in words:
+        if len(current_line + word) <= MAX_CHAR:
+            current_line += " " + word if current_line else word
+        else:
+            lines.append(current_line.strip())
+            current_line = word
+    if current_line:
+        lines.append(current_line.strip())
+
+    return " \n".join(lines)
+
+
+@sync_to_async
+def generate_card(out: BytesIO, text: str, name: str) -> BytesIO:
+    # it's a must to reset the file cursor to the begining
+    out.seek(0)
+    try:
+        r = requests.post(
+            "https://clipdrop-api.co/remove-background/v1",
+            files={
+                "image_file": ("img.png", out, "image/png"),
+            },
+            headers={
+                "x-api-key": os.environ.get("CLIPDROP_TOKEN", ""),
+            },
+        )
+
+        if r.ok:
+            out.close()
+            front = Image.open(BytesIO(r.content))
+        else:
+            r.raise_for_status()
+
+    except Exception as e:
+        raise e
+
+    with Image.open("./template.png").convert("RGBA") as background:
+        width, height = background.size
+        front_h = 1800
+        front_w = int(front_h / front.size[1] * front.size[0])
+        front = front.resize((front_w, front_h))
+        background.paste(front, (width - front_w - 100, height - front_h), front)
+        # make a blank image for the text, initialized to transparent text color
+        txt = Image.new("RGBA", background.size, (255, 255, 255, 0))
+        txt_name = Image.new("RGBA", background.size, (255, 255, 255, 0))
+        if text.isascii():
+            fnt_it = ImageFont.truetype("./MinionPro-BoldCnIt.otf", 140)
+        else:
+            fnt_it = ImageFont.truetype("./Gulzar-Regular.ttf", 130)
+        if name.isascii():
+            fnt = ImageFont.truetype("./MinionPro-Regular.otf", 50)
+        else:
+            fnt = ImageFont.truetype("./Harir_complete_OTF_Harir.otf", 50)
+
+        # get a drawing context
+        d = ImageDraw.Draw(txt)
+        d_name = ImageDraw.Draw(txt)
+        # draw text quote
+        d.text(
+            (width // 4 - 100, height // 2 - 500),
+            _break_words(text),
+            font=fnt_it,
+            fill=(255, 255, 255, 200),
+            spacing=60,
+            align="center",
+        )
+        # draw text name
+        d_name.text(
+            (width // 4, height - 150),
+            f"- {name} (2023)",
+            font=fnt,
+            fill=(255, 255, 255, 160),
+        )
+        res = Image.alpha_composite(background, txt)
+        res = Image.alpha_composite(res, txt_name)
+        res = res.convert("RGB")
+
+        res_io = BytesIO()
+        res.save(res_io, format="jpeg")
+        res_io.seek(0)
+
+        return res_io

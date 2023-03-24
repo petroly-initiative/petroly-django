@@ -7,16 +7,21 @@ a course.
 # pyright: reportIncompatibleMethodOverride=false
 
 from enum import Enum
+from io import BytesIO
 from typing import Dict, cast
+from asgiref.sync import sync_to_async
+from django.db.models.fields.related import utils
 
 from telegram.ext import ContextTypes, ConversationHandler
 from telegram.constants import ParseMode
 from telegram import InlineKeyboardMarkup, Update
-from telegram_bot.models import TelegramProfile
+from telegram_bot.models import TelegramProfile, TelegramRecord
+from PIL import Image
 
 from telegram_bot.utils import (
     clear_tracking,
     construct_reply_callback_grid,
+    generate_card,
     get_courses,
     get_departments,
     get_sections,
@@ -39,11 +44,13 @@ class CommandEnum(Enum):
     CRN = 4
     CLOSE = 5
     SELECT = 6
+    CARD = 7
+    GET_PHOTO = 8
+    GET_QUOTE = 9
+    CARD_NAME = 10
 
 
-async def track(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> CommandEnum:
+async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     """starting point for the /track command"""
     # cleaning data from previous sessions
     context.bot.callback_data_cache.clear_callback_data()
@@ -70,9 +77,7 @@ async def track(
     return CommandEnum.DEPT  # type: ignore
 
 
-async def track_dept(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> CommandEnum:
+async def track_dept(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     """a handler for department selection step in /track command"""
 
     # waiting for the user response
@@ -309,9 +314,7 @@ async def untrack_crn(
     return ConversationHandler.END
 
 
-async def untrack_select(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
+async def untrack_select(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """a handler for button-based input in /untrack command"""
 
     ## waiting for user response
@@ -330,16 +333,12 @@ async def untrack_select(
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """a handler to cancel ongoing conversational commands"""
 
-    await update.message.reply_text(
-        text="All right, we won't change anything."
-    )
+    await update.message.reply_text(text="All right, we won't change anything.")
 
     return ConversationHandler.END
 
 
-async def clear(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> CommandEnum:
+async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     """a starting point for a full clear of selected terms' operation"""
 
     terms = await get_terms(update.effective_chat.id)
@@ -356,9 +355,7 @@ async def clear(
     return CommandEnum.CONFIRM
 
 
-async def clear_confirm(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
+async def clear_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """a handler for term selection in /clear command"""
 
     query = update.callback_query
@@ -374,3 +371,74 @@ async def clear_confirm(
     )
 
     return ConversationHandler.END
+
+
+async def send_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Generate card"""
+
+    await update.message.reply_text("Working on your card 🤩")
+    out = BytesIO()
+
+    if update.message:
+        try:
+            photo = context.user_data["photo"]
+            print(photo)
+            name = update.effective_message.text.strip()
+            file = await photo.get_file()
+
+            await file.download_to_memory(out)
+            image_io = await generate_card(out, context.user_data["text"], name)
+            await update.message.reply_photo(image_io)
+            await TelegramRecord.objects.acreate(user_id=update.effective_user.id)
+            await update.message.reply_text(
+                "Consider supporting us on GitHub\n\n"
+                "https://github.com/petroly-initiative/petroly-django"
+            )
+        except Exception as e:
+            await update.effective_message.reply_text(f"An error occured {e}")
+
+    return ConversationHandler.END
+
+
+@sync_to_async
+def _get_number_trials(user_id) -> int:
+    return TelegramRecord.objects.filter(user_id=user_id).count()
+
+
+async def start_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
+    """Start point to create a card"""
+    # cleaning data from previous sessions
+    context.user_data.clear()
+    trials = await _get_number_trials(update.effective_user.id)
+
+    if trials == 10:
+        await update.message.reply_text("Sorry you excceded the number of trials")
+        return ConversationHandler.END
+
+    await update.message.reply_text(
+        f"Send your photo, you have {10 - trials} card generations"
+    )
+
+    return CommandEnum.GET_PHOTO
+
+
+async def ask_card_text(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum:
+    """To get the card text then send the card"""
+
+    context.user_data["photo"] = update.message.photo[-1]  # type:ignore
+    await update.message.reply_text("Write your Quote, don't excced 20 words.")
+
+    return CommandEnum.GET_QUOTE
+
+
+async def ask_card_name(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum:
+    """To get the card text then send the card"""
+
+    context.user_data["text"] = update.message.text
+    await update.message.reply_text("Write your name.")
+
+    return CommandEnum.CARD_NAME
