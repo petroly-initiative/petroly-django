@@ -7,7 +7,6 @@ import strawberry
 from graphql.validation import NoSchemaIntrospectionCustomRule
 from strawberry.extensions import AddValidationRules, QueryDepthLimiter
 from strawberry.tools import merge_types
-from strawberry_django_jwt.middleware import JSONWebTokenMiddleware
 from strawberry_django_plus.optimizer import DjangoOptimizerExtension
 from strawberry_django_plus.directives import SchemaDirectiveExtension
 
@@ -69,6 +68,5 @@ schema = strawberry.Schema(
         ),
         DjangoOptimizerExtension,
         SchemaDirectiveExtension,
-        JSONWebTokenMiddleware,
     ],
 )
