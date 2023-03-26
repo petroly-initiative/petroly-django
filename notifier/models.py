@@ -146,7 +146,7 @@ class Course(models.Model):
     pk: `crn`
     """
 
-    crn = models.CharField(_("CRN"), max_length=5, unique=True)
+    crn = models.CharField(_("CRN"), max_length=5)
     term = models.CharField(_("term"), max_length=6)
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
     last_updated = models.DateTimeField(_("last updated"), auto_now=True)
