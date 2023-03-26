@@ -159,6 +159,9 @@ class Course(models.Model):
 
     class Meta:
         ordering = ["term", "department"]
+        constraints = [
+            models.UniqueConstraint("crn", "term", name="unique_crn_term"),
+        ]
 
     def __str__(self) -> str:
         return str(self.crn)
