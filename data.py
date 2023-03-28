@@ -61,7 +61,7 @@ class SubjectEnum(TextChoices):
     COE = ("COE", "Computer Engineering")
     CPG = ("CPG", "CPG")
     CRP = ("CRP", "City & Regional Planning")
-    ERTH = ("ERTH", "Earth Sciences")
+    # ERTH = ("ERTH", "Earth Sciences")
     EE = ("EE", "Electrical Engineering")
     # ELI = ("ELI", "English Language Inst. (Prep)")
     # ELD = ("ELD", "English Language Department")
@@ -91,5 +91,6 @@ class SubjectEnum(TextChoices):
     CGS = ("CGS", "College of General Studies")
     ECON = ("ECON", "Economics")
     GEOL = ("GEOL", "Geology")
+    GEOP = ("GEOP", "Geophysics")
 
     # TODO make sure to map new subjects in instructor search
