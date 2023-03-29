@@ -18,7 +18,7 @@ psycopg2 = "^2.9.5"
 strawberry-django-auth = "0.374.0"
 strawberry-django-plus = "^1.33.1"
 strawberry-graphql = "0.159.0"
-strawberry-graphql-django = "0.9"
+strawberry-graphql-django = "0.9.2"
 whitenoise = "^6.4.0"
 cloudinary = "^1.32.0"
 python-telegram-bot = {extras = ["callback-data"], version = "^20.2"}
