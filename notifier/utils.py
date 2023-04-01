@@ -3,8 +3,9 @@ This module is to define the fetching, filtering, and processing the data
 from the KFUPM API
 """
 
-import imp
 import os
+import sys
+import imp
 import json
 import logging
 from typing import List, Dict, Tuple
@@ -12,11 +13,12 @@ from typing import List, Dict, Tuple
 import requests as rq
 from telegram import error
 from django.db.models import Q
+from django.conf import settings
 from django.template import loader
 from django.utils.timezone import now
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
-from data import DepartmentEnum, SubjectEnum
+from django_q.tasks import async_task
 
 from telegram_bot import messages
 from telegram_bot import utils as bot_utils
@@ -24,6 +26,10 @@ from evaluation.models import Instructor
 from evaluation.schema import crete_global_id
 from evaluation.types import InstructorNode
 from cryptography.fernet import Fernet
+
+from notifier.models import Cache
+from data import DepartmentEnum, SubjectEnum
+
 
 # from . import banner_api
 from .models import (
@@ -379,3 +385,46 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
         }
 
     return {}
+
+
+def not_stale_all_cache():
+    """While DEBUG is False, make all cache stale False,
+    to re-queue new fetching request, once the server is started."""
+
+    if not settings.DEBUG:
+        Cache.objects.filter(stale=True).update(stale=False)
+
+
+# tbh, it's a dirty solution
+if "runserver" in sys.argv:
+    # run task only when the server is started
+    async_task("notifier.utils.not_stale_all_cache", task_name="set_stale_False")
+
+
+# def clean_old_tasks():
+#     old_date = datetime.now() - timedelta(minutes=2)
+#     old_tasks = OrmQ.objects.filter(lock__date__lt=old_date)
+#     print(old_tasks)
+#     return
+#     for task in old_tasks:
+#         name: str = task.name()
+#         if name.startswith("request-data"):
+#             term, subject = name.replace("request-data-", "").split("-")
+
+#             Cache.objects.filter(term=term, department=subject).update(stale=False)
+
+
+# try:
+#     schedule(
+#         "notifier.utils.clean_old_task",
+#         name="clean_old_tasks",
+#         schedule_type=Schedule.MINUTES,
+#         minutes=1,
+#         repeats=-1,
+#     )
+# except IntegrityError as e:
+#     logger.warn("While adding `clean_old_task`: %s", e)
+#     pass
+# except Exception as e:
+#     logger.error("Failed to as clean old tasks: %s", e)
+#     raise
