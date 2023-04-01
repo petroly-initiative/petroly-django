@@ -21,7 +21,7 @@ from telegram_bot.utils import escape_md
 
 from data import SubjectEnum
 from .utils import fetch_data, get_course_info, instructor_info_from_name
-from .models import TrackingList, Course, ChannelEnum
+from .models import Term, TrackingList, Course, ChannelEnum
 from .types import CourseInput, TermType, ChannelsType, PreferencesInput
 
 
@@ -106,11 +106,13 @@ class Query:
             JSON: the same structure of the API data.
         """
 
-        if term is None or not term:
-            raise Exception("You should specify a term")
+        # TODO We shouldn't keep calling db for this
+        # better cache it.
+        if not term or term not in Term.objects.values_list("long", flat=True):
+            raise Exception("You should specify a valid term.")
 
-        if department is None or not department:
-            raise Exception("You should specify a department")
+        if not department or department not in SubjectEnum.values:
+            raise Exception("You should specify a valid department.")
 
         raw = fetch_data(term, department)
         result = []
