@@ -396,7 +396,7 @@ def not_stale_all_cache():
 
 
 # tbh, it's a dirty solution
-if "runserver" in sys.argv:
+if "gunicorn" in sys.argv:
     # run task only when the server is started
     async_task("notifier.utils.not_stale_all_cache", task_name="set_stale_False")
 
