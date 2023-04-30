@@ -1253,14 +1253,14 @@ files = [
 
 [[package]]
 name = "strawberry-django-auth"
-version = "0.374.2"
+version = "0.374.3"
 description = "Graphql authentication system with Strawberry for Django."
 category = "main"
 optional = false
 python-versions = ">=3.8,<3.12"
 files = [
-    {file = "strawberry_django_auth-0.374.2-py3-none-any.whl", hash = "sha256:f9f08ac25be48f9bd3f523a492caff48435610dc0f8e1e37b84a142b702aa3fc"},
-    {file = "strawberry_django_auth-0.374.2.tar.gz", hash = "sha256:c69d9f450347514ec11f26aa35eac4e3f9c3042fdeb6c1a238d0d001279f57b9"},
+    {file = "strawberry_django_auth-0.374.3-py3-none-any.whl", hash = "sha256:b6a681966143a561183540501c0fd4e42b54f262c94fde73e5939f6358ed0b62"},
+    {file = "strawberry_django_auth-0.374.3.tar.gz", hash = "sha256:5351cb9f9fcc34fb95b70f110ea251350c2aebd6dd064c3b1e613d6248dac7cc"},
 ]
 
 [package.dependencies]
@@ -1501,4 +1501,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "59a741790f7fd07ab617de2b84ba0f5e20296232fbe64a517426268e0512cf93"
+content-hash = "eb2554a1cd8dcb643d9cda9637c514116a241e8f5cf3a5a685187ec9b0fcdd3b"
