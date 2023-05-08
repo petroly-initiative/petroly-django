@@ -564,6 +564,48 @@ sentry = ["django-q-sentry (>=0.1)"]
 testing = ["boto3 (>=1.14.12,<2.0.0)", "croniter (>=0.3.34,<0.4.0)", "django-redis (>=4.12.1,<5.0.0)", "hiredis (>=1.0.1,<2.0.0)", "iron-mq (>=0.9,<0.10)", "psutil (>=5.7.0,<6.0.0)", "pymongo (>=3.10.1,<4.0.0)"]
 
 [[package]]
+name = "django-stubs"
+version = "4.2.0"
+description = "Mypy stubs for Django"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django-stubs-4.2.0.tar.gz", hash = "sha256:93baff824f0a056e71036b423b942a74f07b909e45e3fa38185b910f597c5c08"},
+    {file = "django_stubs-4.2.0-py3-none-any.whl", hash = "sha256:d2c671989efb3f7b0fa91e461909ad5a5a52155fe7fe6d1f2058cb88e3afb123"},
+]
+
+[package.dependencies]
+django = "*"
+django-stubs-ext = ">=4.2.0"
+mypy = [
+    {version = ">=0.980"},
+    {version = ">=1.2.0,<1.3", optional = true, markers = "extra == \"compatible-mypy\""},
+]
+types-pytz = "*"
+types-PyYAML = "*"
+typing-extensions = "*"
+
+[package.extras]
+compatible-mypy = ["mypy (>=1.2.0,<1.3)"]
+
+[[package]]
+name = "django-stubs-ext"
+version = "4.2.0"
+description = "Monkey-patching and extensions for django-stubs"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django-stubs-ext-4.2.0.tar.gz", hash = "sha256:7789f0caeca7152fef07ad6b94dec7310a05d0b8dab77f7979e19db0037b5127"},
+    {file = "django_stubs_ext-4.2.0-py3-none-any.whl", hash = "sha256:55b2e3077f883e0131a7596f8ff8b19f8fc3ca325a3318ccacf5331acb2601e4"},
+]
+
+[package.dependencies]
+django = "*"
+typing-extensions = "*"
+
+[[package]]
 name = "flake8"
 version = "6.0.0"
 description = "the modular source code checker: pep8 pyflakes and co"
@@ -778,7 +820,7 @@ files = [
 name = "mypy"
 version = "1.2.0"
 description = "Optional static typing for Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -824,7 +866,7 @@ reports = ["lxml"]
 name = "mypy-extensions"
 version = "1.0.0"
 description = "Type system extensions for programs checked with the mypy type checker."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.5"
 files = [
@@ -1253,23 +1295,24 @@ files = [
 
 [[package]]
 name = "strawberry-django-auth"
-version = "0.374.3"
+version = "0.374.4"
 description = "Graphql authentication system with Strawberry for Django."
 category = "main"
 optional = false
 python-versions = ">=3.8,<3.12"
 files = [
-    {file = "strawberry_django_auth-0.374.3-py3-none-any.whl", hash = "sha256:b6a681966143a561183540501c0fd4e42b54f262c94fde73e5939f6358ed0b62"},
-    {file = "strawberry_django_auth-0.374.3.tar.gz", hash = "sha256:5351cb9f9fcc34fb95b70f110ea251350c2aebd6dd064c3b1e613d6248dac7cc"},
+    {file = "strawberry_django_auth-0.374.4-py3-none-any.whl", hash = "sha256:d4a906ef0d5b74ecbf1fbfe8e6b6cd30ec35cb853af7cbe73c1661add20eb64a"},
+    {file = "strawberry_django_auth-0.374.4.tar.gz", hash = "sha256:add2307f33cde85bfd907d66c6ed8760968385641a9956d30caebccdebb44475"},
 ]
 
 [package.dependencies]
 Django = ">=3.2,<4.2"
-Pillow = ">=9.2.0,<10.0.0"
+django-stubs = {version = ">=4.2.0,<5.0.0", extras = ["compatible-mypy"]}
 PyJWT = ">=2.6.0,<3.0"
 strawberry-django-plus = ">=1.25.2,<3.0.0"
-strawberry-graphql = ">=0.128,<0.171.0"
-strawberry-graphql-django = ">=0.2.5,<4.0"
+
+[package.extras]
+captcha = ["pillow[captcha] (>=9.5.0,<10.0.0)"]
 
 [[package]]
 name = "strawberry-django-plus"
@@ -1354,6 +1397,30 @@ python-versions = ">=3.6"
 files = [
     {file = "tomlkit-0.11.6-py3-none-any.whl", hash = "sha256:07de26b0d8cfc18f871aec595fda24d95b08fef89d147caa861939f37230bf4b"},
     {file = "tomlkit-0.11.6.tar.gz", hash = "sha256:71b952e5721688937fb02cf9d354dbcf0785066149d2855e44531ebdd2b65d73"},
+]
+
+[[package]]
+name = "types-pytz"
+version = "2023.3.0.0"
+description = "Typing stubs for pytz"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-pytz-2023.3.0.0.tar.gz", hash = "sha256:ecdc70d543aaf3616a7e48631543a884f74205f284cefd6649ddf44c6a820aac"},
+    {file = "types_pytz-2023.3.0.0-py3-none-any.whl", hash = "sha256:4fc2a7fbbc315f0b6630e0b899fd6c743705abe1094d007b0e612d10da15e0f3"},
+]
+
+[[package]]
+name = "types-pyyaml"
+version = "6.0.12.9"
+description = "Typing stubs for PyYAML"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-PyYAML-6.0.12.9.tar.gz", hash = "sha256:c51b1bd6d99ddf0aa2884a7a328810ebf70a4262c292195d3f4f9a0005f9eeb6"},
+    {file = "types_PyYAML-6.0.12.9-py3-none-any.whl", hash = "sha256:5aed5aa66bd2d2e158f75dda22b059570ede988559f030cf294871d3b647e3e8"},
 ]
 
 [[package]]
@@ -1501,4 +1568,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "a91ac4464139bcdf7ab1026a23afdc77f9e08c69898494f4a30623b77c6ebd93"
+content-hash = "13bfb7ba11761605956dde0a3d5b6ac166a33a32d5bc0b2a63845c884d379ab3"
