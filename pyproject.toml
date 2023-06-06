@@ -20,7 +20,7 @@ strawberry-django-plus = "^1.33.1"
 strawberry-graphql = "0.159.0"
 strawberry-graphql-django = "0.9.3"
 whitenoise = "^6.4.0"
-cloudinary = "^1.32.0"
+cloudinary = "^1.33.0"
 python-telegram-bot = {extras = ["callback-data"], version = "^20.3"}
 django-multiselectfield = "^0.1.12"
 cryptography = "^40.0.2"
