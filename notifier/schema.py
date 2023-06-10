@@ -212,6 +212,13 @@ class Mutation:
                     return False
 
         tracking_list.save()
+        logger.warn(
+            "Request to update channels but nothing changed for user %s: %s %s",
+            user.pk,
+            input.dataCheckString,
+            input,
+        )
+        print(input.channels, input.hash, input.telegram_id)
 
         return True
 
