@@ -14,7 +14,7 @@ from strawberry.types import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import IsAuthenticated
 from django.conf import settings
-from django_q.tasks import async_task
+from django_q.tasks import async_task, logger
 
 from telegram_bot.models import TelegramProfile
 from telegram_bot.utils import escape_md
@@ -203,6 +203,12 @@ class Mutation:
                     # if `TrackingList` is just created remove
                     tracking_list.delete()
                 else:
+                    logger.warn(
+                        "Issue in setting Telegram ID for user %s: %s %s",
+                        user.pk,
+                        input.telegram_id,
+                        input.dataCheckString,
+                    )
                     return False
 
         tracking_list.save()
