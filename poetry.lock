@@ -539,6 +539,46 @@ sentry = ["django-q-sentry (>=0.1)"]
 testing = ["boto3 (>=1.14.12,<2.0.0)", "croniter (>=0.3.34,<0.4.0)", "django-redis (>=4.12.1,<5.0.0)", "hiredis (>=1.0.1,<2.0.0)", "iron-mq (>=0.9,<0.10)", "psutil (>=5.7.0,<6.0.0)", "pymongo (>=3.10.1,<4.0.0)"]
 
 [[package]]
+name = "django-stubs"
+version = "4.2.1"
+description = "Mypy stubs for Django"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django-stubs-4.2.1.tar.gz", hash = "sha256:8c15d5f7b05926805cfb25f2bfbf3509c37792fbd8aec5aedea358b85d8bccd5"},
+    {file = "django_stubs-4.2.1-py3-none-any.whl", hash = "sha256:66477bdba25407623f4079205e58f3c7265a4f0d8f7c9f540a6edc16f8883a5b"},
+]
+
+[package.dependencies]
+django = "*"
+django-stubs-ext = ">=4.2.1"
+mypy = [
+    {version = ">=1.0.0"},
+    {version = ">=1.3.0,<1.4", optional = true, markers = "extra == \"compatible-mypy\""},
+]
+types-pytz = "*"
+types-PyYAML = "*"
+typing-extensions = "*"
+
+[package.extras]
+compatible-mypy = ["mypy (>=1.3.0,<1.4)"]
+
+[[package]]
+name = "django-stubs-ext"
+version = "4.2.1"
+description = "Monkey-patching and extensions for django-stubs"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django-stubs-ext-4.2.1.tar.gz", hash = "sha256:2696d6f7d8538341b060cffa9565c72ea797e866687e040b86d29cad8799e5fe"},
+    {file = "django_stubs_ext-4.2.1-py3-none-any.whl", hash = "sha256:4b6b63e49f4ba30d93ec46f87507648c99c9de6911e651ad69db7084fd5b2f4e"},
+]
+
+[package.dependencies]
+django = "*"
+typing-extensions = "*"
+
+[[package]]
 name = "flake8"
 version = "6.0.0"
 description = "the modular source code checker: pep8 pyflakes and co"
@@ -1176,22 +1216,23 @@ files = [
 
 [[package]]
 name = "strawberry-django-auth"
-version = "0.374.3"
+version = "0.374.6"
 description = "Graphql authentication system with Strawberry for Django."
 optional = false
 python-versions = ">=3.8,<3.12"
 files = [
-    {file = "strawberry_django_auth-0.374.3-py3-none-any.whl", hash = "sha256:b6a681966143a561183540501c0fd4e42b54f262c94fde73e5939f6358ed0b62"},
-    {file = "strawberry_django_auth-0.374.3.tar.gz", hash = "sha256:5351cb9f9fcc34fb95b70f110ea251350c2aebd6dd064c3b1e613d6248dac7cc"},
+    {file = "strawberry_django_auth-0.374.6-py3-none-any.whl", hash = "sha256:a40c2683f1c21880e4de676984f70bba2ce10e3031f67276d5e686aab65d0719"},
+    {file = "strawberry_django_auth-0.374.6.tar.gz", hash = "sha256:ed61c64d87dbfc5a60e45ea5dfb8fc8412b9197cea078d0252a67479acb01d2e"},
 ]
 
 [package.dependencies]
-Django = ">=3.2,<4.2"
-Pillow = ">=9.2.0,<10.0.0"
+Django = ">=3.2,<4.3"
+django-stubs = {version = ">=4.2.0,<5.0.0", extras = ["compatible-mypy"]}
 PyJWT = ">=2.6.0,<3.0"
 strawberry-django-plus = ">=1.25.2,<3.0.0"
-strawberry-graphql = ">=0.128,<0.171.0"
-strawberry-graphql-django = ">=0.2.5,<4.0"
+
+[package.extras]
+captcha = ["pillow[captcha] (>=9.5.0,<10.0.0)"]
 
 [[package]]
 name = "strawberry-django-plus"
@@ -1272,6 +1313,28 @@ python-versions = ">=3.6"
 files = [
     {file = "tomlkit-0.11.6-py3-none-any.whl", hash = "sha256:07de26b0d8cfc18f871aec595fda24d95b08fef89d147caa861939f37230bf4b"},
     {file = "tomlkit-0.11.6.tar.gz", hash = "sha256:71b952e5721688937fb02cf9d354dbcf0785066149d2855e44531ebdd2b65d73"},
+]
+
+[[package]]
+name = "types-pytz"
+version = "2023.3.0.0"
+description = "Typing stubs for pytz"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-pytz-2023.3.0.0.tar.gz", hash = "sha256:ecdc70d543aaf3616a7e48631543a884f74205f284cefd6649ddf44c6a820aac"},
+    {file = "types_pytz-2023.3.0.0-py3-none-any.whl", hash = "sha256:4fc2a7fbbc315f0b6630e0b899fd6c743705abe1094d007b0e612d10da15e0f3"},
+]
+
+[[package]]
+name = "types-pyyaml"
+version = "6.0.12.10"
+description = "Typing stubs for PyYAML"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-PyYAML-6.0.12.10.tar.gz", hash = "sha256:ebab3d0700b946553724ae6ca636ea932c1b0868701d4af121630e78d695fc97"},
+    {file = "types_PyYAML-6.0.12.10-py3-none-any.whl", hash = "sha256:662fa444963eff9b68120d70cda1af5a5f2aa57900003c2006d7626450eaae5f"},
 ]
 
 [[package]]
@@ -1413,4 +1476,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "7aaafc905cff13a7df258319a4e7360fdf2e0c193e559b93f4e4f61e6ba3ffb9"
+content-hash = "572b17a781fff5975db45943816d6b5d121b1dd7748c2937fbfac312f6f7002d"
