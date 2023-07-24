@@ -414,17 +414,18 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-choices-field"
-version = "2.1.2"
+version = "2.2.2"
 description = "Django field that set/get django's new TextChoices/IntegerChoices enum."
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = ">=3.7"
 files = [
-    {file = "django_choices_field-2.1.2-py3-none-any.whl", hash = "sha256:bec673ba0d432d59033aca0099a356239360c740c8585a1ecb4ed4db046ce616"},
-    {file = "django_choices_field-2.1.2.tar.gz", hash = "sha256:1fd3625c7fc8277c005a5a91f2abdc6f8dc2aa9a1c5a16ff3efe6b8693cb04f1"},
+    {file = "django_choices_field-2.2.2-py3-none-any.whl", hash = "sha256:bfdf5a8e098ead77eb1d5e32a85352af4a37a7b3f28fb5e74b8a17c1270a30bc"},
+    {file = "django_choices_field-2.2.2.tar.gz", hash = "sha256:1147a47d3972a49479be002c5c8ad0118863a8b936933597cfb3d8fcf257a578"},
 ]
 
 [package.dependencies]
 django = ">=3.2"
+typing_extensions = ">=4.0.0"
 
 [[package]]
 name = "django-cors-headers"
@@ -1413,4 +1414,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "b96b7826fb406cfb79bbc9512c16f7ae22981fcd9138be43945dc24b182dc701"
+content-hash = "619b22193b6c779c0bf052d9759692802d88f6d8779b1dbea5d48999b822fb83"
