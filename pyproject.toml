@@ -21,7 +21,7 @@ strawberry-graphql = "0.159.0"
 strawberry-graphql-django = "0.9.3"
 whitenoise = "^6.5.0"
 cloudinary = "^1.33.0"
-python-telegram-bot = {extras = ["callback-data"], version = "^20.3"}
+python-telegram-bot = {extras = ["callback-data"], version = "^20.4"}
 django-multiselectfield = "^0.1.12"
 cryptography = "^41.0.1"
 requests = "^2.31.0"
