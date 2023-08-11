@@ -33,7 +33,7 @@ beautifulsoup4 = "^4.12.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
-mypy = "^1.4"
+mypy = "^1.5"
 pylint-django = "^2.5.3"
 flake8 = "^6.0.0"
 
