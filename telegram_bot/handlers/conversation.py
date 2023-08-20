@@ -6,17 +6,18 @@ a course.
 # ! needs to converted it into a conversational handler instead
 # pyright: reportIncompatibleMethodOverride=false
 
+import logging
 from enum import Enum
 from io import BytesIO
 from typing import Dict, cast
 from asgiref.sync import sync_to_async
 from django.db.models.fields.related import utils
+import telegram
 
 from telegram.ext import ContextTypes, ConversationHandler
 from telegram.constants import ParseMode
 from telegram import InlineKeyboardMarkup, Update
 from telegram_bot.models import TelegramProfile, TelegramRecord
-from PIL import Image
 
 from telegram_bot.utils import (
     clear_tracking,
@@ -27,10 +28,12 @@ from telegram_bot.utils import (
     get_sections,
     get_terms,
     get_tracked_crns,
-    get_user,
     submit_section,
     untrack_section,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class CommandEnum(Enum):
@@ -161,7 +164,8 @@ async def track_sections(
 
     if len(sections) == 0:
         await query.edit_message_text(
-            text=f"Oops! seems like there are no offered sections for {selected_course} course in term {context.user_data.get('term', 'TERM_NOT_FOUND')}"
+            text=f"Oops! seems like there are no offered sections for {selected_course} "
+            f"course in term {context.user_data.get('term', 'TERM_NOT_FOUND')}"
         )
         return ConversationHandler.END
 
@@ -169,26 +173,32 @@ async def track_sections(
         sections, row_length=1, is_callback_different=True
     )
 
+    try:
+        await query.edit_message_text(
+            text=f"Select a section for {selected_course} \\- "
+            + f"Term {context.user_data.get('term', 'TERM_NOT_FOUND')}\n\nEnter /cancel to exit",
+            reply_markup=InlineKeyboardMarkup(section_rows),
+            parse_mode=ParseMode.MARKDOWN_V2,
+        )
+
     ## ! handle overflow by requesting the CRN explicitly
-    if len(sections) > 100:
+    except telegram.error.BadRequest as e:
+        if "Reply markup is too long" not in str(e):
+            logger.warn("Error in `track_sections`: %s", e)
+
         ## cache all crns in the current course instead of fetching again
         ## storing all DB-specific param temporarily to store the data correctly
         context.user_data["sections"] = [
             (section[1]["crn"], section[1]["seats"], section[1]["waitlist"])
             for section in sections
         ]
-        await query.edit_message_text(
-            text="Too many sections to display, please type the course CRN",
-            reply_markup=None,
-        )
-        return CommandEnum.CRN
 
-    await query.edit_message_text(
-        text=f"Select a section for {selected_course} \\- "
-        + f"Term {context.user_data.get('term', 'TERM_NOT_FOUND')}\n\nEnter /cancel to exit",
-        reply_markup=InlineKeyboardMarkup(section_rows),
-        parse_mode=ParseMode.MARKDOWN_V2,
-    )
+        if query:
+            await query.edit_message_text(
+                text="Too many sections to display, please type the course CRN"
+            )
+
+        return CommandEnum.CRN
 
     return CommandEnum.CONFIRM
 
