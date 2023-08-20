@@ -8,6 +8,7 @@ methods:
 """
 
 import re
+import logging
 
 from telegram import (
     InlineKeyboardButton,
@@ -26,6 +27,8 @@ from ..utils import (
     tracked_courses_,
 )
 from .. import messages
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -49,9 +52,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     if user_id:
         try:
-            await update.message.reply_text(
-                text=f"Hi {update.effective_user.username}, I am Petroly Bot",
-            )
+            if update.message:
+                await update.message.reply_text(
+                    text=f"Hi {update.effective_user.username}, I am Petroly Bot",
+                )
 
             # try to identify the user form its telegram id
             await user_from_telegram(user_id=user_id, update=update)
@@ -97,6 +101,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 ),
             )
 
+        except Exception as e:
+            logger.error("Error in `start` cmd: %s", e)
+
 
 # displaying all possible commands by the user
 async def help_msg(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -107,9 +114,7 @@ async def help_msg(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 
-async def tracked_courses(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> None:
+async def tracked_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """a handler to display all currently tracked courses by the user"""
 
     user_id = update.effective_user.id

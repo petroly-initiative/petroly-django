@@ -46,9 +46,8 @@ def get_user(user_id: int):
 
 
 async def user_from_telegram(user_id: int, update: Update) -> User:
-
     try:
-        return await get_user(user_id)
+        return await TelegramProfile.objects.aget(id=user_id).user
 
     except TelegramProfile.DoesNotExist as exc:
         raise TelegramProfile.DoesNotExist from exc
