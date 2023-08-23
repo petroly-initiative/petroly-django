@@ -7,6 +7,7 @@ import hmac
 import hashlib
 import dataclasses
 from typing import List, Optional
+from graphql.error import GraphQLError
 
 import strawberry
 from strawberry.scalars import JSON
@@ -236,7 +237,7 @@ class Mutation:
         tracking_list, _ = TrackingList.objects.get_or_create(user=user)
 
         if len(courses) > 30:
-            raise Exception(
+            raise GraphQLError(
                 "Sorry you can't track more than 30 sections, consider the Premium plan."
             )
 
