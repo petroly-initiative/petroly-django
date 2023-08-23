@@ -18,8 +18,10 @@ from telegram.ext import (
 from .handlers.command import start, help_msg, tracked_courses
 from .handlers import conversation
 from .handlers.conversation import CommandEnum
-from .handlers.error import call_back_error, non_existent
+from .handlers.error import call_back_error, non_existent, error_handler
 
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 # setting up the logger for the bot status
 logging.basicConfig(
@@ -45,7 +47,8 @@ class BotController:
         self.token = os.environ.get("TELEGRAM_BOT_TOKEN")
         self.init_comm_handlers()
         self.init_conv_handlers()
-        self.app.add_handler(MessageHandler(filters.COMMAND, non_existent))
+        # self.app.add_handler(MessageHandler(filters.COMMAND, non_existent))
+        self.app.add_error_handler(error_handler)
         self.app.run_polling()
 
         logger.info("Telegram Bot started")
