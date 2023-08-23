@@ -202,14 +202,14 @@ class Mutation:
                 if cerated:
                     # if `TrackingList` is just created remove
                     tracking_list.delete()
-                else:
-                    logger.warn(
-                        "Issue in setting Telegram ID for user %s: %s %s",
-                        user.pk,
-                        input.telegram_id,
-                        input.dataCheckString,
-                    )
-                    return False
+
+                logger.warn(
+                    "Issue in setting Telegram ID for user %s: %s %s",
+                    user.pk,
+                    input.telegram_id,
+                    input.dataCheckString,
+                )
+                return False
 
         tracking_list.save()
         logger.warn(

@@ -274,7 +274,7 @@ def send_notification(user_pk: int, info: str) -> None:
 
     if ChannelEnum.EMAIL in channels:
         try:
-            send_mail(
+            res = send_mail(
                 subject="Petroly Radar Detected Changes -  We couldn't send it by Telegram"
                 "Please check your Petroly settings",
                 message=info,
@@ -289,6 +289,7 @@ def send_notification(user_pk: int, info: str) -> None:
                 fail_silently=False,
                 from_email=None,
             )
+            logger.info("Changes email was sent: %s", res)
         except Exception as exc:
             logger.error("Couldn't send email: %s", exc)
 
