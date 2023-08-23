@@ -11,7 +11,8 @@ class TelegramMessageForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
     usernames = forms.CharField(widget=forms.Textarea)
 
-    def send_message(self, message, usernames):
+    def send_message(self):
+        usernames = self.cleaned_data["usernames"]
 
         if usernames:
             usernames = usernames.split(",")
@@ -25,8 +26,8 @@ class TelegramMessageForm(forms.Form):
         async_task(
             "telegram_bot.utils.mass_send_telegram_message",
             chat_ids,
-            message,
+            self.cleaned_data["message"],
             task_name="sending-mass-telegram",
             group="telegram_message",
-            timeout=60 * 60 # 1 hour
+            timeout=60 * 60,  # 1 hour
         )
