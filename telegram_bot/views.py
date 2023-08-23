@@ -13,6 +13,6 @@ class SendMassTelegramView(FormView):
     form_class = TelegramMessageForm
 
     def form_valid(self, form: TelegramMessageForm):
-        form.send_message(self.request.POST["message"])
+        form.send_message(self.request.POST["message"], self.request.POST["usernames"])
 
         return render(self.request, "telegram_bot/telegram_sent.html")
