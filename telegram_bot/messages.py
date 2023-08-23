@@ -24,6 +24,10 @@ We connected your Telegram to your Petroly account\\.
 """
 
 # Text
+HAS_NOT_TRACKING_LIST = """Sorry, you don't have a TrackingList yet,
+follow the steps in our website to create a one."""
+
+# Text
 ACCOUNT_NOT_KNOWN = """Sorry, we didn't recognize your Telegram account.
 To do so, follow the steps in our website to connect 
 your Petroly account with your Telegram's one."""
