@@ -9,9 +9,16 @@ class TelegramMessageForm(forms.Form):
     Telegram messages"""
 
     message = forms.CharField(widget=forms.Textarea)
+    usernames = forms.CharField(widget=forms.Textarea)
 
-    def send_message(self, message):
-        profiles = TelegramProfile.objects.all()
+    def send_message(self, message, usernames):
+
+        if usernames:
+            usernames = usernames.split(",")
+            profiles = TelegramProfile.objects.filter(user__username__in=usernames)
+        else:
+            profiles = TelegramProfile.objects.all()
+
         chat_ids = [obj.id for obj in profiles]
         print(chat_ids)
 

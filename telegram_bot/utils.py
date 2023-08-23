@@ -115,21 +115,27 @@ async def send_telegram_changes(chat_id: int, msg: str):
         msg (str): a MD text message
     """
     async with Application.builder().token(settings.TELEGRAM_TOKEN).build() as app:
-        await app.bot.send_message(
-            chat_id=chat_id,
-            text=msg,
-            parse_mode=ParseMode.MARKDOWN_V2,
-            reply_markup=InlineKeyboardMarkup(
-                [
+        try:
+            await app.bot.send_message(
+                chat_id=chat_id,
+                text=msg,
+                parse_mode=ParseMode.MARKDOWN_V2,
+                reply_markup=InlineKeyboardMarkup(
                     [
-                        InlineKeyboardButton(
-                            text="Go to Banner Now",
-                            url="https://banner9-registration.kfupm.edu.sa/StudentRegistrationSsb/ssb/term/termSelection?mode=registration",
-                        )
+                        [
+                            InlineKeyboardButton(
+                                text="Go to Banner Now",
+                                url="https://banner9-registration.kfupm.edu.sa/StudentRegistrationSsb/ssb/term/termSelection?mode=registration",
+                            )
+                        ]
                     ]
-                ]
-            ),
-        )
+                ),
+            )
+            return True
+
+        except error.Forbidden as exc:
+            logger.error("The user %s might have blocked us - %s", chat_id, exc)
+            return False
 
 
 @sync_to_async
