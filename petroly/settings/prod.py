@@ -113,7 +113,7 @@ if "CI" in os.environ:
 
 # To get Email when >500 error happens
 SERVER_EMAIL = "Error@petroly.co"
-ADMINS = [("Ammar", "A@ammarf.com")]
+ADMINS = [("Ammar", "me@ammarf.sa")]
 # To get 404 errors
 MANAGERS = ADMINS
 # Ignore these pattern errors
