@@ -265,8 +265,8 @@ def send_notification(user_pk: int, info: str) -> None:
                 msg=formatter_change_md(info_dict),
             )
             if not success:
-                logger.info("Deleting TrackingList for user: %s", user)
-                user.tracking_list.delete()
+                logger.info("Deleting TrackingList for user: %s - %s", user, success)
+                # user.tracking_list.delete()
 
         except Exception as exc:
             logger.error("Couldn't send to Telegram: %s - %s", user, exc)
