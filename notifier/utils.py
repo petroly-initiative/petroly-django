@@ -260,12 +260,13 @@ def send_notification(user_pk: int, info: str) -> None:
 
     if ChannelEnum.TELEGRAM in channels:
         try:
-            bot_utils.send_telegram_changes(
+            success = bot_utils.send_telegram_changes(
                 chat_id=user.telegram_profile.id,
                 msg=formatter_change_md(info_dict),
             )
-        except error.Forbidden as exc:
-            logger.error("The user %s might have blocked us - %s", user, exc)
+            if not success:
+                logger.info("Deleting TrackingList for user: %s", user)
+                user.tracking_list.delete()
 
         except Exception as exc:
             logger.error("Couldn't send to Telegram: %s - %s", user, exc)

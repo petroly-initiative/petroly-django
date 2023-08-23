@@ -64,13 +64,15 @@ def format_courses(courses: List[Course]):
 
 
 @async_to_sync
-async def send_telegram_message(chat_id: int, msg: str):
+async def send_telegram_message(chat_id: int, msg: str) -> bool:
     """Useful to send one-time message.
     To make this method as sync
 
     Args:
         chat_id (int): like user's id
         msg (str): a MD text message
+
+    returs True if no `error.Forbidden` was raised
     """
     async with Application.builder().token(settings.TELEGRAM_TOKEN).build() as app:
         try:
@@ -79,12 +81,11 @@ async def send_telegram_message(chat_id: int, msg: str):
                 text=msg,
                 parse_mode=ParseMode.MARKDOWN_V2,
             )
+            return True
 
         except error.Forbidden as exc:
             logger.error("The user %s might have blocked us - %s", chat_id, exc)
-
-        except Exception as exc:
-            logger.error("Couldn't send to Telegram: %s - %s", chat_id, exc)
+            return False
 
 
 def mass_send_telegram_message(chat_ids: List[int], message: str) -> None:
@@ -96,7 +97,12 @@ def mass_send_telegram_message(chat_ids: List[int], message: str) -> None:
     """
 
     for chat_id in chat_ids:
-        send_telegram_message(chat_id, message)
+        try:
+            send_telegram_message(chat_id, message)
+
+        except Exception as exc:
+            logger.error("Couldn't send to Telegram: %s - %s", chat_id, exc)
+
 
 
 @async_to_sync
