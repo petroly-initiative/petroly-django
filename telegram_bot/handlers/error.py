@@ -12,7 +12,7 @@ from telegram.constants import ParseMode
 
 from telegram_bot.models import TelegramProfile
 
-DEVELOPER_CHAT_ID = TelegramProfile.objects.get(user__username='ammar-faifi')
+DEVELOPER_CHAT_ID = TelegramProfile.objects.get(user__username='ammar-faifi').id
 
 logger = logging.getLogger(__name__)
 
