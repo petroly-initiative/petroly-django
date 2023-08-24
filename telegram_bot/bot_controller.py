@@ -70,6 +70,7 @@ class BotController:
 
         track_handler = ConversationHandler(
             per_user=True,
+            conversation_timeout=100,
             entry_points=[CommandHandler("track", conversation.track)],  # type: ignore
             states={
                 CommandEnum.DEPT: [CallbackQueryHandler(conversation.track_dept)],
@@ -86,6 +87,7 @@ class BotController:
 
         untrack_handler = ConversationHandler(
             per_user=True,
+            conversation_timeout=100,
             entry_points=[CommandHandler("untrack", conversation.untrack)],  # type: ignore
             states={
                 CommandEnum.CRN: [
@@ -98,6 +100,7 @@ class BotController:
         self.app.add_handler(untrack_handler)
 
         clear_handler = ConversationHandler(
+            conversation_timeout=100,
             entry_points=[CommandHandler("clear", conversation.clear)],  # type: ignore
             states={
                 CommandEnum.CONFIRM: [CallbackQueryHandler(conversation.clear_confirm)]  # type: ignore
@@ -109,6 +112,7 @@ class BotController:
         self.app.add_handler(
             ConversationHandler(
                 per_user=True,
+                conversation_timeout=100,
                 entry_points=[CommandHandler("card", conversation.start_card)],  # type: ignore
                 states={
                     CommandEnum.GET_PHOTO: [
