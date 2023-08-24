@@ -21,8 +21,9 @@ from PIL import Image, ImageFont, ImageDraw
 import requests
 
 from notifier import utils as notifier_utils
-from notifier.models import Course, Term
+from notifier.models import Course, Term, TrackingList
 from data import SubjectEnum
+from telegram_bot import messages
 
 from .models import TelegramProfile, Token
 
@@ -44,13 +45,27 @@ def get_user(user_id: int):
 
     return TelegramProfile.objects.get(id=user_id).user
 
+async def has_tracking_list(user: User) -> bool:
+    return TrackingList.objects.filter(user=user).aexists()
 
 async def user_from_telegram(user_id: int, update: Update) -> User:
     try:
         return await get_user(user_id)
 
-    except TelegramProfile.DoesNotExist as exc:
-        raise TelegramProfile.DoesNotExist from exc
+    except TelegramProfile.DoesNotExist:
+        await update.message.reply_text(
+            text=messages.ACCOUNT_NOT_KNOWN,
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="Visit petroly.co",
+                            url="https://petroly.co",
+                        )
+                    ]
+                ]
+            ),
+        )
 
 
 def format_courses(courses: List[Course]):

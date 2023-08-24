@@ -51,6 +51,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # match their names when contacting the bot
 
     user_id = update.effective_user.id
+    # try to identify the user form its telegram id
+    await user_from_telegram(user_id=user_id, update=update)
 
     if user_id:
         try:
@@ -59,8 +61,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                     text=f"Hi {update.effective_user.username}, I am Petroly Bot",
                 )
 
-            # try to identify the user form its telegram id
-            await user_from_telegram(user_id=user_id, update=update)
 
             # instantiating the menu button
             await context.bot.set_chat_menu_button(update.effective_chat.id, MenuButtonCommands())  # type: ignore
@@ -85,22 +85,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                         "deletes all tracked courses from your tracking list",
                     ),
                 ]
-            )
-
-        except TelegramProfile.DoesNotExist:
-            # TODO provide some kind of sign in with Telegram widget
-            await update.message.reply_text(
-                text=messages.ACCOUNT_NOT_KNOWN,
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                text="Visit petroly.co",
-                                url="https://petroly.co",
-                            )
-                        ]
-                    ]
-                ),
             )
 
         except Exception as e:
