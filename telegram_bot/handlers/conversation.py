@@ -287,8 +287,13 @@ async def untrack(
 ) -> int | CommandEnum:
     """a method to remove a certain section from tracking list via its CRN"""
 
-    crns = await get_tracked_crns(user_id=update.effective_chat.id)
+    # cleaning data from previous sessions
+    context.bot.callback_data_cache.clear_callback_data()
+    context.bot.callback_data_cache.clear_callback_queries()
     context.user_data.clear()
+
+    crns = await get_tracked_crns(user_id=update.effective_chat.id)
+
     ## if CRNs exceed 100, enter the CRN in text
     if len(crns) > 100:
         context.user_data["crns"] = crns
@@ -363,6 +368,11 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     """a starting point for a full clear of selected terms' operation"""
 
+    # cleaning data from previous sessions
+    context.bot.callback_data_cache.clear_callback_data()
+    context.bot.callback_data_cache.clear_callback_queries()
+    context.user_data.clear()
+
     terms = await get_terms(update.effective_chat.id)
     terms.append(("All terms", "ALL"))
     term_rows = construct_reply_callback_grid(
@@ -430,7 +440,10 @@ def _get_number_trials(user_id) -> int:
 async def start_card(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     """Start point to create a card"""
     # cleaning data from previous sessions
+    context.bot.callback_data_cache.clear_callback_data()
+    context.bot.callback_data_cache.clear_callback_queries()
     context.user_data.clear()
+
     trials = await _get_number_trials(update.effective_user.id)
 
     if trials == 10:
