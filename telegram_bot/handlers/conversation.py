@@ -215,6 +215,9 @@ async def track_crn(
         {section[0] for section in context.user_data.get("sections", "NULL")}
     )
 
+    if not current_crns:
+        return ConversationHandler.END
+
     if not crn in current_crns:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -337,6 +340,15 @@ async def untrack_select(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         text=f"Section with CRN `{crn}` was untracked successfully\\!",
         parse_mode=ParseMode.MARKDOWN_V2,
     )
+    return ConversationHandler.END
+
+
+async def timeout(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> CommandEnum | int:
+    if update and update.message:
+        await update.message.reply_text("conversation has timed out. Restart again.")
+
     return ConversationHandler.END
 
 
