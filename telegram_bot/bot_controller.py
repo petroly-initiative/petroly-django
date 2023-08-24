@@ -37,7 +37,6 @@ class BotController:
     It initializes all handlers"""
 
     def __init__(self) -> None:
-
         self.app: Application = (
             Application.builder()
             .token(os.environ.get("TELEGRAM_BOT_TOKEN"))
@@ -69,7 +68,6 @@ class BotController:
         """to handle all assigned multi-step conversation handlers"""
 
         track_handler = ConversationHandler(
-            per_user=True,
             conversation_timeout=100,
             entry_points=[CommandHandler("track", conversation.track)],  # type: ignore
             states={
@@ -80,13 +78,15 @@ class BotController:
                 ],
                 CommandEnum.CRN: [MessageHandler(filters.TEXT, conversation.track_crn)],
                 CommandEnum.CONFIRM: [CallbackQueryHandler(conversation.track_confirm)],
+                ConversationHandler.TIMEOUT: [
+                    MessageHandler(filters.ALL, conversation.timeout)
+                ],
             },  # type: ignore
             fallbacks=[CommandHandler("cancel", conversation.cancel)],  # type: ignore
         )
         self.app.add_handler(track_handler)
 
         untrack_handler = ConversationHandler(
-            per_user=True,
             conversation_timeout=100,
             entry_points=[CommandHandler("untrack", conversation.untrack)],  # type: ignore
             states={
@@ -94,6 +94,9 @@ class BotController:
                     MessageHandler(filters.TEXT, conversation.untrack_crn)
                 ],
                 CommandEnum.SELECT: [CallbackQueryHandler(conversation.untrack_select)],  # type: ignore
+                ConversationHandler.TIMEOUT: [
+                    MessageHandler(filters.ALL, conversation.timeout)
+                ],
             },
             fallbacks=[CommandHandler("cancel", conversation.cancel)],  # type: ignore
         )
@@ -103,7 +106,10 @@ class BotController:
             conversation_timeout=100,
             entry_points=[CommandHandler("clear", conversation.clear)],  # type: ignore
             states={
-                CommandEnum.CONFIRM: [CallbackQueryHandler(conversation.clear_confirm)]  # type: ignore
+                CommandEnum.CONFIRM: [CallbackQueryHandler(conversation.clear_confirm)],  # type: ignore
+                ConversationHandler.TIMEOUT: [
+                    MessageHandler(filters.ALL, conversation.timeout)
+                ],
             },
             fallbacks=[CommandHandler("cancel", conversation.cancel)],
         )
@@ -111,7 +117,6 @@ class BotController:
 
         self.app.add_handler(
             ConversationHandler(
-                per_user=True,
                 conversation_timeout=100,
                 entry_points=[CommandHandler("card", conversation.start_card)],  # type: ignore
                 states={
@@ -123,6 +128,9 @@ class BotController:
                     ],
                     CommandEnum.CARD_NAME: [
                         MessageHandler(filters.TEXT, conversation.send_card)
+                    ],
+                    ConversationHandler.TIMEOUT: [
+                        MessageHandler(filters.ALL, conversation.timeout)
                     ],
                 },
                 fallbacks=[
