@@ -139,7 +139,7 @@ class Command(BaseCommand):
                             ]
 
                 logger.info(
-                    "grouped changes within %0.4f",
+                    "grouped changes within %0.9f",
                     time.perf_counter() - t_start,
                 )
 
@@ -154,7 +154,7 @@ class Command(BaseCommand):
                     )
 
                 logger.info(
-                    "Created `sending-notification-` within %0.4f",
+                    "Created `sending-notification-` within %0.9f",
                     time.perf_counter() - t_start,
                 )
 
