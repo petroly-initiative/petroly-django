@@ -93,12 +93,19 @@ class Command(BaseCommand):
                     logger.error(exc)
                     continue
 
+
             try:
                 t_start = time.perf_counter()
 
                 collection = collect_tracked_courses()
                 changed_courses = []
 
+                logger.info(
+                    "Retrieved tracked courses within %0.4f",
+                    time.perf_counter() - t_start,
+                )
+
+                t_start = time.perf_counter()
                 for _, value in collection.items():
                     changed, status = check_changes(value["course"])
 
@@ -106,6 +113,12 @@ class Command(BaseCommand):
                         value["status"] = status
                         changed_courses.append(value)
 
+                logger.info(
+                    "Courses changes checked within %0.4f",
+                    time.perf_counter() - t_start,
+                )
+
+                t_start = time.perf_counter()
                 # group `changed_courses` by unique trackers
                 courses_by_tracker = {}
                 for c in changed_courses:
@@ -125,6 +138,12 @@ class Command(BaseCommand):
                                 }
                             ]
 
+                logger.info(
+                    "grouped changes within %0.4f",
+                    time.perf_counter() - t_start,
+                )
+
+                t_start = time.perf_counter()
                 for tracker_pk, info in courses_by_tracker.items():
                     async_task(
                         "notifier.utils.send_notification",
@@ -134,14 +153,14 @@ class Command(BaseCommand):
                         group="change_notification",
                     )
 
+                logger.info(
+                    "Created `sending-notification-` within %0.4f",
+                    time.perf_counter() - t_start,
+                )
+
             except Exception as exc:
                 logger.warning(exc)
 
-            # log execution time
-            logger.info(
-                "Courses changes checked within %0.4f",
-                time.perf_counter() - t_start,
-            )
             time.sleep(10)
 
         logger.info("Stopping the Notifier Checking.")
