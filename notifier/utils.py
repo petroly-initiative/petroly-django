@@ -203,8 +203,10 @@ def check_changes(course: Course) -> Tuple:
         "waiting_list_count": course_info["waitAvailable"],
     }
     increased = (
-        info["available_seats"] > course.available_seats
-        or info["waiting_list_count"] > course.waiting_list_count
+        info["available_seats"] and info["available_seats"] > course.available_seats
+    ) or (
+        info["waiting_list_count"]
+        and info["waiting_list_count"] > course.waiting_list_count
     )
 
     # add the old numbers to returned info
