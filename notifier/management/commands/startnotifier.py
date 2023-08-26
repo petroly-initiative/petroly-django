@@ -11,6 +11,7 @@ import requests as rq
 from django_q.tasks import async_task
 from django.core.cache import CacheKeyWarning
 from django.core.management.base import BaseCommand
+from notifier import utils
 
 from notifier.utils import check_changes, collect_tracked_courses, banner_api
 from notifier.models import Status, StatusEnum
@@ -80,23 +81,21 @@ class Command(BaseCommand):
             if api_status.status == StatusEnum.DOWN:
                 logger.warning("API is still Down")
                 time.sleep(30)
+
                 try:
-                    res = rq.get(banner_api.URL4)
-                    if "maintenance" not in res.text:
+                    if utils.banner_api.test_connection():
                         logger.info("API is Up again")
                         api_status.status = StatusEnum.UP
                         api_status.save()
 
-                    continue
-
                 except rq.exceptions.ProxyError:
                     logger.warn("Proxy issue not resolved.")
-                    continue
 
                 except Exception as exc:
                     logger.error(exc)
-                    continue
 
+                finally:
+                    continue
 
             try:
                 t_start = time.perf_counter()
