@@ -9,7 +9,7 @@ class TelegramMessageForm(forms.Form):
     Telegram messages"""
 
     message = forms.CharField(widget=forms.Textarea)
-    usernames = forms.CharField(widget=forms.Textarea)
+    usernames = forms.CharField(required=False, widget=forms.Textarea)
 
     def send_message(self):
         usernames = self.cleaned_data["usernames"]
