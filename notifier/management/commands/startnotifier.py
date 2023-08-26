@@ -89,6 +89,10 @@ class Command(BaseCommand):
 
                     continue
 
+                except rq.exceptions.ProxyError:
+                    logger.warn("Proxy issue not resolved.")
+                    continue
+
                 except Exception as exc:
                     logger.error(exc)
                     continue

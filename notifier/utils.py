@@ -108,6 +108,15 @@ def request_data(term, department) -> None:
         obj.save()
         return
 
+    except rq.exceptions.ProxyError as exc:
+        logger.warn("ProxyError: %s", exc)
+        obj.stale = False
+        obj.save()
+
+        api_obj.status = StatusEnum.DOWN
+        api_obj.save()
+        return
+
     except rq.RequestException as exc:
         logger.error(
             "Failed fetching %s-%s from API - Exception: %s",
