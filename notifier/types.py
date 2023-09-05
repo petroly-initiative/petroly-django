@@ -5,16 +5,15 @@ to be used from `schema` module.
 
 from typing import List, Optional
 
+import strawberry
+import strawberry.django
 from strawberry import auto, ID
-from strawberry.scalars import JSON
 from strawberry.types import Info
-from strawberry_django_plus import gql
-
 
 from .models import Course, TrackingList, Term
 
 
-@gql.django.type(Term)
+@strawberry.django.type(Term)
 class TermType:
     """A type for `Term` model."""
 
@@ -25,13 +24,13 @@ class TermType:
         return Term.objects.filter(allowed=True)
 
 
-@gql.input
+@strawberry.input
 class ChannelsInput:
     EMAIL: bool
     TELEGRAM: bool
 
 
-@gql.type
+@strawberry.type
 class ChannelsType:
     SMS: bool
     PUSH: bool
@@ -40,7 +39,7 @@ class ChannelsType:
     TELEGRAM: bool
 
 
-@gql.input
+@strawberry.input
 class PreferencesInput:
     """An input type for `TrackingList`"""
 
@@ -50,14 +49,14 @@ class PreferencesInput:
     hash: Optional[str]
     dataCheckString: Optional[str]
 
-@gql.type
+@strawberry.type
 class PreferencesType:
     """A type for `TrackingList` preferences"""
 
     channels: ChannelsType
 
 
-@gql.django.type(Course)
+@strawberry.django.type(Course)
 class CourseType:
     """A type for `Course` model."""
 
@@ -66,7 +65,7 @@ class CourseType:
     # department: auto
 
 
-@gql.django.input(Course)
+@strawberry.django.input(Course)
 class CourseInput:
     """A type for `Course` model."""
 
@@ -75,7 +74,7 @@ class CourseInput:
     department: auto
 
 
-@gql.django.input(TrackingList, partial=True)
+@strawberry.django.input(TrackingList, partial=True)
 class TrackingListInput:
     """An input type for `TrackingList` model."""
 
