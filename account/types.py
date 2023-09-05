@@ -1,13 +1,13 @@
 import dataclasses
-import strawberry
-from strawberry import auto, ID, BasePermission, Private
-from strawberry.types import Info
-from strawberry.file_uploads import Upload
-from strawberry_django_plus import gql
-from strawberry_django_plus.permissions import ConditionDirective
-from graphql.type.definition import GraphQLResolveInfo
 from typing import Any
 
+import strawberry
+import strawberry.django
+from strawberry.types import Info
+from strawberry.file_uploads import Upload
+from strawberry import auto, ID, BasePermission, Private
+from graphql.type.definition import GraphQLResolveInfo
+from strawberry_django.permissions import ConditionDirective
 from django.contrib.auth import get_user_model
 
 from . import models
@@ -31,16 +31,16 @@ class UserType_:
     owned_communities: list[communities.types.CommunityType]
     evaluation_set: list[evaluation.types.EvaluationType]
 
-    @gql.field
+    @strawberry.field
     def owned_communities_count(self) -> int:
         return self.owned_communities.count()
 
-    @gql.field
+    @strawberry.field
     def evaluation_set_count(self) -> int:
         return self.evaluation_set.count()
 
 
-@gql.django.type(models.Profile)
+@strawberry.django.type(models.Profile)
 class ProfileType:
     pk: ID
     user: UserType_
@@ -49,7 +49,7 @@ class ProfileType:
     language: str
     theme: str
 
-    @gql.field
+    @strawberry.field
     def profile_pic(self: models.Profile) -> str:
         return self.profile_pic.url
 
@@ -60,7 +60,7 @@ class ProfileType:
         return None
 
 
-@gql.django.input(models.Profile, partial=True)
+@strawberry.django.input(models.Profile, partial=True)
 class ProfileInput:
     pk: ID
     major: auto
