@@ -1,3 +1,6 @@
+
+raise ImportError("This module not maintained")
+
 import graphene
 from graphql import GraphQLError
 from django.contrib.auth.models import User, Group

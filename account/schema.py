@@ -5,14 +5,14 @@ for `account` app.
 from typing import Optional
 
 import strawberry
-from strawberry.file_uploads import Upload
-from strawberry_django_plus import gql
-from strawberry_django_plus.permissions import IsAuthenticated
+import strawberry.django
 from gqlauth.user import arg_mutations
+from strawberry.file_uploads import Upload
+from strawberry_django.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
-from django.contrib.sites.shortcuts import get_current_site
 from cloudinary.uploader import upload_image
+from django.contrib.sites.shortcuts import get_current_site
 
 from .types import (
     UserType_,
@@ -56,7 +56,7 @@ class Mutation(UserMutations):
     It inherits from `AuthMutation`.
     """
 
-    profile_update: ProfileType = gql.django.update_mutation(
+    profile_update: ProfileType = strawberry.django.update_mutation(
         ProfileInput,
         directives=[
             IsAuthenticated(),

@@ -2,13 +2,11 @@ from typing import List, Optional, Iterable, Type
 from base64 import b64encode
 
 import strawberry
-from strawberry import ID
+import strawberry.django
+from strawberry import ID, relay
 from strawberry.types.info import Info
-from strawberry_django_plus import gql
-from strawberry_django_plus.gql import relay
-from strawberry_django_plus.relay import Connection, Node
-from strawberry_django_plus.permissions import IsAuthenticated
 from django.db.models import Avg, Count
+from strawberry_django.permissions import IsAuthenticated
 
 from data import DepartmentEnum
 from .models import Evaluation, Instructor
@@ -43,7 +41,7 @@ def resolve_has_evaluated(root, info: Info, pk: ID) -> bool:
     ).exists()
 
 
-def crete_global_id(cls: Type[Node], id: int | str) -> str:
+def crete_global_id(cls: Type[strawberry.relay.Node], id: int | str) -> str:
     return b64encode(bytes(f"{cls.__name__}:{id}", "utf-8")).decode()
 
 
@@ -61,11 +59,13 @@ class Query:
     Main entry for all the query types
     """
 
-    evaluation: EvaluationType = gql.django.field()
-    evaluations: List[EvaluationType] = gql.django.field()
+    evaluation: EvaluationType = strawberry.django.field()
+    evaluations: List[EvaluationType] = strawberry.django.field()
 
     instructor: Optional[InstructorNode] = relay.node()
-    instructors_connection: Connection[InstructorNode] = relay.connection()
+    instructors_connection: strawberry.relay.ListConnection[
+        InstructorNode
+    ] = relay.connection()
 
     @relay.connection
     def instructors(self, input: InstructorFilter) -> Iterable[InstructorNode]:
@@ -102,12 +102,12 @@ class Mutation:
     Main entry for all Mutation types
     """
 
-    evaluation_create: EvaluationType = gql.django.create_mutation(
+    evaluation_create: EvaluationType = strawberry.django.mutations.create(
         EvaluationInput, directives=[IsAuthenticated(), MatchIdentity()]
     )
-    evaluation_update: EvaluationType = gql.django.update_mutation(
+    evaluation_update: EvaluationType = strawberry.django.mutations.update(
         EvaluationPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
     )
-    evaluation_delete: EvaluationType = gql.django.delete_mutation(
+    evaluation_delete: EvaluationType = strawberry.django.mutations.delete(
         PkInput, directives=[IsAuthenticated(), OwnsObjPerm()]
     )
