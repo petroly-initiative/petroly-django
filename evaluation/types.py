@@ -7,25 +7,25 @@ import dataclasses
 from typing import List, Any
 
 import strawberry
+import strawberry.django
 from strawberry import ID, auto, Private
 from strawberry.types import Info
+from strawberry.django import relay
+from strawberry_django.utils.typing import UserType
 from graphql.type.definition import GraphQLResolveInfo
-
-from strawberry_django_plus import gql
-from strawberry_django_plus.gql import relay
-from strawberry_django_plus.utils.typing import UserType
-from strawberry_django_plus.permissions import ConditionDirective
+from strawberry_django.permissions import ConditionDirective
+from strawberry_django.permissions import DjangoPermissionExtension
 
 from .models import Instructor, Evaluation
 
 
-@gql.django.filter(Instructor, lookups=True)
+@strawberry.django.filter(Instructor, lookups=True)
 class InstructorFilter:
     name: auto
     department: auto
 
 
-@gql.django.type(Instructor, filters=InstructorFilter)
+@strawberry.django.type(Instructor, filters=InstructorFilter)
 class InstructorNode(relay.Node):
     pk: ID
 
@@ -36,40 +36,40 @@ class InstructorNode(relay.Node):
 
     # custom fields
 
-    @gql.django.field
+    @strawberry.django.field
     def instructor_count(self: Instructor, info: Info) -> str:
         return Instructor.objects.count()
 
-    @gql.django.field
+    @strawberry.django.field
     def profile_pic(self: Instructor, info: Info) -> str:
         return self.profile_pic.url
 
-    @gql.django.field
+    @strawberry.django.field
     def evaluation_set_count(self: Instructor, info: Info) -> int:
         return self.evaluation_set.count()
 
-    @gql.django.field
+    @strawberry.django.field
     def grading_avg(self: Instructor, info) -> float:
         return self.avg()["grading__avg"] or 0
 
-    @gql.django.field
+    @strawberry.django.field
     def teaching_avg(self: Instructor, info) -> float:
         return self.avg()["teaching__avg"] or 0
 
-    @gql.django.field
+    @strawberry.django.field
     def personality_avg(self: Instructor, info) -> float:
         return self.avg()["personality__avg"] or 0
 
-    @gql.django.field
+    @strawberry.django.field
     def overall(self: Instructor, info) -> int:
         return self.avg()["overall"]
 
-    @gql.django.field
+    @strawberry.django.field
     def overall_float(self: Instructor, info) -> float:
         return self.avg()["overall_float"]
 
 
-@gql.django.type(Evaluation)
+@strawberry.django.type(Evaluation)
 class EvaluationNode(relay.Node):
     pk: ID
 
@@ -89,7 +89,7 @@ class EvaluationNode(relay.Node):
     instructor: InstructorNode
 
 
-@gql.django.type(Evaluation)
+@strawberry.django.type(Evaluation)
 class EvaluationType:
     pk: ID
 
@@ -109,7 +109,7 @@ class EvaluationType:
     instructor: InstructorNode
 
 
-@gql.django.input(Evaluation, partial=True)
+@strawberry.django.input(Evaluation, partial=True)
 class EvaluationPartialInput:
     pk: ID
 
@@ -128,7 +128,7 @@ class EvaluationPartialInput:
     # instructor: ID
 
 
-@gql.django.input(Evaluation)
+@strawberry.django.input(Evaluation)
 class EvaluationInput:
     comment: auto
     course: auto

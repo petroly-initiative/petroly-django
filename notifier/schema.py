@@ -10,12 +10,12 @@ from typing import List, Optional
 from graphql.error import GraphQLError
 
 import strawberry
-from strawberry.scalars import JSON
-from strawberry.types import Info
-from strawberry_django_plus import gql
-from strawberry_django_plus.permissions import IsAuthenticated
+import strawberry.django
 from django.conf import settings
+from strawberry.types import Info
+from strawberry.scalars import JSON
 from django_q.tasks import async_task, logger
+from strawberry_django.permissions import IsAuthenticated
 
 from telegram_bot.models import TelegramProfile
 from telegram_bot.utils import escape_md
@@ -39,13 +39,13 @@ def resolve_subject_list(root, info: Info, short: bool = True) -> List[str]:
     return subject_long
 
 
-@gql.type
+@strawberry.type
 class Query:
     """Main entry of all Query types of `notifier` app."""
 
-    terms: List[TermType] = gql.django.field()
+    terms: List[TermType] = strawberry.django.field()
 
-    @gql.field
+    @strawberry.field
     def raw_data(self, term: int, department: str) -> JSON:
         """
         The raw data directly from the API.
@@ -53,7 +53,7 @@ class Query:
 
         return fetch_data(term, department)
 
-    @gql.field(directives=[IsAuthenticated()])
+    @strawberry.field(directives=[IsAuthenticated()])
     def tracking_list_channels(self, info: Info) -> Optional[ChannelsType]:
         """Get the user's tracking list tracking_list_channels."""
 
@@ -67,7 +67,7 @@ class Query:
 
     subject_list = strawberry.field(resolve_subject_list)
 
-    @gql.field(directives=[IsAuthenticated()])
+    @strawberry.field(directives=[IsAuthenticated()])
     def tracked_courses(self, info: Info) -> Optional[JSON]:
         """get all tracked courses' CRNs by the
         current logged in user.
@@ -92,7 +92,7 @@ class Query:
 
         return result
 
-    @gql.field
+    @strawberry.field
     def search(self, term: str, department: str, title: str) -> JSON:
         """to call `fetch_data`
         and perform case-insensitive searching
@@ -132,11 +132,11 @@ class Query:
         return result
 
 
-@gql.type
+@strawberry.type
 class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
 
-    @gql.mutation(directives=[IsAuthenticated()])
+    @strawberry.mutation(directives=[IsAuthenticated()])
     def update_tracking_list_channels(
         self, info: Info, input: PreferencesInput
     ) -> bool:
@@ -221,7 +221,7 @@ class Mutation:
 
         return True
 
-    @gql.mutation(directives=[IsAuthenticated()])
+    @strawberry.mutation(directives=[IsAuthenticated()])
     def update_tracking_list(self, info: Info, courses: List[CourseInput]) -> bool:
         """Add all `courses` to the user's tracking list
         then update each course status from the cache.

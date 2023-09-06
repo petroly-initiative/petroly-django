@@ -4,11 +4,9 @@ into a single `RootQuery` and `RootMutation`.
 """
 
 import strawberry
-from graphql.validation import NoSchemaIntrospectionCustomRule
-from strawberry.extensions import AddValidationRules, QueryDepthLimiter
+from strawberry.extensions import QueryDepthLimiter
 from strawberry.tools import merge_types
-from strawberry_django_plus.optimizer import DjangoOptimizerExtension
-from strawberry_django_plus.directives import SchemaDirectiveExtension
+from strawberry_django.optimizer import DjangoOptimizerExtension
 
 import account.schema
 import communities.schema
@@ -67,6 +65,5 @@ schema = strawberry.Schema(
             rate_seconds=60 * 10,
         ),
         DjangoOptimizerExtension,
-        SchemaDirectiveExtension,
     ],
 )

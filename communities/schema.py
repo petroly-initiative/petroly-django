@@ -1,15 +1,13 @@
 import re
 from typing import List
 
-
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
-
-from strawberry import ID
+import strawberry
+import strawberry.django
 from strawberry.types import Info
-from strawberry_django_plus import gql
-from strawberry_django_plus.permissions import IsAuthenticated
 from django_q.tasks import async_task
+from django.contrib.auth import get_user_model
+from strawberry_django.permissions import IsAuthenticated
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Community, Report
 from .types import (
@@ -26,7 +24,7 @@ User = get_user_model()
 
 
 def resolve_community_interactions(
-    root, info: Info, pk: ID
+    root, info: Info, pk: strawberry.ID
 ) -> CommunityInteractionsType:
 
     user: User = info.context.request.user
@@ -37,7 +35,7 @@ def resolve_community_interactions(
     )
 
 
-def rsolve_toggle_like_community(root, info: Info, pk: ID) -> bool:
+def rsolve_toggle_like_community(root, info: Info, pk: strawberry.ID) -> bool:
     try:
         likes = Community.objects.get(pk=pk).likes
     except ObjectDoesNotExist:
@@ -78,38 +76,38 @@ def resolve_community_create(
     ...
 
 
-@gql.type
+@strawberry.type
 class Query:
 
-    community_interactions: CommunityInteractionsType = gql.field(
+    community_interactions: CommunityInteractionsType = strawberry.field(
         resolve_community_interactions, directives=[IsAuthenticated()]
     )
-    community: CommunityType = gql.django.field()
-    communities: List[CommunityType] = gql.django.field()
+    community: CommunityType = strawberry.django.field()
+    communities: List[CommunityType] = strawberry.django.field()
 
 
-@gql.type
+@strawberry.type
 class Mutation:
 
-    community_create: CommunityType = gql.django.create_mutation(
+    community_create: CommunityType = strawberry.django.mutations.create(
         CommunityInput, directives=[IsAuthenticated(), MatchIdentity()]
     )
-    community_update: CommunityType = gql.django.update_mutation(
+    community_update: CommunityType = strawberry.django.mutations.update(
         CommunityPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
     )
-    community_delete: CommunityType = gql.django.delete_mutation(
+    community_delete: CommunityType = strawberry.django.mutations.delete(
         CommunityPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
     )
 
-    report_create = gql.mutation(resolve_report, directives=[IsAuthenticated()])
+    report_create = strawberry.mutation(resolve_report, directives=[IsAuthenticated()])
 
-    toggle_like_community = gql.mutation(
+    toggle_like_community = strawberry.mutation(
         rsolve_toggle_like_community,
         directives=[IsAuthenticated()],
         description="This will toggle the community like for the logged user",
     )
 
-    @gql.field
+    @strawberry.field
     def quick_add(root, info: Info, text: str) -> str:
         """Quickly, using regex, extract WhatsApp links, and add them as
         as a Section, with empty section number"""
