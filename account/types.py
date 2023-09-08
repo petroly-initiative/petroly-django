@@ -7,7 +7,7 @@ from strawberry.types import Info
 from strawberry.file_uploads import Upload
 from strawberry import auto, ID, BasePermission, Private
 from graphql.type.definition import GraphQLResolveInfo
-from strawberry_django.permissions import ConditionDirective
+from strawberry_django.permissions import ConditionDirective, DjangoPermissionExtension
 from django.contrib.auth import get_user_model
 
 from . import models
@@ -91,10 +91,14 @@ class IsAuthenticated(BasePermission):
         return True
 
 
-@dataclasses.dataclass
-class OwnsObjPerm(ConditionDirective):
+class OwnsObjPerm(DjangoPermissionExtension):
 
     message: Private[str] = "You don't own this object."
+
+    def  resolve_for_user(self, resolver: Callable, user: UserType, *, info: Info, source: Any):
+
+        # TODO rewrite using this `DjangoPermissionExtension`
+        return resolver()
 
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType_, **kwargs

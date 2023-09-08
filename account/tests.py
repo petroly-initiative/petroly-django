@@ -557,7 +557,7 @@ class AccountGraphQLTestCase(TestCase):
         """
 
         # update profile info, with logged out user; rasises error
-        from strawberry_django_plus.test.client import TestClient
+        from strawberry_django.test.client import TestClient
 
         self.client = TestClient(self.endpoint)
         res = self.client.query(
