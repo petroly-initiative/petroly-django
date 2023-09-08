@@ -2,10 +2,11 @@ import dataclasses
 import functools
 from typing import Callable, ClassVar, Optional, Any
 
-from strawberry import ID, auto, UNSET, Private
+import strawberry
+import strawberry.django
+from strawberry import ID, auto, Private
 from strawberry.types import Info
 from strawberry.file_uploads import Upload
-from strawberry_django_plus import gql
 from strawberry_django_plus.permissions import ConditionDirective
 from strawberry_django_plus.utils.typing import UserType
 from graphql.type.definition import GraphQLResolveInfo
@@ -13,19 +14,19 @@ from graphql.type.definition import GraphQLResolveInfo
 from django.db.models import Count
 from django.db.models.query import QuerySet
 from django.utils.translation import gettext_lazy as _
-from cloudinary.models import CloudinaryField, CloudinaryResource
+from cloudinary.models import CloudinaryResource
 
 from . import models
 
 
-@gql.django.input(models.Report, partial=True)
+@strawberry.django.input(models.Report, partial=True)
 class ReportInput:
     pk: ID
     reason: auto
     other_reason: auto
 
 
-@gql.django.filter(models.Community, lookups=True)
+@strawberry.django.filter(models.Community, lookups=True)
 class CommunityFilter:
     name: auto
     category: auto
@@ -33,7 +34,7 @@ class CommunityFilter:
     section: auto
 
 
-@gql.django.input(models.Community, partial=True)
+@strawberry.django.input(models.Community, partial=True)
 class CommunityInput:
     owner: ID
     name: auto
@@ -45,7 +46,7 @@ class CommunityInput:
     icon: Optional[Upload]
 
 
-@gql.django.input(models.Community, partial=True)
+@strawberry.django.input(models.Community, partial=True)
 class CommunityPartialInput:
     pk: Optional[ID]
     name: auto
@@ -57,14 +58,14 @@ class CommunityPartialInput:
     icon: Optional[Upload]
 
 
-@gql.type
+@strawberry.type
 class CloudinaryType:
-    @gql.field
+    @strawberry.field
     def url(self: CloudinaryResource) -> str:
         return self.url
 
 
-@gql.django.type(models.Community, filters=CommunityFilter)
+@strawberry.django.type(models.Community, filters=CommunityFilter)
 class CommunityType:
     pk: ID
     name: auto
@@ -79,13 +80,11 @@ class CommunityType:
     icon: Optional[CloudinaryType]
     # likes: Optional[List[UserType]] # replace with likes_count field
 
-    @gql.field
+    @strawberry.field
     def likes_count(self: models.Community, info: Info) -> int:
         return self.likes.count()
 
-    def get_queryset(
-        self, queryset: QuerySet, filters=None, **kw
-    ) -> QuerySet:
+    def get_queryset(self, queryset: QuerySet, filters=None, **kw) -> QuerySet:
         # descending order for number of likes
         return (
             models.Community.objects.filter(archived=False)
@@ -94,7 +93,7 @@ class CommunityType:
         )
 
 
-@gql.type
+@strawberry.type
 class CommunityInteractionsType:
     """
     This type holds info about user's interactions with a community.
@@ -128,7 +127,6 @@ class MatchIdentity(ConditionDirective):
 
 @dataclasses.dataclass
 class OwnsObjPerm(ConditionDirective):
-
     message: Private[str] = "You don't own this community."
 
     def check_condition(
