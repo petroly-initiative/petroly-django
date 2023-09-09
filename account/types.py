@@ -1,13 +1,13 @@
-import dataclasses
-from typing import Any
+from typing import Any, Callable, ClassVar
 
 import strawberry
 import strawberry.django
 from strawberry.types import Info
 from strawberry.file_uploads import Upload
-from strawberry import auto, ID, BasePermission, Private
+from strawberry import auto, ID, BasePermission
 from graphql.type.definition import GraphQLResolveInfo
-from strawberry_django.permissions import ConditionDirective, DjangoPermissionExtension
+from strawberry_django.permissions import DjangoPermissionExtension
+from strawberry_django.utils.typing import UserType
 from django.contrib.auth import get_user_model
 
 from . import models
@@ -92,11 +92,11 @@ class IsAuthenticated(BasePermission):
 
 
 class OwnsObjPerm(DjangoPermissionExtension):
+    DEFAULT_ERROR_MESSAGE: ClassVar[str] = "You don't own this object."
 
-    message: Private[str] = "You don't own this object."
-
-    def  resolve_for_user(self, resolver: Callable, user: UserType, *, info: Info, source: Any):
-
+    def resolve_for_user(
+        self, resolver: Callable, user: UserType, *, info: Info, source: Any
+    ):
         # TODO rewrite using this `DjangoPermissionExtension`
         return resolver()
 

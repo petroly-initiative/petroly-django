@@ -56,11 +56,11 @@ class Mutation(UserMutations):
     It inherits from `AuthMutation`.
     """
 
-    profile_update: ProfileType = strawberry.django.update_mutation(
+    profile_update: ProfileType = strawberry.django.mutations.update(
         ProfileInput,
         directives=[
             IsAuthenticated(),
-            OwnsObjPerm("You don't own this Profile."),
+            OwnsObjPerm(),
         ],
     )
 

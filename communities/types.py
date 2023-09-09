@@ -7,8 +7,8 @@ import strawberry.django
 from strawberry import ID, auto, Private
 from strawberry.types import Info
 from strawberry.file_uploads import Upload
-from strawberry_django_plus.permissions import ConditionDirective
-from strawberry_django_plus.utils.typing import UserType
+from strawberry_django.permissions import DjangoPermissionExtension
+from strawberry_django.utils.typing import UserType
 from graphql.type.definition import GraphQLResolveInfo
 
 from django.db.models import Count
@@ -103,13 +103,17 @@ class CommunityInteractionsType:
     reported: bool
 
 
-@dataclasses.dataclass
-class MatchIdentity(ConditionDirective):
+class MatchIdentity(DjangoPermissionExtension):
     """
     This to check wether the provided `pk` match ther logged in user.
     """
 
     message: Private[str] = "Your identity aren't matching the provided `pk`."
+
+    def resolve_for_user(
+        self, resolver: Callable, user: UserType, *, info: Info, source: Any
+    ):
+        return super().resolve_for_user(resolver, user, info=info, source=source)
 
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
@@ -125,9 +129,13 @@ class MatchIdentity(ConditionDirective):
         raise ValueError("The field `id` must be provided.")
 
 
-@dataclasses.dataclass
-class OwnsObjPerm(ConditionDirective):
+class OwnsObjPerm(DjangoPermissionExtension):
     message: Private[str] = "You don't own this community."
+
+    def resolve_for_user(
+        self, resolver: Callable, user: UserType, *, info: Info, source: Any
+    ):
+        return super().resolve_for_user(resolver, user, info=info, source=source)
 
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
@@ -137,33 +145,3 @@ class OwnsObjPerm(ConditionDirective):
             return True
 
         return False
-
-
-# Example of implementing custom directive; is not courged
-from strawberry_django_plus.directives import (
-    SchemaDirectiveWithResolver,
-    SchemaDirectiveHelper,
-)
-
-
-@dataclasses.dataclass
-class CustomDirective(SchemaDirectiveWithResolver):
-    """Base auth directive definition."""
-
-    has_resolver: ClassVar = True
-
-    def resolve(
-        self,
-        helper: SchemaDirectiveHelper,
-        _next: Callable,
-        root: Any,
-        info: GraphQLResolveInfo,
-        *args,
-        **kwargs,
-    ):
-        print(kwargs)
-        resolver = functools.partial(_next, root, info, *args, **kwargs)
-
-        if callable(resolver):
-            resolver = resolver()
-        return resolver
