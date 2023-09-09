@@ -3,17 +3,15 @@ This module provides types of `evaluation` app for usage
 in `schema.py`.
 """
 
-import dataclasses
-from typing import List, Any
+from typing import Callable, List, Any
 
 import strawberry
 import strawberry.django
 from strawberry import ID, auto, Private
 from strawberry.types import Info
-from strawberry.django import relay
+from strawberry import relay
 from strawberry_django.utils.typing import UserType
 from graphql.type.definition import GraphQLResolveInfo
-from strawberry_django.permissions import ConditionDirective
 from strawberry_django.permissions import DjangoPermissionExtension
 
 from .models import Instructor, Evaluation
@@ -153,13 +151,17 @@ class PkInput:
     pk: ID
 
 
-@dataclasses.dataclass
-class OwnsObjPerm(ConditionDirective):
+class OwnsObjPerm(DjangoPermissionExtension):
     """
     This is to check users can only modify theirs.
     """
 
     message: Private[str] = "You don't have such evaluation."
+
+    def resolve_for_user(
+        self, resolver: Callable, user: UserType, *, info: Info, source: Any
+    ):
+        return super().resolve_for_user(resolver, user, info=info, source=source)
 
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
@@ -174,14 +176,17 @@ class OwnsObjPerm(ConditionDirective):
 # This is not used,
 # we created a constraint on `Evaluation` model
 # to do the same thing
-class NotEvaluated(ConditionDirective):
-
+class NotEvaluated(DjangoPermissionExtension):
     message: Private[str] = "You can only evalute an instructor once."
+
+    def resolve_for_user(
+        self, resolver: Callable, user: UserType, *, info: Info, source: Any
+    ):
+        return super().resolve_for_user(resolver, user, info=info, source=source)
 
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
     ) -> bool:
-
         kwargs["input"]["user"] = user.pk  # set the user field to the logged user
         pk = kwargs["input"]["instructor"]  # get instructor `pk`
 
@@ -190,13 +195,17 @@ class NotEvaluated(ConditionDirective):
         ).exists()
 
 
-@dataclasses.dataclass
-class MatchIdentity(ConditionDirective):
+class MatchIdentity(DjangoPermissionExtension):
     """
     This to check wether the provided `user` match ther logged-in user.
     """
 
     message: Private[str] = "Your identity isn't matching the provided `user`."
+
+    def resolve_for_user(
+        self, resolver: Callable, user: UserType, *, info: Info, source: Any
+    ):
+        return super().resolve_for_user(resolver, user, info=info, source=source)
 
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
