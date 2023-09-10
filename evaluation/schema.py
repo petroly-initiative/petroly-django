@@ -1,4 +1,4 @@
-from typing import List, Optional, Iterable, Type
+from typing import List, Optional, Iterable, Type, cast
 from base64 import b64encode
 
 import strawberry
@@ -63,12 +63,13 @@ class Query:
     evaluations: List[EvaluationType] = strawberry.django.field()
 
     instructor: Optional[InstructorNode] = relay.node()
-    instructors_connection: strawberry.relay.ListConnection[
-        InstructorNode
-    ] = relay.connection()
+    # instructors_connection: relay.ListConnection[
+    #     InstructorNode
+    # ] = relay.connection()
 
-    @relay.connection
-    def instructors(self, input: InstructorFilter) -> Iterable[InstructorNode]:
+
+    @relay.connection(relay.ListConnection[InstructorNode])
+    def instructors(self, input: InstructorFilter) -> Iterable[Instructor]:
         filters = {
             "name__icontains": input.name.i_contains,
         } | ({"department": input.department} if input.department else {})
