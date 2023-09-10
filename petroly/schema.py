@@ -22,8 +22,8 @@ Query = merge_types(
         account.schema.Query,
         communities.schema.Query,
         evaluation.schema.Query,
-        notifier.schema.Query,
-        telegram_bot.schema.Query,
+        # notifier.schema.Query,
+        # telegram_bot.schema.Query,
     ),
 )
 
