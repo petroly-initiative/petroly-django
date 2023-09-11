@@ -167,6 +167,14 @@ GQL_AUTH = GqlAuthSettings(
 )
 
 
+STRAWBERRY_DJANGO = {
+    "FIELD_DESCRIPTION_FROM_HELP_TEXT": True,
+    "TYPE_DESCRIPTION_FROM_MODEL_DOCSTRING": True,
+    "MUTATIONS_DEFAULT_HANDLE_ERRORS": True,
+    "GENERATE_ENUMS_FROM_CHOICES": True,
+    "MAP_AUTO_ID_AS_GLOBAL_ID": True,
+}
+
 Q_CLUSTER = {
     "name": "petroly",
     "workers": int(os.environ.get("Q_CLUSTER_WORKERS", 5)),

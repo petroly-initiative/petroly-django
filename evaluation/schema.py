@@ -63,16 +63,12 @@ class Query:
     evaluations: List[EvaluationType] = strawberry.django.field()
 
     instructor: Optional[InstructorNode] = relay.node()
-    # instructors_connection: relay.ListConnection[
-    #     InstructorNode
-    # ] = relay.connection()
-
 
     @relay.connection(relay.ListConnection[InstructorNode])
     def instructors(self, input: InstructorFilter) -> Iterable[Instructor]:
-        filters = {
-            "name__icontains": input.name.i_contains,
-        } | ({"department": input.department} if input.department else {})
+        filters = {"name__icontains": input.name} | (
+            {"department": input.department} if input.department else {}
+        )
 
         sorted_by_overall = (
             Instructor.objects.filter(**filters)
@@ -90,10 +86,12 @@ class Query:
 
         return sorted_by_overall
 
-    department_list = strawberry.field(resolve_department_list)
-    evaluated_instructors = strawberry.field(resolve_evaluated_instructors)
-    has_evaluated = strawberry.field(
-        resolve_has_evaluated, directives=[IsAuthenticated()]
+    department_list: List[str] = strawberry.field(resolver=resolve_department_list)
+    evaluated_instructors: List[str] = strawberry.field(
+        resolver=resolve_evaluated_instructors
+    )
+    has_evaluated = strawberry.django.field(
+        resolver=resolve_has_evaluated, extensions=[IsAuthenticated()]
     )
 
 
