@@ -17,7 +17,7 @@ from strawberry_django.permissions import DjangoPermissionExtension
 from .models import Instructor, Evaluation
 
 
-@strawberry.django.filter(Instructor, lookups=True)
+@strawberry.django.filter(Instructor)
 class InstructorFilter:
     name: auto
     department: auto
