@@ -533,7 +533,7 @@ class AccountGraphQLTestCase(TestCase):
         profileUpdate = """
         mutation Update($pk: ID!, $language: String, $theme: String) {
             profileUpdate(
-                input: { 
+                data: { 
                     pk: $pk
                     language: $language 
                     theme: $theme
