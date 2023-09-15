@@ -3,7 +3,7 @@ Here all `pertoly` projects' queries and mutations are merged down
 into a single `RootQuery` and `RootMutation`.
 """
 
-import strawberry
+from gqlauth.core.middlewares import JwtSchema
 from strawberry.extensions import QueryDepthLimiter
 from strawberry.tools import merge_types
 from strawberry_django.optimizer import DjangoOptimizerExtension
@@ -38,7 +38,8 @@ Mutation = merge_types(
     ),
 )
 
-schema = strawberry.Schema(
+
+schema = JwtSchema(
     query=Query,
     mutation=Mutation,
     extensions=[
