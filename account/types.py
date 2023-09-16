@@ -6,7 +6,7 @@ from strawberry.types import Info
 from strawberry.file_uploads import Upload
 from strawberry import auto, ID, BasePermission
 from graphql.type.definition import GraphQLResolveInfo
-from strawberry_django.permissions import DjangoPermissionExtension
+from strawberry_django.permissions import DjangoNoPermission, DjangoPermissionExtension
 from strawberry_django.utils.typing import UserType
 from django.contrib.auth import get_user_model
 
@@ -80,34 +80,25 @@ class ProfilePicUpdateType:
     profile_pic: str
 
 
-class IsAuthenticated(BasePermission):
-    message = "User is not authenticated"
-
-    # This method can also be async!
-    def has_permission(self, source: Any, info: Info, **kwargs) -> bool:
-        print("info.field_name", info.field_name)
-
-        print(info.context.request.user.is_authenticated)
-        return True
-
-
 class OwnsObjPerm(DjangoPermissionExtension):
-    DEFAULT_ERROR_MESSAGE: ClassVar[str] = "You don't own this object."
+    DEFAULT_ERROR_MESSAGE = "You don't own this object."
 
     def resolve_for_user(
         self, resolver: Callable, user: UserType, *, info: Info, source: Any
     ):
-        # TODO rewrite using this `DjangoPermissionExtension`
-        return resolver()
+        # another way to access input data
+        # info.selected_fields[0].arguments['data']['pk']
 
-    def check_condition(
-        self, root: Any, info: GraphQLResolveInfo, user: UserType_, **kwargs
-    ):
-        pk = kwargs["input"]["pk"]
-        if pk:
-            try:
-                pk = int(pk)
-            except:
-                raise ValueError("The field `pk` is not valid.")
-            return user.profile.pk == pk
-        raise ValueError("The field `p` must be provided.")
+        pk = resolver.keywords["data"].pk
+        if not pk:
+            raise ValueError("The field `p` must be provided.")
+
+        try:
+            pk = int(pk)
+        except:
+            raise ValueError("The field `pk` is not valid.")
+
+        if user.profile.pk != pk:
+            raise DjangoNoPermission
+
+        return resolver()
