@@ -58,16 +58,15 @@ class Mutation(UserMutations):
 
     profile_update: ProfileType = strawberry.django.mutations.update(
         ProfileInput,
-        directives=[
+        extensions=[
             IsAuthenticated(),
             OwnsObjPerm(),
         ],
     )
 
     # TODO better handling for the Permission Exception
-    # maybe create custom login_required decorator
-    @strawberry.mutation(directives=[IsAuthenticated()])
-    # @login_required
+    # @strawberry.mutation(directives=[IsAuthenticated()])
+    @strawberry.django.mutation(extensions=[IsAuthenticated()])
     def profile_pic_update(self, info, file: Upload) -> Optional[ProfilePicUpdateType]:
         """
         Mutation to help upload only a profile pic to Cloudinary
