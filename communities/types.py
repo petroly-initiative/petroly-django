@@ -1,15 +1,14 @@
-import dataclasses
-import functools
-from typing import Callable, ClassVar, Optional, Any
+from typing import Callable, Optional, Any
 
 import strawberry
 import strawberry.django
-from strawberry import ID, auto, Private
 from strawberry.types import Info
+from strawberry import ID, auto, Private
 from strawberry.file_uploads import Upload
-from strawberry_django.permissions import DjangoPermissionExtension
+from strawberry_django.filters import FilterLookup
 from strawberry_django.utils.typing import UserType
 from graphql.type.definition import GraphQLResolveInfo
+from strawberry_django.permissions import DjangoNoPermission, DjangoPermissionExtension
 
 from django.db.models import Count
 from django.db.models.query import QuerySet
@@ -26,12 +25,12 @@ class ReportInput:
     other_reason: auto
 
 
-@strawberry.django.filter(models.Community, lookups=True)
+@strawberry.django.filter(models.Community)
 class CommunityFilter:
-    name: auto
+    name: FilterLookup[str] | None
+    section: FilterLookup[str] | None
     category: auto
     platform: auto
-    section: auto
 
 
 @strawberry.django.input(models.Community, partial=True)
@@ -108,40 +107,30 @@ class MatchIdentity(DjangoPermissionExtension):
     This to check wether the provided `pk` match ther logged in user.
     """
 
-    message: Private[str] = "Your identity aren't matching the provided `pk`."
+    DEFAULT_ERROR_MESSAGE = "Your identity aren't matching the provided `pk`."
 
     def resolve_for_user(
         self, resolver: Callable, user: UserType, *, info: Info, source: Any
     ):
-        return super().resolve_for_user(resolver, user, info=info, source=source)
-
-    def check_condition(
-        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
-    ):
-        pk = kwargs["input"]["owner"]
+        pk = resolver.keywords["data"].pk
         if pk:
             try:
                 if int(pk) == user.pk:
                     return True
-                return False
+                raise DjangoNoPermission
             except:
                 raise ValueError("The field `id` is not valid.")
         raise ValueError("The field `id` must be provided.")
 
 
 class OwnsObjPerm(DjangoPermissionExtension):
-    message: Private[str] = "You don't own this community."
+    DEFAULT_ERROR_MESSAGE = "You don't own this community."
 
     def resolve_for_user(
         self, resolver: Callable, user: UserType, *, info: Info, source: Any
     ):
-        return super().resolve_for_user(resolver, user, info=info, source=source)
-
-    def check_condition(
-        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
-    ):
-        pk = kwargs["input"]["pk"]  # get community `pk`
+        pk = resolver.keywords["data"].pk  # get community `pk`
         if models.Community.objects.filter(pk=pk, owner=user).exists():
-            return True
+            return resolver()
 
-        return False
+        raise DjangoNoPermission
