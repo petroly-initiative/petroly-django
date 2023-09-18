@@ -10,9 +10,10 @@ import strawberry.django
 from strawberry import ID, auto, Private
 from strawberry.types import Info
 from strawberry import relay
+from strawberry_django.filters import FilterLookup
 from strawberry_django.utils.typing import UserType
 from graphql.type.definition import GraphQLResolveInfo
-from strawberry_django.permissions import DjangoPermissionExtension
+from strawberry_django.permissions import DjangoNoPermission, DjangoPermissionExtension
 
 from .models import Instructor, Evaluation
 
@@ -177,45 +178,37 @@ class OwnsObjPerm(DjangoPermissionExtension):
 # we created a constraint on `Evaluation` model
 # to do the same thing
 class NotEvaluated(DjangoPermissionExtension):
-    message: Private[str] = "You can only evalute an instructor once."
+    DEFAULT_ERROR_MESSAGE = "You can only evalute an instructor once."
 
     def resolve_for_user(
         self, resolver: Callable, user: UserType, *, info: Info, source: Any
     ):
-        return super().resolve_for_user(resolver, user, info=info, source=source)
-
-    def check_condition(
-        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
-    ) -> bool:
-        kwargs["input"]["user"] = user.pk  # set the user field to the logged user
-        pk = kwargs["input"]["instructor"]  # get instructor `pk`
+        resolver.keywords["data"].user = user.pk  # set the user field to the logged user
+        pk = resolver.keywords["data"].instructor  # get instructor `pk`
 
         return Evaluation.objects.filter(
             user=info.context.request.user, instructor__pk=pk
         ).exists()
 
 
+
+
 class MatchIdentity(DjangoPermissionExtension):
     """
-    This to check wether the provided `user` match ther logged-in user.
+    This to check wether the provided `pk` match ther logged in user.
     """
 
-    message: Private[str] = "Your identity isn't matching the provided `user`."
+    DEFAULT_ERROR_MESSAGE = "Your identity aren't matching the provided `pk`."
 
     def resolve_for_user(
         self, resolver: Callable, user: UserType, *, info: Info, source: Any
     ):
-        return super().resolve_for_user(resolver, user, info=info, source=source)
-
-    def check_condition(
-        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
-    ):
-        pk = kwargs["input"]["user"]
+        pk = resolver.keywords["data"].pk
         if pk:
             try:
                 if int(pk) == user.pk:
                     return True
-                return False
+                raise DjangoNoPermission
             except:
-                raise ValueError("The field `user` is not valid.")
-        raise ValueError("The field `user` must be provided.")
+                raise ValueError("The field `id` is not valid.")
+        raise ValueError("The field `id` must be provided.")
