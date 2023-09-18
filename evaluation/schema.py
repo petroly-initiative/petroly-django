@@ -1,4 +1,4 @@
-from typing import List, Optional, Iterable, Type, cast
+from typing import List, Optional, Iterable, Type
 from base64 import b64encode
 
 import strawberry
@@ -11,14 +11,14 @@ from strawberry_django.permissions import IsAuthenticated
 from data import DepartmentEnum
 from .models import Evaluation, Instructor
 from .types import (
-    EvaluationType,
-    OwnsObjPerm,
-    EvaluationInput,
-    EvaluationPartialInput,
     PkInput,
+    OwnsObjPerm,
     MatchIdentity,
     InstructorNode,
+    EvaluationType,
+    EvaluationInput,
     InstructorFilter,
+    EvaluationPartialInput,
 )
 
 
@@ -64,10 +64,12 @@ class Query:
 
     instructor: Optional[InstructorNode] = relay.node()
 
-    @relay.connection(relay.ListConnection[InstructorNode])
-    def instructors(self, input: InstructorFilter) -> Iterable[Instructor]:
-        filters = {"name__icontains": input.name} | (
-            {"department": input.department} if input.department else {}
+    @relay.connection(
+        strawberry.django.relay.ListConnectionWithTotalCount[InstructorNode]
+    )
+    def instructors(self, data: InstructorFilter) -> Iterable[Instructor]:
+        filters = {"name__icontains": data.name} | (
+            {"department": data.department} if data.department else {}
         )
 
         sorted_by_overall = (
@@ -102,11 +104,11 @@ class Mutation:
     """
 
     evaluation_create: EvaluationType = strawberry.django.mutations.create(
-        EvaluationInput, directives=[IsAuthenticated(), MatchIdentity()]
+        EvaluationInput, extensions=[IsAuthenticated(), MatchIdentity()]
     )
     evaluation_update: EvaluationType = strawberry.django.mutations.update(
-        EvaluationPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
+        EvaluationPartialInput, extensions=[IsAuthenticated(), OwnsObjPerm()]
     )
     evaluation_delete: EvaluationType = strawberry.django.mutations.delete(
-        PkInput, directives=[IsAuthenticated(), OwnsObjPerm()]
+        PkInput, extensions=[IsAuthenticated(), OwnsObjPerm()]
     )
