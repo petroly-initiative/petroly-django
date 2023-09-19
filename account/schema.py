@@ -59,8 +59,8 @@ class Mutation(UserMutations):
     profile_update: ProfileType = strawberry.django.mutations.update(
         ProfileInput,
         extensions=[
-            IsAuthenticated(),
             OwnsObjPerm(),
+            IsAuthenticated(),
         ],
     )
 

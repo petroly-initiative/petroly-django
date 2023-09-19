@@ -81,7 +81,7 @@ class ProfilePicUpdateType:
 
 
 class OwnsObjPerm(DjangoPermissionExtension):
-    DEFAULT_ERROR_MESSAGE = "You don't own this object."
+    DEFAULT_ERROR_MESSAGE = "You don't own this Profile."
 
     def resolve_for_user(
         self, resolver: Callable, user: UserType, *, info: Info, source: Any
