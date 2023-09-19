@@ -11,16 +11,18 @@ This module is to test all possible use cases of `account` app.
 """
 
 import json
-import django.contrib.auth.views as auth_views
+
 from django.conf import settings
 from django.core import mail
-from django.test import TestCase, TransactionTestCase, Client, tag
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.utils import IntegrityError
-from cloudinary.uploader import unsigned_upload
 from cloudinary import CloudinaryImage
-
+from django.db.utils import IntegrityError
+from django.contrib.auth import get_user_model
+import django.contrib.auth.views as auth_views
+from cloudinary.uploader import unsigned_upload
+from strawberry_django.test.client import Response
+from django.core.exceptions import ObjectDoesNotExist
+from gqlauth.jwt.types_ import ObtainJSONWebTokenType  
+from django.test import TestCase, TransactionTestCase, Client, tag
 
 from data import DepartmentEnum, years
 from . import views
@@ -555,12 +557,31 @@ class AccountGraphQLTestCase(TestCase):
             }
         }
         """
+        tokenAuth = """
+        mutation {
+            tokenAuth(username: "long-testing", password: "nothing-is-secret") {
+                success
+                errors
+                token {
+                    token
+                    payload {
+                        username
+                        exp
+                        origIat
+                    }
+                }
+                refreshToken{
+                    token
+                }
+            }
+        }
+        """
 
         # update profile info, with logged out user; rasises error
         from strawberry_django.test.client import TestClient
 
-        self.client = TestClient(self.endpoint)
-        res = self.client.query(
+        client = TestClient(self.endpoint)
+        res = client.query(
             profileUpdate, {"pk": self.user.profile.pk}, asserts_errors=False
         )
         self.assertIsNone(res.errors)
@@ -570,17 +591,21 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(data["messages"][0]["message"], "User is not authenticated.")
 
         # login the user and pass its token in the HTTP header
-        client = Client()
-        client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[0])
-        self.client = TestClient(self.endpoint, client)
+        res  = client.query(
+            tokenAuth,
+        )
+        assert isinstance(res, Response)
+        assert res.data and res.data['tokenAuth']
+        token = res.data['tokenAuth']['token']['token']
         # update other user's profile
-        res = self.client.query(
+        res = client.query(
             profileUpdate,
-            {
+            variables={
                 "pk": self.user2.profile.pk,
                 "theme": "dark",
                 "language": "ar-SA",
             },
+            headers={'AUTHORIZATION': f'JWT {token}'}
         )
         self.assertIsNone(res.errors)
         self.assertIsNotNone(res.data)
@@ -588,7 +613,7 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(data["messages"][0]["message"], "You don't own this Profile.")
 
         # update the user profile
-        res = self.client.query(
+        res = client.query(
             profileUpdate,
             {
                 "pk": self.user.profile.pk,

@@ -162,7 +162,6 @@ GQL_AUTH = GqlAuthSettings(
     ACTIVATION_PATH_ON_EMAIL="confirm",
     EMAIL_TEMPLATE_VARIABLES={"frontend_domain": "petroly.co"},
     JWT_REFRESH_EXPIRATION_DELTA=timedelta(days=30),
-    JWT_EXPIRATION_DELTA=timedelta(days=22222)
 )
 
 
