@@ -21,7 +21,7 @@ import django.contrib.auth.views as auth_views
 from cloudinary.uploader import unsigned_upload
 from strawberry_django.test.client import Response
 from django.core.exceptions import ObjectDoesNotExist
-from gqlauth.jwt.types_ import ObtainJSONWebTokenType  
+from gqlauth.jwt.types_ import ObtainJSONWebTokenType
 from django.test import TestCase, TransactionTestCase, Client, tag
 
 from data import DepartmentEnum, years
@@ -591,12 +591,12 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(data["messages"][0]["message"], "User is not authenticated.")
 
         # login the user and pass its token in the HTTP header
-        res  = client.query(
+        res = client.query(
             tokenAuth,
         )
         assert isinstance(res, Response)
-        assert res.data and res.data['tokenAuth']
-        token = res.data['tokenAuth']['token']['token']
+        assert res.data and res.data["tokenAuth"]
+        token = res.data["tokenAuth"]["token"]["token"]
         # update other user's profile
         res = client.query(
             profileUpdate,
@@ -605,7 +605,7 @@ class AccountGraphQLTestCase(TestCase):
                 "theme": "dark",
                 "language": "ar-SA",
             },
-            headers={'AUTHORIZATION': f'JWT {token}'}
+            headers={"AUTHORIZATION": f"JWT {token}"},
         )
         self.assertIsNone(res.errors)
         self.assertIsNotNone(res.data)
@@ -620,6 +620,7 @@ class AccountGraphQLTestCase(TestCase):
                 "theme": "dark",
                 "language": "ar-SA",
             },
+            headers={"AUTHORIZATION": f"JWT {token}"},
         )
 
         self.assertIsNone(res.errors)
