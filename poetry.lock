@@ -350,12 +350,12 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "cloudinary"
-version = "1.34.0"
+version = "1.35.0"
 description = "Python and Django SDK for Cloudinary"
 optional = false
 python-versions = "*"
 files = [
-    {file = "cloudinary-1.34.0.tar.gz", hash = "sha256:3f7112ca6cc7af106c757d5591a2c185bec773526bbdadaedbd86dd85f984fa7"},
+    {file = "cloudinary-1.35.0.tar.gz", hash = "sha256:933102bb461b9ec5b497f3098c225804b633cf402cde7aac6a29d1b5c73e40d4"},
 ]
 
 [package.dependencies]
@@ -1538,4 +1538,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.1"
-content-hash = "63ddea7f5915a5376878aa03e204a7c0ebcb6c36929d226e60d1cbf470c293cd"
+content-hash = "bb56a9be853e968ab5cc5265e0a8cb4b275b8edda3396679b83785dbebd93daf"
