@@ -1283,13 +1283,13 @@ captcha = ["pillow[captcha] (>=9.5,<11.0)"]
 
 [[package]]
 name = "strawberry-graphql"
-version = "0.209.2"
+version = "0.209.8"
 description = "A library for creating GraphQL APIs"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "strawberry_graphql-0.209.2-py3-none-any.whl", hash = "sha256:b4200a0b9081db71fe9fffc19075ff403d89815fa22c8b7e4647c7c6088afc9d"},
-    {file = "strawberry_graphql-0.209.2.tar.gz", hash = "sha256:f8aafcd7184aeff953dbd81e982e3d140434ae55962cc8d2d7cc0cb282878543"},
+    {file = "strawberry_graphql-0.209.8-py3-none-any.whl", hash = "sha256:115184c3bafbe8ea3fddf95862831970fd3a32dd3253568d4a2e5fdb23d75a81"},
+    {file = "strawberry_graphql-0.209.8.tar.gz", hash = "sha256:565392a8a8f70b3653638da8383d748bfcf3d68d50f8eac32c40e15d070e693a"},
 ]
 
 [package.dependencies]
@@ -1538,4 +1538,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.1"
-content-hash = "13f961fd9e06b2c8d1ad8880368a8316a5bab7b7f734faed21fe4549b033442c"
+content-hash = "f739394d4609c7482e59eba902537fa1d1ad236a06edd28f6f6130b4e6b3667e"
