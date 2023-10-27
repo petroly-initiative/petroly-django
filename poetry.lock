@@ -1439,13 +1439,13 @@ files = [
 
 [[package]]
 name = "whitenoise"
-version = "6.5.0"
+version = "6.6.0"
 description = "Radically simplified static file serving for WSGI applications"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "whitenoise-6.5.0-py3-none-any.whl", hash = "sha256:16468e9ad2189f09f4a8c635a9031cc9bb2cdbc8e5e53365407acf99f7ade9ec"},
-    {file = "whitenoise-6.5.0.tar.gz", hash = "sha256:15fe60546ac975b58e357ccaeb165a4ca2d0ab697e48450b8f0307ca368195a8"},
+    {file = "whitenoise-6.6.0-py3-none-any.whl", hash = "sha256:b1f9db9bf67dc183484d760b99f4080185633136a273a03f6436034a41064146"},
+    {file = "whitenoise-6.6.0.tar.gz", hash = "sha256:8998f7370973447fac1e8ef6e8ded2c5209a7b1f67c1012866dbcd09681c3251"},
 ]
 
 [package.extras]
@@ -1538,4 +1538,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.1"
-content-hash = "19533d1c5e3757b6e19ac46aa7eb64b34a9aa22ecc85524f060156a556e1fc48"
+content-hash = "50252db719c4a10cbd61a75d4741648a06a0bed069ca855492b24ba3466bf4eb"
