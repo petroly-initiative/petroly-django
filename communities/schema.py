@@ -26,7 +26,6 @@ User = get_user_model()
 def resolve_community_interactions(
     root, info: Info, pk: strawberry.ID
 ) -> CommunityInteractionsType:
-
     user: User = info.context.request.user
 
     return CommunityInteractionsType(
@@ -53,7 +52,6 @@ def rsolve_toggle_like_community(root, info: Info, pk: strawberry.ID) -> bool:
 
 
 def resolve_report(root, info: Info, input: ReportInput) -> bool:
-
     user: User = info.context.request.user
     community = Community.objects.get(pk=input.pk)
 
@@ -78,7 +76,6 @@ def resolve_community_create(
 
 @strawberry.type
 class Query:
-
     community_interactions: CommunityInteractionsType = strawberry.field(
         resolve_community_interactions, directives=[IsAuthenticated()]
     )
@@ -88,15 +85,14 @@ class Query:
 
 @strawberry.type
 class Mutation:
-
     community_create: CommunityType = strawberry.django.mutations.create(
-        CommunityInput, directives=[IsAuthenticated(), MatchIdentity()]
+        CommunityInput, directives=[MatchIdentity(), IsAuthenticated()]
     )
     community_update: CommunityType = strawberry.django.mutations.update(
-        CommunityPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
+        CommunityPartialInput, directives=[OwnsObjPerm(), IsAuthenticated()]
     )
     community_delete: CommunityType = strawberry.django.mutations.delete(
-        CommunityPartialInput, directives=[IsAuthenticated(), OwnsObjPerm()]
+        CommunityPartialInput, directives=[OwnsObjPerm(), IsAuthenticated()]
     )
 
     report_create = strawberry.mutation(resolve_report, directives=[IsAuthenticated()])

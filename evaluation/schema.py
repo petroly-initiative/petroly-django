@@ -107,8 +107,8 @@ class Mutation:
         EvaluationInput, extensions=[IsAuthenticated()]
     )
     evaluation_update: EvaluationType = strawberry.django.mutations.update(
-        EvaluationPartialInput, extensions=[IsAuthenticated(), OwnsObjPerm()]
+        EvaluationPartialInput, extensions=[OwnsObjPerm(), IsAuthenticated()]
     )
     evaluation_delete: EvaluationType = strawberry.django.mutations.delete(
-        PkInput, extensions=[IsAuthenticated(), OwnsObjPerm()]
+        PkInput, extensions=[OwnsObjPerm(), IsAuthenticated()]
     )
