@@ -42,29 +42,29 @@ Mutation = merge_types(
 schema = JwtSchema(
     query=Query,
     mutation=Mutation,
-    extensions=[
-        # AddValidationRules([NoSchemaIntrospectionCustomRule]),
-        QueryDepthLimiter(max_depth=10),
-        ExtensionRatelimit(
-            type_name=[
-                "me",
-                "search",
-                "instructor",
-                "instructors",
-                "evaluations",
-                "evaluation",
-                "rawData",
-                "register",
-                "refreshToken",
-            ],
-            rate_max=220,
-            rate_seconds=60,
-        ),
-        ExtensionRatelimit(
-            type_name=["register"],
-            rate_max=3,
-            rate_seconds=60 * 10,
-        ),
-        DjangoOptimizerExtension,
-    ],
+    # extensions=[
+    #     # AddValidationRules([NoSchemaIntrospectionCustomRule]),
+    #     QueryDepthLimiter(max_depth=10),
+    #     ExtensionRatelimit(
+    #         type_name=[
+    #             "me",
+    #             "search",
+    #             "instructor",
+    #             "instructors",
+    #             "evaluations",
+    #             "evaluation",
+    #             "rawData",
+    #             "register",
+    #             "refreshToken",
+    #         ],
+    #         rate_max=220,
+    #         rate_seconds=60,
+    #     ),
+    #     ExtensionRatelimit(
+    #         type_name=["register"],
+    #         rate_max=3,
+    #         rate_seconds=60 * 10,
+    #     ),
+    #     DjangoOptimizerExtension,
+    # ],
 )

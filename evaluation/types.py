@@ -162,7 +162,7 @@ class OwnsObjPerm(DjangoPermissionExtension):
     def resolve_for_user(
         self, resolver: Callable, user: UserType, *, info: Info, source: Any
     ):
-        return super().resolve_for_user(resolver, user, info=info, source=source)
+        return resolver()
 
     def check_condition(
         self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
@@ -183,14 +183,14 @@ class NotEvaluated(DjangoPermissionExtension):
     def resolve_for_user(
         self, resolver: Callable, user: UserType, *, info: Info, source: Any
     ):
-        resolver.keywords["data"].user = user.pk  # set the user field to the logged user
+        resolver.keywords[
+            "data"
+        ].user = user.pk  # set the user field to the logged user
         pk = resolver.keywords["data"].instructor  # get instructor `pk`
 
         return Evaluation.objects.filter(
             user=info.context.request.user, instructor__pk=pk
         ).exists()
-
-
 
 
 class MatchIdentity(DjangoPermissionExtension):
