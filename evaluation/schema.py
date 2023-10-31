@@ -106,7 +106,7 @@ class Mutation:
     evaluation_create: EvaluationType = strawberry.django.mutations.create(
         EvaluationInput, extensions=[IsAuthenticated()]
     )
-    evaluation_update: Optional[EvaluationType] = strawberry.django.mutations.update(
+    evaluation_update: EvaluationType = strawberry.django.mutations.update(
         EvaluationPartialInput, extensions=[IsAuthenticated(), OwnsObjPerm()]
     )
     evaluation_delete: EvaluationType = strawberry.django.mutations.delete(
