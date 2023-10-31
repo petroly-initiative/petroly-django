@@ -53,7 +53,7 @@ class Query:
 
         return fetch_data(term, department)
 
-    @strawberry.field(directives=[IsAuthenticated()])
+    @strawberry.field(extensions=[IsAuthenticated()])
     def tracking_list_channels(self, info: Info) -> Optional[ChannelsType]:
         """Get the user's tracking list tracking_list_channels."""
 
@@ -67,7 +67,7 @@ class Query:
 
     subject_list = strawberry.field(resolve_subject_list)
 
-    @strawberry.field(directives=[IsAuthenticated()])
+    @strawberry.field(extensions=[IsAuthenticated()])
     def tracked_courses(self, info: Info) -> Optional[JSON]:
         """get all tracked courses' CRNs by the
         current logged in user.
@@ -136,7 +136,7 @@ class Query:
 class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
 
-    @strawberry.mutation(directives=[IsAuthenticated()])
+    @strawberry.mutation(extensions=[IsAuthenticated()])
     def update_tracking_list_channels(
         self, info: Info, input: PreferencesInput
     ) -> bool:
@@ -221,7 +221,7 @@ class Mutation:
 
         return True
 
-    @strawberry.mutation(directives=[IsAuthenticated()])
+    @strawberry.mutation(extensions=[IsAuthenticated()])
     def update_tracking_list(self, info: Info, courses: List[CourseInput]) -> bool:
         """Add all `courses` to the user's tracking list
         then update each course status from the cache.
