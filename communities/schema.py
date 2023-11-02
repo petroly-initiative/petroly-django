@@ -77,7 +77,7 @@ def resolve_community_create(
 @strawberry.type
 class Query:
     community_interactions: CommunityInteractionsType = strawberry.field(
-        resolve_community_interactions, directives=[IsAuthenticated()]
+        resolve_community_interactions, extensions=[IsAuthenticated()]
     )
     community: CommunityType = strawberry.django.field()
     communities: List[CommunityType] = strawberry.django.field()
@@ -86,20 +86,20 @@ class Query:
 @strawberry.type
 class Mutation:
     community_create: CommunityType = strawberry.django.mutations.create(
-        CommunityInput, directives=[MatchIdentity(), IsAuthenticated()]
+        CommunityInput, extensions=[MatchIdentity(), IsAuthenticated()]
     )
     community_update: CommunityType = strawberry.django.mutations.update(
-        CommunityPartialInput, directives=[OwnsObjPerm(), IsAuthenticated()]
+        CommunityPartialInput, extensions=[OwnsObjPerm(), IsAuthenticated()]
     )
     community_delete: CommunityType = strawberry.django.mutations.delete(
-        CommunityPartialInput, directives=[OwnsObjPerm(), IsAuthenticated()]
+        CommunityPartialInput, extensions=[OwnsObjPerm(), IsAuthenticated()]
     )
 
-    report_create = strawberry.mutation(resolve_report, directives=[IsAuthenticated()])
+    report_create = strawberry.mutation(resolve_report, extensions=[IsAuthenticated()])
 
     toggle_like_community = strawberry.mutation(
         rsolve_toggle_like_community,
-        directives=[IsAuthenticated()],
+        extensions=[IsAuthenticated()],
         description="This will toggle the community like for the logged user",
     )
 
