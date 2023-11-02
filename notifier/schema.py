@@ -137,6 +137,28 @@ class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
 
     @strawberry.mutation(extensions=[IsAuthenticated()])
+    def toggle_register_course(self, info: Info, crn: str) -> bool:
+        """This takes the CRN of a course to add/remove it to/from
+        user's TrackingList."""
+
+        user = info.context.request.user
+        try:
+            course = Course.objects.get(crn=crn)
+
+            if user.tracking_list.register_courses.filter(crn=crn):
+                user.tracking_list.register_courses.remove(course)
+            else:
+                user.tracking_list.register_courses.add(course)
+
+            return True
+
+        except Exception as e:
+            logger.error(
+                "Couldn't toggle register course %s for user %s: %s", crn, user.pk, e
+            )
+            return False
+
+    @strawberry.mutation(extensions=[IsAuthenticated()])
     def update_tracking_list_channels(
         self, info: Info, input: PreferencesInput
     ) -> bool:

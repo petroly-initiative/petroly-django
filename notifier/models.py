@@ -196,6 +196,13 @@ class TrackingList(models.Model):
         related_name="tracked_courses",
         blank=True,
     )
+    register_courses = models.ManyToManyField(
+        Course,
+        verbose_name=_("register courses"),
+        related_name="register_courses",
+        blank=True,
+        default=None,
+    )
     channels = MultiSelectField(
         choices=ChannelEnum.choices,
         default=ChannelEnum.EMAIL,

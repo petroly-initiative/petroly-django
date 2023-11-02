@@ -25,6 +25,7 @@ class TrackingListAdmin(admin.ModelAdmin):
     ]
     filter_horizontal = [
         "courses",
+        "register_courses",
     ]
     search_fields = [
         "user__username",
