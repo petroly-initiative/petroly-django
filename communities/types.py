@@ -83,10 +83,11 @@ class CommunityType:
     def likes_count(self: models.Community, info: Info) -> int:
         return self.likes.count()
 
-    def get_queryset(self, queryset: QuerySet, filters=None, **kw) -> QuerySet:
+    @classmethod
+    def get_queryset(cls, queryset: QuerySet, info: Info, **kwargs):
         # descending order for number of likes
         return (
-            models.Community.objects.filter(archived=False)
+            queryset.filter(archived=False)
             .annotate(num_likes=Count("likes"))
             .order_by("-num_likes")
         )

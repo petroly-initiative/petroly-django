@@ -157,21 +157,27 @@ class OwnsObjPerm(DjangoPermissionExtension):
     This is to check users can only modify theirs.
     """
 
-    message: Private[str] = "You don't have such evaluation."
+    DEFAULT_ERROR_MESSAGE = "You don't own this Profile."
 
     def resolve_for_user(
         self, resolver: Callable, user: UserType, *, info: Info, source: Any
     ):
+        # another way to access input data
+        # info.selected_fields[0].arguments['data']['pk']
+
+        pk = resolver.keywords["data"].pk
+        if not pk:
+            raise ValueError("The field `p` must be provided.")
+
+        try:
+            pk = int(pk)
+        except:
+            raise ValueError("The field `pk` is not valid.")
+
+        if not Evaluation.objects.filter(pk=pk, user=user).exists():
+            raise DjangoNoPermission
+
         return resolver()
-
-    def check_condition(
-        self, root: Any, info: GraphQLResolveInfo, user: UserType, **kwargs
-    ) -> bool:
-        pk = kwargs["input"]["pk"]  # get evaluation's `pk`
-        if Evaluation.objects.filter(pk=pk, user=user).exists():
-            return True
-
-        return False
 
 
 # This is not used,

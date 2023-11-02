@@ -1,4 +1,4 @@
-from typing import Any, Callable, ClassVar
+from typing import Any, Callable, List
 
 import strawberry
 import strawberry.django
@@ -28,8 +28,8 @@ class UserType_:
     date_joined: auto
     profile: "ProfileType"
 
-    owned_communities: list[communities.types.CommunityType]
-    evaluation_set: list[evaluation.types.EvaluationType]
+    owned_communities: List[communities.types.CommunityType]
+    evaluation_set: List[evaluation.types.EvaluationType]
 
     @strawberry.field
     def owned_communities_count(self) -> int:
