@@ -35,7 +35,7 @@ black = "^23.9.1"
 mypy = "^1.4"
 pylint-django = "^2.5.3"
 flake8 = "^6.1.0"
-django-stubs = "^4.2.3"
+django-stubs = "^4.2.6"
 
 [build-system]
 requires = ["poetry-core"]
