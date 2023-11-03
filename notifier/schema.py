@@ -4,6 +4,7 @@ of the `notifier` app.
 """
 
 import hmac
+import json
 import hashlib
 import dataclasses
 from typing import List, Optional
@@ -135,6 +136,15 @@ class Query:
 @strawberry.type
 class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
+
+    @strawberry.mutation(extensions=[IsAuthenticated()])
+    def save_banner_session(self, info:Info, cookies: str) -> str:
+        from pprint import pprint
+
+        pprint(json.loads(cookies))
+        # TODO
+
+        return "SUCCESS"
 
     @strawberry.mutation(extensions=[IsAuthenticated()])
     def toggle_register_course(self, info: Info, crn: str) -> bool:
