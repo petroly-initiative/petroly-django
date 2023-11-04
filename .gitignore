@@ -267,3 +267,4 @@ proj/media
 # End of https://www.toptal.com/developers/gitignore/api/vscode,python,macos,osx,django
 
 banner_api.py
+user_log.json

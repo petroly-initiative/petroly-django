@@ -90,6 +90,7 @@ class Query:
         for course in tracking_list.courses.all():
             for raw_course in fetch_data(course.term, course.department):
                 if course.crn == raw_course["courseReferenceNumber"]:
+                    raw_course["userRegister"] = tracking_list.register_courses.contains(course)
                     result.append(raw_course)
 
         return result
