@@ -8,6 +8,7 @@ import json
 import hashlib
 import dataclasses
 from typing import List, Optional
+from django.utils.timezone import now
 from graphql.error import GraphQLError
 
 import strawberry
@@ -15,7 +16,7 @@ import strawberry.django
 from django.conf import settings
 from strawberry.types import Info
 from strawberry.scalars import JSON
-from django_q.tasks import async_task, logger
+from django_q.tasks import async_task, logger, schedule
 from strawberry_django.permissions import IsAuthenticated
 
 from telegram_bot.models import TelegramProfile
@@ -23,7 +24,7 @@ from telegram_bot.utils import escape_md
 
 from data import SubjectEnum
 from .utils import fetch_data, get_course_info, instructor_info_from_name
-from .models import Term, TrackingList, Course, ChannelEnum
+from .models import Term, TrackingList, Course, ChannelEnum, Banner
 from .types import CourseInput, TermType, ChannelsType, PreferencesInput
 
 
@@ -138,13 +139,28 @@ class Mutation:
     """Main entry of all Mutation types of `notifier` app."""
 
     @strawberry.mutation(extensions=[IsAuthenticated()])
-    def save_banner_session(self, info:Info, cookies: str) -> str:
-        from pprint import pprint
+    def save_banner_session(self, info: Info, cookies: str) -> bool:
+        user = info.context.request.user
+        try:
+            obj, _ = Banner.objects.get_or_create(user=user)
+            s = schedule(
+                "",
+                repeats=-1,
+                minutes=13,
+                next_run=now(),
+                schedule_type="M",
+                name=f"sending-success-connection-{user.pk}",
+            )
+            obj.cookies = json.loads(cookies)
+            obj.scheduler = s
+            obj.save()
+            print(json.loads(cookies))
 
-        pprint(json.loads(cookies))
-        # TODO
+        except Exception as e:
+            logger.error("Error in saving Banner for user %s: %s", user.pk, e)
+            return False
 
-        return "SUCCESS"
+        return True
 
     @strawberry.mutation(extensions=[IsAuthenticated()])
     def toggle_register_course(self, info: Info, crn: str) -> bool:

@@ -26,6 +26,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 from django_choices_field import TextChoicesField
 from django.utils.timezone import timedelta, now
+from django_q.models import Schedule
 from django_q.tasks import async_task
 from multiselectfield import MultiSelectField
 
@@ -177,13 +178,31 @@ class ChannelEnum(models.TextChoices):
     TELEGRAM = "telegram", _("telegram")
 
 
+class Banner(models.Model):
+    """A model to stores user's Banner session cookies
+    and last check to the session health, with djangoQ scheduler."""
+
+    class Meta:
+        verbose_name = _("banner")
+        verbose_name_plural = _("banners")
+
+    created_on = models.DateTimeField(_("created on"), auto_now_add=True)
+    updated_on = models.DateTimeField(_("updated on"), auto_now=True)
+
+    cookies = models.JSONField(("cookies"), None)
+    user = models.OneToOneField(User, verbose_name=_("user"), on_delete=models.CASCADE)
+    scheduler = models.OneToOneField(
+        Schedule, null=True, blank=True, on_delete=models.SET_NULL
+    )
+
+
 class TrackingList(models.Model):
     """
     It assigns each users to what `Course` they are willing to track.
     pk: OneToOneField `user`.
     """
 
-    updated_on = models.DateTimeField(_("updated on"), auto_now_add=True)
+    updated_on = models.DateTimeField(_("updated on"), auto_now=True)
     user = models.OneToOneField(
         User,
         verbose_name=_("user"),
