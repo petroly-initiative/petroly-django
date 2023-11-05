@@ -9,6 +9,7 @@ import hashlib
 import dataclasses
 from typing import List, Optional
 from django.utils.timezone import now
+from django_q.models import Schedule
 from graphql.error import GraphQLError
 
 import strawberry
@@ -90,7 +91,9 @@ class Query:
         for course in tracking_list.courses.all():
             for raw_course in fetch_data(course.term, course.department):
                 if course.crn == raw_course["courseReferenceNumber"]:
-                    raw_course["userRegister"] = tracking_list.register_courses.contains(course)
+                    raw_course[
+                        "userRegister"
+                    ] = tracking_list.register_courses.contains(course)
                     result.append(raw_course)
 
         return result
@@ -144,18 +147,21 @@ class Mutation:
         user = info.context.request.user
         try:
             obj, _ = Banner.objects.get_or_create(user=user)
+            if obj.scheduler:
+                obj.scheduler.delete()
+
             s = schedule(
-                "",
+                "notifier.utils.check_session",
+                user.pk,
                 repeats=-1,
-                minutes=13,
+                minutes=1,
                 next_run=now(),
-                schedule_type="M",
-                name=f"sending-success-connection-{user.pk}",
+                schedule_type=Schedule.MINUTES,
+                name=f"save-cookies-{user.pk}",
             )
             obj.cookies = json.loads(cookies)
             obj.scheduler = s
             obj.save()
-            print(json.loads(cookies))
 
         except Exception as e:
             logger.error("Error in saving Banner for user %s: %s", user.pk, e)

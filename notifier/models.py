@@ -189,7 +189,7 @@ class Banner(models.Model):
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("updated on"), auto_now=True)
 
-    cookies = models.JSONField(("cookies"), None)
+    cookies = models.JSONField(("cookies"), null=True, default=None)
     user = models.OneToOneField(User, verbose_name=_("user"), on_delete=models.CASCADE)
     scheduler = models.OneToOneField(
         Schedule, null=True, blank=True, on_delete=models.SET_NULL

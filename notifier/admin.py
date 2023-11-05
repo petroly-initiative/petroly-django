@@ -9,6 +9,7 @@ admin.site.register(
     [
         models.NotificationEvent,
         models.Status,
+        models.Banner,
     ]
 )
 

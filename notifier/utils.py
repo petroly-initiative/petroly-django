@@ -11,14 +11,13 @@ import logging
 from typing import List, Dict, Tuple
 
 import requests as rq
-from telegram import error
 from django.db.models import Q
 from django.conf import settings
 from django.template import loader
 from django.utils.timezone import now
 from django.core.mail import send_mail
-from django.contrib.auth import get_user_model
 from django_q.tasks import async_task
+from django.contrib.auth import get_user_model
 
 from telegram_bot import messages
 from telegram_bot import utils as bot_utils
@@ -46,13 +45,13 @@ User = get_user_model()
 ENC_KEY = os.environ.get("ENC_KEY")
 
 if ENC_KEY:
-    # with open('notifier/banner_api.py', 'r') as file:
-    #     file_data = file.read().encode()
-    #     f = Fernet(os.environ.get('ENC_KEY').encode())
-    #     dec_file = f.encrypt(file_data)
+    with open('notifier/banner_api.py', 'r') as file:
+        file_data = file.read().encode()
+        f = Fernet(os.environ.get('ENC_KEY').encode())
+        dec_file = f.encrypt(file_data)
 
-    # with open('notifier/banner_api.py.bin', 'wb') as file:
-    #     file.write(dec_file)
+    with open('notifier/banner_api.py.bin', 'wb') as file:
+        file.write(dec_file)
 
     # decrypt the python code into a module
     with open("notifier/banner_api.py.bin", "rb") as file:
@@ -62,6 +61,20 @@ if ENC_KEY:
 
         banner_api = imp.new_module(code)
         exec(code, banner_api.__dict__)
+
+
+def check_session(user_pk):
+    """This uses user's Banner session to
+    check for its health."""
+    user = User.objects.get(pk=user_pk)
+    first = user.banner.scheduler.repeats == -2
+
+    if user.banner.cookies:
+        if banner_api.check_banner(user.banner.cookies, user.banner, first):
+            return
+
+    # TODO notify user about this change
+    user.banner.scheduler.delete()
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
