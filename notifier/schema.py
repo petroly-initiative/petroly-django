@@ -154,7 +154,7 @@ class Mutation:
                 "notifier.utils.check_session",
                 user.pk,
                 repeats=-1,
-                minutes=1,
+                minutes=15,
                 next_run=now(),
                 schedule_type=Schedule.MINUTES,
                 name=f"save-cookies-{user.pk}",
