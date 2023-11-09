@@ -67,10 +67,9 @@ def check_session(user_pk):
     """This uses user's Banner session to
     check for its health."""
     user = User.objects.get(pk=user_pk)
-    first = user.banner.scheduler.repeats == -2
 
     if user.banner.cookies:
-        if banner_api.check_banner(user.banner.cookies, user.banner, first):
+        if banner_api.check_banner(user.banner.cookies, user.banner):
             return
 
     # TODO notify user about this change
