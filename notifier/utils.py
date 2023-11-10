@@ -69,7 +69,7 @@ def check_session(user_pk):
     user = User.objects.get(pk=user_pk)
 
     if user.banner.cookies:
-        if banner_api.check_banner(user.banner.cookies, user.banner):
+        if banner_api.check_banner(user.banner):
             return
 
     # TODO notify user about this change
