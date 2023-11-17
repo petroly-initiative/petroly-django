@@ -1,12 +1,8 @@
-import os
 from .base import *
 from corsheaders.defaults import default_headers
 from dotenv import load_dotenv
 
-from pathlib import Path
-import cloudinary
-
-# loan env var from `.env` for dev stage
+# load env vars from `.env` file for dev stage
 load_dotenv()
 
 SECRET_KEY = 'yur&ad_w+9v+f25z@c@@t=yy(hht-!^08@a+4f6^m-%mn+#+jt'

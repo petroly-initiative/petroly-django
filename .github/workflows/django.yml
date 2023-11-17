@@ -34,4 +34,4 @@ jobs:
       run:  poetry install
 
     - name: Run Tests
-      run: poetry run python manage.py test --settings=petroly.settings.dev --no-input  --exclude-tag=require_secretes  account
+      run: poetry run python manage.py test --settings=petroly.settings.dev --no-input  --exclude-tag=require_secrets account

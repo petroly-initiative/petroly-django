@@ -629,7 +629,7 @@ class AccountGraphQLTestCase(TestCase):
         self.assertEqual(data["language"], "ar-SA")
         self.assertEqual(data["theme"], "dark")
 
-    @tag("require_secretes")
+    @tag("require_secrets")
     def test_profile_pic(self):
         profilePicUpdate = """
         mutation File($file: Upload!){
