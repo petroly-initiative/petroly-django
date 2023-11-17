@@ -55,14 +55,6 @@ CORS_ALLOWED_ORIGINS = [
     "https://petroly.co",
 ]
 
-
-# Clouddinary: for media
-cloudinary.config(
-    cloud_name="petroly-initiative",
-    api_key="777263134962661",
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET", ""),
-)
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 # Check if DATABASE_URL is provided

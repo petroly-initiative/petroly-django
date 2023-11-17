@@ -1,23 +1,19 @@
 import os
 from .base import *
 from corsheaders.defaults import default_headers
+from dotenv import load_dotenv
 
 from pathlib import Path
 import cloudinary
 
+# loan env var from `.env` for dev stage
+load_dotenv()
 
 SECRET_KEY = 'yur&ad_w+9v+f25z@c@@t=yy(hht-!^08@a+4f6^m-%mn+#+jt'
 
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
-
-cloudinary.config(
-    cloud_name = 'petroly-initiative',
-    api_key = '777263134962661',
-    api_secret = os.environ.get("CLOUDINARY_API_SECRET")
-)
 
 INTERNAL_IPS = ("127.0.0.1", "172.17.0.1", 'localhost')
 
