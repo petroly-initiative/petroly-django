@@ -65,9 +65,6 @@ def file_graphql_query(
     }
 
     data.update(files)
-    if headers:
-        resp = client.post(graphql_url, data, **headers)
-    else:
-        resp = client.post(graphql_url, data)
+    resp = client.post(graphql_url, data, headers=headers)
 
     return resp
