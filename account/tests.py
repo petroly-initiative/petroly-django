@@ -21,13 +21,14 @@ import django.contrib.auth.views as auth_views
 from cloudinary.uploader import unsigned_upload
 from strawberry_django.test.client import Response
 from django.core.exceptions import ObjectDoesNotExist
-from gqlauth.jwt.types_ import ObtainJSONWebTokenType
+from gqlauth.jwt.types_ import ObtainJSONWebTokenType, TokenType
 from django.test import TestCase, TransactionTestCase, Client, tag
 
 from data import DepartmentEnum, years
 from . import views
 from .models import Profile
 from .test_utils import file_graphql_query
+
 
 class UserTestCase(TransactionTestCase):
     def setUp(self) -> None:
@@ -66,7 +67,7 @@ class ProfileTestCase(UserTestCase):
         self.assertEqual(profile.major, None)
         self.assertEqual(profile.year, None)
 
-    @tag('require_secrets')
+    @tag("require_secrets")
     def test_crud_profile(self):
         # Note User:Profile is 1:1 relationship
         # user cannot create profile without a User object
@@ -632,12 +633,22 @@ class AccountGraphQLTestCase(TestCase):
     @tag("require_secrets")
     def test_profile_pic(self):
         profilePicUpdate = """
-        mutation File($file: Upload!){
-            profilePicUpdate(file: $file){
-                success
-                profilePic
-            }
-        }
+mutation File($file: Upload!) {
+  profilePicUpdate(file: $file) {
+    ... on ProfilePicUpdateType {
+      success
+      profilePic
+    }
+    ... on OperationInfo {
+      messages {
+        kind
+        message
+        field
+        code
+      }
+    }
+  }
+}
         """
 
         # without login in
@@ -650,19 +661,24 @@ class AccountGraphQLTestCase(TestCase):
             )
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["profilePicUpdate"]
-        self.assertIsNone(data)
+        self.assertIsNotNone(data)
         self.assertEqual(res.wsgi_request.content_type, "multipart/form-data")
+        self.assertEqual(data["messages"][0]["kind"], "PERMISSION")
+        self.assertEqual(data["messages"][0]["field"], "profilePicUpdate")
+        self.assertIsNone(data["messages"][0]["code"])
 
         # login in the user
-        self.client.force_login(self.user, settings.AUTHENTICATION_BACKENDS[0])
+        token: TokenType = TokenType.from_user(self.user)
         with open("static/img/blank_profile.png", "rb") as file:
             res = file_graphql_query(
                 query=profilePicUpdate,
                 client=self.client,
                 files={"file": file},
                 graphql_url=self.endpoint,
+                headers={"AUTHORIZATION": f"JWT {token.token}"},
             )
         self.assertEqual(res.status_code, 200)
         data = json.loads(res.content)["data"]["profilePicUpdate"]
         self.assertEqual(res.wsgi_request.content_type, "multipart/form-data")
         self.assertTrue(data["success"])
+        self.assertEqual(data["profilePic"], "profile_pics/testserver/long-testing")
