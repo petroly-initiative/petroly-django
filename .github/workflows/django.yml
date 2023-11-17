@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  ENC_KEY: ${{ secrets.ENC_KEY}}
-  CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL}}
 
 jobs:
   build:
@@ -33,6 +30,10 @@ jobs:
 
     - name: Install Dependencies
       run:  poetry install
+
+    env:
+      ENC_KEY: ${{ secrets.ENC_KEY}}
+      CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL}}
 
     - name: Run Tests
       run: poetry run python manage.py test --settings=petroly.settings.dev --no-input account
