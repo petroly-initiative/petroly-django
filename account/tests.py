@@ -28,7 +28,8 @@ from data import DepartmentEnum, years
 from . import views
 from .models import Profile
 from .test_utils import file_graphql_query
-
+import os
+print('cloudinary' in os.environ.get('CLOUDINARY_URL'))
 
 class UserTestCase(TransactionTestCase):
     def setUp(self) -> None:
