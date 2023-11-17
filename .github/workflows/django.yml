@@ -8,7 +8,7 @@ on:
 
 env:
   ENC_KEY: ${{ secrets.ENC_KEY}}
-  CLOUDINARY_URL: ${{ secrets.ENC_KEY}}
+  CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL}}
 
 jobs:
   build:

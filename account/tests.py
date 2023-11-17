@@ -28,8 +28,6 @@ from data import DepartmentEnum, years
 from . import views
 from .models import Profile
 from .test_utils import file_graphql_query
-import os
-print('cloudinary' in os.environ.get('CLOUDINARY_URL'))
 
 class UserTestCase(TransactionTestCase):
     def setUp(self) -> None:
@@ -68,6 +66,7 @@ class ProfileTestCase(UserTestCase):
         self.assertEqual(profile.major, None)
         self.assertEqual(profile.year, None)
 
+    @tag('require_secrets')
     def test_crud_profile(self):
         # Note User:Profile is 1:1 relationship
         # user cannot create profile without a User object
