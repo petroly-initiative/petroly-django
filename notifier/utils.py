@@ -3,77 +3,92 @@ This module is to define the fetching, filtering, and processing the data
 from the KFUPM API
 """
 
-import os
-import sys
+import html
 import imp
 import json
 import logging
-from typing import List, Dict, Tuple
-
+import os
+import sys
 import requests as rq
-from django.db.models import Q
+from typing import Dict, List, Tuple
+
+from cryptography.fernet import Fernet
 from django.conf import settings
+from django.core.mail import send_mail
+from django.db.models import Q
 from django.template import loader
 from django.utils.timezone import now
-from django.core.mail import send_mail
 from django_q.tasks import async_task
+from telegram.constants import ParseMode
 from django.contrib.auth import get_user_model
 
-from telegram_bot import messages
-from telegram_bot import utils as bot_utils
+from data import DepartmentEnum, SubjectEnum
 from evaluation.models import Instructor
 from evaluation.schema import crete_global_id
 from evaluation.types import InstructorNode
-from cryptography.fernet import Fernet
-
 from notifier.models import Cache
-from data import DepartmentEnum, SubjectEnum
+from telegram_bot import messages
+from telegram_bot import utils as bot_utils
 
+from .models import Banner, Cache, ChannelEnum, Course, Status, StatusEnum, TrackingList
 
-# from . import banner_api
-from .models import (
-    TrackingList,
-    Course,
-    ChannelEnum,
-    Cache,
-    Status,
-    StatusEnum,
-)
-
-logger = logging.getLogger(__name__)
 User = get_user_model()
-ENC_KEY = os.environ.get("ENC_KEY")
+logger = logging.getLogger(__name__)
+assert (ENC_KEY := os.environ.get("ENC_KEY")), "You must provide `ENC_KEY` env var."
 
-if ENC_KEY:
-    # with open('notifier/banner_api.py', 'r') as file:
-    #     file_data = file.read().encode()
-    #     f = Fernet(os.environ.get('ENC_KEY').encode())
-    #     dec_file = f.encrypt(file_data)
-    #
-    # with open('notifier/banner_api.py.bin', 'wb') as file:
-    #     file.write(dec_file)
+# with open("notifier/banner_api.py", "r") as file:
+#     file_bin = file.read().encode()
+#     f = Fernet(ENC_KEY.encode())
+#     enc_file = f.encrypt(file_bin)
+#
+# with open("notifier/banner_api.py.bin", "wb") as file:
+#     file.write(enc_file)
 
-    # decrypt the python code into a module
-    with open("notifier/banner_api.py.bin", "rb") as file:
-        f = Fernet(ENC_KEY.encode())
-        code = f.decrypt(file.read()).decode()
-        import imp
+# decrypt the python code into a module
+with open("notifier/banner_api.py.bin", "rb") as file:
+    f = Fernet(ENC_KEY.encode())
+    code = f.decrypt(file.read()).decode()
+    import imp
 
-        banner_api = imp.new_module(code)
-        exec(code, banner_api.__dict__)
+    banner_api = imp.new_module(code)
+    exec(code, banner_api.__dict__)
+
+
+def register_for_user(user_pk, term: str, crns: List):
+    banner, created = Banner.objects.get_or_create(user__pk=user_pk)
+
+    if created or not banner.cookies:
+        bot_utils.send_telegram_message(
+            banner.user.telegram_profile.id, r"You did not clone your Banner session"
+        )
+        return
+
+    res = banner_api.register(banner, term, crns)
+    print(res)
+    if res is not None:
+        bot_utils.send_telegram_message(
+            banner.user.telegram_profile.id,
+            "We tried to register your courses here is the result\n\n"
+            f"<pre>{html.escape(res)}</pre>",
+            ParseMode.HTML,
+        )
+    else:
+        bot_utils.send_telegram_message(
+            banner.user.telegram_profile.id, r"We could not register your courses\."
+        )
 
 
 def check_session(user_pk):
     """This uses user's Banner session to
     check for its health."""
-    user = User.objects.get(pk=user_pk)
+    banner = Banner.objects.get(user__pk=user_pk)
 
-    if user.banner.cookies:
-        if banner_api.check_banner(user.banner):
+    if banner.cookies:
+        if banner_api.check_banner(banner):
             return
 
     # TODO notify user about this change
-    user.banner.scheduler.delete()
+    banner.scheduler.delete()
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
@@ -86,7 +101,7 @@ def fetch_data(term: str, department: str) -> List[Dict]:
         request_data(term, department)
         obj = Cache.objects.get(term=term, department=department)
 
-    return obj.get_data()
+    return obj.get_data()  # type: ignore
 
 
 def request_data(term, department) -> None:
@@ -219,14 +234,15 @@ def check_changes(course: Course) -> Tuple:
             "It's deleted."
         )
 
+    # renaming keys for back compatibility
     info = {
         "available_seats": course_info["seatsAvailable"],
         "waiting_list_count": course_info["waitAvailable"],
     }
     increased = (
-        info["available_seats"] and info["available_seats"] > course.available_seats
+        info["available_seats"] > 0 and info["available_seats"] > course.available_seats
     ) or (
-        info["waiting_list_count"]
+        info["waiting_list_count"] > 0
         and info["waiting_list_count"] > course.waiting_list_count
     )
 
@@ -272,8 +288,9 @@ def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
 def send_notification(user_pk: int, info: str) -> None:
     """Send a notification for every channel in `TrackingList.channels`"""
 
-    user: User = User.objects.get(pk=user_pk)
-    channels = user.tracking_list.channels
+    tracking_list = TrackingList.objects.get(user__pk=user_pk)
+    user = tracking_list.user
+    channels = tracking_list.channels
     # deserialize the dict back
     info_dict: List[Dict] = eval(info)
 
@@ -316,6 +333,24 @@ def send_notification(user_pk: int, info: str) -> None:
             logger.info("Changes email was sent: %s", res)
         except Exception as exc:
             logger.error("Couldn't send email: %s", exc)
+
+    # After sending notifications, let's try to register (if enabled)
+    crns = []
+    register_courses = tracking_list.register_courses.all()
+    for c in info_dict:
+        if c["course"] in register_courses:
+            crns.append(c["course"].crn)
+
+    # TODO there might be different terms
+    if crns:
+        async_task(
+            "notifier.utils.register_for_user",
+            user_pk,
+            "202320",
+            ",".join(crns),
+            task_name=f"register-{user_pk}",
+            group="register_crns",
+        )
 
 
 def formatter_md(courses: List[Course]) -> str:

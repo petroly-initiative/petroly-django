@@ -42,11 +42,12 @@ def escape_md(txt) -> str:
 
 @sync_to_async
 def get_user(user_id: int):
-
     return TelegramProfile.objects.get(id=user_id).user
+
 
 async def has_tracking_list(user: User) -> bool:
     return TrackingList.objects.filter(user=user).aexists()
+
 
 async def user_from_telegram(user_id: int, update: Update) -> User:
     try:
@@ -79,7 +80,9 @@ def format_courses(courses: List[Course]):
 
 
 @async_to_sync
-async def send_telegram_message(chat_id: int, msg: str) -> bool:
+async def send_telegram_message(
+    chat_id: int, msg: str, parse_mode=ParseMode.MARKDOWN_V2
+) -> bool:
     """Useful to send one-time message.
     To make this method as sync
 
@@ -91,11 +94,7 @@ async def send_telegram_message(chat_id: int, msg: str) -> bool:
     """
     async with Application.builder().token(settings.TELEGRAM_TOKEN).build() as app:
         try:
-            await app.bot.send_message(
-                chat_id=chat_id,
-                text=msg,
-                parse_mode=ParseMode.MARKDOWN_V2,
-            )
+            await app.bot.send_message(chat_id=chat_id, text=msg, parse_mode=parse_mode)
             return True
 
         except error.Forbidden as exc:
@@ -117,7 +116,6 @@ def mass_send_telegram_message(chat_ids: List[int], message: str) -> None:
 
         except Exception as exc:
             logger.error("Couldn't send to Telegram: %s - %s", chat_id, exc)
-
 
 
 @async_to_sync
@@ -409,7 +407,6 @@ def construct_reply_callback_grid(
             )
     else:
         for i in range(int(len(input_list) / row_length)):
-
             result.append(
                 [
                     InlineKeyboardButton(text=el, callback_data=el)

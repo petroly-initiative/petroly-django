@@ -297,6 +297,7 @@ class Mutation:
             )
 
         try:
+            # TODO turn `register` off for each removed course
             # get all `Course` objects or create them
             new_list = []
             for course in courses:
