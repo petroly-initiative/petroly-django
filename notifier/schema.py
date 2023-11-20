@@ -291,10 +291,16 @@ class Mutation:
         user = info.context.request.user
         tracking_list, _ = TrackingList.objects.get_or_create(user=user)
 
-        if len(courses) > 30:
-            raise GraphQLError(
-                "Sorry you can't track more than 30 sections, consider the Premium plan."
-            )
+        if user.profile.premium:
+            if len(courses) > 30:
+                raise GraphQLError(
+                    "Sorry you can't track more than 5 sections, consider the Premium plan."
+                )
+        else:
+            if len(courses) > 5:
+                raise GraphQLError(
+                    "Sorry you can't track more than 5 sections, consider the Premium plan."
+                )
 
         try:
             # TODO turn `register` off for each removed course
@@ -310,7 +316,7 @@ class Mutation:
 
                 # always update the status from our cache
                 # This will guarantee that the course status is to date
-                # before it's being tracked
+                # before it's being tracked avoiding false notification
                 course_info = get_course_info(course)
                 obj.available_seats = course_info["seatsAvailable"]
                 obj.waiting_list_count = course_info["waitAvailable"]

@@ -37,6 +37,7 @@ class Profile(models.Model):
     year = models.CharField(blank=True, null=True, max_length=25, choices=years)
     language = models.CharField(_("language"), max_length=10, default="en-US")
     theme = models.CharField(_("theme"), max_length=10, default="light")
+    premium = models.BooleanField(_("premium"), default=False)
 
     # Some views need this to redirect to a url
     def get_absolute_url(self) -> str:
