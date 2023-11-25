@@ -57,8 +57,11 @@ class UserAdminCostom(UserAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-
     list_display = ["user", "major", "year"]
+    search_fields = [
+        "user__username",
+        "user__email",
+    ]
 
 
 @admin.register(UserLog)
