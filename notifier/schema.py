@@ -193,21 +193,21 @@ class Mutation:
 
     @strawberry.mutation(extensions=[IsAuthenticated()])
     def update_tracking_list_channels(
-        self, info: Info, input: PreferencesInput
+        self, info: Info, data: PreferencesInput
     ) -> bool:
         """To update user's tracking list preferences.
         This also is responsible for creating TrackingList for
         first time user and `TelegramProfile`"""
 
         # we don't support notifications on email
-        if input.channels.EMAIL:
+        if data.channels.EMAIL:
             raise ValueError(
                 "We don't support sending notification through email anymore."
             )
 
         user = info.context.request.user
         tracking_list, cerated = TrackingList.objects.get_or_create(user=user)
-        channels = dataclasses.asdict(input.channels)
+        channels = dataclasses.asdict(data.channels)
 
         # loop through provided channels, add them to the user's tracking list
         tracking_list.channels = set()
@@ -216,11 +216,11 @@ class Mutation:
                 tracking_list.channels.add(ChannelEnum[channel])
 
         # ! check for the hashing and return false to the caller if the hashing was incorrect
-        if input.channels.TELEGRAM:
-            if input.telegram_id and input.dataCheckString:
+        if data.channels.TELEGRAM:
+            if data.telegram_id and data.dataCheckString:
                 # calculate the hash from check string
                 message = (
-                    input.dataCheckString.encode("utf-8")
+                    data.dataCheckString.encode("utf-8")
                     .decode("unicode-escape")
                     .encode("ISO-8859-1")
                 )
@@ -232,15 +232,15 @@ class Mutation:
                     digestmod=hashlib.sha256,
                 ).hexdigest()
 
-                if check_hash == input.hash:
+                if check_hash == data.hash:
                     # if the hash match
                     # try to get or create a `TelegramProfile` obj
                     try:
-                        TelegramProfile.objects.get(id=int(input.telegram_id))
+                        TelegramProfile.objects.get(id=int(data.telegram_id))
 
                     except TelegramProfile.DoesNotExist:
                         TelegramProfile.objects.create(
-                            id=int(input.telegram_id),
+                            id=int(data.telegram_id),
                             user=user,
                         )
 
@@ -250,7 +250,7 @@ class Mutation:
                         "telegram_bot.utils.send_telegram_message",
                         task_name=f"sending-success-connection-{user.pk}",
                         group="telegram_connection",
-                        chat_id=int(input.telegram_id),
+                        chat_id=int(data.telegram_id),
                         msg=f"Hey {escape_md(user.username)}, "
                         "we connected your telegram with Petroly \\!",
                     )
@@ -262,8 +262,8 @@ class Mutation:
                 logger.warn(
                     "Issue in setting Telegram ID for user %s: %s %s",
                     user.pk,
-                    input.telegram_id,
-                    input.dataCheckString,
+                    data.telegram_id,
+                    data.dataCheckString,
                 )
                 return False
 
@@ -271,7 +271,7 @@ class Mutation:
         logger.warn(
             "Request to update channels but nothing changed for user %s: %s",
             user.pk,
-            input,
+            data,
         )
 
         return True
