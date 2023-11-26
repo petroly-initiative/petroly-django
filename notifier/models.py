@@ -191,9 +191,33 @@ class Banner(models.Model):
 
     cookies = models.JSONField(("cookies"), null=True, default=None)
     user = models.OneToOneField(User, verbose_name=_("user"), on_delete=models.CASCADE)
+    active = models.BooleanField(_("active"), default=False)
     scheduler = models.OneToOneField(
         Schedule, null=True, blank=True, on_delete=models.SET_NULL
     )
+
+    def __str__(self) -> str:
+        return str(self.user)
+
+
+class BannerEvent(models.Model):
+    """A model to records any event for register thru Banner."""
+
+    class Meta:
+        verbose_name = _("banner event")
+        verbose_name_plural = _("banner events")
+
+    created_on = models.DateTimeField(_("created on"), auto_now_add=True)
+
+    result = models.TextField(_("result"), max_length=1000)
+    crns = models.TextField(_("crns"), max_length=100)
+    term = models.IntegerField(_("term"))
+    banner = models.ForeignKey(
+        Banner, verbose_name=_("banner"), on_delete=models.CASCADE
+    )
+
+    def __str__(self) -> str:
+        return str(self.banner)
 
 
 class TrackingList(models.Model):

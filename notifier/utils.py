@@ -30,7 +30,16 @@ from notifier.models import Cache
 from telegram_bot import messages
 from telegram_bot import utils as bot_utils
 
-from .models import Banner, Cache, ChannelEnum, Course, Status, StatusEnum, TrackingList
+from .models import (
+    Banner,
+    BannerEvent,
+    Cache,
+    ChannelEnum,
+    Course,
+    Status,
+    StatusEnum,
+    TrackingList,
+)
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -65,6 +74,8 @@ def register_for_user(user_pk, term: str, crns: List):
 
     res = banner_api.register(banner, term, crns)
     print(res)
+    BannerEvent.objects.create(banner=banner, crns=crns, term=term, reslut=res)
+
     if res is not None:
         bot_utils.send_telegram_message(
             banner.user.telegram_profile.id,
@@ -342,7 +353,8 @@ def send_notification(user_pk: int, info: str) -> None:
             crns.append(c["course"].crn)
 
     # TODO there might be different terms
-    if crns:
+    reg_obj, _ = Status.objects.get_or_create(key="register")
+    if crns and reg_obj.status == StatusEnum.UP:
         async_task(
             "notifier.utils.register_for_user",
             user_pk,
