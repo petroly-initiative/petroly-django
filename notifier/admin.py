@@ -5,14 +5,26 @@ Customization of the admin site for `notifier` app.
 from django.contrib import admin
 from . import models
 
-admin.site.register(
-    [
-        models.NotificationEvent,
-        models.Status,
-        models.Banner,
-        models.BannerEvent
+admin.site.register([models.NotificationEvent, models.Status, models.BannerEvent])
+
+
+def repeats(obj: models.Banner) -> str:
+    return abs(obj.scheduler.repeats) - 1
+
+
+@admin.register(models.Banner)
+class BannerAdmin(admin.ModelAdmin):
+    """
+    Custom admin model site for `Banner` model.
+    """
+
+    list_display = ["id", "user", "active", repeats]
+    list_filter = [
+        "active",
     ]
-)
+    search_fields = [
+        "user__username",
+    ]
 
 
 @admin.register(models.TrackingList)
