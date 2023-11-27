@@ -9,7 +9,10 @@ admin.site.register([models.NotificationEvent, models.Status, models.BannerEvent
 
 
 def repeats(obj: models.Banner) -> str:
-    return abs(obj.scheduler.repeats) - 1
+    if obj.scheduler:
+        return abs(obj.scheduler.repeats) - 1
+    else:
+        return "0"
 
 
 @admin.register(models.Banner)

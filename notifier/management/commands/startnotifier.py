@@ -147,6 +147,7 @@ class Command(BaseCommand):
                 )
 
                 t_start = time.perf_counter()
+                # TODO if premium users exist, schedule the rest
                 for tracker_pk, info in courses_by_tracker.items():
                     async_task(
                         "notifier.utils.send_notification",
