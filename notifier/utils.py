@@ -96,10 +96,14 @@ def check_session(user_pk):
 
     if banner.cookies:
         if banner_api.check_banner(banner):
-            return
+            banner.active = True
 
-    # TODO notify user about this change
-    banner.scheduler.delete()
+        else:
+            # TODO notify user about this change
+            banner.active = False
+            banner.scheduler.delete()
+
+    banner.save()
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
