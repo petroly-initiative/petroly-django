@@ -71,6 +71,10 @@ class Mutation(UserMutations):
     @strawberry.mutation(extensions=[IsAuthenticated()])
     def become_premium(self, info: Info) -> bool:
         profile = info.context.request.user.profile
+
+        if profile.premium:
+            return True
+
         if Profile.objects.filter(premium=True).count() <= 10:
             profile.premium = True
             profile.save()
