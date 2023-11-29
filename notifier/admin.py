@@ -21,7 +21,7 @@ class BannerAdmin(admin.ModelAdmin):
     Custom admin model site for `Banner` model.
     """
 
-    list_display = ["id", "user", "active", repeats]
+    list_display = ["id", "user", "active", repeats, "updated_on", "created_on"]
     list_filter = [
         "active",
     ]
