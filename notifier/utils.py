@@ -88,11 +88,12 @@ def register_for_user(user_pk, term: str, crns: List):
     if isinstance(res, list):
         message = ""
         for model in res:
-            message += f"{model['subject']}{model['courseNumber']} - {model['courseReferenceNumber']}:"
+            if model["submitResultIndicator"]:
+                message += f"{model['subject']}{model['courseNumber']} - {model['courseReferenceNumber']}:"
 
-            for msg in model["messages"]:
-                message += f"\n{msg['message']}"
-            message += "\n\n"
+                for msg in model["messages"]:
+                    message += f"\n{msg['message']}"
+                message += "\n\n"
     elif isinstance(res, str):
         message = res
     else:
