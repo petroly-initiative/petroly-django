@@ -52,6 +52,17 @@ class Status(models.Model):
         verbose_name = _("status")
         verbose_name_plural = _("status")
 
+    @classmethod
+    def is_up(cls, key: str) -> bool:
+        """Wether the staus with given `key` is
+        `StatusEnum.UP`."""
+
+        try:
+            return cls.objects.get(key=key).status == StatusEnum.UP
+
+        except:
+            return False
+
     def __str__(self):
         return str(self.key)
 
