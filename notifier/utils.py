@@ -84,7 +84,6 @@ def register_for_user(user_pk, term: str, crns: List):
         return
 
     res = banner_api.register(banner, term, crns)
-    BannerEvent.objects.create(banner=banner, crns=crns, term=term, result=res)
 
     if isinstance(res, list):
         message = ""
@@ -110,6 +109,8 @@ def register_for_user(user_pk, term: str, crns: List):
         bot_utils.send_telegram_message(
             banner.user.telegram_profile.id, r"We could not register your courses\."
         )
+
+    BannerEvent.objects.create(banner=banner, crns=crns, term=term, result=res)
 
 
 def check_session(user_pk):
