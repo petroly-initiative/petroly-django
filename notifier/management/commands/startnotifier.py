@@ -162,9 +162,8 @@ class Command(BaseCommand):
                             "notifier.utils.send_notification",
                             tracker_pk,
                             str(info),
-                            # TODO indicate it's delayed
-                            group="change_notification",
                             next_run=now() + timedelta(minutes=1),
+                            name="change_notification",
                         )
 
                 logger.info(
