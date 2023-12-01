@@ -99,9 +99,14 @@ def check_session(user_pk):
             banner.active = True
 
         else:
-            # TODO notify user about this change
             banner.scheduler.delete()
             banner.active = False
+
+            bot_utils.send_telegram_message(
+                banner.user.telegram_profile.id,
+                r"We lost your cookies, re-clone your Banner session",
+                ParseMode.HTML,
+            )
 
     banner.save()
 
