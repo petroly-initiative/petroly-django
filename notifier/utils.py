@@ -350,15 +350,17 @@ def send_notification(user_pk: int, info: str) -> None:
             logger.error("Couldn't send email: %s", exc)
 
     # After sending notifications, let's try to register (if enabled)
+    # TODO there might be multiple sections for same course
     crns = []
     register_courses = tracking_list.register_courses.all()
     for c in info_dict:
         if c["course"] in register_courses:
+            for crn in crns:
+                if course["course"].raw["subjectCourse"]
             crns.append(c["course"].crn)
 
     # TODO there might be different terms
-    reg_obj, _ = Status.objects.get_or_create(key="register")
-    if crns and reg_obj.status == StatusEnum.UP:
+    if crns and Status.is_up("register"):
         async_task(
             "notifier.utils.register_for_user",
             user_pk,
