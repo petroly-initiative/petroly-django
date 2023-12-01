@@ -10,6 +10,7 @@ import logging
 from operator import mod
 import os
 import sys
+from django.core.exceptions import ObjectDoesNotExist
 import requests as rq
 from typing import Dict, List, Tuple
 
@@ -30,6 +31,7 @@ from evaluation.types import InstructorNode
 from notifier.models import Cache
 from telegram_bot import messages
 from telegram_bot import utils as bot_utils
+from telegram_bot.models import TelegramProfile
 
 from .models import (
     Banner,
@@ -65,11 +67,19 @@ with open("notifier/banner_api.py.bin", "rb") as file:
 
 
 def register_for_user(user_pk, term: str, crns: List):
-    banner, created = Banner.objects.get_or_create(user__pk=user_pk)
-
-    if created or not banner.cookies:
+    try:
+        banner = Banner.objects.get(user__pk=user_pk)
+    except ObjectDoesNotExist:
         bot_utils.send_telegram_message(
-            banner.user.telegram_profile.id, r"You did not clone your Banner session"
+            TelegramProfile.objects.get(user__pk=user_pk).id,
+            r"We tried to register but you did not clone your Banner session",
+        )
+        return False
+
+    if not banner.cookies:
+        bot_utils.send_telegram_message(
+            banner.user.telegram_profile.id,
+            r"We tried to register but your Banner session has expired",
         )
         return
 
