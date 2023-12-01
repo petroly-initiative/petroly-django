@@ -157,7 +157,7 @@ class Mutation:
                 minutes=10,
                 next_run=now(),
                 schedule_type=Schedule.MINUTES,
-                name=f"save-cookies-{user.pk}",
+                name=f"save-cookies",
             )
             obj.cookies = json.loads(cookies)
             obj.scheduler = s
@@ -192,9 +192,7 @@ class Mutation:
             return False
 
     @strawberry.mutation(extensions=[IsAuthenticated()])
-    def update_tracking_list_channels(
-        self, info: Info, data: PreferencesInput
-    ) -> bool:
+    def update_tracking_list_channels(self, info: Info, data: PreferencesInput) -> bool:
         """To update user's tracking list preferences.
         This also is responsible for creating TrackingList for
         first time user and `TelegramProfile`"""
@@ -293,9 +291,7 @@ class Mutation:
 
         if user.profile.premium:
             if len(courses) > 30:
-                raise GraphQLError(
-                    "Sorry you can't track more than 5 sections, consider the Premium plan."
-                )
+                raise GraphQLError("Sorry you can't track more than 30 sections.")
         else:
             if len(courses) > 5:
                 raise GraphQLError(
