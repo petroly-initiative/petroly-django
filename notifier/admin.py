@@ -5,7 +5,7 @@ Customization of the admin site for `notifier` app.
 from django.contrib import admin
 from . import models
 
-admin.site.register([models.NotificationEvent, models.Status, models.BannerEvent])
+admin.site.register([models.NotificationEvent, models.Status])
 
 
 def repeats(obj: models.Banner) -> str:
@@ -13,6 +13,21 @@ def repeats(obj: models.Banner) -> str:
         return abs(obj.scheduler.repeats) - 1
     else:
         return "0"
+
+
+@admin.register(models.BannerEvent)
+class BannerEventAdmin(admin.ModelAdmin):
+    """
+    Custom admin model site for `BannerEvent` model.
+    """
+
+    list_display = ["id", "banner", "term", "created_on"]
+    list_filter = [
+        "term",
+    ]
+    search_fields = [
+        "user__username",
+    ]
 
 
 @admin.register(models.Banner)
