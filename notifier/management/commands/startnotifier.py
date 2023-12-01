@@ -2,19 +2,22 @@
 A django custom command to start the Notifier checking.
 """
 
-import time
-import signal
+from datetime import timedelta
 import logging
+import signal
+import time
 import warnings
 
-import requests as rq
-from django_q.tasks import async_task
 from django.core.cache import CacheKeyWarning
 from django.core.management.base import BaseCommand
-from notifier import utils
+from django.utils.timezone import now
+from django_q.tasks import async_task, schedule
+import requests as rq
 
-from notifier.utils import check_changes, collect_tracked_courses, banner_api
+from account.models import Profile
+from notifier import utils
 from notifier.models import Status, StatusEnum
+from notifier.utils import check_changes, collect_tracked_courses
 
 warnings.simplefilter("ignore", CacheKeyWarning)
 warnings.simplefilter("ignore", DeprecationWarning)
@@ -71,9 +74,7 @@ class Command(BaseCommand):
         killer = GracefulKiller()
 
         while not killer.kill_now:
-            api_status, status_created = Status.objects.get_or_create(
-                key="API"
-            )
+            api_status, status_created = Status.objects.get_or_create(key="API")
             if status_created:
                 api_status.status = StatusEnum.UP
                 api_status.save()
@@ -147,15 +148,24 @@ class Command(BaseCommand):
                 )
 
                 t_start = time.perf_counter()
-                # TODO if premium users exist, schedule the rest
                 for tracker_pk, info in courses_by_tracker.items():
-                    async_task(
-                        "notifier.utils.send_notification",
-                        tracker_pk,
-                        str(info),
-                        task_name=f"sending-notification-{tracker_pk}",
-                        group="change_notification",
-                    )
+                    if Profile.objects.get(user__pk=tracker_pk).premium:
+                        async_task(
+                            "notifier.utils.send_notification",
+                            tracker_pk,
+                            str(info),
+                            task_name=f"sending-notification-{tracker_pk}",
+                            group="change_notification",
+                        )
+                    else:
+                        schedule(
+                            "notifier.utils.send_notification",
+                            tracker_pk,
+                            str(info),
+                            # TODO indicate it's delayed
+                            group="change_notification",
+                            next_run=now() + timedelta(minutes=1),
+                        )
 
                 logger.info(
                     "Created `sending-notification-` within %0.9f",

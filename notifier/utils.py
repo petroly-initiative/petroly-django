@@ -310,8 +310,8 @@ def send_notification(user_pk: int, info: str) -> None:
     info_dict: List[Dict] = eval(info)
 
     # inject `Course` objects and `course_api` into `info_dict`
-    for c in info_dict:
-        c["course"] = Course.objects.get(pk=c["course_pk"])
+    for c_info in info_dict:
+        c_info["course"] = Course.objects.get(pk=c_info["course_pk"])
 
     if ChannelEnum.TELEGRAM in channels:
         try:
@@ -350,15 +350,22 @@ def send_notification(user_pk: int, info: str) -> None:
             logger.error("Couldn't send email: %s", exc)
 
     # After sending notifications, let's try to register (if enabled)
-    crns = []
+    courses = []
     register_courses = tracking_list.register_courses.all()
-    for c in info_dict:
-        if c["course"] in register_courses:
-            crns.append(c["course"].crn)
+    for c_info in info_dict:
+        if (
+            c_info["course"] in register_courses
+            and c_info["course"] in tracking_list.courses.all()
+        ):
+            # search if another section's been added already
+            for course in courses:
+                if course.raw["subjectCourse"] == c_info["course"].raw["subjectCourse"]:
+                    break
+            courses.append(c_info["course"])
 
     # TODO there might be different terms
-    reg_obj, _ = Status.objects.get_or_create(key="register")
-    if crns and reg_obj.status == StatusEnum.UP:
+    crns = [c.crn for c in courses]
+    if crns and Status.is_up("register"):
         async_task(
             "notifier.utils.register_for_user",
             user_pk,

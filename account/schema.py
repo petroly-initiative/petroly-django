@@ -68,6 +68,7 @@ class Mutation(UserMutations):
         ],
     )
 
+
     @strawberry.mutation(extensions=[IsAuthenticated()])
     def become_premium(self, info: Info) -> bool:
         profile = info.context.request.user.profile
@@ -84,8 +85,7 @@ class Mutation(UserMutations):
             "Sorry we reached 10 premium users. But still be happy we won the Expo."
         )
 
-    # TODO better handling for the Permission Exception
-    # @strawberry.mutation(directives=[IsAuthenticated()])
+
     @strawberry.django.mutation(extensions=[IsAuthenticated()])
     def profile_pic_update(self, info, file: Upload) -> Optional[ProfilePicUpdateType]:
         """
