@@ -220,7 +220,7 @@ class BannerEvent(models.Model):
 
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
 
-    result = models.TextField(_("result"), max_length=1000)
+    result = models.TextField(_("result"), max_length=1000, null=True, blank=True)
     crns = models.TextField(_("crns"), max_length=100)
     term = models.IntegerField(_("term"))
     banner = models.ForeignKey(
