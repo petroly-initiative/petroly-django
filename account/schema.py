@@ -3,16 +3,20 @@ This defines the `Query` and `Muatation` for all GraphQL operations
 for `account` app.
 """
 from typing import Optional
+from graphql.error import GraphQLError
 
 import strawberry
 import strawberry.django
 from gqlauth.user import arg_mutations
 from strawberry.file_uploads import Upload
+from strawberry.types.info import Info
 from strawberry_django.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
 from cloudinary.uploader import upload_image
 from django.contrib.sites.shortcuts import get_current_site
+
+from account.models import Profile
 
 from .types import (
     UserType_,
@@ -63,6 +67,24 @@ class Mutation(UserMutations):
             IsAuthenticated(),
         ],
     )
+
+
+    @strawberry.mutation(extensions=[IsAuthenticated()])
+    def become_premium(self, info: Info) -> bool:
+        profile = info.context.request.user.profile
+
+        if profile.premium:
+            return True
+
+        if Profile.objects.filter(premium=True).count() <= 10:
+            profile.premium = True
+            profile.save()
+            return True
+
+        raise GraphQLError(
+            "Sorry we reached 10 premium users. But still be happy we won the Expo."
+        )
+
 
     @strawberry.django.mutation(extensions=[IsAuthenticated()])
     def profile_pic_update(self, info, file: Upload) -> Optional[ProfilePicUpdateType]:

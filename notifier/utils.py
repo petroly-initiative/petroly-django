@@ -100,8 +100,8 @@ def check_session(user_pk):
 
         else:
             # TODO notify user about this change
-            banner.active = False
             banner.scheduler.delete()
+            banner.active = False
 
     banner.save()
 
