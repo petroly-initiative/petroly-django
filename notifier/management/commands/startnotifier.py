@@ -163,7 +163,6 @@ class Command(BaseCommand):
                             tracker_pk,
                             str(info),
                             next_run=now() + timedelta(minutes=1),
-                            name="change_notification",
                         )
 
                 logger.info(
