@@ -64,8 +64,6 @@ class Mutation(UserMutations):
         ],
     )
 
-    # TODO better handling for the Permission Exception
-    # @strawberry.mutation(directives=[IsAuthenticated()])
     @strawberry.django.mutation(extensions=[IsAuthenticated()])
     def profile_pic_update(self, info, file: Upload) -> Optional[ProfilePicUpdateType]:
         """
