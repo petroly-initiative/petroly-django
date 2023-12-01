@@ -7,6 +7,7 @@ import html
 import imp
 import json
 import logging
+from operator import mod
 import os
 import sys
 import requests as rq
@@ -73,14 +74,26 @@ def register_for_user(user_pk, term: str, crns: List):
         return
 
     res = banner_api.register(banner, term, crns)
-    print(res)
     BannerEvent.objects.create(banner=banner, crns=crns, term=term, result=res)
 
-    if res is not None:
+    if isinstance(res, list):
+        message = ""
+        for model in res:
+            message += f"{model['subject']}{model['courseNumber']} - {model['courseReferenceNumber']}:"
+
+            for msg in model["messages"]:
+                message += f"\n{msg['message']}"
+            message += "\n\n"
+    elif isinstance(res, str):
+        message = res
+    else:
+        message = str(res)
+
+    if message is not None:
         bot_utils.send_telegram_message(
             banner.user.telegram_profile.id,
             "We tried to register your courses here is the result\n\n"
-            f"<pre>{html.escape(res)}</pre>",
+            f"<pre>{html.escape(message)}</pre>",
             ParseMode.HTML,
         )
     else:
