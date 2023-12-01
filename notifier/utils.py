@@ -100,6 +100,7 @@ def check_session(user_pk):
 
         else:
             banner.scheduler.delete()
+            banner.scheduler = None
             banner.active = False
 
             bot_utils.send_telegram_message(
