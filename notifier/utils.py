@@ -74,7 +74,7 @@ def register_for_user(user_pk, term: str, crns: List):
 
     res = banner_api.register(banner, term, crns)
     print(res)
-    BannerEvent.objects.create(banner=banner, crns=crns, term=term, reslut=res)
+    BannerEvent.objects.create(banner=banner, crns=crns, term=term, result=res)
 
     if res is not None:
         bot_utils.send_telegram_message(
