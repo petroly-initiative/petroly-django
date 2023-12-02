@@ -111,7 +111,7 @@ def register_for_user(user_pk, term: str, crns: List):
             banner.user.telegram_profile.id, r"We could not register your courses\."
         )
 
-    BannerEvent.objects.create(banner=banner, crns=crns, term=term, result=res)
+    BannerEvent.objects.create(banner=banner, crns=crns, term=term, result=f'{res}\n\n\n{message}')
 
 
 def check_session(user_pk):
