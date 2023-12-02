@@ -111,7 +111,9 @@ def register_for_user(user_pk, term: str, crns: List):
             banner.user.telegram_profile.id, r"We could not register your courses\."
         )
 
-    BannerEvent.objects.create(banner=banner, crns=crns, term=term, result=f'{res}\n\n\n{message}')
+    BannerEvent.objects.create(
+        banner=banner, crns=crns, term=term, result=f"{res}\n\n\n{message}"
+    )
 
 
 def check_session(user_pk):
@@ -124,17 +126,15 @@ def check_session(user_pk):
             banner.active = True
 
         else:
-            banner.scheduler.delete()
-            banner.scheduler = None
             banner.active = False
+            banner.save()
+            banner.scheduler.delete()
 
             bot_utils.send_telegram_message(
                 banner.user.telegram_profile.id,
                 r"We lost your cookies, re-clone your Banner session",
                 ParseMode.HTML,
             )
-
-    banner.save()
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
