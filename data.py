@@ -10,7 +10,6 @@ years = [
 
 
 class DepartmentEnum(TextChoices):
-
     ACFN = ("ACFN", "Accounting & Finance")
     AE = ("AE", "Aerospace Engineering")
     ARE = ("ARE", "Architectural Engineering")
@@ -47,7 +46,6 @@ class DepartmentEnum(TextChoices):
 
 
 class SubjectEnum(TextChoices):
-
     # ACFN = ("ACFN", "Accounting & Finance")
     AE = ("AE", "Aerospace Engineering")
     ARE = ("ARE", "Architectural Engineering")
@@ -92,5 +90,7 @@ class SubjectEnum(TextChoices):
     ECON = ("ECON", "Economics")
     GEOL = ("GEOL", "Geology")
     GEOP = ("GEOP", "Geophysics")
+    MIS = ("MIS", "Management Information Systems")
+    OM = ("OM", "Operations Management")
 
     # TODO make sure to map new subjects in instructor search

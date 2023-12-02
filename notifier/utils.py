@@ -459,14 +459,17 @@ def instructor_info_from_name(name: str, department: str) -> Dict:
 
     names = name.split(" ")
     match department:
-        case SubjectEnum.SWE:
-            department = DepartmentEnum.ICS
+        case SubjectEnum.ACCT | SubjectEnum.MKT | SubjectEnum.BUS | SubjectEnum.ECON:
+            department = DepartmentEnum.ACFN
+
+        case SubjectEnum.MIS | SubjectEnum.OM:
+            department = DepartmentEnum.ISOM
 
         case SubjectEnum.ENGL | SubjectEnum.CGS:
             department = DepartmentEnum.ELD
 
-        case SubjectEnum.ACCT | SubjectEnum.MKT | SubjectEnum.BUS | SubjectEnum.ECON:
-            department = DepartmentEnum.ACFN
+        case SubjectEnum.SWE:
+            department = DepartmentEnum.ICS
 
         case SubjectEnum.STAT:
             department = DepartmentEnum.MATH
