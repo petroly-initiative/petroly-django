@@ -124,17 +124,19 @@ def check_session(user_pk):
     if banner.cookies:
         if banner_api.check_banner(banner):
             banner.active = True
-
-        else:
-            banner.active = False
             banner.save()
-            banner.scheduler.delete()
 
-            bot_utils.send_telegram_message(
-                banner.user.telegram_profile.id,
-                r"We lost your cookies, re-clone your Banner session",
-                ParseMode.HTML,
-            )
+            return True
+
+        banner.active = False
+        banner.save()
+        banner.scheduler.delete()
+
+        bot_utils.send_telegram_message(
+            banner.user.telegram_profile.id,
+            "We lost your cookies, re-clone your Banner session",
+            ParseMode.HTML,
+        )
 
 
 def fetch_data(term: str, department: str) -> List[Dict]:
