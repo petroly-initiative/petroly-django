@@ -11,7 +11,7 @@ import warnings
 from django.core.cache import CacheKeyWarning
 from django.core.management.base import BaseCommand
 from django.utils.timezone import now
-from django_q.tasks import async_task, schedule
+from django_q.tasks import Schedule, async_task
 import requests as rq
 
 from account.models import Profile
@@ -158,12 +158,20 @@ class Command(BaseCommand):
                             group="change_notification",
                         )
                     else:
-                        schedule(
-                            "notifier.utils.send_notification",
-                            tracker_pk,
-                            str(info),
+                        # create a schedule 1min delayed
+                        s = Schedule(
+                            name="delayed_notification",
+                            func="notifier.utils.send_notification",
                             next_run=now() + timedelta(minutes=1),
+                            args=(tracker_pk, str(info)),
+                            minutes=None,
+                            kwargs=None,
+                            hook=None,
+                            cron=None,
                         )
+                        # make sure we trigger validation
+                        s.full_clean()
+                        s.save()
 
                 logger.info(
                     "Created `sending-notification-` within %0.9f",

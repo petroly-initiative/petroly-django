@@ -8,7 +8,6 @@ import json
 import hashlib
 import dataclasses
 from typing import List, Optional
-from django.utils.timezone import now
 from django_q.models import Schedule
 from graphql.error import GraphQLError
 
@@ -17,7 +16,7 @@ import strawberry.django
 from django.conf import settings
 from strawberry.types import Info
 from strawberry.scalars import JSON
-from django_q.tasks import async_task, logger, schedule
+from django_q.tasks import async_task, logger
 from strawberry_django.permissions import IsAuthenticated
 
 from telegram_bot.models import TelegramProfile
@@ -150,14 +149,21 @@ class Mutation:
             if obj.scheduler:
                 obj.scheduler.delete()
 
-            s = schedule(
-                "notifier.utils.check_session",
-                user.pk,
-                repeats=-1,
-                minutes=10,
-                next_run=now(),
+            # create a schedule for 10 min forever, starting now
+            s = Schedule(
+                name="check_session",
+                func="notifier.utils.check_session",
                 schedule_type=Schedule.MINUTES,
+                args=(user.pk,),
+                minutes=10,
+                kwargs=None,
+                hook=None,
+                cron=None,
             )
+            # make sure we trigger validation
+            s.full_clean()
+            s.save()
+
             obj.cookies = json.loads(cookies)
             obj.scheduler = s
             obj.save()
