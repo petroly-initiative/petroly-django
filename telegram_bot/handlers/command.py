@@ -61,7 +61,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                     text=f"Hi {update.effective_user.username}, I am Petroly Bot",
                 )
 
-
             # instantiating the menu button
             await context.bot.set_chat_menu_button(update.effective_chat.id, MenuButtonCommands())  # type: ignore
             await context.bot.set_my_commands(
@@ -105,6 +104,9 @@ async def tracked_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     user_id = update.effective_user.id
     user: User = await user_from_telegram(user_id=user_id, update=update)
+
+    if user is None:
+        return
 
     if update.message:
         try:
