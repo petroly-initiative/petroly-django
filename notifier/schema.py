@@ -233,7 +233,12 @@ class Mutation:
                     # if the hash match
                     # try to get or create a `TelegramProfile` obj
                     try:
-                        TelegramProfile.objects.get(id=int(data.telegram_id))
+                        telegram_profile = TelegramProfile.objects.get(
+                            id=int(data.telegram_id)
+                        )
+                        # setting the user again, it might be a new account
+                        telegram_profile.user = user
+                        telegram_profile.save()
 
                     except TelegramProfile.DoesNotExist:
                         TelegramProfile.objects.create(
