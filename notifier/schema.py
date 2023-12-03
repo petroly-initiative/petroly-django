@@ -157,6 +157,7 @@ class Mutation:
                 minutes=10,
                 next_run=now(),
                 schedule_type=Schedule.MINUTES,
+                group="check_session",
             )
             obj.cookies = json.loads(cookies)
             obj.scheduler = s
