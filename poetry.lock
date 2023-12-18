@@ -350,18 +350,21 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "cloudinary"
-version = "1.36.0"
+version = "1.37.0"
 description = "Python and Django SDK for Cloudinary"
 optional = false
 python-versions = "*"
 files = [
-    {file = "cloudinary-1.36.0.tar.gz", hash = "sha256:88571d8ed3366797bdbaec87e452471f7e09c1f767f83390efca326dd1cbcc8f"},
+    {file = "cloudinary-1.37.0.tar.gz", hash = "sha256:5f6441a4dd839951032508d88068bd705eee9d58802c321cddc84e0a67ea202b"},
 ]
 
 [package.dependencies]
 certifi = "*"
 six = "*"
 urllib3 = ">=1.26.5"
+
+[package.extras]
+dev = ["tox"]
 
 [[package]]
 name = "colorama"
@@ -1542,4 +1545,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.6"
-content-hash = "c22033c0130aae7f97e49f3892b1b1d7d9b7fd171e7f879a7433bdc0eadb0f8c"
+content-hash = "bf3ed0b09a65f74eed1f3560bd735030a588da125a25837662d496d03f23f7db"
