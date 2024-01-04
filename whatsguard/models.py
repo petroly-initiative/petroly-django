@@ -142,3 +142,6 @@ class Message(models.Model):
     contact = models.ForeignKey(
         Contact, on_delete=models.CASCADE, verbose_name=_("contact")
     )
+
+    def __str__(self) -> str:
+        return str(self.body)
