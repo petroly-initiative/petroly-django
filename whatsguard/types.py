@@ -36,3 +36,9 @@ class ContactType:
 
     number: auto
     pushname: auto
+
+
+@strawberry.type
+class CheckResult:
+    is_spam: bool
+    message_pk: int | None

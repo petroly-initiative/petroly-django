@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from whatsguard.models import Chat, Contact, Message
+
+admin.site.register([Chat, Contact, Message])
