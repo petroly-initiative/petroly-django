@@ -39,7 +39,7 @@ https://forms.gle/VZ5AXMg2rokXnboA8
 
 def is_spam_or_ad(message):
     completion = client.chat.completions.create(
-        model="gpt-4-1106-preview",
+        model="gpt-3.5-turbo-1106",
         messages=[
             {
                 "role": "system",
