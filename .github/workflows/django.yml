@@ -9,6 +9,7 @@ on:
 env:
   ENC_KEY: ${{ secrets.ENC_KEY }}
   CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
 jobs:
   build:
