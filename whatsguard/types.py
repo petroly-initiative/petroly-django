@@ -7,7 +7,6 @@ to be used from `schema` module.
 import strawberry
 import strawberry.django
 from strawberry import auto
-from strawberry.types import Info
 
 from .models import Chat, Contact, Message
 
@@ -42,3 +41,4 @@ class ContactType:
 class CheckResult:
     is_spam: bool
     message_pk: int | None
+    reason: str

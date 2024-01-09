@@ -23,10 +23,10 @@ class Mutation:
         self, info: Info, message: MessageType, chat: ChatType, contact: ContactType
     ) -> CheckResult:
         try:
-            result = is_spam_or_ad(message.body)
+            result, reason = is_spam_or_ad(message.body)
         except Exception as e:
             print(e)
-            return CheckResult(is_spam=False, message_pk=None)
+            return CheckResult(is_spam=False, message_pk=None, reason="")
 
         try:
             if result:
@@ -36,10 +36,10 @@ class Mutation:
                 msg_obj = Message.objects.create(
                     **asdict(message), chat=chat_obj, contact=contact_obj
                 )
-                return CheckResult(is_spam=result, message_pk=msg_obj.pk)
+                return CheckResult(is_spam=result, message_pk=msg_obj.pk, reason=reason)
 
-            return CheckResult(is_spam=result, message_pk=None)
+            return CheckResult(is_spam=result, message_pk=None, reason=reason)
 
         except Exception as e:
             print(e)
-            return CheckResult(is_spam=False, message_pk=None)
+            return CheckResult(is_spam=False, message_pk=None, reason=reason)

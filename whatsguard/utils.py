@@ -1,10 +1,13 @@
+from typing import Any
 from openai import OpenAI
 
 client = OpenAI()
 
-system_prompt = """Reply with `yes` or `no` based on whether the quoted text looks like spam or unwanted ads."""
+SYSTEM_PROMPT = """Reply with `true` or `false` based on whether the given message looks like spam, advertisement, or violation of academic integrity."""
 
-USER_EX1 = """```السلام عليكم ورحمة الله 
+USER_EX1 = """
+message:
+السلام عليكم ورحمة الله 
 الي يبي مساعده يتفضل خاص 
 
 بحوثات علميه 
@@ -25,9 +28,11 @@ USER_EX1 = """```السلام عليكم ورحمة الله
 انجليزي 
 رياضيات 
 لغة عربية 
-مع ضمان الفل مارك```"""
+مع ضمان الفل مارك"""
 
-USER_EX2 = """السلام عليكم شباب 
+USER_EX2 = """
+message:
+السلام عليكم شباب 
 
 هذا قروب خاص بحـلول مواد ( CS, SWE, COE) ،نسعى من خلاله لمساعدتكم و بيخدم عدد كبير من الطلاب وبيكون منفعه للجميع 🫂🤍. 
 
@@ -38,36 +43,55 @@ https://forms.gle/VZ5AXMg2rokXnboA8
 
 
 def is_spam_or_ad(message):
+    messages: Any = [
+        {
+            "role": "system",
+            "content": SYSTEM_PROMPT,
+        },
+        {
+            "role": "user",
+            "content": USER_EX2,
+        },
+        {
+            "role": "assistant",
+            "content": "false",
+        },
+        {
+            "role": "user",
+            "content": USER_EX1,
+        },
+        {
+            "role": "assistant",
+            "content": "true",
+        },
+        {
+            "role": "user",
+            "content": f"message:\n{message}",
+        },
+    ]
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo-1106",
-        messages=[
-            {
-                "role": "system",
-                "content": "Reply with `yes` or `no` based on whether the triple-backtick quoted text looks like spam or unwanted ads",
-            },
-            {
-                "role": "user",
-                "content": USER_EX2,
-            },
-            {
-                "role": "assistant",
-                "content": "no",
-            },
-            {
-                "role": "user",
-                "content": USER_EX1,
-            },
-            {
-                "role": "assistant",
-                "content": "yes",
-            },
-            {
-                "role": "user",
-                "content": f"```{message}```",
-            },
-        ],
+        messages=messages,
     )
 
     print(completion.choices[0].message)
-    cont: str = completion.choices[0].message.content
-    return "yes" in cont.lower()
+
+    cont = str(completion.choices[0].message.content)
+    is_spam = "true" in cont.lower()
+
+    reason = ""
+    if is_spam:
+        messages.append(
+            {
+                "role": "user",
+                "content": f"Explain why.",
+            }
+        )
+        completion = client.chat.completions.create(
+            model="gpt-3.5-turbo-1106",
+            messages=messages,
+        )
+        print(completion)
+        reason = str(completion.choices[0].message.content)
+
+    return is_spam, reason
