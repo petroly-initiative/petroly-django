@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for petroly-django on 2024-01-04T19:49:00+03:00
+# fly.toml app configuration file generated for petroly-django on 2024-01-10T06:09:20+03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -26,7 +26,7 @@ console_command = "/code/manage.py shell"
 [[vm]]
   cpu_kind = "shared"
   cpus = 1
-  memory_mb = 256
+  memory_mb = 1024
 
 [[statics]]
   guest_path = "/code/static"

@@ -1,18 +1,49 @@
-import os
 from datetime import timedelta
+import os
 from pathlib import Path
+import re
 
+import dj_database_url
 from django.utils.translation import gettext_lazy as _
 from gqlauth.settings_type import GqlAuthSettings
 
 from petroly.log import CUSTOM_LOGGING
 
+
+LOGGING = CUSTOM_LOGGING
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
+DEBUG = True
+
+# Fly.io uses proxy to connect to django server forcing HTTPS
+# will create infinite redirects
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# CORS lib
+CORS_ALLOWED_ORIGINS = [
+    "https://petroly.vercel.app",
+    "https://react.petroly.co",
+    "https://petroly.co",
+]
+
+APP_NAME = os.environ.get("FLY_APP_NAME")
+ALLOWED_HOSTS = [f"{APP_NAME}.fly.dev"]
+
+print(APP_NAME)
+# if not APP_NAME:
+#     from dotenv import load_dotenv
+#
+#     load_dotenv()
 
 
 # Application definition
 INSTALLED_APPS = [
+    "django.contrib.admindocs",
     "account.apps.AccountConfig",
     "evaluation.apps.EvaluationConfig",
     "roommate.apps.RoommateConfig",
@@ -48,6 +79,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "account.middleware.AllowOnlyStaffMiddleware",
+    "account.middleware.DiscordNotificationMiddleware",
 ]
 
 ROOT_URLCONF = "petroly.urls"
@@ -89,6 +121,28 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
+
+# Database
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+# Check if DATABASE_URL is provided
+# otherwise fallback to basic db
+MAX_CONN_AGE = 600
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    }
+}
+
+if "DATABASE_URL" in os.environ:
+    # Configure Django for DATABASE_URL environment variable.
+    DATABASES["default"] = dj_database_url.config(conn_max_age=MAX_CONN_AGE)
+
+
+# Models
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 # Cache
 CACHES = {
     "default": {
@@ -99,7 +153,6 @@ CACHES = {
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 # LANGUAGE_CODE = 'ar-SA'
 
@@ -109,18 +162,12 @@ LANGUAGES = [
 ]
 
 LOCALE_PATHS = [BASE_DIR / "locale"]
-
 TIME_ZONE = "Asia/Riyadh"
-
 USE_I18N = True
-
 USE_L10N = False
-
 USE_TZ = True
-
 DATETIME_FORMAT = "N j, Y, H:i:s"
 
-LOGGING = CUSTOM_LOGGING
 
 # Static files (CSS, JavaScript, Images)
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -131,6 +178,14 @@ STATICFILES_DIRS = [
 
 # MEDIA
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.0/howto/static-files/
+MEDIA_URL = "/media/"
+STATIC_URL = "/static/"
+
+# Enable WhiteNoise's GZip compression of static assets.
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 LOGIN_REDIRECT_URL = "index"
 LOGIN_URL = "login"
@@ -143,8 +198,21 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 
-# Models
-DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+# To get Email when >500 error happens
+SERVER_EMAIL = "Error@petroly.co"
+ADMINS = [("Ammar", "me@ammarf.sa")]
+# To get 404 errors
+MANAGERS = ADMINS
+# Ignore these pattern errors
+IGNORABLE_404_URLS = [
+    re.compile(r"^/apple-touch-icon.*\.png$"),
+    re.compile(r"^/favicon\.ico$"),
+    re.compile(r"^/robots\.txt$"),
+    re.compile(r"^/ads\.txt$"),
+]
+
+# For Discord notification
+DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", default="")
 
 # Telegram
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
@@ -152,7 +220,6 @@ TELEGRAM_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
-
 
 GQL_AUTH = GqlAuthSettings(
     ALLOW_LOGIN_NOT_VERIFIED=False,
@@ -164,7 +231,6 @@ GQL_AUTH = GqlAuthSettings(
     JWT_REFRESH_EXPIRATION_DELTA=timedelta(days=30),
     JWT_EXPIRATION_DELTA=timedelta(days=1),
 )
-
 
 STRAWBERRY_DJANGO = {
     "FIELD_DESCRIPTION_FROM_HELP_TEXT": True,
