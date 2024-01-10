@@ -991,13 +991,13 @@ files = [
 
 [[package]]
 name = "openai"
-version = "1.6.1"
+version = "1.7.0"
 description = "The official Python library for the openai API"
 optional = false
 python-versions = ">=3.7.1"
 files = [
-    {file = "openai-1.6.1-py3-none-any.whl", hash = "sha256:bc9f774838d67ac29fb24cdeb2d58faf57de8b311085dcd1348f7aa02a96c7ee"},
-    {file = "openai-1.6.1.tar.gz", hash = "sha256:d553ca9dbf9486b08e75b09e8671e4f638462aaadccfced632bf490fc3d75fa2"},
+    {file = "openai-1.7.0-py3-none-any.whl", hash = "sha256:2282e8e15acb05df79cccba330c025b8e84284c7ec1f3fa31f167a8479066333"},
+    {file = "openai-1.7.0.tar.gz", hash = "sha256:f2a8dcb739e8620c9318a2c6304ea72aebb572ba02fa1d586344405e80d567d3"},
 ]
 
 [package.dependencies]
@@ -1743,4 +1743,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.6"
-content-hash = "259bcaa68f258215c8c3cdee4b80ad56e48ab35313f55df4f587b338e44d55cb"
+content-hash = "ea80e16603f3139a36e2ed637a1b9e218c1b3d6f4f73f6e1a50ab422dd11d4c0"
