@@ -38,6 +38,7 @@ pylint-django = "^2.5.3"
 flake8 = "^6.1.0"
 django-stubs = "^4.2.3"
 python-dotenv = "^1.0.0"
+setuptools = "^69.0.3"
 
 [build-system]
 requires = ["poetry-core"]
