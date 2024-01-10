@@ -5,44 +5,49 @@ import re
 
 import dj_database_url
 from django.utils.translation import gettext_lazy as _
+import environ
 from gqlauth.settings_type import GqlAuthSettings
 
 from petroly.log import CUSTOM_LOGGING
-
 
 LOGGING = CUSTOM_LOGGING
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get(
-    "SECRET_KEY", "6VpnYALEBd8ppnNYh6SWZAsKR7qkiwgUxXziBthBlusMdYKbq7"
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False),
+    FLY_APP_NAME=(str, ""),
 )
-DEBUG = bool(os.environ.get("DEBUG", False))
+env.read_env(overwrite=False)
 
-SECURE_SSL_REDIRECT = True
-# django server lives behind Fly.io proxy to connect to django server forcing HTTPS
-# to prevent infinite redirects we need to set following:
-# X-Forwarded-Proto	Original client protocol, either http or https
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECRET_KEY = env("SECRET_KEY")
 
-# CORS lib
-CORS_ALLOWED_ORIGINS = [
-    "https://petroly.vercel.app",
-    "https://react.petroly.co",
-    "https://petroly.co",
-]
+# False if not in os.environ because of casting above
+DEBUG = env("DEBUG")
 
-APP_NAME = os.environ.get("FLY_APP_NAME")
-ALLOWED_HOSTS = [f"{APP_NAME}.fly.dev"]
+APP_NAME = env("FLY_APP_NAME")
 
-print(APP_NAME)
-# if not APP_NAME:
-#     from dotenv import load_dotenv
-#
-#     load_dotenv()
+if APP_NAME:
+    ALLOWED_HOSTS = [f"{APP_NAME}.fly.dev"]
+    SECURE_SSL_REDIRECT = True
+    # django server lives behind Fly.io proxy to connect to django server
+    # forcing HTTPS  to prevent infinite redirects we need to set following:
+    # X-Forwarded-Proto	Original client protocol, either http or https
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # CORS lib
+    CORS_ALLOWED_ORIGINS = [
+        "https://petroly.vercel.app",
+        "https://react.petroly.co",
+        "https://petroly.co",
+    ]
+else:
+    DEBUG = True
+    ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
