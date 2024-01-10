@@ -15,12 +15,16 @@ LOGGING = CUSTOM_LOGGING
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = True
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY", "6VpnYALEBd8ppnNYh6SWZAsKR7qkiwgUxXziBthBlusMdYKbq7"
+)
+DEBUG = bool(os.environ.get("DEBUG", False))
 
-# Fly.io uses proxy to connect to django server forcing HTTPS
-# will create infinite redirects
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = True
+# django server lives behind Fly.io proxy to connect to django server forcing HTTPS
+# to prevent infinite redirects we need to set following:
+# X-Forwarded-Proto	Original client protocol, either http or https
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
