@@ -4,12 +4,10 @@ of the `whatsguard` app.
 """
 
 from dataclasses import asdict
-from pydantic_core.core_schema import none_schema
 
 import strawberry
 import strawberry.django
 from strawberry.types import Info
-from strawberry_django.permissions import IsAuthenticated
 
 from whatsguard.models import Chat, Contact, Message
 from whatsguard.types import ChatType, CheckResult, ContactType, MessageType
@@ -23,6 +21,10 @@ class Mutation:
         self, info: Info, message: MessageType, chat: ChatType, contact: ContactType
     ) -> CheckResult:
         try:
+            # check if this contact is alwys allowed to send
+            if (qs := Contact.objects.filter(number=contact.number)) and qs[0].ignore:
+                return CheckResult(is_spam=False, message_pk=None, reason="")
+                
             result, reason = is_spam_or_ad(message.body)
         except Exception as e:
             print(e)
