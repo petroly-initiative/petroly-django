@@ -84,6 +84,7 @@ class Contact(models.Model):
 
     number = models.CharField(_("number"), max_length=15)
     pushname = models.CharField(_("pushname"), max_length=300)
+    ignore = models.BooleanField(_("ignore"), default=False)
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
 
 
