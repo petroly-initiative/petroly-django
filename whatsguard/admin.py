@@ -35,6 +35,6 @@ class MessageAdmin(admin.ModelAdmin):
     Custom admin model site for `Message` model.
     """
 
-    list_display = ["id", "author", "chat", "contact", "created_on"]
+    list_display = ["id", "author", "chat", "contact", "created_on", "body"]
     list_filter = ["device_type"]
     search_fields = ["id", "pushname", "number"]
