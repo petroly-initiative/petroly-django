@@ -87,6 +87,9 @@ class Contact(models.Model):
     ignore = models.BooleanField(_("ignore"), default=False)
     created_on = models.DateTimeField(_("created on"), auto_now_add=True)
 
+    def __str__(self) -> str:
+        return str(self.pk)
+
 
 class Chat(models.Model):
     """
@@ -114,6 +117,9 @@ class Chat(models.Model):
 
     name = models.CharField(_("name"), max_length=300)
     is_group = models.BooleanField(_("is group"))
+
+    def __str__(self) -> str:
+        return str(self.pk)
 
 
 class Message(models.Model):
@@ -145,4 +151,4 @@ class Message(models.Model):
     )
 
     def __str__(self) -> str:
-        return str(self.body)
+        return str(self.pk)
