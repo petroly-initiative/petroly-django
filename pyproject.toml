@@ -33,7 +33,7 @@ lxml = "^4.9.3"
 openai = "^1.6.1"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.9.1"
+black = "^24.1.0"
 mypy = "^1.4"
 pylint-django = "^2.5.3"
 flake8 = "^6.1.0"
