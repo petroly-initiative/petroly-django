@@ -13,6 +13,7 @@ import communities.schema
 import evaluation.schema
 import notifier.schema
 import telegram_bot.schema
+import whatsguard.schema
 from strawberry_ratelimit.ratelimit import ExtensionRatelimit
 
 
@@ -35,6 +36,7 @@ Mutation = merge_types(
         evaluation.schema.Mutation,
         notifier.schema.Mutation,
         telegram_bot.schema.Mutation,
+        whatsguard.schema.Mutation,
     ),
 )
 

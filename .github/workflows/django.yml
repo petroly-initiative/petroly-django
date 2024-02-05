@@ -9,6 +9,7 @@ on:
 env:
   ENC_KEY: ${{ secrets.ENC_KEY }}
   CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
 jobs:
   build:
@@ -17,7 +18,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.11.6]
+        python-version: [3.11.7]
         pipenv-version: ["v2022.11.5"]
 
     steps:
