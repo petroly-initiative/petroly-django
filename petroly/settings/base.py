@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "notifier",
     "django_q",
     "telegram_bot",
+    "whatsguard",
 ]
 
 MIDDLEWARE = [
