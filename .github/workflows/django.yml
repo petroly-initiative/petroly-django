@@ -6,11 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  ENC_KEY: ${{ secrets.ENC_KEY }}
-  CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
-  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
 jobs:
   build:
 
@@ -36,4 +31,8 @@ jobs:
       run:  poetry install
 
     - name: Run Tests
+      env:
+        ENC_KEY: ${{ secrets.ENC_KEY }}
+        CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: poetry run python manage.py test --settings=petroly.settings.dev --no-input account
