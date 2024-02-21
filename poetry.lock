@@ -1531,17 +1531,17 @@ test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "strawberry-django-auth"
-version = "0.376.2"
+version = "0.376.5"
 description = "Graphql authentication system with Strawberry for Django."
 optional = false
-python-versions = ">=3.8,<3.12"
+python-versions = ">=3.8,<3.13"
 files = [
-    {file = "strawberry_django_auth-0.376.2-py3-none-any.whl", hash = "sha256:628f42a1fe1441cba10729184a2d91db0631474fc2ca825dd2df7878d93e3026"},
-    {file = "strawberry_django_auth-0.376.2.tar.gz", hash = "sha256:f92d96a6505bb49b42faa5e876263928b6644f4f693f83e943f86d53b7b57d4d"},
+    {file = "strawberry_django_auth-0.376.5-py3-none-any.whl", hash = "sha256:e2e57d44f7ccec4b6aa831aa4229bb9755c3b15da15c696cb8b7e8ec6617838c"},
+    {file = "strawberry_django_auth-0.376.5.tar.gz", hash = "sha256:2bdf0f43136facdd20dcdf1bd85053d7bb334a6271cee6759c17e13580ee32e7"},
 ]
 
 [package.dependencies]
-Django = ">=3.2,<4.3"
+Django = ">=3.2,<=5.0"
 django-stubs = {version = ">=4.2.0,<5.0.0", extras = ["compatible-mypy"]}
 PyJWT = ">=2.6.0,<3.0"
 strawberry-graphql-django = ">=0.10.5"
@@ -1754,4 +1754,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.7"
-content-hash = "edb76fa6d65650a58d35281ddfb9b15065950b9733b883e49acb7fe1b5dacca2"
+content-hash = "e671fc964dc0b72cb1991ea6e85d892b596f12c1cef2f63b6004c1300c6f4250"
