@@ -22,7 +22,7 @@ whitenoise = "^6.6.0"
 cloudinary = "^1.38.0"
 python-telegram-bot = {extras = ["callback-data"], version = "^20.7"}
 django-multiselectfield = "^0.1.12"
-cryptography = "^41.0.7"
+cryptography = "^42.0.5"
 requests = "^2.31.0"
 django-email-verification = "^0.3.3"
 django-filter = "^23.5"
