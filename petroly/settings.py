@@ -30,7 +30,7 @@ DEBUG = env("DEBUG")
 APP_NAME = env("FLY_APP_NAME")
 
 if APP_NAME:
-    ALLOWED_HOSTS = [f"{APP_NAME}.fly.dev"]
+    ALLOWED_HOSTS = [f"{APP_NAME}.fly.dev", ".ammarf.sa"]
     SECURE_SSL_REDIRECT = True
     # django server lives behind Fly.io proxy to connect to django server
     # forcing HTTPS  to prevent infinite redirects we need to set following:
