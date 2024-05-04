@@ -4,10 +4,8 @@ from the KFUPM API
 """
 
 import html
-import imp
 import json
 import logging
-from operator import mod
 import os
 import sys
 from django.core.exceptions import ObjectDoesNotExist
@@ -60,9 +58,9 @@ assert (ENC_KEY := os.environ.get("ENC_KEY")), "You must provide `ENC_KEY` env v
 with open("notifier/banner_api.py.bin", "rb") as file:
     f = Fernet(ENC_KEY.encode())
     code = f.decrypt(file.read()).decode()
-    import imp
+    import types
 
-    banner_api = imp.new_module(code)
+    banner_api = types.ModuleType("banner_api")
     exec(code, banner_api.__dict__)
 
 

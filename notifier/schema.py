@@ -303,9 +303,9 @@ class Mutation:
             if len(courses) > 30:
                 raise GraphQLError("Sorry you can't track more than 30 sections.")
         else:
-            if len(courses) > 5:
+            if len(courses) > 15:
                 raise GraphQLError(
-                    "Sorry you can't track more than 5 sections, consider the Premium plan."
+                    "Sorry you can't track more than 15 sections."
                 )
 
         try:
