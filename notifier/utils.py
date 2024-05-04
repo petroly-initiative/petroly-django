@@ -400,7 +400,7 @@ def send_notification(user_pk: int, info: str) -> None:
         async_task(
             "notifier.utils.register_for_user",
             user_pk,
-            "202320",
+            "202410",
             ",".join(crns),
             task_name=f"register-{user_pk}",
             group="register_crns",
