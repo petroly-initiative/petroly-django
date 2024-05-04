@@ -401,15 +401,14 @@ def send_notification(user_pk: int, info: str) -> None:
 
     if Status.is_up("register"):
         for term, crns in grouped_by_term.items():
-            if crns:
-                async_task(
-                    "notifier.utils.register_for_user",
-                    user_pk,
-                    term,
-                    ",".join(crns),
-                    task_name=f"register-{user_pk}",
-                    group="register_crns",
-                )
+            async_task(
+                "notifier.utils.register_for_user",
+                user_pk,
+                term,
+                ",".join(crns),
+                task_name=f"register-{user_pk}",
+                group="register_crns",
+            )
 
 
 def formatter_md(courses: List[Course]) -> str:
