@@ -8,19 +8,20 @@ import json
 import logging
 import os
 import sys
-from django.core.exceptions import ObjectDoesNotExist
-import requests as rq
 from typing import Dict, List, Tuple
+from collections import defaultdict
 
 from cryptography.fernet import Fernet
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.db.models import Q
 from django.template import loader
 from django.utils.timezone import now
 from django_q.tasks import async_task
+import requests as rq
 from telegram.constants import ParseMode
-from django.contrib.auth import get_user_model
 
 from data import DepartmentEnum, SubjectEnum
 from evaluation.models import Instructor
@@ -381,7 +382,7 @@ def send_notification(user_pk: int, info: str) -> None:
             logger.error("Couldn't send email: %s", exc)
 
     # After sending notifications, let's try to register (if enabled)
-    courses = []
+    courses: List[Course] = []
     register_courses = tracking_list.register_courses.all()
     for c_info in info_dict:
         if (
@@ -394,17 +395,21 @@ def send_notification(user_pk: int, info: str) -> None:
                     break
             courses.append(c_info["course"])
 
-    # TODO there might be different terms
-    crns = [c.crn for c in courses]
-    if crns and Status.is_up("register"):
-        async_task(
-            "notifier.utils.register_for_user",
-            user_pk,
-            "202410",
-            ",".join(crns),
-            task_name=f"register-{user_pk}",
-            group="register_crns",
-        )
+    grouped_by_term = defaultdict(list)
+    for c in courses:
+        grouped_by_term[c.term].append(c.crn)
+
+    if Status.is_up("register"):
+        for term, crns in grouped_by_term.items():
+            if crns:
+                async_task(
+                    "notifier.utils.register_for_user",
+                    user_pk,
+                    term,
+                    ",".join(crns),
+                    task_name=f"register-{user_pk}",
+                    group="register_crns",
+                )
 
 
 def formatter_md(courses: List[Course]) -> str:
