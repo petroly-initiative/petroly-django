@@ -382,6 +382,9 @@ def send_notification(user_pk: int, info: str) -> None:
             logger.error("Couldn't send email: %s", exc)
 
     # After sending notifications, let's try to register (if enabled)
+    if not user.banner.active:
+        return
+
     courses: List[Course] = []
     register_courses = tracking_list.register_courses.all()
     for c_info in info_dict:

@@ -17,7 +17,6 @@ import requests as rq
 from account.models import Profile
 from notifier import utils
 from notifier.models import Status, StatusEnum
-from notifier.utils import check_changes, collect_tracked_courses
 
 warnings.simplefilter("ignore", CacheKeyWarning)
 warnings.simplefilter("ignore", DeprecationWarning)
@@ -101,7 +100,7 @@ class Command(BaseCommand):
             try:
                 t_start = time.perf_counter()
 
-                collection = collect_tracked_courses()
+                collection = utils.collect_tracked_courses()
                 changed_courses = []
 
                 logger.info(
@@ -111,7 +110,7 @@ class Command(BaseCommand):
 
                 t_start = time.perf_counter()
                 for _, value in collection.items():
-                    changed, status = check_changes(value["course"])
+                    changed, status = utils.check_changes(value["course"])
 
                     if changed:
                         value["status"] = status
