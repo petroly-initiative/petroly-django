@@ -231,30 +231,30 @@ class BannerEvent(models.Model):
         return str(self.banner)
 
 
-class RegisterationPlan(models.Model):
-    """Model a plan to try to register it for a user."""
-
-    updated_on = models.DateTimeField(_("updated on"), auto_now=True)
-    user = models.ForeignKey(
-        User,
-        verbose_name=_("user"),
-        on_delete=models.CASCADE,
-        related_name="registeration_plan",
-    )
-    add = models.ManyToManyField(
-        Course,
-        verbose_name=_("add courses"),
-        related_name="add_courses",
-        blank=True,
-        default=None,
-    )
-    drop = models.ManyToManyField(
-        Course,
-        verbose_name=_("dorp courses"),
-        related_name="drop_courses",
-        blank=True,
-        default=None,
-    )
+# class RegistrationPlan(models.Model):
+#     """Model a plan to try to register it for a user."""
+#
+#     updated_on = models.DateTimeField(_("updated on"), auto_now=True)
+#     user = models.ForeignKey(
+#         User,
+#         verbose_name=_("user"),
+#         on_delete=models.CASCADE,
+#         related_name="registeration_plan",
+#     )
+#     add = models.ManyToManyField(
+#         Course,
+#         verbose_name=_("add courses"),
+#         related_name="add_courses",
+#         blank=True,
+#         default=None,
+#     )
+#     drop = models.ManyToManyField(
+#         Course,
+#         verbose_name=_("dorp courses"),
+#         related_name="drop_courses",
+#         blank=True,
+#         default=None,
+#     )
 
 
 class TrackingList(models.Model):
