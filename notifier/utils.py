@@ -382,7 +382,11 @@ def send_notification(user_pk: int, info: str) -> None:
             logger.error("Couldn't send email: %s", exc)
 
     # After sending notifications, let's try to register (if enabled)
-    if not user.banner.active:
+    # user mignt not have a Banner obj yet
+    try:
+        if not user.banner.active:
+            return
+    except ObjectDoesNotExist:
         return
 
     courses: List[Course] = []
