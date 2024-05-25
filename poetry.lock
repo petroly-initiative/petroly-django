@@ -1646,13 +1646,13 @@ captcha = ["pillow[captcha] (>=9.5,<11.0)"]
 
 [[package]]
 name = "strawberry-graphql"
-version = "0.211.2"
+version = "0.230.0"
 description = "A library for creating GraphQL APIs"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = "<4.0,>=3.8"
 files = [
-    {file = "strawberry_graphql-0.211.2-py3-none-any.whl", hash = "sha256:3c58ee8c43f91f4d2b84b84791612cd816d399d5c3eedd9b9a76cbd5649cf42a"},
-    {file = "strawberry_graphql-0.211.2.tar.gz", hash = "sha256:e551b0a2e7b99c99e1fbe006f53a36d258cdd028254d81d6a052e4dd721d0ac6"},
+    {file = "strawberry_graphql-0.230.0-py3-none-any.whl", hash = "sha256:83700255420102d7192a31223e165f83b140191f7800d18314e533dc73b723f8"},
+    {file = "strawberry_graphql-0.230.0.tar.gz", hash = "sha256:34672bab677ce35fe92837dc6c2f194b018daa5b11cf330e71104bec18dc2922"},
 ]
 
 [package.dependencies]
@@ -1662,15 +1662,16 @@ typing-extensions = ">=4.5.0"
 
 [package.extras]
 aiohttp = ["aiohttp (>=3.7.4.post0,<4.0.0)"]
-asgi = ["python-multipart (>=0.0.5,<0.0.7)", "starlette (>=0.18.0)"]
+asgi = ["python-multipart (>=0.0.7)", "starlette (>=0.18.0)"]
 chalice = ["chalice (>=1.22,<2.0)"]
 channels = ["asgiref (>=3.2,<4.0)", "channels (>=3.0.5)"]
-cli = ["libcst (>=0.4.7)", "pygments (>=2.3,<3.0)", "rich (>=12.0.0)", "typer (>=0.7.0)"]
+cli = ["graphlib_backport", "libcst (>=0.4.7)", "pygments (>=2.3,<3.0)", "rich (>=12.0.0)", "typer (>=0.7.0)"]
 debug = ["libcst (>=0.4.7)", "rich (>=12.0.0)"]
-debug-server = ["libcst (>=0.4.7)", "pygments (>=2.3,<3.0)", "python-multipart (>=0.0.5,<0.0.7)", "rich (>=12.0.0)", "starlette (>=0.18.0)", "typer (>=0.7.0)", "uvicorn (>=0.11.6)"]
+debug-server = ["libcst (>=0.4.7)", "pygments (>=2.3,<3.0)", "python-multipart (>=0.0.7)", "rich (>=12.0.0)", "starlette (>=0.18.0)", "typer (>=0.7.0)", "uvicorn (>=0.11.6)"]
 django = ["Django (>=3.2)", "asgiref (>=3.2,<4.0)"]
-fastapi = ["fastapi (>=0.65.2)", "python-multipart (>=0.0.5,<0.0.7)"]
+fastapi = ["fastapi (>=0.65.2)", "python-multipart (>=0.0.7)"]
 flask = ["flask (>=1.1)"]
+litestar = ["litestar (>=2)"]
 opentelemetry = ["opentelemetry-api (<2)", "opentelemetry-sdk (<2)"]
 pydantic = ["pydantic (>1.6.1)"]
 pyinstrument = ["pyinstrument (>=4.0.0)"]
@@ -1849,4 +1850,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.2"
-content-hash = "d5236cc7faa48b1e323c3ec15644cdfdfc8444c5ab41506ff624fe827dd91a9d"
+content-hash = "bf7a2e08a169749445040ca737a830a13953ea82e4e53f6340aabba8f86f06b5"
