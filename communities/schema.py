@@ -109,7 +109,7 @@ class Mutation:
         as a Section, with empty section number"""
 
         try:
-            matches = re.findall(r"https:\/\/chat.whatsapp.com\/[A-Za-z0-9]*", text)
+            matches = re.findall(r"https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]*", text)
 
             async_task(
                 "communities.populate.whatsapp_populate",
