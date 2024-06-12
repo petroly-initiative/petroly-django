@@ -23,7 +23,7 @@ cloudinary = "^1.40.0"
 python-telegram-bot = {extras = ["callback-data"], version = "^21.2"}
 django-multiselectfield = "^0.1.12"
 cryptography = "^42.0.7"
-requests = "^2.31.0"
+requests = "^2.32.3"
 django-email-verification = "^0.3.3"
 django-filter = "^24.2"
 dj-database-url = "^2.2.0"
