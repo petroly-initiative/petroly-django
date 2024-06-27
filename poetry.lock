@@ -63,13 +63,13 @@ test = ["dateparser (==1.*)", "pre-commit", "pytest", "pytest-cov", "pytest-mock
 
 [[package]]
 name = "asgiref"
-version = "3.7.2"
+version = "3.8.1"
 description = "ASGI specs, helper code, and adapters"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "asgiref-3.7.2-py3-none-any.whl", hash = "sha256:89b2ef2247e3b562a16eef663bc0e2e703ec6468e2fa8a5cd61cd449786d4f6e"},
-    {file = "asgiref-3.7.2.tar.gz", hash = "sha256:9e0ce3aa93a819ba5b45120216b23878cf6e8525eb3848653452b4192b92afed"},
+    {file = "asgiref-3.8.1-py3-none-any.whl", hash = "sha256:3e1e3ecc849832fe52ccf2cb6686b7a55f82bb1d6aee72a58826471390335e47"},
+    {file = "asgiref-3.8.1.tar.gz", hash = "sha256:c343bd80a0bec947a9860adb4c432ffa7db769836c64238fc34bdc3fec84d590"},
 ]
 
 [package.extras]
@@ -1681,18 +1681,19 @@ starlite = ["starlite (>=1.48.0)"]
 
 [[package]]
 name = "strawberry-graphql-django"
-version = "0.23.0"
+version = "0.44.2"
 description = "Strawberry GraphQL Django extension"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = "<4.0,>=3.8"
 files = [
-    {file = "strawberry_graphql_django-0.23.0-py3-none-any.whl", hash = "sha256:2096f8857652b1aef578a9ef51ac4507cf64cc1de7b49cadb742f72d343d715b"},
-    {file = "strawberry_graphql_django-0.23.0.tar.gz", hash = "sha256:363c43f99bc8261eb1b5f953bc5e0be952f4941d1d4ea4527df24218a47f189d"},
+    {file = "strawberry_graphql_django-0.44.2-py3-none-any.whl", hash = "sha256:c76ecc9690f6f98cd8b1ede1857e27878c51838c0fbbb0f65145678b52232e4e"},
+    {file = "strawberry_graphql_django-0.44.2.tar.gz", hash = "sha256:9409ab41ed44bc6694d62ea01e5c015a23b100550fb141ccd50aed8c1aa95671"},
 ]
 
 [package.dependencies]
-Django = ">=3.2"
-strawberry-graphql = ">=0.209.4"
+asgiref = ">=3.8"
+django = ">=3.2"
+strawberry-graphql = ">=0.234.2"
 
 [package.extras]
 debug-toolbar = ["django-debug-toolbar (>=3.4)"]
@@ -1850,4 +1851,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.4"
-content-hash = "10fedcb1c5bf43ecb0f51b6065df22b63fefdd9b86172568c84a26539c401de5"
+content-hash = "a1d08aa391efca1ace97d502307e6e80b869f2046f3a5afe6f407004c96bac83"
