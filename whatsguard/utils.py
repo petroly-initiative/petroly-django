@@ -61,10 +61,12 @@ def is_spam_or_ad(message):
         ],
     )
 
+    print(message)
+
     reason, answer = parse_claude_response(message.content[0].text)
 
     if answer is not None:
-        is_spam = True if ("true" in answer) else False
+        is_spam = True if "true" in answer.lower() else False
     else:
         is_spam = False
 
