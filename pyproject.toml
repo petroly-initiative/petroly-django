@@ -16,7 +16,7 @@ gunicorn = "^22.0.0"
 Pillow = "^10.4.0"
 psycopg2 = "^2.9.9"
 strawberry-django-auth = "^0.376.2"
-strawberry-graphql-django = "^0.46.1"
+strawberry-graphql-django = "^0.47.0"
 whitenoise = "^6.7.0"
 cloudinary = "^1.40.0"
 python-telegram-bot = {extras = ["callback-data"], version = "^21.3"}

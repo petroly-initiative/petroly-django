@@ -1878,13 +1878,13 @@ captcha = ["pillow[captcha] (>=9.5,<11.0)"]
 
 [[package]]
 name = "strawberry-graphql"
-version = "0.235.1"
+version = "0.236.0"
 description = "A library for creating GraphQL APIs"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "strawberry_graphql-0.235.1-py3-none-any.whl", hash = "sha256:616844222fc144972e1235b47362b64e9e7c9b17b5f81c7328855c839aaf59a3"},
-    {file = "strawberry_graphql-0.235.1.tar.gz", hash = "sha256:135ff15d91bd6b0ba5c675103ebbfb188db16d95cf2652860febc7108787f427"},
+    {file = "strawberry_graphql-0.236.0-py3-none-any.whl", hash = "sha256:685f775be47c0753c39e0ef601d7f2b6f0e15dd4dfe5d57094d29a9cceb066f4"},
+    {file = "strawberry_graphql-0.236.0.tar.gz", hash = "sha256:26dcae2c0b506330db60624194cdd0b49c1e773166791bd4f729126bf872b65c"},
 ]
 
 [package.dependencies]
@@ -1913,19 +1913,19 @@ starlite = ["starlite (>=1.48.0)"]
 
 [[package]]
 name = "strawberry-graphql-django"
-version = "0.46.1"
+version = "0.47.0"
 description = "Strawberry GraphQL Django extension"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "strawberry_graphql_django-0.46.1-py3-none-any.whl", hash = "sha256:68970e49b5aedc8d6abea5f0ba83b8d54ecc24debe0d3418d603308b7e535e6a"},
-    {file = "strawberry_graphql_django-0.46.1.tar.gz", hash = "sha256:598f0a1d58497311364c448140d57c050ae9516648ad3745143c712c5f77f4e4"},
+    {file = "strawberry_graphql_django-0.47.0-py3-none-any.whl", hash = "sha256:11ac8f18cbe6ebdcb3fd2507dbde980ad3b8944c31fc34527d2ad38fadee8427"},
+    {file = "strawberry_graphql_django-0.47.0.tar.gz", hash = "sha256:1711a417cbac9270676e987480a1842764dd724f05173cb46025ea49b5198fc8"},
 ]
 
 [package.dependencies]
 asgiref = ">=3.8"
 django = ">=3.2"
-strawberry-graphql = ">=0.235.1"
+strawberry-graphql = ">=0.236.0"
 
 [package.extras]
 debug-toolbar = ["django-debug-toolbar (>=3.4)"]
@@ -2200,4 +2200,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.4"
-content-hash = "41d791cf712359829b82d23220b21b30556ba2f426aed97d6468da393ba5be61"
+content-hash = "a76c2f522943a018676023e5be4e77e2c0e483c8425919257627cbad023b27aa"
