@@ -1873,17 +1873,17 @@ captcha = ["pillow[captcha] (>=9.5,<11.0)"]
 
 [[package]]
 name = "strawberry-graphql"
-version = "0.235.1"
+version = "0.237.2"
 description = "A library for creating GraphQL APIs"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "strawberry_graphql-0.235.1-py3-none-any.whl", hash = "sha256:616844222fc144972e1235b47362b64e9e7c9b17b5f81c7328855c839aaf59a3"},
-    {file = "strawberry_graphql-0.235.1.tar.gz", hash = "sha256:135ff15d91bd6b0ba5c675103ebbfb188db16d95cf2652860febc7108787f427"},
+    {file = "strawberry_graphql-0.237.2-py3-none-any.whl", hash = "sha256:0cab6ceb13d5d598faad7afc721a39cabae79e9bc801c2aac0b5bcd3402e4e10"},
+    {file = "strawberry_graphql-0.237.2.tar.gz", hash = "sha256:ac419798303195547e3b286ee810ce957072d5aaac55e5f639cdc4bbb0d72c46"},
 ]
 
 [package.dependencies]
-graphql-core = ">=3.2.0,<3.3.0"
+graphql-core = ">=3.2.0,<3.4.0"
 python-dateutil = ">=2.7.0,<3.0.0"
 typing-extensions = ">=4.5.0"
 
@@ -1908,19 +1908,19 @@ starlite = ["starlite (>=1.48.0)"]
 
 [[package]]
 name = "strawberry-graphql-django"
-version = "0.46.1"
+version = "0.47.1"
 description = "Strawberry GraphQL Django extension"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "strawberry_graphql_django-0.46.1-py3-none-any.whl", hash = "sha256:68970e49b5aedc8d6abea5f0ba83b8d54ecc24debe0d3418d603308b7e535e6a"},
-    {file = "strawberry_graphql_django-0.46.1.tar.gz", hash = "sha256:598f0a1d58497311364c448140d57c050ae9516648ad3745143c712c5f77f4e4"},
+    {file = "strawberry_graphql_django-0.47.1-py3-none-any.whl", hash = "sha256:9afef91933c6b7a87b80a61b6634a278086f8880b3fbc0d2aa56f78747043cbc"},
+    {file = "strawberry_graphql_django-0.47.1.tar.gz", hash = "sha256:864c3f41de741639ce1b33107ee16ccd400167d5d0bc4e1fe01b1f3f556e127e"},
 ]
 
 [package.dependencies]
 asgiref = ">=3.8"
 django = ">=3.2"
-strawberry-graphql = ">=0.235.1"
+strawberry-graphql = ">=0.236.0"
 
 [package.extras]
 debug-toolbar = ["django-debug-toolbar (>=3.4)"]
@@ -2195,4 +2195,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.4"
-content-hash = "04a9ba2ce9752bc56f23f502129190a58e11e91d8b9ee57b2816636ad6fa9db0"
+content-hash = "d1d19e807c2d4bf5ad9533ca0b957188e6413130b4909d6a2d019f42f8afe22d"
