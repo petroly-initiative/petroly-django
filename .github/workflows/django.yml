@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.12.4]
+        python-version: [3.12.5]
         pipenv-version: ["v2022.11.5"]
 
     steps:
