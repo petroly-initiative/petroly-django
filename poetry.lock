@@ -24,13 +24,13 @@ files = [
 
 [[package]]
 name = "anthropic"
-version = "0.31.2"
+version = "0.36.2"
 description = "The official Python library for the anthropic API"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "anthropic-0.31.2-py3-none-any.whl", hash = "sha256:28d176b98c72615bfae30f0a9eee6297cc33bf52535d38156fc2805556e2f09b"},
-    {file = "anthropic-0.31.2.tar.gz", hash = "sha256:0134b73df8d1f142fc68675fbadb75e920054e9e3437b99df63f10f0fc6ac26f"},
+    {file = "anthropic-0.36.2-py3-none-any.whl", hash = "sha256:308ddc6c538de03c081552e456bc0b387b6f7c7d1dea0c20122cc11c7cdbaf6a"},
+    {file = "anthropic-0.36.2.tar.gz", hash = "sha256:d5a3fa56d1c82a51944f9dc7b0dc72048deb89f8df5ebfd09e2d1b59c62eb8eb"},
 ]
 
 [package.dependencies]
@@ -2196,4 +2196,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.5"
-content-hash = "58cd4c93b3d011f557d691a01bcf69b68780c03df594e2bc58473348de2394b7"
+content-hash = "e94f19091dea7e457feab0db0cdba6a9361982a19c9b6248f52d63326b033e68"
