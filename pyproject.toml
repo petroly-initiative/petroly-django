@@ -34,7 +34,7 @@ anthropic = "^0.31.2"
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
 mypy = "^1.7"
-pylint-django = "^2.5.3"
+pylint-django = "^2.6.1"
 flake8 = "^7.1.1"
 django-stubs = "^4.2.3"
 python-dotenv = "^1.0.1"
