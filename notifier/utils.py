@@ -71,14 +71,14 @@ def register_for_user(user_pk, term: str, crns: List):
     except ObjectDoesNotExist:
         bot_utils.send_telegram_message(
             TelegramProfile.objects.get(user__pk=user_pk).id,
-            r"We tried to register but you did not clone your Banner session",
+            r"We tried to register your courses but you did not clone your Banner session",
         )
         return False
 
     if not banner.cookies:
         bot_utils.send_telegram_message(
             banner.user.telegram_profile.id,
-            r"We tried to register but your Banner session has expired",
+            r"We tried to register your courses but your Banner session has expired",
         )
         return
 
