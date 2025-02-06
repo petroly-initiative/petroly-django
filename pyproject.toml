@@ -8,7 +8,7 @@ packages = []
 
 [tool.poetry.dependencies]
 python = "3.12.5"
-Django = "^4.2.16"
+Django = "^4.2.19"
 django-q = "^1.3.9"
 django-choices-field = "^2.3"
 django-cors-headers = "^4.4.0"
