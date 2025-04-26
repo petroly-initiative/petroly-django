@@ -3,13 +3,13 @@ This module is to define the fetching, filtering, and processing the data
 from the KFUPM API
 """
 
+from collections import defaultdict
 import html
 import json
 import logging
 import os
 import sys
 from typing import Dict, List, Tuple
-from collections import defaultdict
 
 from cryptography.fernet import Fernet
 from django.conf import settings
@@ -40,6 +40,7 @@ from .models import (
     Course,
     Status,
     StatusEnum,
+    Term,
     TrackingList,
 )
 
@@ -140,6 +141,13 @@ def check_session(user_pk):
 
 def fetch_data(term: str, department: str) -> List[Dict]:
     """This load data from our DB."""
+
+    # Sanitize the args
+    if not term or term not in Term.objects.values_list("long", flat=True):
+        raise ValueError("You should specify a valid term.")
+
+    if not department or department not in SubjectEnum.values:
+        raise ValueError("You should specify a valid department.")
 
     try:
         obj = Cache.objects.get(term=term, department=department)
@@ -429,9 +437,9 @@ def formatter_md(courses: List[Course]) -> str:
             course_number=course.raw["subjectCourse"],
             section_number=course.raw["sequenceNumber"],
             available_seats=course.available_seats,
-            waiting_list_count="🟢 Open"
-            if course.waiting_list_count > 0
-            else "🔴 Closed",
+            waiting_list_count=(
+                "🟢 Open" if course.waiting_list_count > 0 else "🔴 Closed"
+            ),
         )
 
     return result.replace("-", "\\-")

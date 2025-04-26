@@ -3,29 +3,29 @@ This module is to define the GraphQL queries and mutations
 of the `notifier` app.
 """
 
+import dataclasses
+import hashlib
 import hmac
 import json
-import hashlib
-import dataclasses
 from typing import List, Optional
-from django_q.models import Schedule
-from graphql.error import GraphQLError
 
+from django.conf import settings
+from django_q.models import Schedule
+from django_q.tasks import async_task, logger
+from graphql.error import GraphQLError
 import strawberry
 import strawberry.django
-from django.conf import settings
-from strawberry.types import Info
 from strawberry.scalars import JSON
-from django_q.tasks import async_task, logger
+from strawberry.types import Info
 from strawberry_django.permissions import IsAuthenticated
 
+from data import SubjectEnum
 from telegram_bot.models import TelegramProfile
 from telegram_bot.utils import escape_md
 
-from data import SubjectEnum
+from .models import Banner, ChannelEnum, Course, Term, TrackingList
+from .types import ChannelsType, CourseInput, PreferencesInput, TermType
 from .utils import fetch_data, get_course_info, instructor_info_from_name
-from .models import Term, TrackingList, Course, ChannelEnum, Banner
-from .types import CourseInput, TermType, ChannelsType, PreferencesInput
 
 
 def resolve_subject_list(root, info: Info, short: bool = True) -> List[str]:
@@ -90,9 +90,9 @@ class Query:
         for course in tracking_list.courses.all():
             for raw_course in fetch_data(course.term, course.department):
                 if course.crn == raw_course["courseReferenceNumber"]:
-                    raw_course[
-                        "userRegister"
-                    ] = tracking_list.register_courses.contains(course)
+                    raw_course["userRegister"] = (
+                        tracking_list.register_courses.contains(course)
+                    )
                     result.append(raw_course)
 
         return result
@@ -112,15 +112,9 @@ class Query:
             JSON: the same structure of the API data.
         """
 
-        # TODO We shouldn't keep calling db for this
-        # better cache it.
-        if not term or term not in Term.objects.values_list("long", flat=True):
-            raise Exception("You should specify a valid term.")
-
-        if not department or department not in SubjectEnum.values:
-            raise Exception("You should specify a valid department.")
-
+        # TODO: We shouldn't keep calling db for this better cache it.
         raw = fetch_data(term, department)
+
         result = []
         for course in raw:
             if title.lower() in course["subjectCourse"].lower():
@@ -304,9 +298,7 @@ class Mutation:
                 raise GraphQLError("Sorry you can't track more than 30 sections.")
         else:
             if len(courses) > 15:
-                raise GraphQLError(
-                    "Sorry you can't track more than 15 sections."
-                )
+                raise GraphQLError("Sorry you can't track more than 15 sections.")
 
         try:
             # TODO turn `register` off for each removed course

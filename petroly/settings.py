@@ -251,7 +251,7 @@ STRAWBERRY_DJANGO = {
 
 Q_CLUSTER = {
     "name": "petroly",
-    "workers": env("Q_CLUSTER_WORKERS"),
+    "workers": env("Q_CLUSTER_WORKERS", int),
     "timeout": 60 * 2,
     "retry": 60 * 60 * 24,  # 1 day
     "queue_limit": 50,
