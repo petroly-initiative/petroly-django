@@ -42,7 +42,7 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
 
     # Finally, send the message
     if isinstance(update, Update):
-        await update.message.reply_text("Sorry, an error happened, we'll invistigate the isssue")
+        await update.effective_user.send_message("Sorry, an error happened, we'll invistigate the isssue")
 
     await context.bot.send_message(
         chat_id=DEVELOPER_CHAT_ID, text=message, parse_mode=ParseMode.HTML
