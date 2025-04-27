@@ -144,10 +144,10 @@ def fetch_data(term: str, department: str) -> List[Dict]:
 
     # Sanitize the args
     if not term or term not in Term.objects.values_list("long", flat=True):
-        raise ValueError("You should specify a valid term.")
+        raise ValueError(f"`{term}` is not a valid term.")
 
     if not department or department not in SubjectEnum.values:
-        raise ValueError("You should specify a valid department.")
+        raise ValueError(f"`{department}` is not a valid department.")
 
     try:
         obj = Cache.objects.get(term=term, department=department)
