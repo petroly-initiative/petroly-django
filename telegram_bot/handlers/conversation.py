@@ -10,15 +10,15 @@ import logging
 from enum import Enum
 from io import BytesIO
 from typing import Dict, cast
+
+import telegram
 from asgiref.sync import sync_to_async
 from django.db.models.fields.related import utils
-import telegram
-
-from telegram.ext import ContextTypes, ConversationHandler
-from telegram.constants import ParseMode
 from telegram import InlineKeyboardMarkup, Update
-from telegram_bot.models import TelegramProfile, TelegramRecord
+from telegram.constants import ParseMode
+from telegram.ext import ContextTypes, ConversationHandler
 
+from telegram_bot.models import TelegramProfile, TelegramRecord
 from telegram_bot.utils import (
     clear_tracking,
     construct_reply_callback_grid,
@@ -31,7 +31,6 @@ from telegram_bot.utils import (
     submit_section,
     untrack_section,
 )
-
 
 logger = logging.getLogger(__name__)
 
@@ -55,10 +54,12 @@ class CommandEnum(Enum):
 
 async def track(update: Update, context: ContextTypes.DEFAULT_TYPE) -> CommandEnum:
     """starting point for the /track command"""
+
     # cleaning data from previous sessions
     context.bot.callback_data_cache.clear_callback_data()
     context.bot.callback_data_cache.clear_callback_queries()
     context.user_data.clear()
+
     # getting available terms and create reply buttons
     try:
         await TelegramProfile.objects.aget(pk=update.effective_user.id)
@@ -357,8 +358,20 @@ async def timeout(
     return ConversationHandler.END
 
 
+# async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+#     """a handler to cancel ongoing conversational commands"""
+#
+#     await update.message.reply_text(text="All right, we won't change anything.")
+#
+#     return ConversationHandler.END
+
+
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """a handler to cancel ongoing conversational commands"""
+    """a handler to cancel ongoing conversational commands and clear relevant data"""
+
+    context.bot.callback_data_cache.clear_callback_data()
+    context.bot.callback_data_cache.clear_callback_queries()
+    context.user_data.clear()
 
     await update.message.reply_text(text="All right, we won't change anything.")
 
