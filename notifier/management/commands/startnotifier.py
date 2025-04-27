@@ -2,17 +2,17 @@
 A django custom command to start the Notifier checking.
 """
 
-from datetime import timedelta
 import logging
 import signal
 import time
 import warnings
+from datetime import timedelta
 
+import requests as rq
 from django.core.cache import CacheKeyWarning
 from django.core.management.base import BaseCommand
 from django.utils.timezone import now
 from django_q.tasks import Schedule, async_task
-import requests as rq
 
 from account.models import Profile
 from notifier import utils
@@ -148,6 +148,17 @@ class Command(BaseCommand):
 
                 t_start = time.perf_counter()
                 for tracker_pk, info in courses_by_tracker.items():
+                    # NOTE: Disable delayed mechanisim
+                    async_task(
+                        "notifier.utils.send_notification",
+                        tracker_pk,
+                        str(info),
+                        task_name=f"sending-notification-{tracker_pk}",
+                        group="change_notification",
+                    )
+
+                    continue
+
                     if Profile.objects.get(user__pk=tracker_pk).premium:
                         async_task(
                             "notifier.utils.send_notification",
