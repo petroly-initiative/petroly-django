@@ -170,8 +170,10 @@ class Mutation:
 
     @strawberry.mutation(extensions=[IsAuthenticated()])
     def toggle_register_course(self, info: Info, crn: str) -> bool:
-        """This takes the CRN of a course to add/remove it to/from
-        user's TrackingList."""
+        """
+        This takes the CRN of a course to add/remove it to/from
+        user's TrackingList.
+        """
 
         user = info.context.request.user
         try:
