@@ -89,7 +89,7 @@ class Command(BaseCommand):
                         api_status.save()
 
                 except rq.exceptions.ProxyError:
-                    logger.warn("Proxy issue not resolved.")
+                    logger.warning("Proxy issue not resolved.")
 
                 except Exception as exc:
                     logger.error(exc)

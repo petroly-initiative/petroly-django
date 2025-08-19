@@ -7,25 +7,37 @@ import dataclasses
 import hashlib
 import hmac
 import json
-from typing import List, Optional
+from typing import List, Optional, cast
 
+import strawberry
+import strawberry.django
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from django_q.models import Schedule
 from django_q.tasks import async_task, logger
 from graphql.error import GraphQLError
-import strawberry
-import strawberry.django
 from strawberry.scalars import JSON
 from strawberry.types import Info
+from strawberry_django.fields.types import OperationMessage
 from strawberry_django.permissions import IsAuthenticated
 
 from data import SubjectEnum
 from telegram_bot.models import TelegramProfile
 from telegram_bot.utils import escape_md
 
-from .models import Banner, ChannelEnum, Course, Term, TrackingList
-from .types import ChannelsType, CourseInput, PreferencesInput, TermType
+from .models import Banner, ChannelEnum, Course, RegisterCourse, TrackingList
+from .types import (
+    ChannelsType,
+    CourseInput,
+    PreferencesInput,
+    RegisterCourseInput,
+    RegisterCourseType,
+    TermType,
+)
 from .utils import fetch_data, get_course_info, instructor_info_from_name
+
+User = get_user_model()
 
 
 def resolve_subject_list(root, info: Info, short: bool = True) -> List[str]:
@@ -46,6 +58,17 @@ class Query:
     """Main entry of all Query types of `notifier` app."""
 
     terms: List[TermType] = strawberry.django.field()
+
+    @strawberry.field(extensions=[IsAuthenticated()])
+    def register_course_by_crn(self, info: Info, crn: str) -> RegisterCourseType:
+        """Returns `RegisterCourse` obj for current logged in user."""
+
+        user = info.context.request.user
+        assert isinstance(user, User), "ERROR_CODE: skill issue."
+
+        tl = TrackingList.objects.get(user=user)
+
+        return cast(RegisterCourseType, tl.registercourse_set.get(course__crn=crn))
 
     @strawberry.field
     def raw_data(self, term: int, department: str) -> JSON:
@@ -71,7 +94,8 @@ class Query:
 
     @strawberry.field(extensions=[IsAuthenticated()])
     def tracked_courses(self, info: Info) -> Optional[JSON]:
-        """get all tracked courses' CRNs by the
+        """
+        get all tracked courses' CRNs by the
         current logged in user.
 
         Returns:
@@ -87,12 +111,11 @@ class Query:
             return False
 
         result = []
-        for course in tracking_list.courses.all():
-            for raw_course in fetch_data(course.term, course.department):
-                if course.crn == raw_course["courseReferenceNumber"]:
-                    raw_course["userRegister"] = (
-                        tracking_list.register_courses.contains(course)
-                    )
+
+        for course in tracking_list.registercourse_set.all():
+            # frontend needs courses to be in Banner format, not just `Course` obj
+            for raw_course in fetch_data(course.course.term, course.course.department):
+                if course.course.crn == raw_course["courseReferenceNumber"]:
                     result.append(raw_course)
 
         return result
@@ -169,11 +192,66 @@ class Mutation:
         return True
 
     @strawberry.mutation(extensions=[IsAuthenticated()])
+    def register_course_update(
+        self, info: Info, data: RegisterCourseInput
+    ) -> OperationMessage:
+        """
+        Updates user's `RegisterCourse` fields, given by courses' CRN.
+
+        Args:
+            info (Info): given by GraphQL
+            courses (List[CourseInput]): A list of CourseInput
+
+        Returns:
+            bool: A success flag
+        """
+
+        user = info.context.request.user
+        assert isinstance(user, User), "ERROR_CODE: skill issue."
+
+        try:
+            tl = user.tracking_list
+            rc = tl.registercourse_set.get(pk=data.id)
+            rc.strategy = data.strategy
+
+            if data.strategy == RegisterCourse.RegisterStrategyEnum.LINKED_LAB:
+                rc.with_add = Course.objects.get(crn=data.with_add_crn)
+
+            elif data.strategy == RegisterCourse.RegisterStrategyEnum.REPLACE_WITH:
+                rc.with_add = Course.objects.get(crn=data.with_drop_crn)
+
+            rc.save()
+
+        except ObjectDoesNotExist:
+            return OperationMessage(
+                kind=OperationMessage.Kind.VALIDATION, message="CRN not found."
+            )
+
+        except Exception as e:
+            logger.error(
+                "Couldn't update `RegisterCourse` with %s for user %s: %s",
+                data,
+                user.pk,
+                e,
+            )
+            return OperationMessage(
+                kind=OperationMessage.Kind.ERROR,
+                message="We have no idea what just happened :(",
+            )
+
+        return OperationMessage(
+            kind=OperationMessage.Kind.INFO, message="Updated.", code="SUCCESS"
+        )
+
+    @strawberry.mutation(extensions=[IsAuthenticated()])
     def toggle_register_course(self, info: Info, crn: str) -> bool:
         """
         This takes the CRN of a course to add/remove it to/from
         user's TrackingList.
         """
+        # FIXME: This should handle updateing course register strategy
+
+        raise NotImplemented("This feature needs a new implementation.")
 
         user = info.context.request.user
         try:
@@ -263,7 +341,7 @@ class Mutation:
                     # if `TrackingList` is just created remove
                     tracking_list.delete()
 
-                logger.warn(
+                logger.warning(
                     "Issue in setting Telegram ID for user %s: %s %s",
                     user.pk,
                     data.telegram_id,
@@ -272,7 +350,7 @@ class Mutation:
                 return False
 
         tracking_list.save()
-        logger.warn(
+        logger.warning(
             "Request to update channels but nothing changed for user %s: %s",
             user.pk,
             data,
@@ -303,28 +381,35 @@ class Mutation:
                 raise GraphQLError("Sorry you can't track more than 15 sections.")
 
         try:
-            # TODO turn `register` off for each removed course
-            # get all `Course` objects or create them
-            new_list = []
+            new_rc_pks = []
             for course in courses:
                 obj, _ = Course.objects.get_or_create(
                     crn=course.crn,
                     term=course.term,
                     department=course.department,
                 )
-                new_list.append(obj)
+                rc, created = RegisterCourse.objects.get_or_create(
+                    course=obj, tracking_list=tracking_list
+                )
+                if created:
+                    rc.make_strategy_off()  # NOTE: Redundent
+
+                new_rc_pks.append(rc.pk)
 
                 # always update the status from our cache
                 # This will guarantee that the course status is to date
                 # before it's being tracked avoiding false notification
-                course_info = get_course_info(course)
+                course_info = get_course_info(cast(Course, course))
                 obj.available_seats = course_info["seatsAvailable"]
                 obj.waiting_list_count = course_info["waitAvailable"]
                 obj.raw = course_info
                 obj.save()
 
-            # clear the old list and set the new one
-            tracking_list.courses.set(new_list, clear=True)
+            # DB-delete any `RegisterCourse` obj not in `new_rc_pks`, that's
+            # how we untrack courses for a user with the new implementaion.
+            RegisterCourse.objects.filter(tracking_list=tracking_list).exclude(
+                pk__in=new_rc_pks
+            ).delete()
 
         except Exception as exc:
             print(

@@ -23,9 +23,6 @@ env.read_env(overwrite=False)
 
 SECRET_KEY = env("SECRET_KEY")
 
-# False if not in os.environ because of casting above
-DEBUG = env("DEBUG")
-
 APP_NAME = env("FLY_APP_NAME")
 
 if APP_NAME:
@@ -48,6 +45,8 @@ else:
     DEBUG = True
     ALLOWED_HOSTS = ["*"]
 
+# False if not in os.environ because of casting above
+DEBUG = env("DEBUG")
 
 # Application definition
 INSTALLED_APPS = [
