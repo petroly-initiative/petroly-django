@@ -3,14 +3,15 @@ This module is to define the fetching, filtering, and processing the data
 from the KFUPM API
 """
 
-from collections import defaultdict
 import html
 import json
 import logging
 import os
 import sys
+from collections import defaultdict
 from typing import Dict, List, Tuple
 
+import requests as rq
 from cryptography.fernet import Fernet
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -20,7 +21,6 @@ from django.db.models import Q
 from django.template import loader
 from django.utils.timezone import now
 from django_q.tasks import async_task
-import requests as rq
 from telegram.constants import ParseMode
 
 from data import DepartmentEnum, SubjectEnum
@@ -38,6 +38,7 @@ from .models import (
     Cache,
     ChannelEnum,
     Course,
+    RegisterCourse,
     Status,
     StatusEnum,
     Term,
@@ -326,16 +327,14 @@ def collect_tracked_courses() -> Dict[str, List[Course | set[User]]]:
     """
     courses_dict = {}
 
-    for tracking_list in TrackingList.objects.all():
-        user = tracking_list.user
-        for course in tracking_list.courses.all():
-            try:
-                courses_dict[course.crn]["trackers"].add(user)
-            except KeyError:
-                courses_dict[course.crn] = {
-                    "course": course,
-                    "trackers": {user},
-                }
+    for rc in RegisterCourse.objects.all():
+        try:
+            courses_dict[rc.course.crn]["trackers"].add(rc.tracking_list.user)
+        except KeyError:
+            courses_dict[rc.course.crn] = {
+                "course": rc.course,
+                "trackers": {rc.tracking_list.user},
+            }
 
     return courses_dict
 
@@ -390,7 +389,7 @@ def send_notification(user_pk: int, info: str) -> None:
             logger.error("Couldn't send email: %s", exc)
 
     # After sending notifications, let's try to register (if enabled)
-    # user mignt not have a Banner obj yet
+    # User mignt not have a Banner obj yet
     try:
         if not user.banner.active:
             return

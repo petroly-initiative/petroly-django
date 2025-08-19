@@ -87,7 +87,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "account.middleware.AllowOnlyStaffMiddleware",
-    "account.middleware.DiscordNotificationMiddleware",
+    # "account.middleware.DiscordNotificationMiddleware",
 ]
 
 ROOT_URLCONF = "petroly.urls"
