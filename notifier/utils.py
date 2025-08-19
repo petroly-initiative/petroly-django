@@ -191,7 +191,7 @@ def request_data(term, department) -> None:
         return
 
     except rq.exceptions.ProxyError as exc:
-        logger.warn("ProxyError: %s", exc)
+        logger.warning("ProxyError: %s", exc)
         obj.stale = False
         obj.save()
 
@@ -397,6 +397,8 @@ def send_notification(user_pk: int, info: str) -> None:
     except ObjectDoesNotExist:
         return
 
+    return
+    # FIXME: re-implement this feature with the new `RegisterCourse`
     courses: List[Course] = []
     register_courses = tracking_list.register_courses.all()
     for c_info in info_dict:

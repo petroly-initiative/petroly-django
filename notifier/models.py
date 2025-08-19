@@ -18,14 +18,13 @@ Here are the related models definition for the `notifier` app.
             - `sent_on`
 """
 
-
 import os
 
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
+from django.utils.timezone import now, timedelta
 from django.utils.translation import gettext as _
-from django_choices_field import TextChoicesField
-from django.utils.timezone import timedelta, now
+from django_choices_field import IntegerChoicesField, TextChoicesField
 from django_q.models import Schedule
 from django_q.tasks import async_task
 from multiselectfield import MultiSelectField
@@ -176,7 +175,7 @@ class Course(models.Model):
         ]
 
     def __str__(self) -> str:
-        return str(self.crn)
+        return f"{self.crn} - {self.department}"
 
 
 class ChannelEnum(models.TextChoices):
@@ -231,32 +230,6 @@ class BannerEvent(models.Model):
         return str(self.banner)
 
 
-# class RegistrationPlan(models.Model):
-#     """Model a plan to try to register it for a user."""
-#
-#     updated_on = models.DateTimeField(_("updated on"), auto_now=True)
-#     user = models.ForeignKey(
-#         User,
-#         verbose_name=_("user"),
-#         on_delete=models.CASCADE,
-#         related_name="registeration_plan",
-#     )
-#     add = models.ManyToManyField(
-#         Course,
-#         verbose_name=_("add courses"),
-#         related_name="add_courses",
-#         blank=True,
-#         default=None,
-#     )
-#     drop = models.ManyToManyField(
-#         Course,
-#         verbose_name=_("dorp courses"),
-#         related_name="drop_courses",
-#         blank=True,
-#         default=None,
-#     )
-
-
 class TrackingList(models.Model):
     """
     It assigns each users to what `Course` they are willing to track.
@@ -270,24 +243,85 @@ class TrackingList(models.Model):
         on_delete=models.CASCADE,
         related_name="tracking_list",
     )
-    courses = models.ManyToManyField(
-        Course,
-        verbose_name=_("courses"),
-        related_name="tracked_courses",
-        blank=True,
-    )
-    register_courses = models.ManyToManyField(
-        Course,
-        verbose_name=_("register courses"),
-        related_name="register_courses",
-        blank=True,
-        default=None,
-    )
     channels = MultiSelectField(
         choices=ChannelEnum.choices,
         default=ChannelEnum.EMAIL,
         max_length=100,
     )
+
+    def __str__(self):
+        return f"{self.pk} - {self.user}"
+
+
+class RegisterCourse(models.Model):
+    """
+    A model to link each course in user's `TrackingList.register_courses`
+    with user's preferred strategy in how to register when the section is open.
+
+    This will server also as holder for user's tracked courses.
+
+    man, im still blaming my self for mislabeling `Course` model,
+    it should've been named `Section`.
+    """
+
+    class Meta:
+        verbose_name = _("register course")
+        verbose_name_plural = _("register courses")
+        constraints = [
+            models.UniqueConstraint(
+                "tracking_list", "course", name="unique_trackinglist_course"
+            ),
+        ]
+
+    class RegisterStrategyEnum(models.IntegerChoices):
+        OFF = 0, _("off")
+        DEFAULT = 1, _("default")
+        LINKED_LAB = 2, _("linked lab")
+        REPLACE_WITH = 3, _("replace with ")
+
+        # __empty__ = _("off")
+
+    tracking_list = models.ForeignKey(
+        TrackingList,
+        verbose_name=_("tracking list"),
+        on_delete=models.CASCADE,
+    )
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        verbose_name=_("course"),
+    )
+    strategy = IntegerChoicesField(
+        verbose_name=_("strategy"),
+        choices_enum=RegisterStrategyEnum,
+        default=RegisterStrategyEnum.OFF,
+    )
+    with_add = models.ForeignKey(
+        Course,
+        null=True,
+        blank=True,
+        default=None,
+        related_name="+",
+        on_delete=models.CASCADE,
+        verbose_name=_("with add course"),
+    )
+    with_drop = models.ForeignKey(
+        Course,
+        null=True,
+        blank=True,
+        default=None,
+        related_name="+",
+        on_delete=models.CASCADE,
+        verbose_name=_("with drop course"),
+    )
+    updated_on = models.DateTimeField(_("updated on"), auto_now=True)
+
+    def make_strategy_off(self) -> None:
+        self.strategy = self.RegisterStrategyEnum.OFF
+        self.save()
+
+    def __str__(self) -> str:
+        return f'{self.id} - {self.course}'
 
 
 class NotificationEvent(models.Model):

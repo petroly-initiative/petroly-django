@@ -3,9 +3,15 @@ Customization of the admin site for `notifier` app.
 """
 
 from django.contrib import admin
+
 from . import models
 
-admin.site.register([models.NotificationEvent, models.Status])
+admin.site.register(
+    [
+        models.NotificationEvent,
+        models.Status,
+    ]
+)
 
 
 def repeats(obj: models.Banner) -> str:
@@ -36,7 +42,14 @@ class BannerAdmin(admin.ModelAdmin):
     Custom admin model site for `Banner` model.
     """
 
-    list_display = ["id", "user", "active", repeats, "updated_on", "created_on"]
+    list_display = [
+        "id",
+        "user",
+        "active",
+        repeats,
+        "updated_on",
+        "created_on",
+    ]
     list_filter = [
         "active",
     ]
@@ -51,16 +64,31 @@ class TrackingListAdmin(admin.ModelAdmin):
     Custom settings for `TrackingList` app in admin site.
     """
 
+    autocomplete_fields = ["user"]
     list_display = ["id", "user", "channels", "updated_on"]
     list_filter = [
         "channels",
     ]
-    filter_horizontal = [
-        "courses",
-        "register_courses",
-    ]
+    filter_horizontal = []
     search_fields = [
         "user__username",
+    ]
+
+
+@admin.register(models.RegisterCourse)
+class RegisterCourseAdmin(admin.ModelAdmin):
+    """
+    Custom settings for `RegisterCourse` app in admin site.
+    """
+
+    autocomplete_fields = [
+        "tracking_list",
+        "course",
+        "with_add",
+        "with_drop",
+    ]
+    search_fields = [
+        "tracking_list__user__username",
     ]
 
 
