@@ -9,7 +9,7 @@ import logging
 import os
 import sys
 from collections import defaultdict
-from typing import Dict, List, Tuple
+from typing import Dict, List, Set, Tuple
 
 import requests as rq
 from cryptography.fernet import Fernet
@@ -58,16 +58,20 @@ assert (ENC_KEY := os.environ.get("ENC_KEY")), "You must provide `ENC_KEY` env v
 #     file.write(enc_file)
 
 # decrypt the python code into a module
-with open("notifier/banner_api.py.bin", "rb") as file:
-    f = Fernet(ENC_KEY.encode())
-    code = f.decrypt(file.read()).decode()
-    import types
+# with open("notifier/banner_api.py.bin", "rb") as file:
+#     f = Fernet(ENC_KEY.encode())
+#     code = f.decrypt(file.read()).decode()
+#     import types
+#
+#     banner_api = types.ModuleType("banner_api")
+#     exec(code, banner_api.__dict__)
+from . import banner_api
 
-    banner_api = types.ModuleType("banner_api")
-    exec(code, banner_api.__dict__)
 
+def register_for_user(user_pk, rc_pks: Set[int]):
 
-def register_for_user(user_pk, term: str, crns: List):
+    rc = RegisterCourse.objects.get(pk=rc_pks.pop())
+
     try:
         banner = Banner.objects.get(user__pk=user_pk)
     except ObjectDoesNotExist:
@@ -84,7 +88,19 @@ def register_for_user(user_pk, term: str, crns: List):
         )
         return
 
-    res = banner_api.register(banner, term, crns)
+    bot_utils.send_telegram_message(
+        banner.user.telegram_profile.id,
+        f"Executing Registration plan for `{rc.course.crn}`"
+        f" with strategy {rc.strategy.name}",
+    )
+
+    res = banner_api.register(
+        banner,
+        term=rc.course.term,
+        add_crns=(rc.course.crn,),
+        drop_crns=(),
+        conditional=True,
+    )
 
     if isinstance(res, list):
         message = ""
@@ -113,8 +129,23 @@ def register_for_user(user_pk, term: str, crns: List):
         )
 
     BannerEvent.objects.create(
-        banner=banner, crns=crns, term=term, result=f"{res}\n\n\n{message}"
+        banner=banner,
+        crns=rc.course.crn,
+        term=rc.course.term,
+        result=f"{res}\n\n\n{message}",
     )
+
+    # Recurse call: if `rc_pks` not empty, call this function again.
+    # In this wait, we register each time one RegisterCourse plan, preventing
+    # submitting many requests to Banner which might result in blocking student.
+    if Status.is_up("register") and rc_pks:
+        async_task(
+            "notifier.utils.register_for_user",
+            user_pk,
+            rc_pks,
+            task_name=f"register-{user_pk}",
+            group="register_course",
+        )
 
 
 def check_session(user_pk):
@@ -361,6 +392,7 @@ def send_notification(user_pk: int, info: str) -> None:
             if not success:
                 logger.info("Deleting TrackingList for user: %s - %s", user, success)
                 user.tracking_list.delete()
+                return
 
         except Exception as exc:
             logger.error("Couldn't send to Telegram: %s - %s", user, exc)
@@ -396,35 +428,52 @@ def send_notification(user_pk: int, info: str) -> None:
     except ObjectDoesNotExist:
         return
 
-    return
-    # FIXME: re-implement this feature with the new `RegisterCourse`
-    courses: List[Course] = []
-    register_courses = tracking_list.register_courses.all()
-    for c_info in info_dict:
-        if (
-            c_info["course"] in register_courses
-            and c_info["course"] in tracking_list.courses.all()
-        ):
-            # search if another section's been added already
-            for course in courses:
-                if course.raw["subjectCourse"] == c_info["course"].raw["subjectCourse"]:
-                    break
-            courses.append(c_info["course"])
+    # List of RegisterCourse pks, that is opened and has strategy to be registred
+    register_courses = (
+        RegisterCourse.objects.filter(tracking_list=tracking_list)
+        .exclude(strategy=RegisterCourse.RegisterStrategyEnum.OFF)
+        .filter(course__in=[i["course"] for i in info_dict])
+        .values_list("pk", flat=True)
+    )
 
-    grouped_by_term = defaultdict(list)
-    for c in courses:
-        grouped_by_term[c.term].append(c.crn)
+    if not register_courses:
+        return
+
+    try:
+        success = bot_utils.send_telegram_message(
+            chat_id=user.telegram_profile.id,
+            msg="We detected courses need to be registered\n"
+            "We will execute each Register Strategy one by one",
+        )
+        if not success:
+            logger.info("Deleting TrackingList for user: %s - %s", user, success)
+            user.tracking_list.delete()
+
+    except Exception as exc:
+        logger.error("Couldn't send to Telegram: %s - %s", user, exc)
+
+    # for c_info in info_dict:
+    #     if (
+    #         c_info["course"] in register_courses
+    #         and c_info["course"] in tracking_list.courses.all()
+    #     ):
+    #         # Prevent adding more than one section per course
+    #         for course in courses:
+    #             if course.raw["subjectCourse"] == c_info["course"].raw["subjectCourse"]:
+    #                 break
+    #         courses.append(c_info["course"])
+    # grouped_by_term = defaultdict(list)
+    # for c in courses:
+    #     grouped_by_term[c.term].append(c.crn)
 
     if Status.is_up("register"):
-        for term, crns in grouped_by_term.items():
-            async_task(
-                "notifier.utils.register_for_user",
-                user_pk,
-                term,
-                ",".join(crns),
-                task_name=f"register-{user_pk}",
-                group="register_crns",
-            )
+        async_task(
+            "notifier.utils.register_for_user",
+            user_pk,
+            set(register_courses),
+            task_name=f"register-{user_pk}",
+            group="register_course",
+        )
 
 
 def formatter_md(courses: List[Course]) -> str:

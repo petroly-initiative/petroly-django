@@ -81,7 +81,12 @@ class RegisterCourseAdmin(admin.ModelAdmin):
     Custom settings for `RegisterCourse` app in admin site.
     """
 
-    list_display = ["id", "strategy", "tracking_list"]
+    list_display = [
+        "id",
+        "course",
+        "strategy",
+        "tracking_list",
+    ]
     list_filter = [
         "strategy",
     ]
@@ -142,7 +147,7 @@ class CacheAdmin(admin.ModelAdmin):
 
 @admin.register(models.Course)
 class CourseAdmin(admin.ModelAdmin):
-e   """
+    """
     Custom settings for `Course` app in admin site.
     """
 
