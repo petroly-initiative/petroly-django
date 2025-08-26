@@ -218,7 +218,7 @@ class Mutation:
                 rc.with_add = Course.objects.get(crn=data.with_add_crn)
 
             elif data.strategy == RegisterCourse.RegisterStrategyEnum.REPLACE_WITH:
-                rc.with_add = Course.objects.get(crn=data.with_drop_crn)
+                rc.with_drop = Course.objects.get(crn=data.with_drop_crn)
 
             rc.save()
 

@@ -92,27 +92,55 @@ def register_for_user(user_pk, rc_pks: Set[int]):
         banner.user.telegram_profile.id,
         f"Executing Registration plan for `{rc.course.crn}`"
         f" with strategy {rc.strategy.name}",
+        parse_mode=ParseMode.HTML,
     )
 
-    res = banner_api.register(
-        banner,
-        term=rc.course.term,
-        add_crns=(rc.course.crn,),
-        drop_crns=(),
-        conditional=True,
-    )
+    match rc.strategy:
+        case RegisterCourse.RegisterStrategyEnum.LINKED_LAB:
+            res = banner_api.register(
+                banner,
+                term=rc.course.term,
+                add_crns=(rc.course.crn, rc.with_add.crn),
+                drop_crns=(),
+                conditional=True,
+            )
+        case RegisterCourse.RegisterStrategyEnum.REPLACE_WITH:
+            res = banner_api.register(
+                banner,
+                term=rc.course.term,
+                add_crns=(rc.course.crn,),
+                drop_crns=(rc.with_drop.crn),
+                conditional=True,
+            )
+        case _:
+            # we wouldn't be here if the strategy is OFF
+            res = banner_api.register(
+                banner,
+                term=rc.course.term,
+                add_crns=(rc.course.crn,),
+                drop_crns=(),
+                conditional=True,
+            )
 
     if isinstance(res, list):
         message = ""
         for model in res:
-            if model["submitResultIndicator"]:
+            if "submitResultIndicator" in model:
                 message += f"{model['subject']}{model['courseNumber']} - {model['courseReferenceNumber']}:"
-
                 for msg in model["messages"]:
                     message += f"\n{msg['message']}"
                 message += "\n\n"
+
+            elif "message" in model:
+                message += (
+                    f"TERM: {model['term']} - CRN: {model['courseReferenceNumber']}:"
+                    f"{model['message']}"
+                )
+                message += "\n\n"
+
     elif isinstance(res, str):
         message = res
+
     else:
         message = str(res)
 
@@ -162,7 +190,9 @@ def check_session(user_pk):
 
         banner.active = False
         banner.save()
-        banner.scheduler.delete()
+
+        if banner.scheduler:
+            banner.scheduler.delete()
 
         bot_utils.send_telegram_message(
             banner.user.telegram_profile.id,
@@ -423,7 +453,7 @@ def send_notification(user_pk: int, info: str) -> None:
     # After sending notifications, let's try to register (if enabled)
     # User mignt not have a Banner obj yet
     try:
-        if not user.banner.active:
+        if not (user.banner.active and user.banner.scheduler):
             return
     except ObjectDoesNotExist:
         return
